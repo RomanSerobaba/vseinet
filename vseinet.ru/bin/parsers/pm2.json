@@ -1,0 +1,32 @@
+{
+  "apps": [
+        {
+            "name": "parser-1",
+            "script": "./worker.js",
+            "env": {
+                "INDEX": 1
+            }
+        },
+        {
+            "name": "parser-2",
+            "script": "./worker.js",
+            "env": {
+                "INDEX": 2
+            }
+        },
+        {
+            "name": "parser-3",
+            "script": "./worker.js",
+            "env": {
+                "INDEX": 3
+            }
+        },
+        {
+            "name": "parser-4",
+            "script": "./worker.js",
+            "env": {
+                "INDEX": 4
+            }
+        }
+    ]
+}

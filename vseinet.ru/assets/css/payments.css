@@ -1,0 +1,41 @@
+/* payments
+-------------------------------------------------------------------*/
+.payments {
+	overflow: hidden;
+}
+	.payments * {
+		background: url(../images/payments.png) no-repeat;
+		border: none !important;
+		float: left;
+		height: 26px;
+		margin-right: 13px;
+	}
+	.payments .visa {
+		background-position: 0 -1px;
+		width: 37px;
+	}
+	.payments .master {
+		background-position: -47px -2px;
+		width: 31px;
+	}
+	.payments .webmoney {
+		background-position: -143px -1px;
+		width: 21px;
+	}
+	.payments .cash {
+		background-position: -243px -1px;
+		width: 31px;
+	}
+	.payments .cashless {
+		background-position: -207px 0;
+		width: 24px;
+	}
+  .payments .sber {
+		background: url(../images/sberlogo_big1.png) no-repeat;
+		width: 70px;
+	}
+  .payments .sbersmall {
+		background: url(../images/sberlogo_small1.png) no-repeat;
+		width: 21px;
+	}
+

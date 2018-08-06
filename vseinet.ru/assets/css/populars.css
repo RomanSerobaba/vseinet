@@ -1,0 +1,51 @@
+/* populars
+-------------------------------------------------------------------*/
+#populars {
+	clear: both;
+	margin: 0 0 42px;
+	overflow: hidden;
+	width: 100%;
+}
+#populars h1{
+	padding-top: 0;
+}
+	#populars .products {
+		overflow: hidden;
+		clear: both;						
+	}
+	#populars .product {
+		float: left;
+		padding: 0 65px 17px 0;
+		position: relative;
+		width: 25%;
+		min-height: 350px;
+	}
+		
+		#populars .image {
+			border: none;
+			display: table-cell;
+			height: 200px;
+			margin: 0 0 5px;
+			vertical-align: middle;
+			width: 100%;
+		}
+		#populars H4 {
+			margin: 4px 0;
+		}
+		#populars H5 {
+			margin: 0 0 10px;
+		}
+		#populars .price {
+			font-size: 18px;
+			line-height: 1;
+		}
+
+#lastview {
+	clear: both;
+	margin: 0 0 0px;
+	overflow: hidden;
+	width: 100%;
+}
+#populars .see-more{
+	display: none;
+}

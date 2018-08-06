@@ -1,0 +1,54 @@
+/* ui autocomplete
+-------------------------------------------------------------------*/
+.ui-autocomplete {
+	background: #fff;
+	border: 1px solid #e3e3e3;
+	cursor: default;
+	font-size: 14px;
+	left: 0;
+	padding: 3px 0;
+	position: absolute;
+	top: 0;
+	z-index: 100;
+}
+	.ui-autocomplete .ui-menu-item {
+		overflow: hidden;
+	}
+	.ui-autocomplete .ui-menu-item > A {
+		border: none !important;
+		color: #333;
+		display: block;
+		padding: 4px 35px;
+	}
+	.ui-autocomplete .ui-menu-item DIV {
+		font-size: 11px;
+    	line-height: 12px;
+    	margin: -5px 0 5px;
+    	padding-left: 35px;
+	}
+		.ui-autocomplete .ui-menu-item.ui-state-focus,
+		.ui-autocomplete .ui-menu-item A.ui-state-focus {
+			background: #f4f4f4;
+		}
+		.ui-autocomplete .ui-menu-item > A SPAN {
+			color: #999;
+			font-size: 11px;
+		}
+		.ui-autocomplete .ui-menu-item SMALL {
+			color: #999;
+		}
+			.ui-autocomplete .ui-menu-item SMALL B {
+				color: #333;
+			}
+	.ui-autocomplete .legend {
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEXj4+NAjkDOAAAACklEQVR4AWNgAAAAAgABc3UBGAAAAABJRU5ErkJggg==) 0 50% repeat-x;
+		color: #999;
+		font-size: 11px;
+		line-height: 15px;
+        margin-top: 5px;
+	}
+		.ui-autocomplete .legend SPAN {
+			background: #fff;
+		    margin-left: 35px;
+		    padding: 0 3px;
+		}

@@ -1,0 +1,94 @@
+<div class="column details">
+    {% if brand or product.model or product.details is defined %}
+        {% if details is defined %}
+            <h3>Краткие характеристики</h3>
+        {% else %}
+            <h3>Основные характеристики</h3>
+        {% endif %}
+    {% endif %}
+    {% if brand %}
+        <dl>
+            <dt><span>Производитель</span></dt>
+            <dd itemprop="brand">{{ brand.name }}</dd>
+        </dl>
+        {% if brand.url %}
+            <dl>
+                <dt><span>Сайт производителя</span></dt>
+                <dd><a href="{{ brand.url }}" target="_blank" rel="nofollow">{{ brand.url }}</a></dd>
+            </dl>
+        {% endif %}
+    {% endif %}
+    {% if product.model %}
+        <dl>
+            <dt><span>Модель</span></dt>
+            <dd>{{ product.model }}</dd>
+        </dl>
+    {% endif %}
+    {% if product.details is defined %}
+        {% for detail in product.details %}
+            <dl>
+                <dt><span>{{ detail.name }}{% if detail.unit %}, {{ detail.unit }}{% endif %}</span></dt>
+                <dd>
+                    {% if constant('AppBundle\\Enum\\DetailType::CODE_BOOLEAN') == detail.typeCode %}
+                        {% if detail.value %}есть{% else %}нет{% endif %}
+                    {% else %}
+                        {{ detail.value }}
+                    {% endif %}
+                </dd>
+            </dl>
+            {% if loop.last and details|length > product.details|length %}
+                <p class="all-details"><a href="#tab-details" class="ajax">все характеристики</a></p>
+            {% endif %}
+        {% endfor %}            
+    {% endif %}
+    <h3 class="garanty_title">Гарантия</h3>
+    <div class="content">
+        <p>На каждый товар распространяется гарантия. Вы всегда сможете проконсультироваться с нашей службой поддержки по вопросу подключения и настройки купленного оборудования.</p>
+    </div>
+</div>
+
+{% set offerta = '
+    <noindex>
+        <h3>Не является публичной офертой</h3>
+        <div class="offer">
+            <label><b style="cursor:default">*</b></label> Внимание! Изображения товара, включая цвет, могут отличаться от реального внешнего вида. Комплектация также может быть изменена производителем без предварительного уведомления. Обращаем ваше внимание на то, что все приведенные выше характеристики товара и сроки поставки носят исключительно информационный характер и не являются публичной офертой, определенной пунктом 2 статьи 437 Гражданского кодекса Российской Федерации. Для получения подробной информации о характеристиках данного товара, цене и сроках поставки обращайтесь, пожалуйста, к менеджерам компании Vseinet.ru, в Российское представительство или на официальные сайты Производителя данного товара.
+        </div>
+    </noindex>
+' %}
+
+<div class="column description">
+    {% if not product.description is empty %}
+        <h3>Описание</h3>
+        <div class="content" itemprop="description">
+            {{ product.description|raw }}
+        </div>
+    {% endif %}
+    {% if product.manufacturerLink or product.manualLink %}
+        <h3>Информация на сайте производителя</h3>
+        <div class="content">
+            {% if product.manufacturerLink %}
+                <p><a href="{{ product.manufacturerLink }}" rel="nofollow" target="_blank">Описание товара на сайте производителя</a></p>
+            {% endif %}
+            {% if product.manualLink %}
+                <p><a href="{{ product.manualLink }}" rel="nofollow" target="_blank">Инструкция по эксплуатации</a></p>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if product.description is empty %}
+        {{ offerta|raw }}
+    {% endif %}
+</div>
+<div class="help">
+    <strong>Затрудняетесь с выбором товара?</strong>
+    <p>Мы поможем вам:</p>
+    {#<ul>
+        <li>{{ app.representative.phone1 }}</li>
+        <li>{{ app.representative.phone2 }}</li>
+        <li>{{ app.representative.phone3 }}</li>
+    </ul>#}
+</div>
+{% if not product.description is empty %}
+    <div class="offerta">
+        {{ offerta|raw }}        
+    </div>
+{% endif %}

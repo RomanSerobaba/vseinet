@@ -1,0 +1,5 @@
+{foreach $regions as $region}
+    <div  class="region" data-id="{$region->id}">
+        <a href="javascript:void(0)" class="ajax">{$region->name}</a>
+    </div>
+{/foreach}

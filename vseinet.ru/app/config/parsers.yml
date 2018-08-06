@@ -1,0 +1,3 @@
+parameters:
+    parsers.source_dir: '%kernel.project_dir%/bin/parsers/sources'
+    parsers.types: [ 'products', 'images', 'prices', 'supplier_products', 'tradings' ]

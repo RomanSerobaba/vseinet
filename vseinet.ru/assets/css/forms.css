@@ -1,0 +1,215 @@
+/* forms
+-------------------------------------------------------------------*/
+.txt {
+	background: #fff;
+    border: 1px solid;
+    border-color: #c5c5c5 #ececec #ebebeb;
+	border-radius: 2px;
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.3) inset;
+	-moz-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	color: #333;
+	display: inline-block;
+	width: 100%;
+}
+	.txt[readonly] {
+		background: #f7f7f7;
+		color: #999;
+	}
+	.txt::placeholder {
+            color: #999;
+            font-weight: normal;
+	}
+	INPUT.txt {
+		font-size: 14px;
+		font-weight: 700;
+		height: 35px;
+		padding: 0 10px;
+	}
+	TEXTAREA.txt {
+		font-size: 13px;
+		padding: 10px;
+		resize: none;
+	}
+
+LABEL {
+	color: #333;
+	display: inline-block;
+	font-family: Arial;
+	font-size: 14px;
+}
+	LABEL B {
+		font-size: 24px;
+		position: relative;
+		top: 8px;
+	}
+	LABEL.notice {
+		font-size: 12px;
+	}
+	LABEL INPUT[type="checkbox"],
+	LABEL INPUT[type="radio"],
+	LABEL INPUT {
+		float: left;
+		margin: 2px 10px  0 0;
+		position: relative;
+	}
+FORM .status {
+	height: 12px;
+	width: 14px;
+}
+	FORM .error .status {
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAG1BMVEX/bEz/bEz/bEz/bEz/bEz/bEz/bEwAAAD/bEzqzt17AAAACHRSTlMbvRziv+QjAKTHVjIAAAA3SURBVHgBY1BJLy9zYvAwK09tZEhuToswYyizMG1OZyhP7jArh5BAEWOgCFDWwgykMrkRrMsBACskEnHDf3LzAAAAAElFTkSuQmCC) 0 center no-repeat;
+	}
+	FORM .ok .status {
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAMAAABlXnzoAAAAXVBMVEUAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAtQAAAAAAtQAmRpAfAAAAHnRSTlO9eIDVbAYzPKJDsfQKT+0Dncgs4fAB5pZUIPqJEQDDHL4gAAAAW0lEQVR4AUXHRxKEIABFQSaYc1bg/fsfU7Qs6V0bou77icUb28QeP9tg3k36E+rvjat6Qt00AmmrIbm6aS7IZrUHV5dN1lXSzl2WXkHOU7pSWv1b6kE7sXjH4wTRDxDSv2bbYwAAAABJRU5ErkJggg==) 0 center no-repeat;
+	}
+FORM .notice {
+	color: #999;
+}
+	FORM .error .error {
+		clear: both;
+		color: #f26c4f;
+		font-size: 12px;
+		/*white-space: nowrap;*/
+	}
+		FORM .error-summary .error {
+			color: #f26c4f;
+			font-size: 16px;	
+		}
+
+FORM .row {
+	clear: both;
+	padding: 5px 0 12px;
+}
+	FORM .row:after {
+		clear: both;
+		content: ' ';
+		display: block;
+	}
+	FORM .row:last-child {
+		padding-bottom: 0;
+	}
+
+	FORM .row.h {
+		padding-left: 150px;
+	}
+		FORM .row.h LABEL {
+	    	float: left;
+	    	line-height: 15px;
+	    	margin-left: -150px;
+	    	padding-top: 6px;
+	    	position: relative;
+	    	width: 150px;
+		}
+			FORM .row.h LABEL.inline {
+				margin: 0 20px 6px 0;
+				width: auto;
+			}
+		FORM .row.h .txt {
+			float: left;
+			margin: 0 0 7px;
+			width: 87%;
+		}
+		FORM .row.h .status {
+			float: left;
+			margin: 12px 0 0 10px;
+		}
+		FORM .row.h .notice {
+	    	clear: both;
+		}
+	FORM .row.v {
+		padding-top: 0;
+	}
+	FORM .col {
+		float: left;
+		padding-right: 18px;
+	}
+		FORM .col:last-child {
+			padding: 0;
+		}
+		FORM .col .txt {
+			width: 100% !important;
+		}
+		FORM .col.w60 {
+			width: 60px;
+		}
+    FORM .col.w80 {
+			width: 80px;
+		}
+    FORM .col.w90 {
+			width: 90px;
+		}
+    FORM .col.w100 {
+			width: 100px;
+		}
+    FORM .col.w120 {
+			width: 120px;
+		}
+		FORM .col.w150 {
+			width: 150px;
+		}
+
+	FORM .bttn.light {
+		float: left;
+	}
+	FORM .bttn.r {
+		float: right;
+	}
+	FORM .city {
+		font-size: 16px;
+		font-weight: 700;
+		line-height: 17px ! important;
+		margin-top: 5px;
+	}
+
+SELECT {
+	font: bold 14px/18px Arial;
+	padding: 8px 6px 7px;
+}
+
+.w60p {
+	float: left;
+	width: 60%;
+}
+.w60p.r {
+	float: right;
+}
+.w40p {
+	float: left;
+	width: 36%;
+}
+.w40p.r {
+	float: right;
+}
+.w25p {
+	float: left;
+	width: 23%;
+}
+.w25p.r {
+	float: right;
+}
+
+#registr-form .gender {
+	padding-top: 6px;
+}
+#registr-form .gender INPUT {
+	float: left;
+}
+#registr-form .gender LABEL {
+    margin: 0 0 0 3px;
+    padding: 0;
+}
+#registr-form .gender .status {
+	margin-top: 0;
+}
+#registr-form .subscribe INPUT {
+	float: left;
+}
+#registr-form .subscribe LABEL {
+	margin: 0 0 0 3px;
+	padding: 0;
+	width: auto;
+}

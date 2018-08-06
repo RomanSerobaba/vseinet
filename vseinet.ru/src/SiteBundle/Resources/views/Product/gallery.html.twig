@@ -1,0 +1,19 @@
+<div id="gallery">
+    <div class="thumbs">
+        {% for index, image in images %}
+            <div class="thumb"{% if app.userIdentity.isEmployee %} data-id="{{ image.id }}"{% endif %}>
+                <img 
+                    src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImageSize::XS')) }}"
+                    alt="Фото № {{ index }}" 
+                    data-index="{{ index }}" 
+                    rel="{{ image|image(constant('AppBundle\\Enum\\BaseProductImageSize::XL')) }}" 
+                    class="{% if index == current %}current{% endif %}" 
+                />
+            </div>
+
+        {% endfor %}
+    </div>
+    <div class="view">
+        <img src="{{ images[current]|image(constant('AppBundle\\Enum\\BaseProductImageSize::XL')) }}" alt="" />
+    </div>
+</div>

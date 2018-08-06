@@ -1,0 +1,51 @@
+/* ui misc
+-------------------------------------------------------------------*/
+.ui-widget-overlay {
+	background: rgba(0,0,0,.2);
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 10000;
+}
+.ui-resizable {
+	position: relative;
+}
+.ui-resizable-handle {
+	font-size: 0.1px;
+	position: absolute;
+}
+.ui-helper-hidden {
+	display: none;
+}
+.ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+/* sp
+-------------------------------------------------------------------*/
+.sp-daterange {
+	position: relative;
+}
+.sp-daterange .txt {
+	margin-right: 0 ! important;
+	width: 60px ! important;
+}
+.sp-daterange .icon-clear {
+    position: relative;
+    top: 2px;
+}
+.sp-checkboxgroup .sp-checkboxgroup-toggler,
+.sp-checkboxgroup .sp-checkboxgroup-inverter {
+    cursor: help;
+}
+.sp-checkboxgroup .sp-checkboxgroup-wrapper {
+	overflow: hidden;
+}

@@ -1,0 +1,157 @@
+/* order
+-------------------------------------------------------------------*/
+#Order {
+	float: left;
+	width: 60%;
+	margin-bottom: 20px;
+}
+	#Order .note {
+		font-size: 13px;
+		margin: 0 0 25px;
+	}
+		#Order .note SPAN {
+			padding-left: 15px;
+		}
+		#Order .block .note {
+			margin: 0;
+			padding-left: 150px;
+		}
+	#Order .notice2 {
+		color: #666;
+		font-size: 13px;
+		line-height: 15px;
+		padding-left: 25px;
+	}
+	#Order .address, #Order .passport {
+		border-top: 1px dashed #dcdcde;
+	}
+
+	#Order .info {
+		font-size: 14px;
+		margin: 0 0 36px;
+	}
+		#Order .info STRONG {
+			white-space: nowrap;
+		}
+	#Order .name > DIV {
+		width: 87%;
+	}
+	#Order .name .txt {
+		width: 70%;
+	}
+	#Order .name .r {
+		float: right;
+		width: 50%;
+	}
+		#Order .name .r LABEL {
+			margin-left: -20px;
+			width: auto;
+		}
+		#Order .name .r .txt {
+			float: right;
+		}
+        #Product_Application #nameHelp,
+        #Order #lfsHelp {
+            position: absolute; 
+            color: #A9A9A9; 
+            font-weight: 700; 
+            font-size: 14px; 
+            left: 162px; 
+            top: 13px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        #Product_Application #nameHelp {
+            left: 161px; 
+            top: 14px;
+        }
+
+/* order status
+-------------------------------------------------------------------*/
+.order-status {
+	border: 1px solid #ccc;
+	float: right;
+	height: 127px;
+	margin: 16px 0 30px;
+	padding: 12px 15px 15px 55px;
+	position: relative;
+	width: 265px;
+}
+	.order-status:after {
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAABpBAMAAADW0i6SAAAAJFBMVEX6+vrg4OD39/fp6enz8/Pv7+/Pz8/V1dXb29v+/v7l5eX///8RbQVXAAABH0lEQVR4AX3UoW/CUBDHcRQTyGVm80ygZqnvmqBwTWrIsgmCWWBVaFQ9TYZacHvmAWW81/vnJvn+BD33Eafum+vZo12nZ3VCHd8pm4oOjvIlZemO+nZULClLd1TrqFhSlosOCeVnlP2K6gl1fqKsFGWikFDHBWX3oqEoJFSzpmwjykWXEXVylJ9T9iDKRJcR1TrquKZsKdqLMtF2QIWCOjmqqag4p2wp2oj2oqkoEz2L+h3669C2Y+9O9CrKRWPRXrQRfVJ+QZ0rqnVUmFDbHZV33G9JNWuqTW73kt3uTBvUPusRNTXqi2oqKhRUZlRJnSuqLqixQf6NOjgqNSiWVOuo4QCKq9tfKh1A/sOg4KgXg5oZ1S+guDIoOOrnCvsHv3y9Sg/+Uh4AAAAASUVORK5CYII=);
+		content: ' ';
+		height: 105px;
+		left: -3px;
+		position: absolute;
+		top: 8px;
+		width: 26px;
+		z-index: 2;
+	}
+	.order-status H3 {
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAMAAAAhxq8pAAAAb1BMVEX/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmMAAAD/mmNR89d0AAAAJHRSTlNWwOix4Ze7aaich/aCC64Y1aCMYO9GJiD62k4GOBJ2/QLHLADxrwFFAAAAmklEQVR4AV3ORxKDMAAEQUzOOWex+/83WpIxUMyxT2Pg1d4U9Qvn0uyd/IltPJD2mBcXZp6gzO8Eqx8mlbspirzJJVuJ0+hH1OXHbpEmjNmpeRYkCEhaMNbhJDUSUrbCkGNpT1J0wErVLFGWrUM4AZW2fpJ4NW4aBf64tEDZaywvPLaiQ5sqHG8k7QWYP9yWBw4dVE2MG8WCuy+azSZLZIemeAAAAABJRU5ErkJggg==) 0 2px no-repeat;
+		font-weight: 400;
+		padding-left: 35px;
+	}
+	.order-status P {
+		font-size: 13px;
+		padding-left: 35px;
+	}
+
+#Order .order_txt_info{
+	padding: 20px 30px 30px;
+	background: #f5f5f5;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	margin-bottom: 30px;
+}
+#Order .order_txt_info h3{
+	font-size: 14px;
+	margin-bottom: 25px;
+}
+#Order .order_txt_info .change_info{
+	float: right;
+	margin-top: -50px;
+}
+#Order .order_txt_info p{
+	line-height: 1.8;
+}
+#Order .order_txt_info p span.title{
+	display: block;
+	min-width: 180px;
+	float: left;
+}
+#Order .order_txt_info p span.info{
+	font-weight: 700;
+	display: block;
+	overflow: hidden;
+	margin-bottom: 0;
+}
+#Order fieldset.block.gray{
+		background: #fff;
+}
+#Order fieldset .wrapper{
+	padding-top: 0;
+}
+#Order fieldset .wrapper h2{
+	font-size: 14px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 30px;
+	margin-left: -30px;
+	margin-right: -30px;
+	background: #f5f5f5;
+	border-radius: 6px 6px 0 0;
+}
+
+#Order fieldset.block{
+	display: none;
+}
+#Order fieldset.block .row{
+	margin-left: 0;
+	margin-right: 0;
+}
+#favorite .cart-table .row{
+	clear: both;
+	
+}

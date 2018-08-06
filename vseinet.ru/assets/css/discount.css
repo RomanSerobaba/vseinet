@@ -1,0 +1,98 @@
+/* discount
+-------------------------------------------------------------------*/
+.product .discount {
+    background: #f30;
+    color: #fff;
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    position: absolute;
+    text-align: center;
+    width: 70px;
+}
+.product .discount:before,
+.product .discount:after {
+    border: 35px solid rgba(255, 51, 0, 0);
+    content: '';
+    left: 0;
+    height: 0;
+    position: absolute;
+    width: 0;
+    font-size: 0;
+    z-index: 2;
+    overflow:hidden;
+}
+.product .discount:before {
+    top: -20px;
+    border-bottom: 20px solid #f30;
+    border-top: none;
+}
+.product .discount:after {
+    bottom: -20px;
+    border-bottom: none;
+    border-top: 20px solid #f30;
+}
+
+.product .discount_big {
+    background: #f30;
+    color: #fff;
+    font-size: 25px;
+    line-height: 56px;
+    height: 56px;
+    position: absolute;
+    text-align: center;
+    width: 98px;
+    top: 45px;
+    left: 14px;
+}
+.product .discount_big:before,
+.product .discount_big:after {
+    border: 49px solid rgba(255, 51, 0, 0);
+    content: '';
+    left: 0;
+    height: 0;
+    position: absolute;
+    width: 0;
+    font-size: 0;
+    z-index: 2;
+    overflow:hidden;
+}
+.product .discount_big:before {
+    top: -28px;
+    border-bottom: 28px solid #f30;
+    border-top: none;
+}
+.product .discount_big:after {
+    bottom: -28px;
+    border-bottom: none;
+    border-top: 28px solid #f30;
+}
+.product .promo_big {
+    background: #F9B45B;
+    color: #fff;
+    font-size: 16px;
+    line-height: 30px;
+    height: 30px;
+    position: absolute;
+    text-align: center;
+    width: 78px;
+    top: 33px;
+    left: 206px;
+    font-weight:bold;
+    border:none;
+}
+.product .promo {
+    background: #F9B45B;
+    color: #fff;
+    font-size: 13px;
+    line-height: 25px;
+    height: 25px;
+    position: absolute;
+    text-align: center;
+    width: 60px;
+    top: 30px;
+    left: 25%;
+    font-weight:bold;
+    border:none;
+    margin-left: -60px;
+}

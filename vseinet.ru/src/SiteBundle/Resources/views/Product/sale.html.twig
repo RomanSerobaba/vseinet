@@ -1,0 +1,112 @@
+{% set isAvailable = constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
+{% set isInTransit = constant('AppBundle\\Enum\\ProductAvailabilityCode::IN_TRANSIT') == product.availability %}
+{% set isOnDemand = constant('AppBundle\\Enum\\ProductAvailabilityCode::ON_DEMAND') == product.availability %}
+<div class="price-wrapper client">
+    {% if isAvailable %}
+        <del class="old_price">
+            {{ product.price|discount_price|price_format }}
+            <span class="RUR">Р</span>
+        </del>    
+    {% endif %}
+    {% if product.price %}
+        <strong
+            class="price"
+            {% if isAvailable %}style="padding:10px 0 3px;"{% endif %}
+            itemprop="offers" 
+            itemscope 
+            itemtype="http://schema.org/Offer"
+        >
+            <span>{{ product.price|price_format }}</span> 
+            <span class="RUR">Р</span>  
+            <meta itemprop="price" content="{{ product.price|price_format({ ts: '' }) }}" />
+            <meta itemprop="priceCurrency" content="RUB" />
+            <meta 
+                itemprop="availability" 
+                content="{% if isAvailable %}in_stock{% elseif isOnDemand %}preorder{% else %}out_of_stock{% endif %}"
+            >   
+        </strong>
+    {% else %}
+        <strong
+            style="cursor:help" 
+            title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}"
+        >
+            ???
+        </strong>
+    {% endif %}
+    <div
+        {% if isAvailable %} 
+            style="padding: 15px 0 {% if product.minQuantity > 1 %}0{% else %}25px{% endif %} 60px"
+        {% elseif product.minQuantity > 1 %}
+            style="padding-bottom:0"
+        {% endif %}
+        class="rating"
+        data-rating="{{ product.estimate }}"
+        {% if product.estimate %}
+            itemprop="aggregateRating" 
+            itemscope 
+            itemtype="http://schema.org/AggregateRating"    
+        {% endif %}
+    >
+        <span>Рейтинг:</span> 
+        {% if product.estimate %}
+            <meta itemprop="ratingValue" content="{{ product.estimate }}" />
+            <meta itemprop="bestRating" content="5" />
+            {#<meta itemprop="reviewCount" content="{{ product.countRreviews }}" />#}    
+        {% endif %}   
+    </div>
+    {% if product.minQuantity > 1 %}
+        <div style="color: rgb(242, 108, 79); margin: {% if isAvailable %}4px 0{% else %}10px 0{% endif %};">
+            Мин. количество для заказа: {{ product.minQuantity }}
+        </div>
+    {% endif %}
+</div>
+<div class="sale-btns-wrapper">
+    <div class="sale-btns to-cart">
+        <a 
+            href="{{ path('cart_add', { id: product.id }) }}"
+            onclick="yaCounter13639594.reachGoal('cartadd');return true;" \
+            class="bttn{% if isAvailable or isInTransit or isOnDemand %} green{% else %} greengray{% endif %}"
+            rel="nofollow"
+        >
+            {% if isAvailable or isInTransit or isOnDemand %}Добавить в корзину{% else %}Сообщить о поступлении{% endif %}    
+        </a>
+        {% if 300000 < product.price %}
+            <a 
+                href="{{ path ('cart_add', { id: product.id }) }}"
+                class="bttn blue credit"
+                rel="nofollow"
+            >
+                {% set credit = product.price*1.2582/24 %}
+                Кредит от {{ credit|round(-2)|price_format }} 
+                <span class="RUR">Р</span> в мес.
+            </a>
+        {% else %}
+            <a 
+                href="javascript:void(0)" class="bttn disabled"
+                title="Оформление кредита возможно на товары стоимостью от 3 000 рублей"
+                rel="nofollow"
+            >
+                Купить в кредит    
+            </a>
+        {% endif %}
+        {% if isAvailable or isOnDemand %}
+            <a 
+                href="{{ path('catalog_product_cheaper', { id: product.id }) }}" 
+                class="bttn orange cheaper" 
+                rel="nofollow">
+                Нашли дешевле?
+            </a>    
+        {% else %}
+            <a 
+                href="javascript:void(0)" 
+                class="bttn disabled" 
+                title="Товар отсутствует, его текущая цена может быть не актуальна при новом поступлении"
+            >
+                Нашли дешевле?
+            </a>
+        {% endif %}
+    </div>
+    <div class="sale-btns in-cart">
+        <a href="{{ path('cart') }}" class="bttn green">Перейти в корзину</a>
+    </div>
+</div>

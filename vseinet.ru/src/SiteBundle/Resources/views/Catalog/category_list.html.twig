@@ -1,0 +1,41 @@
+{% extends "SiteBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    {{ category.pageTitle }}
+{% endblock %}
+
+{% block pageDescription %}
+    {{ category.pageDescription }}
+{% endblock %}
+
+{% block content %}
+    <section id="catalog">
+        <div class="breadcrumbs">
+            <a href="{{ path('catalog_category', { id: 0 }) }}">Каталог</a>
+            {% for link in category.breadcrumbs %} 
+                <span></span>  
+                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a> 
+            {% endfor %}   
+        </div>
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}
+            <section class="content htx htx_catalog">{{ category.description|raw }}</section>    
+        {% endif %}
+        <div class="wrapper"{% if category.description %} style="display: table-header-group;"{% endif %}>
+            {% for subcategory in subcategories %}
+                <div class="category">
+                    <a href="{{ path('catalog_category', { id: subcategory.id }) }}" class="image">
+                        <img src="{{ subcategory|image(constant('AppBundle\\Enum\\BaseProductImageSize::MD')) }}" alt="" />
+                    </a>
+                    <h4>
+                        <a href="{{ path('catalog_category', { id: subcategory.id }) }}">{{ subcategory.name }}</a> 
+                        <small>
+                            {{ subcategory.countProducts|number_format }} 
+                            {{ subcategory.countProducts|declension('товар;товара;товаров') }}
+                        </small>
+                    </h4>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

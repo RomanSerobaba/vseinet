@@ -1,0 +1,17 @@
+{% extends "ServiceBundle:Senders:base_page.html.twig" %}
+
+{% block content %}
+    <p style="color:#333;">
+        {%  if new == '1' %}
+        Добрый день! Вашему заказу №{{ orderId }} был присвоен новый {{ titleTransportCompany }}.
+        {% else %}
+        Добрый день! Ваш заказ №{{ orderId }} был отправлен {{ titleTradingCodeSmall }}.
+        {% endif %}
+    </p>
+    <p style="color:#333;">
+        Получатель: {{ userName }}<br>
+        {{ transportCompany }}
+        {{ titleTradingCode }}: {{ newTradingCode }}
+    </p>
+    {{ oldTradingCode }}
+{% endblock %}

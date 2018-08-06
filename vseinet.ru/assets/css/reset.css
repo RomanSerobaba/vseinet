@@ -1,0 +1,55 @@
+/* reset
+-------------------------------------------------------------------*/
+HTML, BODY, DIV, SPAN, OBJECT, IFRAME, H1, H2, H3, H4, H5, H6, P, BLOCKQUOTE, PRE, ABBR, ADDRESS, CITE, CODE, DEL, DFN,
+EM, INS, KBD, Q, SAMP, SMALL, STRONG, SUB, SUP, VAR, B, I, DL, DT, DD, OL, UL, LI, FIELDSET, FORM, LABEL, LEGEND, TABLE,
+CAPTION, TBODY, TFOOT, THEAD, TR, TH, TD, ARTICLE, ASIDE, FIGURE, FOOTER, HEADER, HGROUP, MENU, NAV, SECTION, MENU,
+TIME, MARK, AUDIO, VIDEO, A { font-size: 100%; padding: 0; margin: 0; border: 0; outline: 0; vertical-align: baseline; }
+ARTICLE, ASIDE, FIGURE, FOOTER, HEADER, HGROUP, NAV, SECTION { display: block; }
+H1, H2, H3, H4, H5, H6 { font-weight: 700; }
+IMG { padding: 0; margin: 0; border: 0; }
+HTML { overflow-y: scroll; }
+HTML, BODY { height: 100%; }
+UL, OL { list-style: none; }
+BLOCKQUOTE, Q { quotes: none; }
+BLOCKQUOTE:before, BLOCKQUOTE:after, Q:before, Q:after { content: ''; content: none; }
+MARK { font-style: italic; font-weight: 700; color: #000; }
+ABBR[title], DFN[title] { border-bottom: 1px dotted #000; cursor: help; }
+PRE { white-space: pre; white-space: pre-wrap; white-space: pre-line; word-wrap: break-word; }
+SMALL { font-size: 85%; }
+SUB, SUP { font-size: 75%; line-height: 0; position: relative; }
+SUP { top: -0.5em; }
+SUB { bottom: -0.25em; }
+TABLE { border-collapse: collapse; border-spacing: 0; }
+TH { font-weight: 700; vertical-align: bottom; }
+TD { font-weight: 400; vertical-align: top; }
+TD IMG { vertical-align: top; }
+PRE, CODE, KBD, SAMP { font-family: monospace, sans-serif; }
+HR { padding: 0; margin: 1em 0; display: block; height: 1px; border: 0; border-top: 1px solid #ccc; }
+.clickable, LABEL, INPUT[type=button], INPUT[type=submit], BUTTON { cursor: pointer; }
+BUTTON, INPUT, SELECT, TEXTAREA { margin: 0; }
+BUTTON { width: auto; overflow: visible; }
+INPUT, SELECT { vertical-align: middle; }
+INPUT[type="radio"] { vertical-align: text-bottom; }
+INPUT[type="checkbox"] { vertical-align: bottom; *vertical-align: baseline; }
+SELECT, INPUT, TEXTAREA { font: 99% sans-serif; }
+LABEL { position: relative; }
+INPUT:focus { outline: none; }
+/* for old ie
+-------------------------------------------------------------------*/
+.ie6 INPUT { vertical-align: text-bottom; }
+.ie7 IMG { -ms-interpolation-mode: bicubic; }
+/* helpers
+-------------------------------------------------------------------*/
+*HTML .clrfix { height: 1%; zoom: 1; }
+.clrfix:before, .clrfix:after { height: 0; content: "\0020"; display: block; overflow: hidden; }
+.clrfix:after { clear: both; }
+.hidden { display: none; }
+.invisible, .invisible * { visibility: hidden !important; }
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

@@ -1,0 +1,98 @@
+<div class="logo-area">
+    <a href="{{ path('index') }}" class="logo">VSEINET.RU</a>
+    <p>&copy; 2008 — {{ 'now'|date('Y') }}, &laquo;ВсеИнет.ру&raquo;<p>
+    {# broken url #}    
+    <p>Все цены указаны в рублях — <a rel="nofollow" class="RUR" style="color:#333" href="_org_registration_">Р</a></p>
+    <p>Наличие товара и цены на него<br/> уточняйте у наших менеджеров</p>
+    <br />
+</div>
+
+<div class="contacts">
+    <div class="coll-sm-6">
+        <div class="socials">
+            <a href="https://www.facebook.com/MagazinVseinet/" rel="nofollow" target="_blank" title="Vseinet в фэйсбуке" class="facebook"></a>
+            <a href="https://vk.com/vseinet" rel="nofollow" target="_blank" title="Vseinet в вконтакте" class="vkontakte"></a>
+            <a href="https://twitter.com/VseinetPenza" rel="nofollow" target="_blank" title="Vseinet в твиттере" class="twitter"></a>
+            <a href="https://ok.ru/group/52950211035223" rel="nofollow" target="_blank" title="Vseinet в одноклассниках" class="odnoklassniki"></a>
+            <a href="https://www.instagram.com/vseinet.ru/" rel="nofollow" target="_blank" title="Vseinet в instagram" class="fa fa-instagram"></a>
+        </div>
+        <p class="error-report">Нашли ошибку?<br/>Выделите текст и нажмите <b>Ctrl + Enter!</b></p>
+    </div>
+    <div class="coll-sm-6">
+        <a href="{{ path('complaint_form') }}" class="bttn light claim">Жалоба директору</a>
+        <a href="{{ path('suggestion_form') }}" class="bttn light claim">Предложения</a>
+    </div>
+</div>
+
+<nav class="menu">
+    <ul>
+        <li><a href="{{ path('about_page') }}" class="gray">О компании</a></li>
+        <li><a href="{{ path('delivery_page') }}" class="gray">Доставка</a> и <a href="/payment/" class="gray">оплата</a></li>
+        <li><a href="{{ path('content_page', { slug: 'garanty' }) }}" class="gray">Гарантия</a></li>
+        <li><a href="{{ path('content_page', { slug: 'promo' }) }}" class="gray">Акции</a></li>
+    </ul>
+    <ul>
+        <li><a href="{{ path('content_page', { slug: 'credit' }) }}" class="gray">Рассрочка и кредит</a></li>
+        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}#franchising" class="gray">Франшиза</a></li>
+        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}#corporate" class="gray">Корпоративным клиентам</a></li>
+        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}#wholesale" class="gray">Оптовикам</a></li>
+    </ul>
+    <ul>
+        <li><a href="{{ path('content_page', { slug: 'help' }) }}" class="gray">Помощь</a></li>
+        <li><a href="{{ path('vacancies') }}" class="gray">Вакансии</a></li>
+        <li><a href="{{ path('contacts') }}" class="gray">Контакты</a></li>
+    </ul>
+</nav>
+
+<div class="contacts contacts_mobile">
+    <div class="coll-sm-6">
+        <a href="{{ path('complaint_form') }}" class="bttn light claim">Жалоба директору</a>
+        <a href="{{ path('suggestion_form') }}" class="bttn light claim">Предложения</a>
+    </div>
+    <div class="location">
+        <dl>
+            <dt>Телефоны</dt>
+            <dd>{{ app.representative.phoneFooter }}</dd>
+        </dl>
+        <dl>
+            <dt>Электронная почта</dt>
+            <dd><a href="mailto:mail@vseinet.ru">mail@vseinet.ru</a></dd>
+        </dl>
+        <ul>
+            <li>
+                <a href="skype:vseinet?chat" class="contact skype online">vseinet</a>
+            </li>
+            <li>
+                <a href="http://www.icq.com/people/432075982/" rel="nofollow" target="_blank" class="contact icq online">432075982</a>
+            </li>
+        </ul>
+    </div>
+    <div class="coll-sm-6">
+        <div class="socials">
+            <a href="https://www.facebook.com/MagazinVseinet/" rel="nofollow" target="_blank" title="Vseinet в фэйсбуке" class="facebook"></a>
+            <a href="https://vk.com/vseinet" rel="nofollow" target="_blank" title="Vseinet в вконтакте" class="vkontakte"></a>
+            <a href="https://twitter.com/VseinetPenza" rel="nofollow" target="_blank" title="Vseinet в твиттере" class="twitter"></a>
+            <a href="https://ok.ru/group/52950211035223" rel="nofollow" target="_blank" title="Vseinet в одноклассниках" class="odnoklassniki"></a>
+            <a href="https://my.mail.ru/community/vseinet/" rel="nofollow" target="_blank" title="Vseinet в mail" class="moimir"></a>
+        </div>
+        <p class="error-report">Нашли ошибку?<br/>Выделите текст и нажмите <b>Ctrl + Enter!</b></p>
+    </div>
+</div>
+
+<div class="location">
+    <dl>
+        <dt>Телефоны</dt>
+        <dd>{{ app.representative.phoneFooter }}</dd>
+    </dl>
+    <dl>
+        <dt>Электронная почта</dt>
+        <dd><a href="mailto:mail@vseinet.ru">mail@vseinet.ru</a></dd>
+    </dl>
+    <ul>
+        <li><a href="skype:vseinet?chat" class="contact skype online">vseinet</a></li>
+        <li><a href="http://www.icq.com/people/432075982/" rel="nofollow" target="_blank" class="contact icq online">432075982</a></li>
+    </ul>
+</div>
+
+<div id="scroller" title="Наверх"></div>
+

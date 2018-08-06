@@ -1,0 +1,35 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    Восстановление пароля
+{% endblock %}
+
+{% block content %}
+    <h1>Восстановление пароля</h1>
+    <div class="block gray w60p">
+        <div class="wrapper">
+            {{ form_start(form, { action: path('restore'), attr: { id: 'restore-form' }}) }}
+                <div class="row h{% if errors.password is defined %} error{% endif %}">
+                {{ form_label(form.password, 'Новый пароль*:') }}
+                {{ form_widget(form.password, { attr: { class: 'txt' }}) }}
+                <span class="status"></span>
+                {% if errors.password is defined %}
+                    <div class="error">{{ errors.password.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="row h{% if errors.passwordConfirm is defined %} error{% endif %}">
+                {{ form_label(form.passwordConfirm, 'Повторите новый пароль*:') }}
+                {{ form_widget(form.passwordConfirm, { attr: { class: 'txt' }}) }}
+                <span class="status"></span>
+                {% if errors.passwordConfirm is defined %}
+                    <div class="error">{{ errors.passwordConfirm.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="row h">
+                {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn blue' }}) }}  
+                {{ form_widget(form._token) }}
+            </div> 
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

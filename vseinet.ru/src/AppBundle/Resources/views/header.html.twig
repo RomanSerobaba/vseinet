@@ -1,0 +1,109 @@
+{% set snowflake %}
+    {% if 'now'|date('%m-%d') >= '12-15' or 'now'|date('%m-%Y') == '01-15' %}
+        <img src="/img/snowflake3.png" style="width:12px;left:-7px;top:2px;" />
+        <img src="/img/snowflake3.png" style="width:8px;left:9px;top:13px;" />
+        <img src="/img/snowflake3.png" style="width:6px;left:48px;top:-11px;" />
+        <img src="/img/snowflake3.png" style="width:10px;left:38px;top:18px;" />
+        <img src="/img/snowflake3.png" style="width:8px;left:63px;top:38px;" />
+        <img src="/img/snowflake3.png" style="width:9px;left:52px;top:23px;" />
+        <img src="/img/snowflake3.png" style="width:12px;left:67px;top:-5px;" />
+        <img src="/img/snowflake3.png" style="width:12px;left:6px;top:36px;" />
+        <img src="/img/snowflake3.png" style="width:18px;left:75px;top:13px;" />
+        <img src="/img/snowflake3.png" style="width:22px;left:125px;top:-10px;" />
+        <img src="/img/snowflake3.png" style="width:10px;left:105px;top:15px;" />
+        <img src="/img/snowflake3.png" style="width:14px;left:125px;top:20px;" />
+        <img src="/img/snowflake3.png" style="width:5px;left:122px;top:44px;" />
+        <img src="/img/santa-hat3.png" style="width:30px;left:17px;top:-15px;" />
+        <img src="/img/snowflake3.png" style="width:5px;left:28px;top:40px;" />
+        <img src="/img/snowflake3.png" style="width:4px;left:23px;top:25px;" />
+    {% endif %}
+{% endset %}
+
+
+<div class="logo-area">
+    <a href="{{ path('index') }}" class="logo">VSEINET.RU <p>все в одном месте</p>
+    {{ snowflake }}
+    {% if app.request.pathInfo != '/' %}
+        <a href="javascript:void(0)" id="tree-trigger" class="bttn tree-title">Каталог</a>
+    {% endif %}
+</div>
+
+{% set representative = app.representative %}
+<ul class="location">
+    <li><em>Ваш город</em></li>
+    <li>
+        <a 
+            href="javascript:void(0)" 
+            class="ajax city" 
+            data-popup="City" 
+            data-rid="{{ representative.regionId }}" 
+            data-cid="{{ representative.cityId }}" 
+        >
+            {{ representative.cityName }}
+        </a>
+        {% if representative.countPoints %}
+            и еще 
+            <a href="javascript:void(0)" class="ajax" data-popup="City">
+                {{ representative.countPoints }} {{ representative.countPoints|declension('пункт;пункта;пунктов') }} по области
+            </a>
+        {% endif %}
+    </li>
+    <li class="phone">
+        <strong>{{ representative.phoneTop1 }}</strong>
+        <br />
+        {% if representative.phoneTop2 %}
+            <strong>{{ representative.phoneTop2 }}</strong>
+        {% endif %}
+        <span class="time">
+            <a href="/contacts/{$representative->pointId}/">{{ representative.schedule }}</a>
+        </span>
+    </li>
+    <li>
+        <a href="/contacts/" class="black address">Адреса магазинов</a>
+        {% if representative.countNewPoints %}
+            <span class="new">
+                +{{ representative.countNewPoints }} {{ representative.countNewPoints|declension('новый;новых') }}! 
+            </span>
+        {% endif %}
+    </li>
+</ul>
+
+<nav class="menu">
+    <ul>
+        <li><a href="{{ path('about_page') }}">О компании</a></li>
+        <li><a href="{{ path('delivery_page') }}">Доставка</a></li>
+        <li><a href="{{ path('content_page', { slug: 'payment' }) }}">Оплата</a></li>
+        <li><a href="{{ path('content_page', { slug: 'garanty' }) }}">Гарантия</a></li>
+        <li><a href="{{ path('content_page', { slug: 'credit' }) }}">Рассрочка и кредит</a></li>
+        <li><a href="{{ path('contacts') }}">Контакты</a></li>
+        <li>
+            <a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a> 
+            <span style="color: red; font-size: 11px; vertical-align: sub;">new</span>
+        </li>
+    </ul>
+</nav>
+
+<form action="{{ url('catalog_search') }}" method="get" class="search">
+    <div>
+        <input 
+            type="text" 
+            class="txt" 
+            name="q" 
+            value="{{ app.request.query.get('q', '')|url_decode }}" 
+            placeholder="{{ render(controller('SiteBundle:Search:getPlaceholder')) }}" 
+        />
+        <button type="submit" class="bttn light">Найти</button>
+        <div class="indicator"></div>
+    </div>
+</form>
+
+<div class="skypeicq">
+    <span style="margin-right:50px;">
+        <a class="contact no-phoning" href="#">+7 (963) 109-07-08</a>
+        <a class="contact viber" href="viber://chat?number=79631090708"></a>
+        <a class="contact whatsapp" href="whatsapp://send/?phone=79631090708"></a>
+        <a class="contact telegram" href="tg://resolve?domain=Vseinet"></a>
+    </span>
+    <a class="contact skype online" href="skype:vseinet?chat">vseinet</a>
+    <a href="http://www.icq.com/people/432075982/" rel="nofollow" target="_blank" class="contact icq online">432075982</a>
+</div>

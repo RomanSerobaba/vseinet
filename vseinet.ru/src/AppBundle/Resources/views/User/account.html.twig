@@ -1,0 +1,43 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    Личный кабинет
+{% endblock %}
+
+{% block content %}
+    <h1>{{ app.user.person.fullname }}</h1>
+    <ul class="tabs r">
+        <li>
+            <a 
+                href="{% if '' == active1 %}#account{% else %}{{ url('account') }}{% endif %}" 
+                class="green"
+            >
+                Личная информация
+            </a>
+        </li>
+        <li>
+            <a 
+                href="{% if 'history' == active1 %}#history{% else %}{{ url('history') }}{% endif %}" 
+                class="green"
+            >
+                История заказов
+            </a>
+        </li>
+        <li>
+            <a 
+                href="{% if 'favorite' == active1 %}#favorite{% else %}{{ url('favorite') }}" 
+                class="green"
+            >
+                Избранные товары
+            </a>
+        </li>
+    </ul>
+    {% if 'account' == active1 %}
+        <ul class="tabs r">
+            <li>
+                <a 
+                    href="{% if '' == active2 %}#"
+        </ul>
+    {% endif %}
+
+{% endblock %}

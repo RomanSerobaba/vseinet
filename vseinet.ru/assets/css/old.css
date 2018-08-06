@@ -1,0 +1,23 @@
+.status_tracker{float: right;margin:0 0 20px;width:60%;}
+.status_tracker table{border-collapse:separate;border-spacing:2px;width:100%;}
+.status_tracker th{font-size:10px;font-weight:400;padding:0;text-align:center;}
+.status_tracker td{background-color:#EFEBEB;height:5px;}
+.status_tracker .status1{background-color:#4D9901;}
+.status_tracker .status7{background-color:red;}
+.status_tracker .status6{background-color:#EF6B00;}
+.status_tracker .status2{background-color:maroon;}
+.status_tracker .status3{background-color:#09169F;}
+.status_tracker .status4{background-color:#000;}
+.status_tracker .status8{background-color:#AAA901;}
+.status_tracker .status9{background-color:#C811C7;}
+.status_tracker .status10{background-color:#4D92FF;}
+.status_tracker .status11{background-color:#03C18B;}
+.status_tracker p{font-size:12px;margin: 20px 0;}
+.status_tracker h4{border-bottom:solid 1px lightgray;font-size:15px;margin:0 0 5px;}
+.status_tracker h4 .price{cursor: help;float: right;}
+.status_tracker .product{font-size:11px;margin:5px 0;}
+.status_tracker .product .price{float:right;font-size: 12px; padding-left:15px;}
+.status_tracker .product .RUR{font-size:inherit;}
+.status_tracker .product a{color:#0068b3;font-weight:700;}
+.status_tracker .position{border-bottom:dotted 1px lightgray;margin:0 15px;padding:5px 0;}
+.status_tracker span{color:#333;font-size:14px;}

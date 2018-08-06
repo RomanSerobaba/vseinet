@@ -1,0 +1,24 @@
+<section id="specials">
+    <h1><a href="{{ url('catalog_specials') }}" class="black">Тотальная распродажа</a></h1>
+    <div class="products">
+        {% for product in products %}
+            {% if loop.index == 4 %}
+                </div><div class="products">
+            {% endif %}
+            <div class="product">
+                <a href="{{ url('catalog_product', { id: product.id }) }}" class="image">
+                    <img 
+                        src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImageSize::MD')) }}" 
+                        alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                    />
+                </a>
+                <h4><a href="{{ url('catalog_product', { id: product.id }) }}">{{ product.name }}</a></h4>
+                <strong class="discount">-{{ product.price|discount_percent }}%</strong>
+                <div class="price">
+                    <del class="old">{{ product.price|discount_price|price_format }}<span class="RUR">Р</span></del>
+                    <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>

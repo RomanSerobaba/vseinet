@@ -1,0 +1,238 @@
+/* order history
+-------------------------------------------------------------------*/
+#history table td,
+#history table th {
+    padding: 5px 10px;
+}
+
+DIV.order-history {
+    box-shadow: none ! important;
+    clear: both;
+    margin-top: 30px;
+}
+DIV.order-history-light {
+    box-shadow: none ! important;
+    clear: both;
+    margin-bottom: 0px;
+    border-radius: 0px;
+}
+TABLE.order-history-light-table {
+    width: 100%;
+}
+TABLE.order-history-light-table thead {
+    text-align: left;
+}
+TABLE.order-history-light-table tbody, .order-history-light-table thead {
+    border: 1px solid #333;
+}
+DIV.order-history .wrapper {
+    padding: 20px 30px;
+}
+TBODY.order-history-light .wrapper {
+    border:1px solid #333;
+    text-align: right;
+}
+TBODY.order-history-light tr td, .order-history-light-table thead tr th {
+    padding: 4px;
+}
+TBODY.order-history-light tr td.prepay {
+    padding-left: 46px;
+}
+TBODY.order-history-light tr td h2{
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+    margin-bottom: 0px;
+    font-size: 12px;
+}
+TBODY.order-history-light tr td span.info {
+    font-weight: bold;
+    margin-left: 15px;
+    font-size: 11px;
+}
+THEAD.order-history-light tr td {
+    padding: 4px;
+}
+THEAD.order-history-light {
+    border:1px solid #333;
+}
+DIV.order-history .wrapper.white {
+    background: #fff;
+    border: 1px #dcdcde;
+    border-radius: 0 0 6px 6px;
+    border-style: none solid solid;
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,.2) inset;
+    padding: 20px 0 0;
+}
+DIV.order-history-light .wrapper.white {
+    border-radius: 0;
+}
+DIV.order-history .wrapper.white H2 {
+    margin: 0 0 0 30px;
+}
+DIV.order-history .column {
+    float: left;
+    padding-right: 2%;
+    width: 30%;
+}
+DIV.order-history-light .column {
+    float: left;
+    padding-right: 2%;
+    width: 25%;
+}
+DIV.order-history-light .column-center {
+    float: left;
+    padding-right: 2%;
+    width: 40%;
+}
+DIV.order-history-light H2 {
+    font-size: 14px;
+    padding: 3px;
+}
+DIV.order-history .column.data {
+    float: left;
+    padding-right: 2%;
+    width: 40%;
+}
+DIV.order-history .column DL {
+    font-size: 13px;
+    overflow: hidden;
+}
+DIV.order-history-light .column DL {
+    font-size: 12px;
+    overflow: hidden;
+}
+DIV.order-history .column DT {
+    clear: left;
+    float: left;
+    padding: 0 6px 4px 0;
+}
+DIV.order-history-light .column DT {
+    clear: left;
+    float: left;
+    padding: 3px 6px 3px 0;
+}
+DIV.order-history .help {
+    cursor: help;
+    border-bottom: dotted 1px #333;
+}
+DIV.order-history .column DD {
+    font-weight: 700;
+    padding: 0 0 4px 0;
+}
+DIV.order-history-light .column DD {
+    font-weight: 700;
+    padding: 3px 0 3px 0;
+}
+DIV.order-history .column H2 SPAN.help,
+DIV.order-history .column H2 SPAN.RUR {
+    color:#333;
+}
+DIV.order-history .actions {
+    float: right;
+    width: 160px;
+}
+DIV.order-history .actions .bttn {
+    margin: 0 0 5px;
+    width: 134px;
+}
+DIV.order-history .actions .order-cancel-text {
+    font-weight: bold;
+    text-align: center;
+}
+DIV.order-history .row {
+    display: table;
+    width: 100%;
+}
+DIV.order-history .row.border {
+    border-top: 1px dashed #dcdcde;
+}
+DIV.order-history .product {
+    display: table-cell;
+    padding: 20px 30px 20px 100px;
+    width: 33%;
+}
+DIV.order-history .product.border {
+    border-right: 1px dashed #dcdcde;
+}
+/*.order-history .product.bb {
+border-bottom: 1px dashed #dcdcde;
+}
+.order-history .product .wrapper {
+height: 136px;
+padding: 20px 30px 0 100px;
+}*/
+DIV.order-history .product .image {
+    border: none ! important;
+    float: left;
+    margin-left: -70px;
+}
+DIV.order-history .product P {
+    color: #999;
+    margin: 0 0 2px;
+}
+DIV.order-history .product P STRONG {
+    color: #333;
+}
+.order-history + a.bttn.light.prev{
+    margin-bottom: 25px;
+}
+/* order statuses
+-------------------------------------------------------------------*/
+.order-history .PROCESS	{
+    color: #00aeef;
+    font-weight: bold;
+}
+.order-history .ACTIVE	{
+    color: #9C00B3;
+    font-weight: bold;
+}
+.order-history .ALL	{
+    color: #333;
+    font-weight: bold;
+}
+.order-history .IN_PROCESS	{
+    color: #4d9901;
+    font-weight: bold;
+}
+.order-history .IN_TRANSIT {
+    color: #800000;
+    font-weight: bold;
+}
+.order-history .IS_READY {
+    color: #09169f;
+    font-weight: bold;
+}
+.order-history .IS_TRANSFERED {
+    color: #000;
+    font-weight: bold;
+}
+.order-history .IS_CANCELED {
+    color: #CCC;
+    font-weight: bold;
+
+}
+.order-history .IS_PREPAYED {
+    color: #ef6b00;
+    font-weight: bold;
+}
+.order-history .IS_PROCESSED {
+    color: #f00;
+    font-weight: bold;
+}
+.order-history .IS_RETURNED {
+    color: #aaa901;
+    font-weight: bold;
+}
+.order-history .IN_RECLAMATION {
+    color: #c811c7;
+    font-weight: bold;
+}
+.order-history .ON_DELIVERY {
+    color: #4D92FF;
+    font-weight: bold;
+}
+.order-history .ON_COMPLETION {
+    color:#03C18B;
+    font-weight: bold;
+}

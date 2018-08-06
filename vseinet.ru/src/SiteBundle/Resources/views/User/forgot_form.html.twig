@@ -1,0 +1,26 @@
+{{ form_start(form, { attr: { class: 'popup validate', title: 'Вход на сайт', id: 'Forgot' }}) }}
+<div class="request">
+    <div class="row">
+        <div class="row notice">Введите номер телефона или адрес эл. почты, который вы указывали при регистрации.</div>
+        {{ form_label(form.username, 'Телефон* / Эл. почта:') }}
+        {{ form_widget(form.username, { attr: { class: 'txt' }}) }}
+        <div class="inline">* 10 цифр, например 9876543210</div>
+    </div>
+    <div class="row">
+        {{ form_widget(form.submit, { label: 'Восстановить пароль', attr: { class: 'bttn blue' }}) }}  
+    </div> 
+</div>
+<div class="response">
+    <div class="row">
+    </div>
+    <div class="row">
+        <button type="button" class="bttn blue">Закрыть</button>
+    </div>
+</div>
+<div class="row center">
+    или <a href="/user/login/" data-popup="Login">Войти</a>
+</div>
+<div class="row loading">
+</div>
+{{ form_end(form) }}
+

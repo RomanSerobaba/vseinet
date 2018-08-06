@@ -1,0 +1,67 @@
+#gallery IMG {
+	display: block;
+}
+#gallery .thumbs {
+	float: left;
+	width: 94px;
+}
+	#gallery .thumbs IMG {
+		border: 2px solid #fff;        
+        cursor: pointer;
+	}
+		#gallery .thumbs IMG.current {
+			border-color: #c7c7c7;
+			border-radius: 2px;
+			cursor: default;
+            opacity: 0.5;
+		}
+		#gallery .thumbs IMG.non-approved {
+			border-color: #f00 !important;
+			border-width: 1px;
+			margin-bottom: 1px;
+            padding: 1px;
+		}
+#gallery .view {
+	overflow: hidden;
+	position: relative;
+}
+	#gallery .view IMG {
+		cursor: pointer;
+		margin: 0 auto;
+		max-width: 100%;
+		z-index: 1;
+	}
+	#gallery .view DIV {
+		height: 60px;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 60px;
+		z-index: 2;
+	}
+#gallery .thumb {
+	position: relative;
+}
+#gallery .delete {
+	background: url(../images/delete.gif);
+	border: none;
+	height: 16px;
+	position: absolute;
+	right: 5px;
+	top: 10px;
+	width: 16px;
+}
+#gallery .approve {
+	background: url(../images/error-status-1.png);
+	border: none;
+	height: 14px;
+	position: absolute;
+	right: 5px;
+	top: 30px;
+	width: 14px;
+}
+#gallery .size {
+    position: relative;
+    text-align: center;
+    width: 64px;
+}

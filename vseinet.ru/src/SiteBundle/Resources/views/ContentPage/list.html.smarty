@@ -1,0 +1,12 @@
+<div id="services">
+    <h3>{$category->getTitle()}</a></h3> 
+    <ul>
+        {foreach $pages as $page}
+            <li>
+                <a href="{'site_contentpage_show'|path:['slug' => $page->getSlug()]}"{if $page->getSlug() == $slug} class="current"{/if}>
+                    {$page->getShortTitle()}
+                </a>
+            </li>
+        {/foreach}
+    </ul>
+</div>

@@ -1,0 +1,26 @@
+{% set count = details|length %}
+<table class="details column">
+    {% set counter = 0 %}
+    {% set group = '' %}
+    {% for detail in details %}
+        {% if detail.group != group %}
+            {% if counter >= count %}
+                </table>
+                <table class="details column" style="margin-right: 0">
+            {% endif %}
+            <tr class="group"><td colspan="2"><h3>{{ detail.group }}</h3></td></tr>
+            {% set group = detail.group %}
+        {% endif %}
+        <tr class="detail">
+            <td class="name"><div><span>{{ detail.name }}{% if detail.unit %}, {{ detail.unit }}{% endif %}</span></div></td>
+            <td calss="value">
+                {% if constant('AppBundle\\Enum\\DetailType::CODE_BOOLEAN') == detail.typeCode %}
+                    {% if detail.value %}есть{% else %}нет{% endif %}
+                {% else %}
+                    {{ detail.value }}
+                {% endif %}
+            </td>
+            {% set counter = counter + 2 %}
+        </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,109 @@
+doctrine:
+    dbal:
+        connections:
+            default:
+                server_version: 9.6
+                driver: pdo_pgsql
+                host: '%pgsql_host%'
+                port: '%pgsql_port%'
+                dbname: '%pgsql_dbname%'
+                user: '%pgsql_user%'
+                password: '%pgsql_password%'
+                charset: UTF8
+                mapping_types:
+                    notification_log_channel: string
+                    base_product_naming_field_name: string
+                    product_price_type: string
+                    goods_reserve_type: string
+                    goods_defect_type: string
+                    client_decision_type: string
+                    order_type: string
+                    order_annul_cause_code: string
+                    register_operation_type_code: string
+                    product_request_type: string
+                    shipment_type: string
+                    person_gender: string
+                    notification_log_status: string
+                    order_item_status_code: string
+                    supplier_reserve_status: string
+                    product_price_log_price_type: string
+                    notification_log_service_name: string
+                    order_document_type: string
+                    delivery_type_code: string
+                    goods_need_register_type: string
+                    category_gender: string
+                    inventory_status: string
+                    content_filling_stats_subject: string
+                    barcode_type: string
+                    product_availability_code: string
+                    payment_type_code: string
+                    goods_issue_type_list: string
+                    goods_packaging_type: string
+                    order_issue_client_requirement_type: string
+                    content_filling_log_status: string
+                    goods_reserve_operation_type: string
+                    content_detail_type_code: string
+                    supply_item_to_geo_room_type: string
+                    base_product_edit_target: string
+                    contact_type_code: string
+                    registrator_type_code: string
+                    order_document_contract_type: string
+                    product_to_competitor_status: string
+                    reserve_type: string
+                    document_type_code: string
+                    order_comment_type: string
+                    color_composite_schema_type: string
+                    category_tpl: string
+                    goods_decision_type: string
+                    notification_log_type: string
+        types: 
+            point: AppBundle\Doctrine\DBAL\Types\PointType
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        entity_managers:
+            default:
+                auto_mapping: true
+                mappings: ~
+                hydrators:
+                    ListHydrator: AppBundle\ORM\Hydrator\ListHydrator
+                    ListAssocHydrator: AppBundle\ORM\Hydrator\ListAssocHydrator
+                    IndexByHydrator: AppBundle\ORM\Hydrator\IndexByHydrator
+                    DTOHydrator: AppBundle\ORM\Hydrator\DTOHydrator
+                    IndexByNativeHydrator: AppBundle\ORM\Hydrator\IndexByNativeHydrator
+                dql:
+                    datetime_functions:
+                        date:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                        time:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                        timestamp:      Oro\ORM\Query\AST\Functions\SimpleFunction
+                        convert_tz:     Oro\ORM\Query\AST\Functions\DateTime\ConvertTz
+                    numeric_functions:
+                        timestampdiff:  Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff
+                        dayofyear:      Oro\ORM\Query\AST\Functions\SimpleFunction
+                        dayofmonth:     Oro\ORM\Query\AST\Functions\SimpleFunction
+                        dayofweek:      Oro\ORM\Query\AST\Functions\SimpleFunction
+                        week:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                        day:            Oro\ORM\Query\AST\Functions\SimpleFunction
+                        hour:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                        minute:         Oro\ORM\Query\AST\Functions\SimpleFunction
+                        month:          Oro\ORM\Query\AST\Functions\SimpleFunction
+                        quarter:        Oro\ORM\Query\AST\Functions\SimpleFunction
+                        second:         Oro\ORM\Query\AST\Functions\SimpleFunction
+                        year:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                        sign:           Oro\ORM\Query\AST\Functions\Numeric\Sign
+                        pow:            Oro\ORM\Query\AST\Functions\Numeric\Pow
+                        floor:          Oro\ORM\Query\AST\Functions\SimpleFunction
+                        ceil:           Oro\ORM\Query\AST\Functions\SimpleFunction
+                    string_functions:
+                        md5:            Oro\ORM\Query\AST\Functions\SimpleFunction
+                        group_concat:   Oro\ORM\Query\AST\Functions\String\GroupConcat
+                        concat_ws:      Oro\ORM\Query\AST\Functions\String\ConcatWs
+                        cast:           Oro\ORM\Query\AST\Functions\Cast
+                        replace:        Oro\ORM\Query\AST\Functions\String\Replace
+                        date_format:    Oro\ORM\Query\AST\Functions\String\DateFormat
+                        round:          AppBundle\ORM\Query\AST\Round
+                        random:         AppBundle\ORM\Query\AST\Random
+
+                        
+doctrine_orm_bridge:
+    entity_manager: default
+    connection: default

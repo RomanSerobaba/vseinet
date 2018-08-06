@@ -1,0 +1,9 @@
+# https://symfony.com/blog/new-in-symfony-3-4-services-are-private-by-default
+services:
+    command_bus:
+        alias: simple_bus.command_bus
+        public: true
+
+    query_bus:
+        alias: simple_bus.query_bus
+        public: true

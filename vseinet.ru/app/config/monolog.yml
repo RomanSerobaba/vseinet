@@ -1,0 +1,8 @@
+services:
+    simple.logger:
+        class: AppBundle\Logger\SimpleLogger
+        public: true
+        arguments: [ 'app' ]
+        calls: 
+            - [ 'useMicrosecondTimestamps', [ '%monolog.use_microseconds%' ] ]
+            - [ setDir, [ '%kernel.logs_dir%' ] ]

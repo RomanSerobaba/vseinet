@@ -1,0 +1,26 @@
+services:
+    twig.extension.price_format:
+        class: 'AppBundle\Twig\Extension\PriceFormatExtension'
+        tags:
+            - { name: 'twig.extension' }
+
+    twig.extension.declension:
+        class: 'AppBundle\Twig\Extension\DeclensionExtension'
+        tags:
+            - { name: 'twig.extension' }
+
+    twig.extension.url_decode:
+        class: 'AppBundle\Twig\Extension\UrlDecoderExtension'
+        tags:
+            - { name: 'twig.extension' }
+
+    app.templating.globals:
+        class: 'SiteBundle\Templating\GlobalVariables'
+        arguments: [ '@service_container' ]
+
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        app: '@app.templating.globals'
+

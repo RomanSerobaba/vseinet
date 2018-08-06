@@ -1,0 +1,98 @@
+/* products block
+-------------------------------------------------------------------*/
+#products {
+    background: #fff;
+    float: right;
+}
+    #products H2 {
+        font-weight: 400;
+    }
+    #products .product {
+        overflow: hidden;
+        margin: 0 0 15px;
+        padding-left: 70px;
+    }
+        #products .product:last-child {
+            margin: 0;
+        }
+    #products IMG {
+        float: left;
+        margin-left: -70px;
+        position: relative;
+        width: 60px;
+    }
+    #products .code {
+        color: #999;
+        white-space: nowrap;
+    }
+
+/* products block in cart
+-------------------------------------------------------------------*/
+#products.cart {
+    border: none ! important;
+}
+#products-sticky-wrapper {
+    position: relative;
+    width: 36%;
+}
+    #products-sticky-wrapper #products.cart {
+        width: auto;
+    }
+    #products.cart .wrapper {
+        padding: 20px 30px;
+    }
+       #products.cart .bttn {
+            float: right;
+            padding: 0 9px;
+       }
+       #products.cart H2 {
+            margin: 0 0 38px;
+            padding-top: 10px;
+       }
+       #products.cart .product {
+            padding-right: 60px;
+       }
+        #products.cart .product DIV {
+            float: right;
+            margin-right: -60px;
+            position: relative;
+            width: 55px;
+        }
+        #products.cart .product SMALL {
+            white-space: nowrap;
+        }
+        #products.cart .quantity {
+            color: #999;
+        }
+        #products.cart .products {
+            border: 1px #dcdcde;
+            border-radius: 6px 6px 0 0;
+            border-style: solid solid none;
+        }
+        #products.cart .summary {
+            background: #fff;
+            font-size: 14px;
+        }
+            #products.cart .summary .wrapper {
+                background: #fff;
+                border: 1px #dcdcde;
+                border-radius: 0 0 6px 6px;
+                border-style: dashed solid solid;
+            }
+                #products.cart .summary .wrapper.fixed {
+                    border-radius: 0;
+                    bottom: 0;
+                    position: fixed;
+                }
+        #products.cart .all {
+            float: right;
+            font-size: 16px;
+            padding-top: 18px;
+        }
+
+/****************/
+#products.cart .product .mobile-quantity-info{
+    display: none;
+    float: none;
+    
+}

@@ -1,0 +1,50 @@
+{% if favorites|length %}
+    <div class="cart-table">
+        <div class="cart-table-head row">
+            <div class="coll-md-6">Товар</div>
+            <div class="coll-md-3">&nbsp;</div>
+            <div class="coll-md-2">Цена</div>
+            <div class="coll-md-1">&nbsp;</div>
+        </div>
+        <div class="cart-table-body">
+            {% for product in favorites %}
+                <div class="row clearfix" data-id="{{ product.id }}">
+                    <div class="coll-md-6">
+                        <div class="image">
+                            <img 
+                                src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImageSize::SM')) }}" 
+                                alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                            />
+                        </div>
+                        <div class="text">
+                            <h6><a href="{{ url('catalog_product', { id: product.id }) }}">{{ product.name }}</a><h6>
+                            <p class="code">Код товара: {{ product.id }}</p>
+                            {#% if points|length %}
+                                <p class="available">В наличии: {{ product.points }}</p>
+                            {% if %#}
+                        </div>
+                    </div>                    
+                    <div class="quantity coll-md-3">
+                        <a href="{{ url('favorite_to_cart', { id: product.id }) }}" class="bttn green">В корзину</a>
+                    </div>
+                    <div class="price coll-md-2">
+                        {{ product.price|price_format }} <span class="RUR">Р</span>
+                    </div>                    
+                    <div class="delete coll-md-1">
+                        <a 
+                            href="{{ url('favorite_del', { id: product.id }) }}" 
+                            class="action" 
+                            title="Удалить" 
+                            tabindex="-1" 
+                            data-favorite="{{ product.id }}"
+                        >
+                            Удалить
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <p>Нет товаров.</p>
+{% endif %}

@@ -1,0 +1,191 @@
+/* popup
+-------------------------------------------------------------------*/
+.popup {
+	color: #999;
+	font-size: 13px;
+}
+	.popup .bttn {
+		font-size: 14px;
+		font-weight: 700;
+		margin: 3px 0 10px;
+		padding: 0;
+		width: 100%;
+	}
+	.popup .center {
+		text-align: center;
+	}
+	.popup .loading {
+		height: 24px;
+	}
+
+/* login
+-------------------------------------------------------------------*/
+#login-form .row.v A {
+	float: right;
+}
+#login-form .socials P {
+	color: #333;
+	font-family: Intro;
+	font-size: 14px;
+	margin: 0 0 15px;
+	text-transform: uppercase;
+}
+#login-form .socials .fb {
+	margin-left: 25px;
+}
+#login-form .center {
+    text-align: center;
+}
+#login-form .loading {
+    height: 24px;
+}
+/* status
+-------------------------------------------------------------------*/
+#Status.popup P {
+	font-size: 13px;
+	margin: 0 0 15px;
+}
+	#Status.popup P B {
+		color: #333;
+		font-size: 14px;
+	}
+#Status.popup .position {
+	margin: 0 0 5px;
+	overflow: hidden;
+}
+	#Status.popup STRONG {
+		color: #2f91f3;
+		font-size: 16px;
+		line-height: 30px;
+	}
+#Status.popup .linker {
+	color: #333;
+	font-family: Intro;
+	font-size: 14px;
+	margin: 0 0 15px;
+	text-transform: uppercase;
+        text-align: center;
+        line-height: 25px;
+}
+.ui-dialog.popup-status .ui-dialog-title {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAMAAADat72NAAAAaVBMVEX/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmP/mmMAAAD/mmMT4+r0AAAAInRSTlN3iTmLaPSYXX6TGqqzIcMUbwImuaELLuNOQfgGWMnt1P4AUW3DtgAAAO1JREFUeF510MeSgzAQhGHwYjA5Z6Xp93/I1RSpBPZ/6/p0mJJHPyuDQv3iXmSLGeVXXqf0DYxCx0+u51DB1uYS4s6DP4JbqrUFEofzj8aWHuoUGOnispIGe2FPHYDu4D5qT8NbEMU8Aubt0CuZE33ANeTVc6dwBeOvRAE4ReQVcBpnIooMuMzyKgpzaVZanZZteJbtbP7UhktFtvk45MXMrYIP1wProHZdVubzS+KetTkUBTG7JSOO/CfXBc4mlzveSWx2NaXLGpIfNKkBp+nOgEzseLXM4ZPNPmcJiAcv0TlE199ZzeTkcjbQo3/oPVVmNCdvMwAAAABJRU5ErkJggg==) 0 0 no-repeat;
+}
+/* city
+-------------------------------------------------------------------*/
+#City.popup H3 {
+	color: #333;
+	margin: 10px 0;
+}
+#City.popup FORM {
+	margin: 0 0 10px;
+}
+#City.popup TABLE {
+	width: 100%;
+}
+	#City.popup TD > DIV {
+		overflow: auto;
+		position: relative;
+	}
+	#City.popup .regions {
+		width: 33%;
+		padding-right: 20px;
+	}
+		#City.popup .region {
+			padding: 5px 0;
+		}
+			#City.popup .region.current {
+				background: #f5f5f5;
+				padding-left: 5px;
+			}
+		#City.popup .cities > DIV.loading {
+			background: url(../images/ajax.gif) center 0 no-repeat;
+		}
+		#City.popup .column {
+			float: left;
+			width: 33%;
+		}
+        #City.popup .column .city {
+            padding-left: 20px;
+            white-space: nowrap;
+        }
+        #City.popup .column .city .point-ico {
+            width:13px;
+            height: 14px;
+            display: inline-block;
+            vertical-align: text-bottom;
+            cursor: help;
+            margin-left: 5px;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAMAAADDoWbgAAAAb1BMVEVmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmYAAABmZmbGY88XAAAAJHRSTlNg9g27lTCB8WOUsSzg2kOc0FinPBQObxru/YjmTh7DyvppBQDg0JLpAAAAcklEQVR4AS3LRQLDMBDAwJQhzGRe/f+NTe3oNgdlcna/3K6SpIYH4JM2isqBivKUbtk67+tDmnK2uKylORS8fsKK2+f4VStFbpc8fvMOvYRR/gqGFRtEojaaN25IUrz6nUmi9EJb00mS4SPTdzxlTfxTP91yFPyh1ZQ/AAAAAElFTkSuQmCC') no-repeat scroll center center rgba(0, 0, 0, 0);
+        }
+	#City.popup .current A {
+		border: none ! important;
+		color: #333;
+		cursor: default;
+	}
+  #City.popup .new_point {
+    color: red; 
+    font-size: 10px; 
+    font-weight: normal; 
+  }
+
+    #cheaper_desc p {
+        font-size: 14px; 
+        margin-bottom:10px;
+    }
+    #cheaper_desc .rules {
+        display:none;
+    }
+    #cheaper_desc .rules h3 {
+        font-size:16px;
+    }
+    #cheaper_desc .rules ol {
+        margin-bottom:15px;
+    }
+    #cheaper_desc .rules ol li {
+        list-style: decimal;
+        margin-bottom:5px;
+    }
+    #cheaper_desc .rules {
+        font-size:14px;
+    }
+    
+    #HomeCredit,
+    #RusskijStandart,
+    #PochtaBank,
+    #RenessanceCredit,
+    #Disclaimer {
+        color:#333;
+    }
+    
+    #Disclaimer p {
+        margin: 15px 0;
+    }
+    
+    #HomeCredit h3,
+    #RusskijStandart h3,
+    #PochtaBank h3,
+    #RenessanceCredit h3 {
+        margin: 25px 0 10px;
+    }
+    
+    #HomeCredit h4,
+    #RusskijStandart h4,
+    #PochtaBank h4,
+    #RenessanceCredit h4 {
+        margin: 15px 0 10px;
+    }
+    
+    #HomeCredit ul,
+    #RusskijStandart ul,
+    #PochtaBank ul,
+    #RenessanceCredit ul {
+        list-style: disc outside;
+    }
+    
+    #HomeCredit img,
+    #RusskijStandart img,
+    #PochtaBank img,
+    #RenessanceCredit img {
+        float:right;
+        margin:25px 0 15px 15px;
+    }

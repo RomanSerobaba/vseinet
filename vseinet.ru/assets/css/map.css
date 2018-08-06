@@ -1,0 +1,99 @@
+#map {
+    height: 460px;
+    margin: 40px 0 30px;
+    width: 100%;
+}
+#map .loading {
+    height: 50px;
+    width: 300px;
+}
+#map .representative {
+    padding: 0 10px 10px 100px;
+}
+#map .representative H2 {
+    margin-bottom: 5px;
+}
+#map .representative H4 {
+    margin-bottom: 23px;
+}
+#map .representative IMG {
+    float: left;
+    margin-left: -100px;
+    position: relative;
+}
+#map .representative .address,
+#map .representative .phones {
+    margin-bottom: 10px;
+}
+#contacts .location {
+    margin: 0 0 40px;
+    overflow: hidden;
+}
+#contacts .location DL {
+    float: left;
+    width: 25%;
+}
+#contacts .location DL.email {
+    width: 20%;
+}
+#contacts .location DL.smaller {
+    float: left;
+    width: 14%;
+}
+#contacts .location LI {
+    float: left;
+    padding-top: 9px;
+}
+#contacts .location .skype {
+    margin-right: 40px;
+}
+#contacts .location DT {
+    color: #999;
+    font-size: 13px;
+}
+#contacts .location DD {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.schedule TD {
+    border: 1px solid #ccc;
+    padding: 3px 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.representatives {
+    display: table;
+    font-size: 13px;
+    line-height: 24px;
+    margin-bottom: 35px;
+    width: 100%;
+}
+.representatives .city {
+    display: table-cell;
+    width: 33%;
+}
+.representatives .wrapper {
+    padding: 0 10px 0 100px;
+}
+.representatives .image {
+    border: none ! important;
+    float: left;
+    margin-left: -100px;
+    position: relative;
+}
+.representatives H4 {
+    font-size: 14px;
+}
+.representatives .phone {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAPFBMVEWpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqakAAACpqam9skZZAAAAE3RSTlMnZVqRmYMYcKohx8wCBtPa+z0AedkOuwAAAE9JREFUeF49x0kSgCAQBEHcZRug6/9/VQkwb+k0+GJ+JgWwmROoM9oh/mmwzORAySPppjY5pVPKN1ySc8bWIhx6U/jUS18MIDb1eKthTeoeyhkJAzIL+ioAAAAASUVORK5CYII=) 0 center no-repeat;
+    padding-left: 17px;
+}
+#contacts .new_point {
+    color: red; 
+    font-size: 10px; 
+    font-weight: normal; 
+    padding-left: 5px;
+}

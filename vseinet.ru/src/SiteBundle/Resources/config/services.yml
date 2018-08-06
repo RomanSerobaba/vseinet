@@ -1,0 +1,53 @@
+services:
+    catalog.query_string:
+        class: 'SiteBundle\Bus\Catalog\QueryString'
+        public: true 
+        arguments: [ '@doctrine.orm.entity_manager', '@user.identity' ]
+
+    catalog.search_product_finder:
+        class: 'SiteBundle\Bus\Catalog\Finder\SearchProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.category_product_finder:
+        class: 'SiteBundle\Bus\Catalog\Finder\CategoryProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.brand_product_finder:
+        class: 'SiteBundle\Bus\Catalog\Finder\BrandProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.supplier_product_finder:
+        class: 'SiteBundle\Bus\Catalog\Finder\SupplierProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.specials_product_finder:
+        class: 'SiteBundle\Bus\Catalog\Finder\SpecialsProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.autocomplete_finder:
+        class: 'SiteBundle\Bus\Catalog\Finder\AutocompleteFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+
+    twig.extension.image:
+        class: 'SiteBundle\Twig\Extension\ImageExtension'
+        arguments: [ '%product.images.web.path%' ]
+        tags:
+            - { name: 'twig.extension' }
+
+    twig.extension.discount_percent:
+        class: 'SiteBundle\Twig\Extension\DiscountExtension'
+        tags:
+            - { name: 'twig.extension' }

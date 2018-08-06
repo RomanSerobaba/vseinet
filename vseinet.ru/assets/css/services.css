@@ -1,0 +1,10 @@
+/* services
+-------------------------------------------------------------------*/
+#services {
+	margin: 0 0 56px;
+}
+	#services LI {
+		font-size: 13px;
+		line-height: 16px;
+		margin: 0 0 8px;
+	}

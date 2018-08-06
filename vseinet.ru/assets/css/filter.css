@@ -1,0 +1,192 @@
+/* Filter
+-------------------------------------------------------------------*/
+.filter {
+	border: 1px solid #dcdcde;
+    border-radius: 6px;
+    margin: 0 0 30px;
+    position: relative;
+}
+	.filter .tab {
+		background: #f5f5f5 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAGBAMAAADj6an2AAAAJFBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc3EWrSVAAAAC3RSTlP2LrfVvdrIDxYcAE7fzWUAAAAuSURBVHgBY1i10nPVAoZVU7fOWsCwIpo7cgFD87ZpmxsYvNOXZzswCFWtKhIAACULDtpcbYBXAAAAAElFTkSuQmCC) 95% 21px no-repeat;
+		border-top: 1px solid #dcdcde;
+		font-size: 13px;
+		font-weight: 700;
+		cursor: pointer;
+		padding: 18px 24px 18px 19px;
+	}
+		.filter .tab.first {
+			border: none;
+			border-radius: 6px 6px 0 0;
+		}
+		.filter .tab.last {
+			border-radius: 0 0 6px 6px;
+		}
+		.filter .tab:hover,
+		.filter .tab.expanded {
+			background-color: #fff;
+		}
+		.filter .tab.expanded {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAGCAMAAAAmGUT3AAAANlBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc1iRri6AAAAEXRSTlP2vsnK2cbbHb0ZFrfWLRwPAKUQQwsAAAAySURBVHheBYCHEYAwDAMFpBf7tf+ynO5OIPfV8Jfk60fruEb1WWIWy2UiiOYWIKCPDvxMRQKOG2AXrwAAAABJRU5ErkJggg==);
+		}
+		.filter .tab.apply {
+			background: #fff !important;
+			cursor: default;
+			overflow: hidden;
+		}
+			.filter .tab.apply .bttn.r {
+				margin-right: 9px;
+			}
+			.filter .tab.apply .gray {
+				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAG1BMVEX/bEz/bEz/bEz/bEz/bEz/bEz/bEwAAAD/bEzqzt17AAAACHRSTlMbvRziv+QjAKTHVjIAAAA3SURBVHgBY1BJLy9zYvAwK09tZEhuToswYyizMG1OZyhP7jArh5BAEWOgCFDWwgykMrkRrMsBACskEnHDf3LzAAAAAElFTkSuQmCC) 0 2px no-repeat;
+				display: inline-block;
+    			font-size: 12px;
+   				line-height: 14px;
+    			margin-top: 12px;
+    			padding-left: 14px;
+			}
+	.filter .sheet {
+		display: none;
+        overflow: hidden;
+		padding: 0 0 15px 19px;
+	}
+    	.filter .expanded .sheet {
+    		display: block;
+    	}
+    .filter .price LABEL {
+    	color: #999;
+    	font-size: 13px;
+    	line-height: 22px;
+    }
+    .filter .price .txt {
+    	font-size: 13px;
+    	font-weight: 400;
+    	height: 22px;
+    	margin: 0 6px;
+    	width: 65px;
+    }
+    .filter .price .RUR {
+    	font-size: 13px;
+    	line-height: 22px;
+    }
+    .filter .price .slider {
+    	margin: 16px 24px 0 5px;
+    }
+    .filter .multi LABEL {
+    	display: inline-block;
+    	line-height: 17px;
+    	margin: 0 0 6px;
+    	padding-left: 23px;
+    }
+        .filter .multi LABEL.inline {
+            margin-right: 10px;
+        }
+    .filter .multi LABEL INPUT {
+    	float: left;
+    	margin: 2px 10px 0 -23px;
+    }
+    .filter .search .txt {
+    	font-weight: 400;
+    	width: 200px;
+    }
+    .filter LABEL P {
+    	overflow: hidden;
+    }
+
+.filter .total {
+	display: none;
+	left: 238px;
+	position: absolute;
+	z-index: 101;
+}
+.filter {
+	border: 1px solid #dcdcde;
+    border-radius: 6px;
+    margin: 0 0 30px;
+    position: relative;
+}
+.filter .service {
+	display: inline-block;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.filter .service img {
+	vertical-align: baseline;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    opacity: 0.3;
+}
+
+.filter .service img:hover {
+    opacity: 1;
+}
+
+.filter .service a {
+    border:none;
+}
+
+.filter .service .with img {
+    opacity: 1;
+}
+
+.filter .single_brand {
+    display:inline-block;
+    text-align:center;
+    margin:5px 3px 5px;
+}
+
+.filter .single_brand img {
+    width: 61px;
+    border: none;
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+
+.filter .multi .other {
+    display: none;
+    overflow: hidden;
+}
+.filter .multi .toggle-other {
+    float: right;
+    margin-right: 15px;
+}
+
+.filter .color {
+    background: -moz-linear-gradient(top left, rgba(255, 255, 255, .3), rgba(0, 0, 0, .3));
+    background: -webkit-linear-gradient(top left, rgba(255, 255, 255, .3), rgba(0, 0, 0, .3));
+    background: -o-linear-gradient(top left, rgba(255, 255, 255, .3), rgba(0, 0, 0, .3));
+    background: -ms-linear-gradient(top left, rgba(255, 255, 255, .3), rgba(0, 0, 0, .3));
+    background: linear-gradient(top left, rgba(255, 255, 255, .3), rgba(0, 0, 0, .3));
+    border: 3px solid #fff;
+    cursor: pointer;
+    float: left;
+    height: 30px;
+    margin: 0 7px 7px 0;
+    width: 30px;
+}
+    .filter .color.selected {
+        border: 3px solid #ccc;
+    }
+.filter LABEL.disabled {
+    color: #999;
+}
+.filter .tab .filter-titles{
+    display: inline;
+    border-bottom: 1px dashed #bababa;
+}
+
+
+/***************/
+#category #ProductFilter.showfilter:before{
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    right: -2px;
+    top: 0;
+    z-index: 10;
+    -webkit-box-shadow: -6px 0 7px 3px rgba(0,0,0,.1);
+    box-shadow: -3px 0 7px 3px rgba(0,0,0,.1);
+    
+}

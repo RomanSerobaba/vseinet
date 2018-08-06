@@ -1,0 +1,28 @@
+{% extends "SiteBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    Распродажа
+{% endblock %}
+
+{% block content %}
+    <section id="category">
+        <div class="breadcrumbs">
+            <a href="{{ path('catalog_category', { id: 0 }) }}">Каталог</a>
+        </div>
+        <div class="title category-title">
+            <h1>Тотальная распродажа</h1>
+            <small id="products-total">{{ facets.total|number_format() }} {{ facets.total|declension('товар;товара;товаров') }}</small>
+        </div>
+        <nav class="sort" id="sorting">
+            {% include 'SiteBundle:Catalog:sorting.html.twig' %}
+        </nav>
+        <div id="category">
+            <nav id="nav">
+                {% include 'SiteBundle:Catalog:filter.html.twig' %}
+            </nav>
+            <div class="wrapper">
+                {% include 'SiteBundle:Catalog:products.html.twig' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

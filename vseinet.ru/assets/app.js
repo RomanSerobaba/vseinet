@@ -1,0 +1,17 @@
+require('./js/utils.js');
+require('./js/forms.js');
+require('./js/slideshow.js');
+require('./js/tree.js');
+require('./js/ajaxcontent.js');
+require('./js/favorites.js');
+require('./js/user-account.js');
+require('./js/search.js');
+require('./js/rating.js');
+require('./js/paging.js');
+require('./js/range-slider.js');
+require('./js/scroller.js');
+require('./js/cart.js');
+require('./js/popup.js');
+require('./js/login.js');
+require('./js/order.js');
+require('./js/oauth.js');

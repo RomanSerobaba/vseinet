@@ -1,0 +1,151 @@
+/* content
+-------------------------------------------------------------------*/
+#content {
+	padding: 14px 0 249px;
+	position: relative;
+	z-index: 1;
+	clear: both;
+	
+}
+/* content
+-------------------------------------------------------------------*/
+.content P {
+	margin: 0 0 10px;
+}
+.content UL {
+	list-style-type: disc;
+	margin: 0 0 10px;
+	padding: 0 0 0 20px;
+}
+.content OL {
+	list-style-type: decimal;
+	margin: 0 0 10px;
+	padding: 0 0 0 20px;
+}
+.content DL {
+	margin: 0 0 10px;
+	overflow: hidden;
+}
+	.content DL DT {
+		clear: left;
+		float: left;
+		margin: 0 3px 1px 0;
+	}
+	.content DL DD {
+		clear: right;
+		margin: 0 0 1px;
+	}
+
+/* stx
+-------------------------------------------------------------------*/
+.content.stx {
+	color: #333/*999*/;
+}
+
+.content.stx,
+.content.stx P,
+.content.stx SPAN {
+    font-family: Arial !important;
+    font-size: 13px !important;
+}
+	.content.stx H1,
+	.content.stx H2 {
+		font-size: 24px;
+		line-height: 18px;
+		margin: 0 0 16px;
+	}
+	.content.stx H3,
+	.content.stx H4,
+	.content.stx H5,
+	.content.stx H6 {
+		font-size: 12px;
+		line-height: 18px;
+	}
+
+    .content.htx.htx_category {
+        margin-top: 15px;
+        display: table-footer-group;
+        /*padding: 20px;
+        border-radius: 5px;
+        border: 1px solid rgb(222, 222, 222);*/
+    }
+
+.content.htx {
+	color: #333;
+}
+.content.htx H1 {
+    font-size: 20px;
+}
+.content.htx H2 {
+    font-size: 18px;
+    padding-left: 50px;
+}
+.content.htx H3 {
+    font-size: 16px;
+}
+
+.content.htx P {
+    margin: 0 0 18px;    
+}
+
+.content.htx,
+.content.htx P,
+.content.htx SPAN {
+    font-family:Arial !important;
+    font-size: 13px !important;
+}
+.content.htx LI {
+    margin-bottom: 15px;
+}
+.content.htx.htx_catalog {
+    margin: 0 0 30px 0;
+    display: table-footer-group;
+}
+.content.htx.htx_catalog p {
+    padding-left:50px;
+}
+
+.content.text_page {
+    font-size: 14px;
+}
+
+.content.text_page H3 {
+    font-size: 16px;
+    margin-top: 35px;
+}
+
+.content.text_page H4 {
+    font-size: 14px;
+}
+
+.content.text_page UL,
+.content.text_page OL {
+    margin-left: 0.5em;
+}
+
+.tariff TH:first-child {
+    width: 70%;
+}
+
+.tariff TD:nth-child(2) {
+    text-align: center;
+}
+
+#about .columns .row{
+	margin: 0;
+}
+#vkwidget1{
+	max-width: 100%;
+}
+#vk_groups{
+	max-width: 100%;
+}
+#__okGroup0{
+	max-width: 100%;
+}
+.fb_iframe_widget iframe{
+	max-width: 100%;
+}
+#about .tabs{
+	margin-bottom: 25px;
+}

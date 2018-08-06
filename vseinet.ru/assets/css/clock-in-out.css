@@ -1,0 +1,14 @@
+#clock-in-out {
+    float: right;
+    height: 26px;
+    margin-top: 2px;
+    width: 22px;
+}
+
+#clock-in-out.work {
+    background: no-repeat url(../images/work-ico.png);
+}
+
+#clock-in-out.rest {
+    background: no-repeat url(../images/rest-ico.png);
+}

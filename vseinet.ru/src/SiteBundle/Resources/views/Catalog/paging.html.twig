@@ -1,0 +1,25 @@
+{% if paging and 1 < paging.count %}
+    <nav class="paging">
+        {% if paging.prev %}
+            <a href="{{ paging.prev }}" class="bttn light prev">Назад<i></i></a>
+        {% endif %}
+        {% if paging.first %}
+            <a href="{{ paging.first }}" class="page">1</a>
+            <span>...</span>
+        {% endif %}
+        {% for page, url in paging.left %}
+            <a href="{{ url }}" class="page">{{ page }}</a>
+        {% endfor %}
+        <span class="current">{{ paging.current }}</span>
+        {% for page, url in paging.right %}
+            <a href="{{ url }}" class="page">{{ page }}</a>
+        {% endfor %}
+        {% if paging.last %}
+            <span>...</span>
+            <a href="{{ paging.last }}" class="page">{{ paging.count }}</a>
+        {% endif %}
+        {% if paging.next %}
+            <a href="{{ paging.next }}" class="bttn light next">Вперед<i></i></a>
+        {% endif %}
+    </nav>
+{% endif %}

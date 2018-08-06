@@ -1,0 +1,42 @@
+<?php
+
+namespace OrgBundle\Bus\Department\Command;
+
+use AppBundle\Annotation as VIA;
+use AppBundle\Bus\Message\Message;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class AddCashDeskCommand extends Message
+{
+    /**
+     * @VIA\Description("Department id")
+     * @Assert\Type(type="integer")
+     * @Assert\GreaterThan(0)
+     * @Assert\NotBlank(
+     *     message="Department id should not be blank."
+     * )
+     */
+    public $id;
+
+    /**
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank()
+     */
+    public $title;
+
+    /**
+     * @Assert\Type(type="integer")
+     * @Assert\NotBlank()
+     */
+    public $geoRoomId;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $collectorId;
+
+    /**
+     * @Assert\Uuid
+     */
+    public $uuid;
+}

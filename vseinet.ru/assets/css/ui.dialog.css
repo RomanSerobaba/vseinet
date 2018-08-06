@@ -1,0 +1,44 @@
+/* ui dialog
+-------------------------------------------------------------------*/
+.ui-dialog {
+	background: #fff;
+	border-radius: 6px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	z-index: 10001;
+}
+	.ui-dialog .ui-dialog-titlebar {
+		overflow: hidden;
+		padding: 29px 50px 1px;
+		position: relative;
+	}
+	.ui-dialog .ui-dialog-title {
+		cursor: default;
+		float: left;
+		font-family: Intro;
+		font-size: 22px;
+		line-height: 24px;
+		overflow: hidden;
+		text-align: center;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 100%;
+	}
+	.ui-dialog .ui-dialog-titlebar-close {
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAMAAAAMCGV4AAAANlBMVEX/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEz/bEwAAAD/bExUtJmjAAAAEXRSTlNGN/wG1+FTOS74oJ2SqgMBAKDYoZsAAABlSURBVHgBLc1dEsMgDANhNUkB9wfW979sS2Tevh3GEjwmfquDaPGd5vtoaETmDn9mHl3rk3fYzNcUDqeJcHiaCAfTZl37x4ntU7Wi4lVB1FDNqshy0IjNWokuFJt3iIZgmLAG/ADWjgyBL0J/RAAAAABJRU5ErkJggg==) no-repeat;
+		border: none;
+		height: 15px;
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		width: 15px;
+	}
+    	.ui-dialog .ui-dialog-titlebar-close * {
+    		display: none;
+    	}
+
+	.ui-dialog .ui-dialog-content {
+		overflow: hidden;
+		padding: 30px 50px;
+	}

@@ -1,0 +1,73 @@
+/* benifits
+ 
+-------------------------------------------------------------------*/
+.benifits {
+    margin: 0 0 20px;
+    overflow: hidden;	
+}
+.benifits .benifit {
+    border: none !important;
+    color: #333;
+    float: left;		
+    padding-left: 60px;
+    padding-right: 15px;
+    width: 25%;
+}
+.benifits .benifit H4 {
+    display: inline-block;
+    line-height: 15px;
+    margin: 0 0 5px;
+    margin-top: 10px;			
+}
+.benifits .benifit:hover H4 {
+    border-color: #b2b2b2;
+}
+.benifits .benifit SPAN {
+    background-color: #f9d386;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+    float: left;
+    font-family: Intro;
+    font-size: 17px;
+    height: 30px;
+    line-height: 30px;
+    margin: 14px 0 0 -60px;
+    position: relative;
+    text-align: center;
+    width: 50px;
+}
+.benifits .benifit SPAN:before,
+.benifits .benifit SPAN:after {
+    border-left: 25px solid rgba(249, 211, 134, 0);
+    border-right: 25px solid rgba(249, 211, 134, 0);
+    content: ' ';
+    left: 0;
+    height: 0;
+    position: absolute;
+    width: 0;
+}
+.benifits .benifit SPAN:before {
+    top: -14px;
+    border-bottom: 14px solid #f9d386;
+}
+.benifits .benifit SPAN:after {
+    bottom: -14px;
+    border-top: 14px solid #f9d386;
+}
+
+
+.benifits .benifit.delivery SPAN {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAZCAMAAADpC5XfAAAAhFBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///+R/NAxAAAAK3RSTlNVqBnpzcZsx1s9Dq9nUfFlq0SL+irsgZUF8jFjozetjuJ4c0naIYadAbUAEoy1NAAAANJJREFUeAFtztt2gjAQhWF6VqslgEAIBElCDpl5//erysRFpf/ld7HXzva7AJuyFqPdKldVdwzPCnD+QL1VCFP8R2HoOABwqcxae5RCxw4xrtXiBe91fKUwxXlhudbhxy+qAOwpkPb3iXp0yk+IBanFkjnnacaRXoc9PvoipWGqOpAuwylDav/ohZQeU+9Jh7mpEs4q6WvWy/Ym3jk2ktq4K3yuy5LViHVLOohGG7ZHfGOf5wCk3/kBdG+OV7mVVOZCNwIo0lMrCjPCk4J5YQ1/6C9AjE1uv1gpfQAAAABJRU5ErkJggg==);
+}
+
+.benifits .benifit.price SPAN {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAnFBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///+1zGGTAAAAM3RSTlOYQ/V+GjdOxnF3JDNnyeoQLT3Nh4LuHLaqu6GzZcLlvRSNkvqlDgOu3eHXCf3+01baBQAhPSzsAAABd0lEQVR4Xm3S6ZKbMBAEYO1hr4+YtQFzhttggbwCTb//u0WohKkk7n9TXwHVzDBaI+qrUylasyKpAjr3lygiQEqg7v7Gyy2L415b22rl8ZcbHRe8NDAZAqKAw6Q5W7wBg8ul15LOt+fyYQISi1+Y6J/0yCyeZlRV5gsDb+OMscUCOVGy1Pj1g63GyCB1HJzKx0nEOBhrNiQxdBpNP0YX+LTD1thIVAF3QUwVwNRSgEyFOPz+wUMblRIIFasA+Wn6NEitzY1i4IM5kKaf8k/J3pqZJXJ2hRR2np/b3aVnZjHBYR6QfT9tzPCOm7YyA3wmQmAoFzsj6k6Pkj4nIFWMVATU1mjEjipsqDKrY0TCgUtvxuiIIpBNSxPk8/dxGm2HEOY9OVKLGSTRdkNzxD79UET9E13w/1dWrMvu+XXwTKOynnKer8s+vsNkCogOy5lcLNI5ie+J1NqWE+CE0a2yB7akq7VyIBIv7tZ8G0gVvUTlO/2+ozV/AHvYg/vU6e8bAAAAAElFTkSuQmCC);
+}
+
+.benifits .benifit.credit SPAN {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAWCAMAAAAYXScKAAAAZlBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///9bvqGcAAAAIXRSTlPEXtnI8j4IDOFqWupwvUwY99AqSAK0VHpkkjKlh8zd7gCDtiPbAAAAh0lEQVR4Xq3PyQ6DIBCAYbqrICDrUhDn/V+yatLUMsf2vwx8h0mGLJ+Mfr8OKkYYkHIKcFXfeo+wdTFHVdNmpdcx7/pIKZleAtTo/HkdYv2TKXrtS7HDLZY97nMmks5t7kkAl3/XgJSwwH2rY+iqtK06qhhgrSJgtaxCpwmgxU7944pSUaflBbJwNZf/754bAAAAAElFTkSuQmCC);
+}
+.benifits.mobile-benefits{
+    display: none;
+}

@@ -1,0 +1,190 @@
+<script>
+window.onload = function() {
+    if (window.history.pushState) {
+        setTimeout(function() {
+            window.onpopstate = function (e) {
+                e.preventDefault()
+                window.location.reload()
+            }
+        }, 4)
+    }
+}
+
+$(function() {
+    var productList = $('#product-list');
+    var sorting1 = $('#sorting');
+    var paging1 = $('#upper-paging');
+    var showmore1 = $('#showmore-container');
+
+    $(document).on('click', '.showmore', function(e) {
+        this.innerHTML = '';
+        this.className = 'showmore loading';
+        if (window.history.pushState) {
+            window.history.pushState({}, null, this.dataset.url);
+        }
+        sp.get(this.dataset.url).done(function(response) {
+            productList.append(response.products)
+            sorting1.html(response.sorting)
+            paging1.html(response.paging)
+            showmore1.html(response.showmore)
+        });
+        e.preventDefault();
+    });
+    var supportsTransitions  = '' == document.createElement('p').style['transition']
+    function loadPage(url) {
+        if (window.history.pushState) {
+            window.history.pushState({}, null, url);
+        }
+        if (!supportsTransitions) {
+            productList.stop().fadeOut(500)
+        }
+        productList.addClass('in')
+        sp.get(url).then(function(data) {
+            if (!supportsTransitions) {
+                productList.stop().fadeIn(250)
+            }
+            productList.html(data.products).removeClass('in')
+            sorting1.html(data.sorting)
+            paging1.html(data.paging)
+            showmore1.html(data.showmore)
+        });
+        filter.prop('action', url)
+    }
+    $(document).on('click', '.paging a', function(e) {
+        loadPage(e.target.href);
+        e.preventDefault();
+        $('#scroller').click();
+    });
+    sorting1.on('click', 'a', function(e) {
+        loadPage(e.target.href)
+        e.preventDefault()
+        $('#scroller').click()
+    })
+    var timer = null;
+    var deferred;
+    var filter = $('#ProductFilter').form({
+        validate: function(xhr) {
+            clearTimeout(timer);
+            xhr.done(function(data) {
+                updatefacets(data.facets);
+                var t = +data.facets.total,
+                    html = '<small>Найдено:</small> <b>' + t + '</b><i/>';
+                total.html(html + (t ? ' Показать' : '')).css('top', top).show().prop('disabled', !t);
+                titleTotal.html(t.declension('товар;товара;товаров'));
+                timer = setTimeout(function() {
+                    loadPage(data.url);
+                    total.hide();
+                }, 1000);
+            });
+        }
+    });
+    var total = filter.find('.total'), top;
+    var titleTotal = $('#products-total');
+    filter.find('input').focusin(function() {
+        var input = $(this);
+        if (input.prop('type') == 'text') {
+            var range = input.closest('.range');
+            if (range.length)
+                top = range.position().top + 12;
+            else
+                top = input.position().top;
+        }
+        else {
+            top = input.parent().position().top - 9;
+            if (input.closest('.categories').length)
+                top -= input.closest('.filter').height() + 30;
+        }
+    });
+    filter.find('.range').range({
+        change: function() {
+            top = this.element.position().top + 12;
+            filter.trigger('change');
+        }
+    });
+    filter.on('click', '.tab:not(.apply)', function() {
+        var tab = $(this).toggleClass('expanded');
+        tab.next('.sheet')[tab.is('.expanded') ? 'slideDown' : 'slideUp'](250);
+        total.hide();
+    });
+    filter.on('click', '.toggle-other', function(event) {
+        var a = $(this), other = a.closest('.sheet').find('.other');
+        if (other.is(':hidden')) {
+            a.text('свернуть');
+            other.slideDown(250);
+        }
+        else {
+            a.text('показать все');
+            other.slideUp(250);
+        }
+        event.preventDefault();
+    });
+    var elements = {
+        price: filter.find('.price.range'),
+        categories: filter.find('.categories label'),
+        brands: filter.find('.brands label'),
+        sections: filter.find('.sections label'), 
+        details: {}
+    };
+    {% for detail in filter.details %}
+        elements.details[{{ detail.id }}] = {
+            {% if 'boolean' == detail.typeCode %}
+                type: 'boolean',
+                labels: filter.find('.detail-{{ detail.id }} label[data-value]')
+            {% elseif 'number' == detail.typeCode %}
+                type: 'number',
+                range: filter.find('.detail-{{ detail.id }} .range')
+            {% else %}
+                type: 'enum',
+                labels: filter.find('.detail-{{ detail.id }} label')
+            {% endif %}
+        }
+    {% endfor %}
+
+    function updatefacets(data) {
+        if (data.price) {
+            elements.price.range('range', data.price.min, data.price.max);
+        }
+        if (data.categorieIds) {
+            $.map(elements.categories, function(category) {
+                var disabled = 'undefined' == typeof data.categories[category.dataset.id];
+                category.className = disabled ? 'disabled' : '';
+            });
+        }
+        if (data.brandIds) {
+            $.map(elements.brands, function(brand) {
+                var disabled = 'undefined' == typeof data.brandIds[brand.dataset.id];
+                brand.className = disabled ? 'disabled' : '';
+            });
+        }
+        if (data.sectionIds) {
+            $.map(elements.sections, function(section) {
+                var disabled = 'undefined' == typeof data.sectionIds[section.dataset.id];
+            });
+        }
+        if (data.details) {
+            $.each(elements.details, function(id, detail) {
+                if ('undefined' !== typeof data.details[id]) {
+                    switch (detail.type) {
+                        case 'boolean':
+                            detail.labels.each(function(index, label) {
+                                var disabled = 'undefined' == typeof data.details[id][label.dataset.value];
+                                label.className = disabled ? 'disabled' : '';
+                            });
+                            break;
+                        case 'number':
+                            detail.range.range('range', data.details[id].min, data.details[id].max);
+                            break;
+                        case 'enum':
+                            detail.labels.each(function(index, label) {
+                                var disabled = 'undefined' == typeof data.details[id][label.dataset.id];
+                                label.className = disabled ? 'disabled' : '';
+                            });
+                    }
+                }
+            });
+        }
+    }
+    var facets = {{ facets|json_encode|raw }};
+    updatefacets(facets);
+});
+</script>

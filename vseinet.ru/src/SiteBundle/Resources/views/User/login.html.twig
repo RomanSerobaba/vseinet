@@ -1,0 +1,41 @@
+{% extends "SiteBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    Вход на сайт / Интернет-магазин "Vseinet.ru"
+{% endblock %}
+
+{% block userLoginForm %}
+{% endblock %}
+
+{% block userForgotForm %}
+{% endblock %}
+
+{% block content %}
+    <h1>Вход на сайт</h1>
+    <div class="block gray w60p">
+        <div class="wrapper">
+            {{ form_start(form) }}
+            <div class="row h{% if error %} error{% endif %}">
+                {{ form_label(form.username, 'Телефон / Эл. почта:') }}
+                {{ form_widget(form.username, { attr: { class: 'txt' }}) }}
+                <span class="status"></span>
+                {% if error %}
+                    <div class="error">{{ error.message }}</div>
+                {% endif %}
+            </div>
+            <div class="row h">
+                {{ form_label(form.password, 'Пароль:') }}
+                {{ form_widget(form.password, { attr: { class: 'txt' }}) }}
+            </div> 
+            <div class="row h">
+                {{ form_widget(form.remember, { attr: { style: 'float:left;margin:6px 5px 0 0' } }) }}
+                {{ form_label(form.remember, 'Запомнить меня', { label_attr: { class: 'inline' } }) }}
+            </div>
+            <div class="row h">
+                <a href="{{ path('forgot') }}">Я забыл пароль</a>
+                {{ form_widget(form.submit, { label: 'Войти', attr: { class: 'bttn blue r' }}) }}  
+            </div> 
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

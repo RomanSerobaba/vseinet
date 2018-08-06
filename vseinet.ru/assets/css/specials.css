@@ -1,0 +1,63 @@
+/* specials
+-------------------------------------------------------------------*/
+	#specials h1{
+		padding-top: 10px;
+		margin-bottom: 34px;
+	}
+	#specials .products {
+            overflow: hidden;
+        }
+        
+	#specials .product {
+		float: left;		
+		position: relative;
+		width: 33.33333333%;
+		min-height: 330px;
+		padding-right: 65px;
+		margin-bottom: 20px;
+	}
+	#specials .image {
+		border: none;
+		display: table-cell;
+		height: 200px;
+		margin: 0 0 5px;
+		vertical-align: middle;
+		width: 100%;
+	}
+	#specials H4 {
+		margin: 2px 0 12px;
+	}
+	#specials .discount {
+		left: 12px;
+		top: 20px;
+	}
+	#specials .price {
+		line-height: 28px;
+	}
+		#specials .price .old,
+		#specials .price .new {
+			float: left;
+			margin-right: 8px;
+		}
+		#specials .price .old {
+			color: #666;
+	       	font-size: 13px;
+	       	position: relative;
+	       	text-decoration: none;
+		}
+			#specials .price .old:after {
+				background: #666;
+				content: ' ';
+				height: 1px;
+				left: 0;
+				position: absolute;
+				top: 50%;
+				width: 100%;
+			}
+		#specials .price .new {
+			/*background: #f30;*/
+			border-radius: 3px;
+			color: #333;
+			font-size: 18px;
+	       	padding: 0 9px;
+		}

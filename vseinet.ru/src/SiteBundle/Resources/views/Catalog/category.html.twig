@@ -1,0 +1,55 @@
+{% extends "SiteBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    {{ category.pageTitle }}
+{% endblock %}
+
+{% block pageDescription %}
+    {{ category.pageDescription }}
+{% endblock %}
+
+{% block content %}
+    <section id="category">
+        <div class="breadcrumbs">
+            <a href="{{ path('catalog_category', { id: 0 }) }}">Каталог</a>
+            {% for link in category.breadcrumbs %} 
+                <span></span>  
+                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a> 
+            {% endfor %}  
+            {% if brand %}
+                <span></span>
+                <a href="{{ path('catalog_category', { id: category.id }) }}">{{ category.name }}</a>
+            {% endif %} 
+        </div>
+        <div class="title category-title">
+            <h1>{{ category.name }}{% if brand %} "{{ brand.name }}"{% endif %}</h1>
+            <small id="products-total">{{ facets.total|number_format() }} {{ facets.total|declension('товар;товара;товаров') }}</small>
+        </div>
+        <nav class="sort" id="sorting">
+            {% include 'SiteBundle:Catalog:sorting.html.twig' %}
+        </nav>
+        <div id="category">
+            <nav id="nav">
+                {% include 'SiteBundle:Catalog:filter.html.twig' %}
+            </nav>
+            {% if category.description %}
+                <section class="content htx htx_category">{{ category.description|raw }}</section>    
+            {% endif %}
+            <div class="wrapper"{%if category.description %} style="display:table-header-group"{% endif %}>
+                {% include 'SiteBundle:Catalog:products.html.twig' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {% include 'SiteBundle:Catalog:filter.js.twig' %}
+    {% if category.description and category.image %}
+        <script>
+            $(function() {
+                $('<img/>', {
+                    src: "{{ category.image|image(constant('AppBundle\\Enum\\BaseProductImageSize::MD')) }}"
+                }).insertAfter('.htx_category h2');
+            });
+        </script>
+    {% endif %}
+{% endblock %}

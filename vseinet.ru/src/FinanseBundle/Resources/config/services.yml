@@ -1,0 +1,24 @@
+services:
+#    finanse.example:
+#        class: vseitnet\FinanseBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    register.financialDocumentPayment:
+        class: FinanseBundle\Service\FinancialDocumentPaymentRegisterService
+        public: true
+        arguments: [ '@doctrine.orm.entity_manager']
+
+    register.financialExpenses:
+        class: FinanseBundle\Service\FinancialExpensesRegisterService
+        public: true
+        arguments: [ '@doctrine.orm.entity_manager']
+
+    register.financialMutual:
+        class: FinanseBundle\Service\FinancialMutualRegisterService
+        public: true
+        arguments: [ '@doctrine.orm.entity_manager']
+
+    register.financialReserve:
+        class: FinanseBundle\Service\FinancialReserveRegisterService
+        public: true
+        arguments: [ '@doctrine.orm.entity_manager']
+        

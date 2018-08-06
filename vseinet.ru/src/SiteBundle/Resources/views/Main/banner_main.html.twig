@@ -1,0 +1,303 @@
+{% set imagedir = app.getParameter('banner.images.web.path') ~ '/' %}
+<div id="slideshow">
+    <div class="sheets">
+        {% for banner in banners %}
+            <div class="sheet">
+                {% if banner.type == 1 %}
+                    <a rel="nofollow" href="{{ banner.url }}">
+                        <div 
+                            class="photoBlock blockPc" 
+                            data-pos-x="{{ banner.posBackgroundPcX }}" 
+                            style="max-width: 845px; width: 845px; height: 280px;{% if banner.imgBackgroundPc %} 
+                                background: url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
+                        >
+                        </div>
+                        <div 
+                            class="photoBlock blockTablet"
+                            data-pos-x="{{ banner.posBackgroundTabletX }}"
+                            style="max-width: 750px; width: 750px; height: 280px;{% if banner.imgBackgroundTablet %} 
+                                background: url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
+                        >
+                        </div>
+                        <div 
+                            class="photoBlock blockPhone"
+                            data-pos-x="{{ banner.posBackgroundPhoneX }}"
+                            style="min-width: 320px; height: 240px;{% if banner.imgBackgroundPhone %} 
+                                background: url({{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
+                        >
+                        </div>
+                    </a>
+                {% endif %}
+                {% if banner.type == 2 %}
+                    <div 
+                        class="photoBlock blockPc" 
+                        data-pos-x="{{ banner.posBackgroundPcX }}"
+                        style="max-width: 845px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPc %} url({{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
+                    >
+                        <div class="infoPosition">
+                            <div class="titleBanner">{{ banner.titlePc|raw }}</div>
+                            <div class="description">{{ banner.descriptionPc|raw }}</div>
+                            <div class="price">{{ banner.pricePc }}</div>
+                            {% if banner.url %}
+                                <p><a rel="nofollow" class="btn-url urlBanner" href="{{ banner.url }}">{{ banner.textUrlPc }}</a></p>
+                            {% endif %}
+                        </div>
+                        {% if banner.imgPc %}
+                            <img 
+                                src="{{ asset(imagedir ~ banner.imgPc) }}" 
+                                alt=""
+                                style="right:{{ banner.imgPosPcX }}px; top:{{ banner.imgPosPcY }}px;"
+                            />
+                        {% endif %}
+                    </div>
+                    <div 
+                        class="photoBlock blockTablet"
+                        data-pos-x="{{ banner.posBackgroundTabletX }}"
+                        style="max-width: 750px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundTablet %} url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
+                    >
+                        <div class="infoPosition">
+                            <div class="titleBanner">{{ banner.titleTablet|raw }}</div>
+                            <div class="description">{{ banner.descriptionTablet|raw }}</div>
+                            <div class="price">{{ banner.priceTablet }}</div>
+                            {% if banner.url %}
+                                <p><a rel="nofollow" class="btn-url urlBanner" href="{{ banner.url }}">{{ banner.textUrlTablet }}</a></p>
+                            {% endif %}
+                        </div>
+                        {% if banner.imgTablet %}
+                            <img 
+                                src="{{ url(imagedir ~ banner.imgTablet) }}" 
+                                alt=""
+                                style="right: {{ banner.imgPosTabletX }}px; top: {{ banner.imgPosTabletY }}px;"
+                            />
+                        {% endif %}
+                    </div>
+                    <div 
+                        class="photoBlock blockPhone"
+                        data-pos-x="{{ banner.posBackgroundPhoneX }}"
+                        style="max-width: 480px; height: 240px; background: {{ banner.backgroundColor }}{% if banner.imBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
+                    >
+                        <div class="infoPosition">
+                            <div class="titleBanner">{{ banner.titlePhone|raw }}</div>
+                            <div class="description">{{ banner.descriptionPhone|raw }}</div>
+                            <div class="price">{{ banner.pricePhone }}</div>
+                            {% if banner.url %}
+                                <p><a rel="nofollow" class="btn-url urlBanner" href="{{ banner.url }}">{{ banner.textUrlPhone }}</a></p>
+                            {% endif %}
+                        </div>
+                        {% if banner.imgPhone %}
+                            <img 
+                                src="{{ asset(imagedir ~ banner.imgPhone) }}" 
+                                alt=""
+                                style="right: {{ banner.imgPosPhoneX }}px; top: {{ banner.imgPosPhoneY }}px;"
+                            />
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if banner.type == 3 %}
+                    {% set product = products[banner.id][0] %}
+                    <div class="one-product">
+                        <div 
+                            class="photoBlock blockPc" 
+                            data-pos-x="{{ banner.posBackgroundPcX }}"
+                            style="max-width: 845px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPc %} url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
+                        >
+                            <div class="infoPosition">
+                                <div class="price">{{ banner.pricePc }}</div>
+                                <div class="titleBanner">{{ banner.titlePc|raw }}</div>
+                                <div class="leftDetails">
+                                    <span class="description">
+                                        <ul>{{ banner.leftDetailsPc|raw }}</ul>
+                                    </span>
+                                </div>
+                                <div class="rightDetails">
+                                    <span class="description">
+                                        <ul>{{ banner.rightDetailsPc|raw }}</ul>
+                                    </span>
+                                </div>
+                                <p>
+                                    <a class="btn-url urlBanner" href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                        {{ banner.textUrlPc }}
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="pricePhoto">
+                                <div class="innerRelative">
+                                    <img src="{{ banner.imgPc }}" alt="" />
+                                    <div class="item-price">{{ product.price }} ₽</div>
+                                    <div class="sale-price">{{ product.salePrice }} ₽</div>
+                                    <div class="result-sale">ЭКОНОМИЯ<br />{{ product.salePrice - product.price }} ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="photoBlock blockTablet"
+                            data-pos-x="{{ banner.posBackgroundTabletX }}"
+                            style="max-width: 750px; min-width: 700px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundTablet %} url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
+                        >
+                            <div class="infoPosition">
+                                <div class="price">{{ banner.priceTablet }}</div>
+                                <div class="titleBanner">{{ banner.titleTablet|raw }}</div>
+                                <div class="leftDetails">
+                                    <span class="description">
+                                        <ul>{{ banner.leftDetailsTablet|raw }}</ul>
+                                    </span>
+                                </div>
+                                <div class="rightDetails">
+                                    <span class="description">
+                                        <ul>{{ banner.rightDetailsTablet|raw }}</ul>
+                                    </span>
+                                </div>
+                                <p>
+                                    <a class="btn-url urlBanner" href="{{ url('catalog_product', { id: product.baseProductId}) }}">
+                                        {{ banner.textUrlTablet }}
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="pricePhoto">
+                                <div class="innerRelative">
+                                    <img src="{{ banner.imgTablet }}" alt="" />
+                                    <div class="item-price">{{ product.price }} ₽</div>
+                                    <div class="sale-price">{{ product.salePrice }} ₽</div>
+                                    <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="photoBlock blockPhone"
+                            data-pos-x="{{ banner.posBackgroundPhoneX }}"
+                            style="max-width: 480px; min-width: 320px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
+                        >
+                            <div class="infoPosition">
+                                <div class="price">{{ banner.pricePhone }}</div>
+                                <div class="titleBanner">{{ banner.titlePhone|raw }}</div>
+                                <div class="leftDetails">
+                                    <span class="description">
+                                        <ul>{{ banner.leftDetailsPhone|raw }}</ul>
+                                    </span>
+                                </div>
+                                <div class="rightDetails">
+                                    <span class="description">
+                                        <ul>{{ banner.rightDetailsPhone|raw }}</ul>
+                                    </span>
+                                </div>
+                                <p>
+                                    <a class="btn-url urlBanner" href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                        {{ banner.textUrlPhone }}
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="pricePhoto">
+                                <div class="innerRelative">
+                                    <img src="{{ banner.imgPhone }}" alt="" />
+                                    <div class="item-price">{{ product.price }} ₽</div>
+                                    <div class="sale-price">{{ product.salePrice }} ₽</div>
+                                    <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if banner.type == 4 %}
+                    {% set productList = products[banner.id] %}
+                    <div class="multi-product">
+                        <div 
+                            class="photoBlock blockPc"
+                            data-pos-x="{{ banner.posBackgroundPcX }}"
+                            style="max-width: 845px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPc %} url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
+                        >
+                            <div class="infoPosition">
+                                <p class="titleBanner" style="color: {{ banner.titleTextColor }}">{{ banner.titlePc|raw }}</p>
+                                <div class="description">{{ banner.descriptionPc|raw }}</div>
+                                <div class="items">
+                                    {% for product in productList %}
+                                        <a href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                            <div class="item-product-element">
+                                                <div class="pricePhoto">
+                                                    <div class="innerRelative">
+                                                        <img src="{{ product.photoPc }}" alt="" />
+                                                        <div class="price">{{ product.titlePc }}</div>
+                                                        <div class="item-price">{{ product.price }} ₽</div>
+                                                        <div class="sale-price">{{ product.salePrice }} ₽</div>
+                                                        <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="photoBlock blockTablet"
+                            data-pos-x="{{ banner.posBackgroundTabletX }}"
+                            style="max-width: 750px; min-width: 480px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundTablet %} url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
+                        >
+                            <div class="infoPosition">
+                                <p class="titleBanner" style="color: {{ banner.titleTextColor }}">{{ banner.titleTablet|raw }}</p>
+                                <div class="description">{{ banner.descriptionTablet|raw }}</div>
+                                <div class="items">
+                                    {% for product in productList %}
+                                        <a href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                            <div class="item-product-element">
+                                                <div class="pricePhoto">
+                                                    <div class="innerRelative">
+                                                        <img src="{{ product.photoTablet }}" alt="" />
+                                                        <div class="price">{{ product.titleTablet }}</div>
+                                                        <div class="item-price">{{ product.price }} ₽</div>
+                                                        <div class="sale-price">{{ product.salePrice }} ₽</div>
+                                                        <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="photoBlock blockPhone"
+                            data-pos-x="{{ banner.posBackgroundPhoneX }}"
+                            style="max-width: 480px; min-width: 320px; height: 240px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
+                        >
+                            <div class="infoPosition">
+                                <p class="titleBanner" style="color: {{ banner.titleTextColor }}">{{ banner.titlePhone|raw }}</p>
+                                <div class="description">{{ banner.descriptionPhone|raw }}</div>
+                                <div class="items">
+                                    {% for product in productList %}
+                                        <a href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                            <div class="item-product-element">
+                                                <div class="pricePhoto">
+                                                    <div class="innerRelative">
+                                                        <img src="{{ product.photoPhone }}" alt="" />
+                                                        <div class="price">{{ product.titlePhone }}</div>
+                                                        <div class="item-price">{{ product.price }} ₽</div>
+                                                        <div class="sale-price">{{ product.salePrice }} ₽</div>
+                                                        <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="tabs">
+        {% for banner in banners %}
+            <div 
+                class="tab tabExample{% if banner.tabIsFixed %} fixed{% endif %}"
+                style="background:{% if banner.tabImg %} url('{{ asset(imagedir ~ banner.tabImg) }}') {{ banner.tabImgPosX }}px {{ banner.tabImgPosY }}px no-repeat{% endif %} {{ banner.tabBackgroundColor }}">
+                {% if banner.tabText %}
+                    <div class="textTab" style="color:{{ banner.tabTextColor|default('#000000') }}">
+                        {{ banner.tabText }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+

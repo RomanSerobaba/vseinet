@@ -1,0 +1,49 @@
+/* ui tabs
+-------------------------------------------------------------------*/
+.ui-tabs .tabs {
+	border: 1px solid #dcdcde;
+	border-radius: 2px;
+	box-shadow: 0 0 10px rgba(0,0,0,.1);
+	margin: 0 0 10px;
+	padding: 1px 10px;
+}
+	.ui-tabs .tabs.r {
+		float: right;
+		margin-top: 18px;
+	}
+	.ui-tabs .tabs LI {
+		float: left;
+		font-size: 13px;
+		padding: 6px 10px;
+		position: relative;
+	}
+		.ui-tabs .tabs LI.ui-tabs-active:before,
+		.ui-tabs .tabs LI.ui-tabs-active:after {
+			border-bottom: none !important;
+			content: ' ';
+			height: 0;
+			left: 50%;
+			position: absolute;
+			width: 0;
+		}
+		.ui-tabs .tabs LI.ui-tabs-active:before {
+			border: 5px solid rgba(234,234,236,0);
+			border-top: 6px solid #eaeaec;
+			bottom: -7px;
+			margin-left: -5px;
+		}
+		.ui-tabs .tabs LI.ui-tabs-active:after {
+			border: 4px solid rgba(255,255,255,0);
+			border-top: 4px solid #fff;
+			bottom: -5px;
+			margin-left: -4px;
+		}
+	.ui-tabs .tabs LI.ui-tabs-active A {
+		border: none !important;
+		color: #333 !important;
+		cursor: default;
+	}
+	.ui-tabs .tabs LI SPAN {
+		color: #999;
+		font-size: 11px;
+	}

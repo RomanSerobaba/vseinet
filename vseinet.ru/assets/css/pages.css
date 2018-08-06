@@ -1,0 +1,48 @@
+/* pages
+-------------------------------------------------------------------*/
+.paging {
+	color: #0f68b1;
+	padding: 38px 0 32px;
+}
+	.paging .page {
+		display: inline-block;
+		line-height: 12px;
+		margin: 0 5px;
+	}
+	.paging .prev {
+		margin-right: 17px;
+	}
+	.paging .next {
+		margin-left: 17px;
+	}
+	.paging .current {
+		background: #f26c4f;
+		color: #fff;
+		display: inline-block;
+		height: 15px;
+		line-height: 15px;
+		position: relative;
+		text-align: center;
+		width: 26px;
+	}
+		.paging .current:before,
+		.paging .current:after {
+		    border: 13px solid rgba(242, 108, 79, 0);
+	   		content: '';
+	   		left: 0;
+	   		height: 0;
+	   		position: absolute;
+			width: 0;
+            font-size: 0;
+            overflow:hidden;
+		}
+		.paging .current:before {
+	   		top: -8px;
+		    border-bottom: 8px solid #f26c4f;
+		    border-top: none !important;
+		}
+		.paging .current:after {
+		    bottom: -8px;
+		    border-bottom: none !important;
+		    border-top: 8px solid #f26c4f;
+		}

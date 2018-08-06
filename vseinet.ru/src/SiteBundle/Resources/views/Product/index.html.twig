@@ -1,0 +1,256 @@
+{% extends "SiteBundle::layout.html.twig" %}
+
+{% block pageTitle %}
+    Купить {{ product.name }} в Пензе, цена / Интернет-магазин "Vseinet.ru"
+{% endblock %}
+
+{% block pageDescription %}
+    Купить недорого {{ product.name|slice(0, 70) }} в интернет-магазине vseinet.ru. Рассрочка и кредит.
+{% endblock %}
+
+{% block keywords %}
+    {{ product.name }}
+{% endblock %}
+
+{% block content %}
+    <div itemscope itemtype="http://schema.org/Product" class="product" data-id="{$product.id}" id="product-{$product.id}">
+        <div class="breadcrumbs">
+            {% for link in breadcrumbs %}
+                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a>
+                {% if not loop.last %}
+                    <span></span>
+                {% endif %}
+            {% endfor %}
+            {% if brand %}
+                <span></span>
+                <a href="{{ path('catalog_category_with_brand', { id: product.categoryId, brandName: brand.name }) }}">{{ brand.name }}</a>
+            {% endif %}
+        </div>
+        <div class="title">
+            <h1 itemprop="name">{{ product.name }}</h1> 
+            <small>Код товара: <b itemprop="sku" class="sku">{{ product.id }}</b></small>
+        </div>
+        <div id="product">
+            <div class="row clearfix">
+                <div class="coll-md-5 coll-sm-6">
+                    <div class="image">
+                        {% set image = images[0]|default(null) %}
+                        <img
+                            {% if image %}itemprop="image"{% endif %} 
+                            src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImageSize::LG')) }}"
+                            title="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                            data-index="0" 
+                        />
+                        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
+                            <strong class="discount_big">-{{ product.price|discount_percent }}%</strong>
+                        {% endif %}
+                    </div>
+                    {% if 1 < images|length %}
+                        <div class="gallery">
+                            {% for index, image in images %}
+                                <img 
+                                    src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImageSize::XS')) }}" 
+                                    alt="Фото № {{ index }}" 
+                                    data-index="{{ index }}"
+                                    {% if 0 == index %}class="current"{% endif %} 
+                                />
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="coll-md-3 coll-sm-6">
+                    <div class="sale{% if product.quantityInCart %} in-cart{% else %} to-cart{% endif %}{% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %} sale-discount{% endif %}" id="sale{{ product.id }}">
+                        {% include 'SiteBundle:Product:sale.html.twig' %}
+                    </div>
+                </div>
+                <div class="coll-md-3 coll-sm-6">
+                    {% include 'SiteBundle:Product:delivery.html.twig' %}
+                </div>
+                <div class="coll-md-1">
+                    <div class="socials">
+                        {% if product.inFavorites %}
+                            <a href="{{ path('favorite_del', { id: product.id }) }}" class="bm active" data-favorite="{{ product.id }}">
+                                в избранном
+                            </a>
+                        {% else %}
+                            <a href="{{ path('favorite_add', { id: product.id }) }}" class="bm" data-favorite="{{ product.id }}">
+                                в избранное
+                            </a>
+                        {% endif %}
+                        <div id="YaShare"></div>
+                    </div>
+                </div>
+            </div>
+            {% if points|length %}
+                <ul>
+                    {% for point in points %}
+                        <li>
+                            {{ point.code }}, {{ point.name }}: {{ point.quantity }} шт.
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div style="clear:both" class="uitab-wrapper">
+                <ul class="tabs">
+                    <li><a href="#tab-overview" class="green">Обзор</a></li>
+                    {% if details is defined %}
+                        <li><a href="#tab-details" class="green">Характеристики</a></li>
+                    {% endif %}
+                    {#<li><a href="#tab-reviews" class="green">Отзывы</a> <span>{{ reviews|length }}</span></li>#}
+                </ul>
+            </div>
+            <div id="tab-overview" class="ui-tabs-panel">
+                {% include 'SiteBundle:Product:overview.html.twig' %}
+            </div>
+            {% if details is defined %}
+                <div id="tab-details" class="ui-tabs-panel">
+                    {% include 'SiteBundle:Product:details.html.twig' %}
+                </div>
+            {% endif %}
+            <div id="tab-reviews" class="ui-tabs-panel">
+                {#% include 'SiteBundle:Product:reviews.html.twig' %#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://yandex.st/share/share.js" charset="utf-8"></script>
+{#<script src="{{ asset('media/Nifty/plugins/typeahead/bootstrap3-typeahead.min.js') }}"></script>#}
+<script>
+$(function() {
+    $('[itemprop]').removeAttr('itemprop');
+    var product = $('#product');
+    product.tabs({
+        create: function() {
+            product.find('.ui-tabs-panel').appendTo(product);
+        },
+        active: product.find('.tabs > .active').index(),
+        beforeLoad: function(event, ui) {
+            if (ui.tab.is('.mods')) {
+                window.location = ui.tab.find('a').prop('href');
+                return;
+            }
+            ui.ajaxSettings.dataType = 'json';
+            ui.ajaxSettings.dataFilter = function(data) {
+                ui.panel.html($.parseJSON(data).html);
+                $('#Review').form();
+                $('#Review-estimate, .review .rating').rating();
+            };
+        }
+    });
+    var hint = $('<div class="hint"/>').mouseleave(function() {
+        hint.stop().hide();
+    });
+    var dd = product.find('.address');
+    dd.children().mouseenter(function() {
+        var a = $(this);
+        hint.text(a.text()).insertAfter(dd).html(a.clone()).show();
+        var hw = hint.width(), dw = dd.width();
+        if (hw > dw - 10)
+            hint.css({ left: a.position().left - 2, top: a.position().top - 6, width: dw}).animate({ width: hw }, 150);
+        else
+            hint.hide();
+    });
+
+    function recalculate() {
+        sp.post('/shipping/city/calculate', {
+            'cityId' : $('#Delivery [name="Delivery[city_id]"]').val(),
+            'quantity' : $('#Delivery [name="Delivery[quantity]"]').val(),
+            'hasLift' : $('#Delivery [name="Delivery[has_lift]"]').is(':checked'),
+            'floor' : $('#Delivery [name="Delivery[floor]"]').val(),
+            'productId' : {{ product.id }}
+        }).done(
+            function(response) {
+                $('#Delivery #calculation').html(response.html);
+            }
+        );
+    }
+    {#$('#Delivery [name="Delivery[city]"]').typeahead({
+        source: function(query, process) {
+            return sp.post('/shipping/city/search', {
+                q: query,
+                type: 'all'
+            }).done(function(response) {
+                if (response.cities) {
+                    process(response.cities);
+                }
+            });
+        },
+        afterSelect: function(data) {
+            $('#Delivery [name="Delivery[city_id]"]').val(data.id);
+            recalculate();
+        }
+    });
+    $('#Delivery [name="Delivery[quantity]"], #Delivery [name="Delivery[has_lift]"], #Delivery [name="Delivery[floor]"]').on('change', function(){
+        recalculate();
+    });#}
+    {% if images|length %}
+        product.find('.image img').ajaxcontent({
+            data: function() {
+                return { index: $(this).data('index') };
+            },
+            dialog: {
+                minWidth: 994,
+                title: '{{ product.name }}'
+            },
+            method: 'get',
+            onload: function() {
+                var thumbs = this.find('.thumbs img')
+                if (thumbs.length) {
+                    var view = this.find('.view img');
+                    var indicator = $('<div/>').insertAfter(view);
+                    thumbs.click(function() {
+                        thumbs.removeClass('current');
+                        indicator.addClass('loading');
+                        var image = new Image();
+                        image.onload = function() {
+                            view.attr('src', image.src);
+                            indicator.removeClass('loading');
+                        };
+                        image.onerror = function() {
+                            view.click();
+                        }
+                        image.src = $(this).addClass('current').attr('rel');
+                    });
+                    view.click(function() {
+                        var thumb = thumbs.filter('.current').parent().next().find('img');
+                        if ( ! thumb.length)
+                            thumb = thumbs.eq(0);
+                        thumb.click();
+                    });
+                }
+            },
+            url: "{{ url('catalog_product_gallery', { id: product.id }) }}"
+        });
+        product.find('.gallery img').click(function(){
+            product.find('.gallery img').removeClass('current');
+            $(this).addClass('current');
+            product.find('.image img').attr('src', $(this).attr('src').replace(/(_\d+)/, '_280')).data('index',$(this).data('index'));
+        });
+    {% endif %}
+    if ('undefined' != typeof Ya) {
+        var YaShareInstance = new Ya.share({
+            element: 'YaShare',
+            l10n: 'ru',
+            link: '{{ app.request.requestUri }}',
+            title: "{{ product.name|e('js') }}",
+            description: "{{ product.description|e('js') }}",
+            {% if images|length %}
+            image: "{{ images[0]|image(constant('AppBundle\\Enum\\BaseProductImageSize::XL')) }}",
+            {% endif %}
+            elementStyle: {
+                type: 'none',
+                quickServices: ['facebook', 'vkontakte', 'twitter', 'odnoklassniki']
+            },
+            onready: function(instance) {
+                $(instance._block).find('a').each(function() {
+                    this.className = $(this).html('').data('service');
+                });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
