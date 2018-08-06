@@ -48,8 +48,13 @@ class UserInfo
      */
     public $cityName;
 
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isMarketingSubscribed;
 
-    public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $cityId, $cityName)
+
+    public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $cityId, $cityName, $isMarketingSubscribed)
     {
         $this->id = $id;
         $this->lastname = $lastname;
@@ -59,5 +64,6 @@ class UserInfo
         $this->birthday = $birthday;
         $this->cityId = $cityId;
         $this->cityName = $cityName;
+        $this->isMarketingSubscribed = $isMarketingSubscribed;
     }
 }

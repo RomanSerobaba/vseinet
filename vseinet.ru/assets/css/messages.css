@@ -1,0 +1,18 @@
+.notice-block {
+    border-color: #e1f0bc;
+    color: #5fad12;
+    border-width: 2px 1px 2px 4px;
+    border-style: solid;
+    padding: 15px;
+    border-radius: 6px;
+    background: #f6fddd;
+}
+.error-block {
+    border-color: #f7d3cb;
+    color: #f26c4f;
+    border-width: 2px 1px 2px 4px;
+    border-style: solid;
+    padding: 15px;
+    border-radius: 6px;
+    background: #ffeeee;
+}

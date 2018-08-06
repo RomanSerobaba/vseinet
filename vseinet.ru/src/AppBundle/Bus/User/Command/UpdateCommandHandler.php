@@ -14,21 +14,21 @@ class UpdateCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository(User::class)->find($command->id);
+        $user = $em->getRepository(User::class)->find($this->get('user.identity')->getUser()->getId());
         if (!$user instanceof User) {
             throw new NotFoundHttpException();
-            
         }
-        if ($command->cityId) {
-            $city = $em->getRepository(GeoCity::class)->find($command->cityId);
-            if (!$city instanceof GeoCity) {
-                throw new NotFoundHttpException();
-            }
-        }
-        $user->setCityId($command->cityId);
+        // if ($command->cityId) {
+        //     $city = $em->getRepository(GeoCity::class)->findOneBy($command->cityId);
+        //     if (!$city instanceof GeoCity) {
+        //         throw new NotFoundHttpException();
+        //     }
+        // }
+        // $user->setCityId($command->cityId);
+        $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
         $em->persist($user);
 
-        $person = $m->getRepository(Person::class)->find($user->getPersonId());
+        $person = $em->getRepository(Person::class)->find($user->getPersonId());
         if (!$person instanceof Person) {
             throw new NotFoundHttpException();
         }
@@ -36,7 +36,7 @@ class UpdateCommandHandler extends MessageHandler
         $person->setFirstname($command->firstname);
         $person->setSecondname($command->secondname);
         $person->setGender($command->gender);
-        if ($commnad->birthday) {
+        if ($command->birthday) {
             if (!$command->birthday instanceof \DateTime) {
                 $command->birthday = new \DateTime($command->birthday);
             }

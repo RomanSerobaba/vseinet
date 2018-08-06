@@ -16,7 +16,13 @@
             {% endif %}
             {% if account.info.gender %}
                 <dt>Пол:</dt>
-                <dd>{{ account.info.gender }}</dd>
+                <dd>
+                    {% if constant('AppBundle\\Enum\\PersonGender::MALE') == account.info.gender %}
+                        мужской
+                    {% else %}
+                        женский
+                    {% endif %}
+                </dd>
             {% endif %}
             {% if account.info.cityName %}
                 <dt>Город:</dt>

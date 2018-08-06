@@ -18,13 +18,14 @@ class GetQueryHandler extends MessageHandler
                     p.gender,
                     p.birthday,
                     u.cityId,
-                    c.name
+                    gc.name,
+                    u.isMarketingSubscribed
                 )
             FROM AppBundle:User AS u
             INNER JOIN AppBundle:Person AS p WITH u.personId = p.id
-            INNER JOIN GeoBundle:GeoCity AS gc WITH gc.id = u.cityId
+            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = u.cityId
             WHERE u.id = :id
-        ")
+        ");
         $q->setParameter('id', $this->get('user.identity')->getUser()->getId());
         $info = $q->getSingleResult();
 

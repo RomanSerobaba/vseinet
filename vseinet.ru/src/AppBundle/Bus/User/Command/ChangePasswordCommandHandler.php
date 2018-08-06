@@ -3,17 +3,31 @@
 namespace AppBundle\Bus\User\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Entity\User;
 
 class ChangePasswordCommandHandler extends MessageHandler
 {
     public function handle(ChangePasswordCommand $command)
     {
-        $user = $this->get('user.identity')->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository(User::class)->find($this->get('user.identity')->getUser()->getId());
+        if (!$user instanceof User) {
+            throw new NotFoundHttpException();
+        }
 
         $encoder = $this->get('security.password_encoder');
         if (!$encoder->isPasswordValid($user, $command->password)) {
             throw new ValidationException([
                 'password' => 'Неверный пароль', 
+            ]);
+        }
+
+        if ($command->newPassword === $command->password) {
+            throw new ValidationException([
+                'newPassword' => 'Совпадает со старым'
             ]);
         }
 
@@ -25,8 +39,6 @@ class ChangePasswordCommandHandler extends MessageHandler
 
         $this->get('security.password_encoder')->encodePassword($user, $command->newPassword);
 
-        $em = $this->getDoctrine()->getManager();
-        
         $em->persist($user);
         $em->flush();
 

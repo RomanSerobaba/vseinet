@@ -20,7 +20,8 @@ class GetAccountQueryHandler extends MessageHandler
                     p.gender,
                     p.birthday,
                     gc.id,
-                    gc.name
+                    gc.name,
+                    u.isMarketingSubscribed
                 )
             FROM AppBundle:User AS u
             INNER JOIN AppBundle:Person AS p WITH u.personId = p.id

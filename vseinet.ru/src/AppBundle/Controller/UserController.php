@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
@@ -35,7 +35,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
         }
@@ -71,7 +71,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -120,7 +120,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
         }
@@ -145,7 +145,7 @@ class UserController extends Controller
                 return $this->redirectToRoute('user_restore_password');
 
             } catch (\Exception $e) {
-                throw new NotFoundHttpException();
+                throw new BadRequestHttpException($e);
             }
         }
         
@@ -163,7 +163,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
         }    
@@ -195,7 +195,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
         }
@@ -252,7 +252,7 @@ class UserController extends Controller
             $this->get('query_bus')->handle(new Query\GetQuery(), $info);
             $command->init((array) $info);    
         }
-        $form = $this->createForm(Form\AccountType::class, $command);
+        $form = $this->createForm(Form\EditType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -277,7 +277,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -350,7 +350,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -368,6 +368,8 @@ class UserController extends Controller
                 ]),
             ]);
         }
+
+        // var_dump($command, $this->getFormErrors($form)); exit;
 
         return $this->render('AppBundle:User:password_form.html.twig', [
             'form' => $form->createView(),
@@ -406,7 +408,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -466,7 +468,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -538,7 +540,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -599,7 +601,7 @@ class UserController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
+                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -643,14 +645,14 @@ class UserController extends Controller
     protected function checkIsAnonimous()
     {
         if (!$this->get('user.identity')->isAnonimous()) {
-            throw new NotFoundHttpException();
+            throw new BadRequestHttpException();
         }
     }
 
     protected function checkIsAutorized()
     {
         if (!$this->get('user.identity')->isAuthorized()) {
-            throw new NotFoundHttpException();
+            throw new BadRequestHttpException();
         }
     }
 
