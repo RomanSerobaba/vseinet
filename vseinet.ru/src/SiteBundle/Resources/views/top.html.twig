@@ -29,9 +29,9 @@
 
 <div class="auth">
     {% if app.userIdentity.isAuthorized %}
-        <a href="{{ path('account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ path('logout') }}">Выйти</a>   
+        <a href="{{ path('user_account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ path('user_logout') }}">Выйти</a>   
     {% else %}
-        <a href="{{ path('login') }}" id="login-form-trigger">Вход</a> или <a href="{{ path('registr') }}">регистрация</a>
+        <a href="{{ path('user_login') }}" id="login-form-trigger">Вход</a> или <a href="{{ path('user_registr') }}">регистрация</a>
     {% endif %}
 </div>
 

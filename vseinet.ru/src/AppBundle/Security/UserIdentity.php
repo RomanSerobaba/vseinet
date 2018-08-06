@@ -19,7 +19,7 @@ class UserIdentity
         $this->session = $session;
     }
 
-    public function setUser(UserInterface $user)
+    public function setUser(?UserInterface $user)
     {
         $this->session->set('user', $user);
     }

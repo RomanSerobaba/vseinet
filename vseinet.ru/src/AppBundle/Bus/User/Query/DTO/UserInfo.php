@@ -4,6 +4,7 @@ namespace AppBundle\Bus\User\Query\DTO;
 
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\Enum;
 
 class UserInfo 
 {
@@ -28,6 +29,11 @@ class UserInfo
     public $secondname;
 
     /**
+     * @Enum("AppBunlde\Enum\PersonGender")
+     */
+    public $gender;
+
+    /**
      * @Assert\Type(type="datetime")
      */
     public $birthday;
@@ -43,12 +49,13 @@ class UserInfo
     public $cityName;
 
 
-    public function __construct($id, $lastname, $firstname, $secondname, $birthday, $cityId, $cityName)
+    public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $cityId, $cityName)
     {
         $this->id = $id;
         $this->lastname = $lastname;
         $this->firstname = $firstname;
         $this->secondname = $secondname;
+        $this->gender = $gender;
         $this->birthday = $birthday;
         $this->cityId = $cityId;
         $this->cityName = $cityName;

@@ -4,7 +4,7 @@ namespace GeoBundle\Service;
 
 use AppBundle\Container\ContainerAware;
 
-class PhoneFormater extends ContainerAware
+class PhoneFormatter extends ContainerAware
 {
     public function format(string $phone): ?string 
     {
@@ -17,7 +17,7 @@ class PhoneFormater extends ContainerAware
         if ('9' == $phone[0]) {
             preg_match('~(\d{3})(\d{3})(\d{2})(\d{2})~', $phone, $matches);
 
-            return "+7 ({$matches[1]})&nbsp;{$matches[2]}-{$matches[3]}-{$matches[4]}";
+            return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}-{$matches[4]}";
         }
 
         $codes = explode("\n", file_get_contents(__DIR__.'/data/codes'));

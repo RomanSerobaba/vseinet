@@ -14,6 +14,13 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    twig.extension.phone_format:
+        class: 'AppBundle\Twig\Extension\PhoneFormatExtension'
+        arguments: [ '@phone.formatter' ]
+        tags:
+            - { name: 'twig.extension' }
+
+
     app.templating.globals:
         class: 'SiteBundle\Templating\GlobalVariables'
         arguments: [ '@service_container' ]

@@ -21,13 +21,14 @@ class UserController extends Controller
     {
         $this->checkIsAnonimous();
 
-        $form = $this->createForm(Form\RegistrType::class, new Command\RegistrCommand());
+        $command = new Command\RegistrCommand();
+        $form = $this->createForm(Form\RegistrType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
                     return $this->redirectToRoute('index');
         
@@ -39,7 +40,7 @@ class UserController extends Controller
             }
         }
 
-        return $this->render('AppBundle:User:registr.html.twig', [
+        return $this->render('AppBundle:User:registr_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
@@ -52,13 +53,14 @@ class UserController extends Controller
     {
         $this->checkIsAnonimous();
 
-        $form = $this->createForm(Form\LoginType::class, new Command\LoginCommand());
+        $command = new Command\LoginCommand();
+        $form = $this->createForm(Form\LoginType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
                     
                     if ($request->isXmlHttpRequest()) {
                         return $this->json([]);
@@ -85,13 +87,13 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:login_form.html.twig', [
+                'html' => $this->renderView('AppBundle:User:login_form_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
         }
 
-        return $this->render('AppBundle:User:login.html.twig', [
+        return $this->render('AppBundle:User:login_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
@@ -104,15 +106,16 @@ class UserController extends Controller
     {
         $this->checkIsAnonimous();
 
-        $form = $this->createForm(Form\ForgotType::class, new Command\ForgotCommand());
+        $command = new Command\ForgotCommand();
+        $form = $this->createForm(Form\ForgotType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
                     
-                    return $this->redirectToRoute('check');
+                    return $this->redirectToRoute('user_check_token');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
@@ -122,14 +125,14 @@ class UserController extends Controller
             }
         }
 
-        return $this->render('AppBundle:User:forgot.html.twig', [
+        return $this->render('AppBundle:User:forgot_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
     }
 
     /**
-     * @VIA\Route(name="/user_check", path="/user/check/", methods={"GET", "POST"})
+     * @VIA\Route(name="user_check_token", path="/user/check/", methods={"GET", "POST"})
      */
     public function checkAction(Request $request)
     {
@@ -139,22 +142,23 @@ class UserController extends Controller
             try {
                 $this->get('command_bus')->handle(new Command\CheckTokenCommand($request->query->all()));
                 
-                return $this->redirectToRoute('restore');
+                return $this->redirectToRoute('user_restore_password');
 
             } catch (\Exception $e) {
                 throw new NotFoundHttpException();
             }
         }
         
-        $form = $this->createForm(Form\CheckTokenType::class, new Command\CheckTokenCommand());
+        $command = new Command\CheckTokenCommand();
+        $form = $this->createForm(Form\CheckTokenType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
-                    return $this->redirectToRoute('restore');
+                    return $this->redirectToRoute('user_restore_password');
                     
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
@@ -164,28 +168,29 @@ class UserController extends Controller
             }
         }    
 
-        return $this->render('AppBundle:User:check_token.html.twig', [
+        return $this->render('AppBundle:User:check_token_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
     }
 
     /**
-     * @VIA\Route(name="user_restore", path="/user/restore/", methods={"GET", "POST"})
+     * @VIA\Route(name="user_restore_password", path="/user/restore/password/", methods={"GET", "POST"})
      */
     public function restoreAction(Request $request)
     {
         $this->checkIsAutorized();
         
-        $form = $this->createForm(Form\RestorePasswordType::class, new Command\RestorePasswordCommand());
+        $command = new Command\RestorePasswordCommand();
+        $form = $this->createForm(Form\RestorePasswordType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
                     
-                    return $this->redirectToRoute('account');
+                    return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
@@ -195,7 +200,7 @@ class UserController extends Controller
             }
         }
 
-        return $this->render('AppBundle:User:restore_password.html.twig', [
+        return $this->render('AppBundle:User:restore_password_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
@@ -224,7 +229,7 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:account_data.html.twig', [
+                'html' => $this->renderView('AppBundle:User:account_ajax.html.twig', [
                     'account' => $account,
                 ]),
             ]);
@@ -242,92 +247,32 @@ class UserController extends Controller
     {
         $this->checkIsAutorized();
 
-        $this->get('query_bus')->handle(new Query\GetQuery(), $info);
-        $form = $this->createForm(Form\AccountType::class, new Command\UpdateCommand((array) $info));
+        $command = new Command\UpdateCommand();
+        if ($request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new Query\GetQuery(), $info);
+            $command->init((array) $info);    
+        }
+        $form = $this->createForm(Form\AccountType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
                     if ($request->isXmlHttpRequest()) {
+                        $this->get('query_bus')->handle(new Query\GetQuery(), $info);
+                        
+                        return $this->json([
+                            'html' => $this->renderView('AppBundle:User:account_info.html.twig', [
+                                'info' => $info, 
+                            ]),
+                        ]);
+
                         return $this->json([]);
                     }
 
                     return $this->redirectToRoute('user_account');
-
-                } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new NotFoundHttpException();
-                }
-            }
-
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'errors' => $this->getFormErrors($form);
-                ]);
-            }
-        }
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('AppBundle:User:edit_form.html.twig', [
-                    'form' => $form->createView(),
-                ]),
-            ]);
-        }
-
-        return $this->render('AppBundle:User:edit.html.twig', [
-            'form' => $form->createView(),
-            'errors' => $this->getFormErrors($form),
-        ]);
-    }
-
-
-    /**
-     * @VIA\Route(name="user_history", path="/user/history/", methods={"GET", "POST"})
-     */
-    public function historyAction(Request $request)
-    {
-        $this->checkIsAutorized();
-
-        $this->get('query_bus')->handle(new Query\GetHistoryQuery(), $history);
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('AppBundle:User:history_list.html.twig', [
-                    'history' => $history,
-                ]),
-            ]);
-        }
-
-        return $this->render('AppBundle:User:history.html.twig', [
-            'history' => $history,
-        ]);
-    }
-
-    /**
-     * @VIA\Route(name="user_password", path="/user/password/", methods={"GET", "POST"})
-     */
-    public function passwordAction(Request $request)
-    {
-        $this->checkIsAutorized();
-
-        $form = $this->createForm(Form\ChangePasswordType::class, new Command\ChangePasswordCommand());
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->get('command_bus')->handle($form->getData());
-
-                    if ($request->isXmlHttpRequest()) {
-                        return $this->json([]);
-                    }
-                    
-                    return $this->redirectToRoute('change_password');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
@@ -345,27 +290,100 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:change_password_form.html.twig', [
+                'html' => $this->renderView('AppBundle:User:edit_form_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
         }
 
-        return $this->render('AppBundle:User:password.html.twig', [
+        return $this->render('AppBundle:User:edit_form.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $this->getFormErrors($form),
+        ]);    
+    }
+
+
+    /**
+     * @VIA\Route(name="user_history", path="/user/history/", methods={"GET", "POST"})
+     */
+    public function historyAction(Request $request)
+    {
+        $this->checkIsAutorized();
+
+        $this->get('query_bus')->handle(new Query\GetHistoryQuery(), $history);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('AppBundle:User:history_ajax.html.twig', [
+                    'history' => $history,
+                ]),
+            ]);
+        }
+
+        return $this->render('AppBundle:User:history.html.twig', [
+            'history' => $history,
+        ]);
+    }
+
+    /**
+     * @VIA\Route(name="user_change_password", path="/user/change/password/", methods={"GET", "POST"})
+     */
+    public function passwordAction(Request $request)
+    {
+        $this->checkIsAutorized();
+
+        $command = new Command\ChangePasswordCommand();
+        $form = $this->createForm(Form\ChangePasswordType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle($command);
+
+                    if ($request->isXmlHttpRequest()) {
+                        return $this->json([]);
+                    }
+                    
+                    return $this->redirectToRoute('user_account');
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessages());
+                } catch (\Exception $e) {
+                    throw new NotFoundHttpException();
+                }
+            }
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'errors' => $this->getFormErrors($form),
+                ]);
+            }
+        } 
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('AppBundle:User:password_form_ajax.html.twig', [
+                    'form' => $form->createView(),
+                ]),
+            ]);
+        }
+
+        return $this->render('AppBundle:User:password_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
     }
 
     /**
-     * @VIA\Route(name="user_contact_new", path="/user/contact/new/", methods={"GET", "POST"})
+     * @VIA\Route(name="user_contact_add", path="/user/contact/add/", methods={"GET", "POST"})
      */
-    public function newContactAction(Request $request)
+    public function addContactAction(Request $request)
     {
         $this->checkIsAutorized();   
 
-        $uuid = $this->get('uuid.manager')->generate();
-        $form = $this->createForm(Form\ContactType::class, new Command\CreateContactCommand(['uuid' => $uuid]));
+        $command = new Command\CreateContactCommand();
+        $form = $this->createForm(Form\ContactType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -374,8 +392,7 @@ class UserController extends Controller
                     $this->get('command_bus')->handle($form->getData());
 
                     if ($request->isXmlHttpRequest()) {
-                        $id = $this->get('uuid.manager')->loadId($uuid);
-                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
+                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
 
                         return $this->json([
                             'html' => $this->renderView('AppBundle:User:contact.html.twig', [
@@ -415,14 +432,18 @@ class UserController extends Controller
     }
 
     /**
-     * @VIA\Route(name="user_contact_edit", path="/user/contact/{id}/", requrements={"id" = "\d+"}, methods={"GET", "POST"})
+     * @VIA\Route(name="user_contact_edit", path="/user/contact/{id}/", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
     public function editContactAction(int $id, Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); 
 
-        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
-        $form = $this->createForm(Form\ContactType::class, new Command\UpdateContactCommand($contact));
+        $command = new Command\UpdateContactCommand();
+        if ($request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
+            $command->init((array) $contact);   
+        }
+        $form = $this->createForm(Form\ContactType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -431,7 +452,7 @@ class UserController extends Controller
                     $this->get('command_bus')->handle($form->getData());
 
                     if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
+                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
                            
                         return $this->json([
                             'html' => $this->renderView('AppBundle:User:contact.html.twig', [
@@ -470,12 +491,31 @@ class UserController extends Controller
         ]); 
     }
 
+    /**
+     * @VIA\Get(name="user_contact_delete", path="/user/contact/{id}/delete/", requirements={"id" = "\d+"})
+     */
+    public function deleteContactAction(int $id, Request $request)
+    {
+        $this->checkIsAutorized();
+
+        $this->get('command_bus')->handle(new Command\DeleteContactCommand(['id' => $id]));
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([]);
+        }
+
+        return $this->redirectToRoute('user_account');
+    }
+
+    /**
+     * @VIA\Route(name="user_address_add", path="/user/address/add/", methods={"GET", "POST"})
+     */
     public function addAddressAction(Request $request)
     {
-        $this->checkIsAutorized()
+        $this->checkIsAutorized();
 
-        $uuid = $this->get('uuid.manager')->generate();
-        $form = $this->createForm(Form\AddressType::class, new Command\CreateAddressCommand(['uuid' => $uuid]));
+        $command = new Command\CreateAddressCommand();
+        $form = $this->createForm(Form\AddressType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -484,12 +524,11 @@ class UserController extends Controller
                     $this->get('command_bus')->handle($form->getData());
 
                     if ($request->isXmlHttpRequest()) {
-                        $id = $this->get('uuid.manager')->loadId($uuid);
-                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
+                        $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
 
                         return $this->json([
-                            'html' => $this->renderView('AppBundle:User:contact.html.twig', [
-                                'contact' => $contact,
+                            'html' => $this->renderView('AppBundle:User:address.html.twig', [
+                                'address' => $address,
                             ]),
                         ]);
                     }
@@ -526,23 +565,33 @@ class UserController extends Controller
 
 
     /**
-     * @VIA\Route(name="user_address_edit", path="/user/address/{id}/", requrements={"id" = "\d+"}, methods={"GET", "POST"})
+     * @VIA\Route(name="user_address_edit", path="/user/address/{id}/", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
     public function editAddressAction(int $id, Request $request)
     {
-        $this->checkIsAutorized()
+        $this->checkIsAutorized();
 
-        $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]), $address);
-        $form = $this->createForm(Form\AddressType::class, new Command\UpdateAddressCommand($address));
+        $command = new Command\UpdateAddressCommand();
+        if ($Request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]), $address);
+            $command->init((array) $address);
+        }
+        $form = $this->createForm(Form\AddressType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
                     if ($request->isXmlHttpRequest()) {
-                        return $this->json([]);
+                        $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
+                           
+                        return $this->json([
+                            'html' => $this->renderView('AppBundle:User:address.html.twig', [
+                                'address' => $address,
+                            ]),
+                        ]);
                     }
 
                     return $this->redirectToRoute('user_addresses');
@@ -563,16 +612,32 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:address_form.html.twig', [
+                'html' => $this->renderView('AppBundle:User:address_form_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
         }
 
-        return $this->render('AppBundle:User:address.html.twig', [
+        return $this->render('AppBundle:User:address_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
+    }
+
+    /**
+     * @VIA\Get(name="user_address_delete", path="/user/address/{id}/delete/", requirements={"id" = "\d+"})
+     */
+    public function deleteAddressAction(int $id, Request $request)
+    {
+        $this->checkIsAutorized();
+
+        $this->get('command_bus')->handle(new Command\DeleteAddressCommand(['id' => $id]));
+        
+        if ($Request->isXmlHttpRequest()) {
+            return $this->json([]);
+        }
+
+        return $this->redirectToRoute('user_account');
     }
 
     protected function checkIsAnonimous()

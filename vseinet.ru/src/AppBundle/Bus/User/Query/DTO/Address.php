@@ -79,16 +79,6 @@ class Address
     /**
      * @Assert\Type(type="integer")
      */
-    public $subwayStationId;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $subwayStationName;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
     public $floor;
 
     /**
@@ -132,8 +122,6 @@ class Address
         $building,
         $apartment,
         $office,
-        $subwayStationId,
-        $subwayStationName,
         $floor,
         $hasLift,
         $coordinates,
@@ -154,8 +142,6 @@ class Address
         $this->building = $building;
         $this->apartment = $apartment;
         $this->office = $office;
-        $this->subwayStationId = $subwayStationId;
-        $this->subwayStationName = $subwayStationName;
         $this->floor = $floor;
         $this->hasLift = $hasLift;
         $this->coordinates = $coordinates;
@@ -183,9 +169,6 @@ class Address
         }
         if ($office) {
             $fragments[] = 'оф '.$office;
-        }
-        if ($subwayStation) {
-            $fragments[] = 'м '.$subwayStation;
         }
 
         $this->address = implode(', ', $fragments);

@@ -95,7 +95,7 @@ class GetCurrentRepresentativeQueryHandler extends MessageHandler
         }
 
         foreach ($contacts as &$contact) {
-            $contact['value'] = $this->get('phone.formater')->format($contact['value']);
+            $contact['value'] = $this->get('phone.formatter')->format($contact['value']);
         }
 
         $contacts = array_filter($contacts, function($contact) {

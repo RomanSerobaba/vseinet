@@ -1,0 +1,45 @@
+<div class="block">
+    <div class="wrapper">
+        <h2>Адреса доставки</h2>
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <td>Адрес</td>
+                    <td style="width:50px">Этаж</td>
+                    <td style="width:50px">Лифт</td>
+                    <td style="width:40px"></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for address in account.addresses %}
+                    <tr>
+                        <td>
+                            {{ address.address }}   
+                        </td>
+                        <td>
+                            {{ address.floor }}
+                        </td>
+                        <td>
+                            {% if address.floor %}
+                                {% if address.hasLift %}есть{% else %}нет{% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a 
+                                href="{{ path('user_address_edit', { id: address.id }) }}" 
+                                title="Редактировать"
+                                class="icon address-edit"
+                            ></a>
+                            <a 
+                                href="{{ path('user_address_delete', { id: address.id }) }}" 
+                                title="Удалить"
+                                class="icon address-delete"
+                            ></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('user_address_add') }}" class="address-add">Добавить адрес</a>
+    </div>
+</div>

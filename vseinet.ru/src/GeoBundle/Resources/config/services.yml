@@ -17,8 +17,8 @@ services:
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
-    phone.formater:
-        class: 'GeoBundle\Service\PhoneFormater'
+    phone.formatter:
+        class: 'GeoBundle\Service\PhoneFormatter'
         public: true 
         calls:
             - [ 'setContainer', [ '@service_container' ] ]

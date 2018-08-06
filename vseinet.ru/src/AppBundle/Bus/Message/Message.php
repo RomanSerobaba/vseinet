@@ -5,12 +5,23 @@ namespace AppBundle\Bus\Message;
 abstract class Message  
 {
     /**
-     * Initial object with values from array.
+     * Constructor.
      *
      * @param array $values 
      * @param array $extra
      */
     public function __construct(array $values = [], array $extra = [])
+    {
+        $this->init($values, $extra);
+    }
+
+    /**
+     * Initial object with values from array.
+     *
+     * @param array $values 
+     * @param array $extra
+     */
+    public function init(array $values = [], array $extra = []) 
     {
         $data = $this->empty2null($extra + $values);
 
@@ -18,7 +29,7 @@ abstract class Message
             if (property_exists($this, $property)) {
                 $this->$property = $value;
             }
-        }
+        }     
     }
 
     protected function empty2null($value) 

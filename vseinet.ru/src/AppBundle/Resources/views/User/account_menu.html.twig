@@ -1,0 +1,26 @@
+<ul class="tabs r">
+    <li>
+        <a 
+            href="{% if 'account' == active %}#account{% else %}{{ path('user_account') }}{% endif %}" 
+            class="green"
+        >
+            Личная информация
+        </a>
+    </li>
+    <li>
+        <a 
+            href="{% if 'history' == active %}#history{% else %}{{ path('user_history') }}{% endif %}" 
+            class="green"
+        >
+            История заказов
+        </a>
+    </li>
+    <li>
+        <a 
+            href="{% if 'favorite' == active %}#favorite{% else %}{{ path('favorite') }}{% endif %}" 
+            class="green"
+        >
+            Избранные товары
+        </a>
+    </li>
+</ul>

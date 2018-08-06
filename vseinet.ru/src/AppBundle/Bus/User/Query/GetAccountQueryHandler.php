@@ -19,13 +19,14 @@ class GetAccountQueryHandler extends MessageHandler
                     p.secondname,
                     p.gender,
                     p.birthday,
-                    c.name
+                    gc.id,
+                    gc.name
                 )
             FROM AppBundle:User AS u
             INNER JOIN AppBundle:Person AS p WITH u.personId = p.id
-            INNER JOIN GeoBundle:GeoCity AS gc WITH gc.id = u.cityId
+            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = u.cityId
             WHERE u.id = :id
-        ")
+        ");
         $q->setParameter('id', $this->get('user.identity')->getUser()->getId());
         $info = $q->getSingleResult();
 
@@ -62,11 +63,8 @@ class GetAccountQueryHandler extends MessageHandler
                     ga.building,
                     ga.apartment,
                     ga.office,
-                    gss.id,
-                    gss.name,
                     ga.floor,
                     ga.hasLift,
-                    gss.name,
                     ga.coordinates,
                     ga.comment,
                     u2ga.isDefault
@@ -76,7 +74,6 @@ class GetAccountQueryHandler extends MessageHandler
             LEFT OUTER JOIN GeoBundle:GeoStreet AS gs WITH gs.id = ga.geoStreetId
             LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = gs.geoCityId
             LEFT OUTER JOIN GeoBundle:GeoRegion gr WITH gr.id = gc.geoRegionId 
-            LEFT OUTER JOIN GeoBundle:GeoSubwayStation AS gss WITH gss.id = ga.geoSubwayStationId
             WHERE u2ga.userId = :userId
         ");
         $q->setParameter('userId', $this->get('user.identity')->getUser()->getId());

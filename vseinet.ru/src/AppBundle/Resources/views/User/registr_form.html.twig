@@ -7,7 +7,7 @@
 {% block content %}
     <h1>Регистрация на сайте</h1>
     <div class="block gray w60p">
-        {{ form_start(form, { action: path('registr'), attr: { id: 'registr-form' }}) }}
+        {{ form_start(form, { action: path('user_registr'), attr: { id: 'registr-form' }}) }}
         <fieldset class="wrapper">
             {% if errors|length %}
                 <div class="row h error-summary">
