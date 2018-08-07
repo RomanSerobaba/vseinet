@@ -32,15 +32,15 @@ class UpdateCommand extends Message
     public $gender;
 
     /**
-     * @Assert\Type(type="datetime")
+     * @Assert\Type(type="DateTime")
      */
     public $birthday;
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш город")
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="GeoBundle\Entity\GeoCity")
      */
-    // public $city;
+    public $city;
     
     /**
      * @Assert\Type(type="boolean")

@@ -17,7 +17,7 @@ class GetQueryHandler extends MessageHandler
                     p.secondname,
                     p.gender,
                     p.birthday,
-                    u.cityId,
+                    gc.id,
                     gc.name,
                     u.isMarketingSubscribed
                 )

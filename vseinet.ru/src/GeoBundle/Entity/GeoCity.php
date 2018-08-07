@@ -52,7 +52,7 @@ class GeoCity
     /**
      * @var string
      *
-     * @ORM\Column(name="AOGUID", type="string")
+     * @ORM\Column(name="""AOGUID""", type="string")
      */
     private $AOGUID;
 
@@ -66,7 +66,7 @@ class GeoCity
     /**
      * @var integer
      *
-     * @ORM\Column(name="AOLEVEL", type="integer")
+     * @ORM\Column(name="""AOLEVEL""", type="integer")
      */
     private $AOLEVEL;
 

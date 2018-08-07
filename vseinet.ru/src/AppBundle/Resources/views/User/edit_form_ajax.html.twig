@@ -50,13 +50,13 @@
         <div class="error">{{ errors.birthday.0 }}</div>
     {% endif %}
 </div>
-{#<div class="row h{% if errors.city is defined %} error{% endif %}">
-    {{ form_label(form.city, 'Город*:') }}
+<div class="row h{% if errors.city is defined %} error{% endif %}">
+    {{ form_label(form.city, 'Населенный пункт*:') }}
     {{ form_widget(form.city, { attr: { class: 'txt' }}) }}
     {% if errors.city is defined %}
         <div class="error">{{ errors.city.0 }}</div>
     {% endif %}
-</div>#}
+</div>
 <div class="row h">
     <div class="subscribe">
         {{ form_widget(form.isMarketingSubscribed) }}
@@ -67,3 +67,4 @@
     {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
     {{ form_widget(form._token) }}
 </div>
+{{ form_end(form) }}

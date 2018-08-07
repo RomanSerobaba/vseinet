@@ -3,7 +3,7 @@
 namespace AppBundle\Bus\User\Command\Validator;
 
 use AppBundle\Bus\Exception\ValidationException;
-use AppBundle\Entity\ContactType;
+use AppBundle\Enum\ContactTypeCode;
 
 class ContactValidator
 {
@@ -20,7 +20,7 @@ class ContactValidator
     public function validate()
     {
         if (ContactTypeCode::MOBILE === $this->typeCode || ContactTypeCode::PHONE === $this->typeCode) {
-            $this->value = prep_replace('/\D+/', '', $this->value);
+            $this->value = preg_replace('/\D+/', '', $this->value);
             if (11 === strlen($this->value) && ('7' === $this->value[0] || '8' === $this->value)) {
                 $this->value = substr($this->value);
             }
@@ -39,7 +39,7 @@ class ContactValidator
                 ]);
             }
         }
-        if (ContactTypeCode::EMAIL) {
+        if (ContactTypeCode::EMAIL === $this->typeCode) {
             if (false === strpos($this->value, '@')) {
                 throw new ValidationException([
                     'value' => 'Неверный формат email',

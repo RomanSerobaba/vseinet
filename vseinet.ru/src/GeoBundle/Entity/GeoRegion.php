@@ -31,7 +31,7 @@ class GeoRegion
     /**
      * @var string
      *
-     * @ORM\Column(name="AOGUID", type="string")
+     * @ORM\Column(name="""AOGUID""", type="string")
      */
     private $AOGUID;
 

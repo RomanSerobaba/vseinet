@@ -213,3 +213,12 @@ SELECT {
 	padding: 0;
 	width: auto;
 }
+
+FORM .row.h .inline-h INPUT {
+	float: left;
+}
+FORM .row.h .inline-h LABEL {
+	margin: 0 0 0 3px;
+	padding: 0;
+	width: auto;
+}

@@ -11,6 +11,7 @@ use AppBundle\Bus\User\Form;
 use Symfony\Component\Form\FormError;
 use AppBundle\Bus\User\Query;
 use AppBundle\Bus\User\Command;
+use GeoBundle\Entity\GeoCity;
 
 class UserController extends Controller
 {
@@ -250,7 +251,10 @@ class UserController extends Controller
         $command = new Command\UpdateCommand();
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new Query\GetQuery(), $info);
-            $command->init((array) $info);    
+            $command->init((array) $info);  
+            if ($info->cityId) {
+                $command->city = $this->getDoctrine()->getRepository(GeoCity::class)->find($info->cityId);
+            }
         }
         $form = $this->createForm(Form\EditType::class, $command);
 
@@ -391,7 +395,7 @@ class UserController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
@@ -440,7 +444,7 @@ class UserController extends Controller
     {
         $this->checkIsAutorized(); 
 
-        $command = new Command\UpdateContactCommand();
+        $command = new Command\UpdateContactCommand(['id' => $id]);
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
             $command->init((array) $contact);   
@@ -451,7 +455,7 @@ class UserController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
@@ -467,8 +471,8 @@ class UserController extends Controller
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
+                // } catch (\Exception $e) {
+                //     throw new BadRequestHttpException($e);
                 }
             }
 
@@ -488,6 +492,7 @@ class UserController extends Controller
         }  
 
         return $this->render('AppBundle:User:contact_form.html.twig', [
+            'id' => $id,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]); 
@@ -689,7 +694,7 @@ class UserController extends Controller
     {
         $errors = [];
         foreach ($form->all() as $child) {
-            if (!$child->isValid()) {
+            if ($child->isSubmitted() && !$child->isValid()) {
                 foreach ($child->getErrors() as $error) {
                     $errors[$child->getName()][] = $error->getMessage();
                 }

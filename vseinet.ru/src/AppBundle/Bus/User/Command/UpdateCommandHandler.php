@@ -6,7 +6,6 @@ use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Person;
-use GeoBundle\Entity\GeoCity;
 
 class UpdateCommandHandler extends MessageHandler
 {
@@ -18,13 +17,7 @@ class UpdateCommandHandler extends MessageHandler
         if (!$user instanceof User) {
             throw new NotFoundHttpException();
         }
-        // if ($command->cityId) {
-        //     $city = $em->getRepository(GeoCity::class)->findOneBy($command->cityId);
-        //     if (!$city instanceof GeoCity) {
-        //         throw new NotFoundHttpException();
-        //     }
-        // }
-        // $user->setCityId($command->cityId);
+        $user->setCityId($command->city->getId());
         $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
         $em->persist($user);
 
@@ -36,14 +29,9 @@ class UpdateCommandHandler extends MessageHandler
         $person->setFirstname($command->firstname);
         $person->setSecondname($command->secondname);
         $person->setGender($command->gender);
-        if ($command->birthday) {
-            if (!$command->birthday instanceof \DateTime) {
-                $command->birthday = new \DateTime($command->birthday);
-            }
-        }
         $person->setBirthday($command->birthday);
+        
         $em->persist($person);
-
         $em->flush();
 
         $this->get('session')->getFlashBag()->add('notice', 'Ваш профиль успешно обновлен');

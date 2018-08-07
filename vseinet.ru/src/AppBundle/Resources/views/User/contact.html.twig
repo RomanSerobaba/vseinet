@@ -1,0 +1,33 @@
+{% set isEmail = constant('AppBundle\\Enum\\ContactTypeCode::EMAIL') ==  contact.typeCode %}
+{% set isMobile = constant('AppBundle\\Enum\\ContactTypeCode::MOBILE') ==  contact.typeCode %}
+{% set isPhone = constant('AppBundle\\Enum\\ContactTypeCode::PHONE') ==  contact.typeCode %}
+<tr data-id="{{ contact.id }}">
+    <td>
+        {% if isEmail %}
+            E-mail
+        {% elseif isMobile %}
+            Мобильный телефон
+        {% elseif isPhone %}
+            Телефон
+        {% endif %}    
+    </td>
+    <td>
+        {% if isMobile or isPhone %} 
+            {{ contact.value|phone_format }}
+        {% else %}
+            {{ contact.value }}
+        {% endif %}
+    </td>
+    <td>
+        <a 
+            href="{{ path('user_contact_edit', { id: contact.id }) }}" 
+            title="Редактировать"
+            class="icon contact-edit"
+        ></a>
+        <a 
+            href="{{ path('user_contact_delete', { id: contact.id }) }}" 
+            title="Удалить"
+            class="icon contact-delete"
+        ></a>
+    </td>
+</tr>

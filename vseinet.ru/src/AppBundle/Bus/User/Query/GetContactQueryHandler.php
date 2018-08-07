@@ -8,7 +8,7 @@ class GetContactQueryHandler extends MessageHandler
 {
     public function handle(GetContactQuery $query)
     {
-        $q = $this->getDoctrine()->getManager();->createQuery("
+        $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT 
                 NEW AppBundle\Bus\User\Query\DTO\Contact (
                     c.id,
