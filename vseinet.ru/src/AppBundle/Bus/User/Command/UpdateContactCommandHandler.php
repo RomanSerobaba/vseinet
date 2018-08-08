@@ -19,10 +19,14 @@ class UpdateContactCommandHandler extends MessageHandler
             throw new NotFoundHttpException();
         }
 
+        $validator = new Validator\ContactValidator($command->typeCode, $command->value);
+        $validator->validate();
+        $command->value = $validator->getValue();
+
         $duplicate = $em->getRepository(Contact::class)->findOneBy([
             'contactTypeCode' => $command->typeCode,
             'value' => $command->value,
-            'personId' => $user->getPersonId(),
+            'personId' => $user->person->getId(),
         ]);
         if ($duplicate instanceof Contact && $duplicate !== $contact) {
             throw new ValidationException([
@@ -30,22 +34,29 @@ class UpdateContactCommandHandler extends MessageHandler
             ]);
         }
 
-        $validator = new Validator\ContactValidator($command->typeCode, $command->value);
-        $validator->validate();
-        $command->value = $validator->getValue();
-
         if ($command->isMain) {
+            $same = $em->getRepository(Contact::class)->findOneBy([
+                'contactTypeCode' => $command->typeCode,
+                'value' => $command->value,    
+                'isMain' => true,
+            ]);
+            if ($same instanceof Contact && $same->getPersonId() !== $user->person->getId()) {
+                throw new ValidationException([
+                    'value' => 'Вы не можите назначить этот контакт основным',
+                ]);
+            }
+
             $q = $em->createQuery("
                 UPDATE AppBundle:Contact AS c 
                 SET c.isMain = false 
-                WHERE c.contactTypeCode = :typeCode AND c.personId = :personId
+                WHERE c.contactTypeCode = :typeCode AND c.personId = :personId AND c.id != :id
             ");
-            $q->setParameter('typeCode', $command->typeCode);
-            $q->setParameter('personId', $user->getPersonId());
+            $q->setParameter('typeCode', $contact->getContactTypeCode());
+            $q->setParameter('personId', $user->person->getId());
+            $q->setParameter('id', $contact->getId());
             $q->execute();
         }
 
-        $contact->setContactTypeCode($command->typeCode);
         $contact->setValue($command->value);
         $contact->setComment($command->comment);
         $contact->setIsMain($command->isMain);

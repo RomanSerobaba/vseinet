@@ -9,6 +9,11 @@ use AppBundle\Validator\Constraints\Enum;
 class CreateContactCommand extends Message
 {
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $id;
+
+    /**
      * @Assert\NotBlank(message="Выберите тип контакта")
      * @Enum("AppBundle\Enum\ContactTypeCode")
      */
@@ -29,9 +34,4 @@ class CreateContactCommand extends Message
      * @Assert\Type(type="boolean")
      */
     public $isMain;
-
-    /**
-     * @Assert\Uuid
-     */
-    public $uuid;
 }

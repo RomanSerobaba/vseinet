@@ -389,7 +389,7 @@ class UserController extends Controller
         $this->checkIsAutorized();   
 
         $command = new Command\CreateContactCommand();
-        $form = $this->createForm(Form\ContactType::class, $command);
+        $form = $this->createForm(Form\CreateContactType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -411,8 +411,6 @@ class UserController extends Controller
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -425,13 +423,13 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:contact_form_ajax.html.twig', [
+                'html' => $this->renderView('AppBundle:User:contact_create_form_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
         }  
 
-        return $this->render('AppBundle:User:contact_form.html.twig', [
+        return $this->render('AppBundle:User:contact_create_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]); 
@@ -449,7 +447,7 @@ class UserController extends Controller
             $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
             $command->init((array) $contact);   
         }
-        $form = $this->createForm(Form\ContactType::class, $command);
+        $form = $this->createForm(Form\ContactEditType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -471,8 +469,6 @@ class UserController extends Controller
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                // } catch (\Exception $e) {
-                //     throw new BadRequestHttpException($e);
                 }
             }
 
@@ -485,13 +481,13 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:contact_form_ajax.html.twig', [
+                'html' => $this->renderView('AppBundle:User:contact_edit_form_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
         }  
 
-        return $this->render('AppBundle:User:contact_form.html.twig', [
+        return $this->render('AppBundle:User:contact_edit_form.html.twig', [
             'id' => $id,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),

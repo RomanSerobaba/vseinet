@@ -28,6 +28,9 @@
     height: 16px;
     width: 16px;
 }
+.account-table .main * {
+    font-weight: 700;
+}
 .account-table .contact-edit,
 .account-table .address-edit {
     background: url('../images/edit_small.png');

@@ -22,7 +22,7 @@ class ContactValidator
         if (ContactTypeCode::MOBILE === $this->typeCode || ContactTypeCode::PHONE === $this->typeCode) {
             $this->value = preg_replace('/\D+/', '', $this->value);
             if (11 === strlen($this->value) && ('7' === $this->value[0] || '8' === $this->value)) {
-                $this->value = substr($this->value);
+                $this->value = substr($this->value, 1);
             }
         }
         if (ContactTypeCode::MOBILE === $this->typeCode) {

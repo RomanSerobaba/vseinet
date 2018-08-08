@@ -24,32 +24,32 @@ class PhoneFormatter extends ContainerAware
         foreach ($codes as $code) {
             if (0 === strpos($phone, $code)) {
                 $codelen = strlen($code);
-                if (3 == $codelen) {
+                if (3 === $codelen) {
                     preg_match('~(\d{3})(\d{3})(\d{2})(\d{2})~', $phone, $matches);
                 
                     return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}-{$matches[4]}";       
                 }
-                if (4 == $codelen) {
+                if (4 === $codelen) {
                     preg_match('~(\d{4})(\d{2})(\d{2})(\d{2})~', $phone, $matches);
                 
                     return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}-{$matches[4]}";     
                 }
-                if (5 == $codelen) {
+                if (5 === $codelen) {
                     preg_match('~(\d{5})(\d{1})(\d{2})(\d{2})~', $phone, $matches);
                 
                     return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}-{$matches[4]}";     
                 }
-                if (6 == $codelen) {
+                if (6 === $codelen) {
                     preg_match('~(\d{6})(\d{2})(\d{2})~', $phone, $matches);
                 
                     return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}";     
                 }
-                if (7 == $codelen) {
+                if (7 === $codelen) {
                     preg_match('~(\d{7})(\d{1})(\d{2})~', $phone, $matches);
                 
                     return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}";     
                 }
-                if (8 == $codelen) {
+                if (8 === $codelen) {
                     preg_match('~(\d{8})(\d{2})~', $phone, $matches);
                 
                     return "+7 ({$matches[1]}) {$matches[2]}";     

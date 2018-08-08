@@ -1,13 +1,4 @@
-{{ form_start(form, { action: path('user_contact_edit', { id: id }), attr: { id: 'edit-form' }}) }}
-{% if errors|length %}
-    <div class="row h error-summary">
-        <span class="error">
-            {{ errors|length|declension('Обнаружена;Обнаружено')}}
-            {{ errors|length }}
-            {{ errors|length|declension('ошибка;ошибок')}}
-        </span>
-    </div>
-{% endif %}
+{{ form_start(form, { action: path('user_contact_add'), attr: { id: 'contact-form' }}) }}
 <div class="row h{% if errors.typeCode is defined %} error{% endif %}">
     {{ form_label(form.typeCode, 'Тип*:') }}
     {{ form_widget(form.typeCode, { attr: { class: 'txt' }}) }}
@@ -24,13 +15,9 @@
         <div class="error">{{ errors.value.0 }}</div>
     {% endif %}
 </div>
-<div class="row h{% if errors.comment is defined %} error{% endif %}">
+<div class="row h{">
     {{ form_label(form.comment, 'Комментарий:') }}
-    {{ form_widget(form.comment, { attr: { class: 'txt' }})  }}
-    <span class="status"></span>
-    {% if errors.comment is defined %}
-        <div class="error">{{ errors.comment.0 }}</div>
-    {% endif %}
+    {{ form_widget(form.comment, { attr: { class: 'txt' }}) }}
 </div>
 <div class="row h">
     <div class="inline-h">
@@ -40,7 +27,6 @@
 </div>
 <div class="row h">
     {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
-    {#{ form_widget(form.id) }#}
     {{ form_widget(form._token) }}
 </div>
 {{ form_end(form) }}

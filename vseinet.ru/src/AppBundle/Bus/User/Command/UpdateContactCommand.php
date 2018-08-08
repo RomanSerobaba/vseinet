@@ -15,7 +15,6 @@ class UpdateContactCommand extends Message
     public $id;
 
     /**
-     * @Assert\NotBlank(message="Выберите тип контакта")
      * @Enum("AppBundle\Enum\ContactTypeCode")
      */
     public $typeCode;
