@@ -12,6 +12,7 @@ imports:
     - { resource: twig.yml }
     - { resource: sphinx.yml }
     - { resource: parsers.yml }
+    - { resource: httplug.yml }
     - { resource: "@GeoBundle/Resources/config/services.yml" }
     - { resource: "@SiteBundle/Resources/config/services.yml" }
     

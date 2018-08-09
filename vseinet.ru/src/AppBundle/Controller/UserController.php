@@ -518,13 +518,13 @@ class UserController extends Controller
         $this->checkIsAutorized();
 
         $command = new Command\CreateAddressCommand();
-        $form = $this->createForm(Form\AddressType::class, $command);
+        $form = $this->createForm(Form\CreateAddressType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($form->getData());
+                    $this->get('command_bus')->handle($command);
 
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
@@ -536,6 +536,7 @@ class UserController extends Controller
                         ]);
                     }
 
+                    return $this->redirectToRoute('user_address_add');
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
