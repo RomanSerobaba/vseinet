@@ -12,9 +12,9 @@ class Address
     public $id;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="string")
      */
-    public $regionId;
+    public $postalCode;
 
     /**
      * @Assert\Type(type="string")
@@ -27,9 +27,14 @@ class Address
     public $regionUnit;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="string") 
      */
-    public $cityId;
+    public $areaName;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $areaUnit;
 
     /**
      * @Assert\type(type="string")
@@ -40,11 +45,6 @@ class Address
      * @Assert\Type(type="string")
      */
     public $cityUnit;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $streetId;
 
     /**
      * @Assert\Type(type="string")
@@ -87,7 +87,7 @@ class Address
     public $hasLift;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type(type="AppBundle\Doctrine\DBAL\ValueObject\Point")
      */
     public $coordinates;
 
@@ -99,7 +99,7 @@ class Address
     /**
      * @Assert\Type(type="boolean")
      */
-    public $isDefault;
+    public $isMain;
 
     /**
      * @Assert\Type(type="string")
@@ -109,13 +109,13 @@ class Address
 
     public function __construct(
         $id,
-        $regionId,
+        $postalCode,
         $regionName,
         $regionUnit,
-        $cityId,
+        $areaName,
+        $areaUnit,
         $cityName,
         $cityUnit,
-        $streetId,
         $streetName,
         $streetUnit,
         $house,
@@ -126,16 +126,16 @@ class Address
         $hasLift,
         $coordinates,
         $comment,
-        $isDefault
+        $isMain
     ) {
         $this->id = $id;
-        $this->regionId = $regionId;
+        $this->postalCode = $postalCode;
         $this->regionName = $regionName;
         $this->regionUnit = $regionUnit;
-        $this->cityId = $cityId;
+        $this->areaName = $areaName;
+        $this->areaUnit = $areaUnit;
         $this->cityName = $cityName;
         $this->cityUnit = $cityUnit;
-        $this->streetId = $streetId;
         $this->streetName = $streetName;
         $this->streetUnit = $streetUnit;
         $this->house = $house;
@@ -146,31 +146,34 @@ class Address
         $this->hasLift = $hasLift;
         $this->coordinates = $coordinates;
         $this->comment = $comment;
-        $this->isDefault = $isDefault; 
+        $this->isMain = $isMain; 
 
-        $fragments = [];
+        $components = [];
+        if ($postalCode) {
+            $components[] = $postalCode;
+        }
         if ($regionName) {
-            $fragments[] = $regionName.' '.$regionUnit;
+            $components[] = $regionName.' '.$regionUnit;
         }
         if ($cityName) {
-            $fragments[] = $cityName.' '.$cityUnit;
+            $components[] = $cityName.' '.$cityUnit;
         }
         if ($streetName) {
-            $fragments[] = $streetName.' '.$streetUnit;
+            $components[] = $streetName.' '.$streetUnit;
         }
         if ($house) {
-            $fragments[] = 'д '.$house;
+            $components[] = 'д '.$house;
         }
         if ($building) {
-            $fragments[] = 'стр-е '.$building;
+            $components[] = 'стр-е '.$building;
         }
         if ($apartment) {
-            $fragments[] = 'кв '.$apartment;
+            $components[] = 'кв '.$apartment;
         }
         if ($office) {
-            $fragments[] = 'оф '.$office;
+            $components[] = 'оф '.$office;
         }
 
-        $this->address = implode(', ', $fragments);
+        $this->address = implode(', ', $components);
     }
 }

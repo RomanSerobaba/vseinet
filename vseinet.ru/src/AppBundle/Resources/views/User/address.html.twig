@@ -1,0 +1,25 @@
+<tr>
+    <td>
+        {{ address.address }}   
+    </td>
+    <td>
+        {{ address.floor }}
+    </td>
+    <td>
+        {% if address.floor %}
+            {% if address.hasLift %}есть{% else %}нет{% endif %}
+        {% endif %}
+    </td>
+    <td>
+        <a 
+            href="{{ path('user_address_edit', { id: address.id }) }}" 
+            title="Редактировать"
+            class="icon address-edit"
+        ></a>
+        <a 
+            href="{{ path('user_address_delete', { id: address.id }) }}" 
+            title="Удалить"
+            class="icon address-delete"
+        ></a>
+    </td>
+</tr>

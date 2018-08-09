@@ -517,14 +517,18 @@ class UserController extends Controller
     {
         $this->checkIsAutorized();
 
-        $command = new Command\CreateAddressCommand();
+        $variants = $this->get('session')->get('address-variants');
+        // print_r($variants);exit;
+        $command = new Command\CreateAddressCommand(['variants' => $variants, 'variant' => 0]);
         $form = $this->createForm(Form\CreateAddressType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                // print_r($command);exit;
                 try {
                     $this->get('command_bus')->handle($command);
+                    $this->get('session')->remove('address-variants');
 
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
@@ -536,13 +540,12 @@ class UserController extends Controller
                         ]);
                     }
 
-                    return $this->redirectToRoute('user_address_add');
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
+                    $this->get('session')->set('address-variants', $command->variants);
+                    // print_r($command);exit;
                 }
             }
 
@@ -560,8 +563,9 @@ class UserController extends Controller
                 ]),
             ]);
         }
-
+// print_r($command);exit;
         return $this->render('AppBundle:User:address_form.html.twig', [
+            'variants' => $command->variants,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);   

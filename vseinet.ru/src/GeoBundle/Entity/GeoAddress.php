@@ -3,6 +3,7 @@
 namespace GeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Doctrine\DBAL\ValueObject\Point;
 
 /**
  * GeoAddress
@@ -20,6 +21,34 @@ class GeoAddress
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="postal_code", type="string")
+     */
+    private $postalCode;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_region_id", type="integer")
+     */
+    private $geoRegionId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_area_id", type="integer")
+     */
+    private $geoAreaId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_city_id", type="integer")
+     */
+    private $geoCityId;
 
     /**
      * @var int
@@ -78,7 +107,7 @@ class GeoAddress
     private $geoSubwayStationId;
 
     /**
-     * @var \AppBundle\Doctrine\DBAL\ValueObject\Point
+     * @var Point
      *
      * @ORM\Column(name="coordinates", type="point")
      */
@@ -107,6 +136,102 @@ class GeoAddress
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set postalCode.
+     *
+     * @param string $postalCode
+     *
+     * @return GeoAddress
+     */
+    public function setPostalCode($postalCode)
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    /**
+     * Get postalCode.
+     *
+     * @return string
+     */
+    public function getPostalCode()
+    {
+        return $this->postalCode;
+    }
+
+    /**
+     * Set geoRegionId.
+     *
+     * @param int $geoRegionId
+     *
+     * @return GeoAddress
+     */
+    public function setGeoRegionId($geoRegionId)
+    {
+        $this->geoRegionId = $geoRegionId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoRegionId.
+     *
+     * @return int
+     */
+    public function getGeoRegionId()
+    {
+        return $this->geoRegionId;
+    }
+
+    /**
+     * Set geoAreaId.
+     *
+     * @param int $geoAreaId
+     *
+     * @return GeoAddress
+     */
+    public function setGeoAreaId($geoAreaId)
+    {
+        $this->geoAreaId = $geoAreaId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoAreaId.
+     *
+     * @return int
+     */
+    public function getGeoAreaId()
+    {
+        return $this->geoAreaId;
+    }
+
+    /**
+     * Set geoCityId.
+     *
+     * @param int $geoCityId
+     *
+     * @return GeoAddress
+     */
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = $geoCityId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoCityId.
+     *
+     * @return int
+     */
+    public function getGeoCityId()
+    {
+        return $this->geoCityId;
     }
 
     /**
@@ -304,7 +429,7 @@ class GeoAddress
     /**
      * Set coordinates.
      *
-     * @param @param \AppBundle\Doctrine\DBAL\ValueObject\Point $coordinates
+     * @param Point $coordinates
      *
      * @return GeoAddress
      */
@@ -318,7 +443,7 @@ class GeoAddress
     /**
      * Get coordinates.
      *
-     * @return \AppBundle\Doctrine\DBAL\ValueObject\Point
+     * @return Point
      */
     public function getCoordinates()
     {

@@ -3,8 +3,52 @@
     {{ form_label(form.address, 'Адрес*:') }}
     {{ form_widget(form.address, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
+    <div class="notice">регион/район, населенный пункт и улица*</div>
     {% if errors.address is defined %}
         <div class="error">{{ errors.address.0 }}</div>
+    {% endif %}
+</div>
+{% if variants is not empty %}
+    <div class="row h{% if errors.variant is defined %} error{% endif %}">
+        <div class="inline-h">
+            {% for variant in form.variant %}
+                {{ form_widget(variant) }}
+                {{ form_label(variant) }}
+                {% if not loop.last %}<br />{% endif %}
+            {% endfor %}
+        </div>
+        <span class="status"></span>
+        {% if errors.variant is defined %}
+            <div class="error">{{ errors.variant.0 }}</div>
+        {% endif %}
+    </div>
+{% endif %}
+<div class="row h{% if errors.house is defined or errors.floor is defined %} error{% endif %}">
+    <div class="col w80">
+        {{ form_widget(form.house, { attr: { class: 'txt' }}) }}
+        <div class="notice">дом*</div>
+    </div>
+    <div class="col w80">
+        {{ form_widget(form.building, { attr: { class: 'txt' }}) }}
+        <div class="notice">корпус</div>
+    </div>
+    <div class="col w80">
+        {{ form_widget(form.apartment, { attr: { class: 'txt' }}) }}
+        <div class="notice">квартира</div>
+    </div>
+    <div class="col w80">
+        {{ form_widget(form.floor, { attr: { class: 'txt' }}) }}
+        <div class="notice">этаж</div>
+    </div>
+    <div class="col w150 inline-h" style="padding-top:10px">
+        {{ form_widget(form.hasLift) }}
+        {{ form_label(form.hasLift, 'Есть лифт') }}
+    </div>
+    <span class="status"></span>
+    {% if errors.house is defined %}
+        <div class="error">{{ errors.house.0 }}</div>
+    {% elseif errors.floor is defined %}
+        <div class="error">{{ errors.floor.0 }}</div>
     {% endif %}
 </div>
 <div class="row h">
