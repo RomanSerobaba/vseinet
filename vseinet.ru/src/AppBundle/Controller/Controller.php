@@ -3,19 +3,19 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormError;
 
 class Controller extends BaseController
 {
-    protected function addFormErrors(AbstractType $form, array $messages) 
+    protected function addFormErrors(FormInterface $form, array $messages) 
     {
         foreach ($messages as $key => $message) {
             $form->get($key)->addError(new FormError($message));   
         }
     }
 
-    protected function getFormErrors(AbstractType $form)
+    protected function getFormErrors(FormInterface $form)
     {
         $errors = [];
         foreach ($form->all() as $child) {
