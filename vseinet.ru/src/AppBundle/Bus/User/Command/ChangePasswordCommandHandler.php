@@ -42,8 +42,6 @@ class ChangePasswordCommandHandler extends MessageHandler
         $em->persist($user);
         $em->flush();
 
-        $this->get('session')->getFlashBag()->add('notice', 'Новый пароль успешно сохранен');
-
         $this->get('command_bus')->handle(new LoginCompleteCommand(['id' => $user->getId()]));
     }
 }

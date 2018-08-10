@@ -1,19 +1,37 @@
-{{ form_start(form, { attr: { id: 'address-form' }}) }}
+{% if command.id %}
+    {% set title = 'Редактирование адреса' %}
+    {% set action = path('user_address_edit', { id: command.id }) %}
+{% else %}
+    {% set title = 'Добавление нового адреса' %}
+    {% set action = path('user_address_add') %}
+{% endif %}
+
+{{ form_start(form, { action: action, attr: { id: 'address-form', title: title }}) }}
+
 <div class="row h{% if errors.address is defined %} error{% endif %}">
     {{ form_label(form.address, 'Адрес*:') }}
     {{ form_widget(form.address, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
     <div class="notice">регион/район, населенный пункт и улица*</div>
+    {% if command.structuredAddress is not empty %}
+        <div class="notice">Структурированный адрес: <b>{{ command.structuredAddress }}</b></div>
+    {% endif %}
     {% if errors.address is defined %}
         <div class="error">{{ errors.address.0 }}</div>
     {% endif %}
 </div>
-{% if variants is not empty %}
+
+{% if command.variants is iterable %}
     <div class="row h{% if errors.variant is defined %} error{% endif %}">
         <div class="inline-h">
-            {% for variant in form.variant %}
-                {{ form_widget(variant) }}
-                {{ form_label(variant) }}
+            {% for index, variant in command.variants %}
+                <input 
+                    type="radio" 
+                    id="add_address_variant_{{ index }}"
+                    name="add_address[variant]"
+                    value="{{ index }}" 
+                />
+                <label for="add_address_variant_{{ index }}">{{ variant }}</label>
                 {% if not loop.last %}<br />{% endif %}
             {% endfor %}
         </div>
@@ -23,6 +41,7 @@
         {% endif %}
     </div>
 {% endif %}
+
 <div class="row h{% if errors.house is defined or errors.floor is defined %} error{% endif %}">
     <div class="col w80">
         {{ form_widget(form.house, { attr: { class: 'txt' }}) }}
@@ -51,18 +70,22 @@
         <div class="error">{{ errors.floor.0 }}</div>
     {% endif %}
 </div>
+
 <div class="row h">
     {{ form_label(form.comment, 'Комментарий:') }}
     {{ form_widget(form.comment, { attr: { class: 'txt' }}) }}
 </div>
+
 <div class="row h">
     <div class="inline-h">
         {{ form_widget(form.isMain) }}
         {{ form_label(form.isMain, 'Основной') }}
     </div>
 </div>
+
 <div class="row h">
     {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
     {{ form_widget(form._token) }}
 </div>
-{{ form_end(form) }}
+
+{{ form_end(form, { render_rest: false }) }}

@@ -94,6 +94,11 @@ class Address
     /**
      * @Assert\Type(type="string")
      */
+    public $address;
+
+    /**
+     * @Assert\Type(type="string")
+     */
     public $comment;
 
     /**
@@ -104,7 +109,7 @@ class Address
     /**
      * @Assert\Type(type="string")
      */
-    public $address;
+    public $structuredAddress;
 
 
     public function __construct(
@@ -125,6 +130,7 @@ class Address
         $floor,
         $hasLift,
         $coordinates,
+        $address,
         $comment,
         $isMain
     ) {
@@ -145,6 +151,7 @@ class Address
         $this->floor = $floor;
         $this->hasLift = $hasLift;
         $this->coordinates = $coordinates;
+        $this->address = $address;
         $this->comment = $comment;
         $this->isMain = $isMain; 
 
@@ -173,7 +180,8 @@ class Address
         if ($office) {
             $components[] = 'оф '.$office;
         }
-
-        $this->address = implode(', ', $components);
+        if (!empty($components)) {
+            $this->structuredAddress = implode(', ', $components);
+        }
     }
 }

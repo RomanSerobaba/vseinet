@@ -3,47 +3,49 @@
 namespace AppBundle\Bus\User\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetAddressQueryHandler extends MessageHandler
 {
     public function handle(GetAddressQuery $query)
     {
-        $q = $this->getDoctrine()->getManager(->createQuery("
+         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\User\Query\DTO\Address (
-                    ga.id,
-                    gr.id,
+                    a.id,
+                    a.postalCode,
                     gr.name,
                     gr.unit,
-                    gc.id,
+                    ga.name,
+                    ga.unit,
                     gc.name,
                     gc.unit,
-                    gs.id,
                     gs.name,
                     gs.unit,
-                    ga.house,
-                    ga.building,
-                    ga.apartment,
-                    ga.office,
-                    gss.id,
-                    gss.name,
-                    ga.floor,
-                    ga.hasLift,
-                    gss.name,
-                    ga.coordinates,
-                    ga.comment,
-                    u2ga.isDefault
+                    a.house,
+                    a.building,
+                    a.apartment,
+                    a.office,
+                    a.floor,
+                    a.hasLift,
+                    a.coordinates,
+                    a.address,
+                    a.comment,
+                    ga2p.isMain
                 )
-            FROM AppBundle:UserToAddress AS u2ga
-            INNER JOIN GeoBundle:GeoAddress AS ga WITH ga.id = u2ga.geoAddressId
-            LEFT OUTER JOIN GeoBundle:GeoStreet AS gs WITH gs.id = ga.geoStreetId
-            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = gs.geoCityId
-            LEFT OUTER JOIN GeoBundle:GeoRegion gr WITH gr.id = gc.geoRegionId 
-            LEFT OUTER JOIN GeoBundle:GeoSubwayStation AS gss WITH gss.id = ga.geoSubwayStationId
-            WHERE ga.id = :id
+            FROM GeoBundle:GeoAddressToPerson AS ga2p
+            INNER JOIN GeoBundle:GeoAddress AS a WITH a.id = ga2p.geoAddressId
+            LEFT OUTER JOIN GeoBundle:GeoRegion gr WITH gr.id = a.geoRegionId 
+            LEFT OUTER JOIN GeoBundle:GeoArea AS ga WITH ga.id = a.geoAreaId
+            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = a.geoCityId
+            LEFT OUTER JOIN GeoBundle:GeoStreet AS gs WITH gs.id = a.geoStreetId
+            WHERE a.id = :id
         ");
         $q->setParameter('id', $query->id);
         $address = $q->getSingleResult();
+        if (!$address instanceof DTO\Address) {
+            throw new NotFoundHttpException();
+        }
 
         return $address;
     }

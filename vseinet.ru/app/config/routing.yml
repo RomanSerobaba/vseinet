@@ -1,100 +1,15 @@
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-    
-# finanse:
-#     resource: "@FinanseBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
 
 site:
     resource: "@SiteBundle/Controller/"
     type:     annotation
     prefix:   /
 
-# document:
-#     resource: "@DocumentBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1/documents
-
-shop:
-    resource: "@ShopBundle/Controller/"
-    type:     annotation
-    prefix:   /api/v1
-
-# promo:
-#     resource: "@PromoBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
-
-# catalog:
-#     resource: "@CatalogBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
-
 geo:
     resource: "@GeoBundle/Controller/"
     type:     annotation
     prefix:   /
-
-# suppliers:
-#     resource: "@SuppliersBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
-
-# register:
-#     resource: "@RegisterBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
-
-# order:
-#     resource: "@OrderBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1  
-
-# accounting:
-#     resource: "@AccountingBundle/Controller/"
-#     type:     annotation
-#     prefix:   /
-
-pricing:
-    resource: "@PricingBundle/Controller/"
-    type:     annotation
-    prefix:   /api/v1
-
-org:
-    resource: "@OrgBundle/Controller/"
-    type:     annotation
-    prefix:   /api/v1
-
-# service:
-#     resource: "@ServiceBundle/Controller/"
-#     type:     annotation
-#     prefix:   /service
-
-# reserves:
-#     resource: "@ReservesBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
-
-# supply:
-#     resource: "@SupplyBundle/Controller/"
-#     type:     annotation
-#     prefix:   /api/v1
-
-content:
-    resource: "@ContentBundle/Controller/"
-    type: annotation
-    prefix: /api/v1
-
-# matrix:
-#     resource: "@MatrixBundle/Controller/"
-#     type: annotation
-#     prefix: /api/v1
-
-# delivery:
-#     resource: "@DeliveryBundle/Controller/"
-#     type: annotation
-#     prefix: /api/v1
 
 app:
     resource: "@AppBundle/Controller/"

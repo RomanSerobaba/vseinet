@@ -1,24 +1,21 @@
-<?php
+<?php 
 
 namespace AppBundle\Bus\User\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\{ CheckboxType, ChoiceType, IntegerType, SubmitType, TextType };
+use Symfony\Component\Form\Extension\Core\Type\{ CheckboxType, IntegerType, SubmitType, TextType };
 
-class CreateAddressType extends AbstractType
+class AddAddressType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // print_r($options['data']);exit;
         $builder
             ->add('address', TextType::class, [
                 'required' => true,
             ])
-            ->add('variant', ChoiceType::class, [
-                'required' => true,
-                'choices' => array_flip($options['data']->variants ?? []),
-                'expanded' => true,
+            ->add('variant', IntegerType::class, [
+                'required' => false,
             ])
             ->add('house', TextType::class, [
                 'required' => true,

@@ -3,6 +3,7 @@
 namespace AppBundle\Bus\User\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Enum\ContactTypeCode;
 
 class Contact
 {
@@ -31,6 +32,15 @@ class Contact
      */
     public $isMain;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $typeCodeTitle;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isPhone;
 
     public function __construct($id, $typeCode, $value, $comment, $isMain)
     {
@@ -39,5 +49,7 @@ class Contact
         $this->value = $value;
         $this->comment = $comment;
         $this->isMain = $isMain;
+        $this->typeCodeTitle = ContactTypeCode::getTitle($typeCode);
+        $this->isPhone = ContactTypeCode::MOBILE === $typeCode || ContactTypeCode::PHONE === $typeCode;
     }
 }

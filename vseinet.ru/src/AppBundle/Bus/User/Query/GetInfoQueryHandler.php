@@ -4,9 +4,9 @@ namespace AppBundle\Bus\User\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 
-class GetQueryHandler extends MessageHandler
+class GetInfoQueryHandler extends MessageHandler
 {
-    public function handle(GetQuery $query)
+    public function handle(GetInfoQuery $query)
     {
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT 

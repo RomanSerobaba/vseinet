@@ -2,13 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\User\Form;
-use Symfony\Component\Form\FormError;
 use AppBundle\Bus\User\Query;
 use AppBundle\Bus\User\Command;
 use GeoBundle\Entity\GeoCity;
@@ -20,7 +17,7 @@ class UserController extends Controller
      */
     public function registrAction(Request $request) 
     {
-        $this->checkIsAnonimous();
+        $this->checkIsAnonimous(); // @todo: remove it
 
         $command = new Command\RegistrCommand();
         $form = $this->createForm(Form\RegistrType::class, $command);
@@ -31,13 +28,13 @@ class UserController extends Controller
                 try {
                     $this->get('command_bus')->handle($command);
 
+                    $this->get('session')->getFlashBag()->add('notice', 'Регистрация прошла успешно');
+
                     return $this->redirectToRoute('index');
         
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
-                }
+                } 
             }
         }
 
@@ -52,7 +49,13 @@ class UserController extends Controller
      */
     public function loginAction(Request $request)
     {
-        $this->checkIsAnonimous();
+        $this->checkIsAnonimous(); // @todo: remove it
+
+        if ($request->isMethod('GET') && !$request->isXmlHttpRequest()) {
+            if (!$this->get('session')->has('return_url')) {
+                $this->get('session')->set('return_url', $request->headers->get('referer'));
+            }    
+        }
 
         $command = new Command\LoginCommand();
         $form = $this->createForm(Form\LoginType::class, $command);
@@ -67,13 +70,15 @@ class UserController extends Controller
                         return $this->json([]);
                     }
 
-                    return $this->redirect($this->getReturnUrl());
+                    if ($this->get('session')->has('return_url')) {
+                        return $this->redirect($this->get('session')->get('return_url'));    
+                    }
+
+                    return $this->redirectToRoute('index');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
-                }
+                } 
             }
 
             if ($request->isXmlHttpRequest()) {
@@ -81,9 +86,6 @@ class UserController extends Controller
                     'errors' => $this->getFormErrors($form),
                 ]);
             }
-
-        } else {
-            $this->setReturnUrl($request);
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -105,7 +107,7 @@ class UserController extends Controller
      */
     public function forgotAction(Request $request)
     {
-        $this->checkIsAnonimous();
+        $this->checkIsAnonimous(); // @todo: remove it
 
         $command = new Command\ForgotCommand();
         $form = $this->createForm(Form\ForgotType::class, $command);
@@ -120,9 +122,7 @@ class UserController extends Controller
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
-                }
+                } 
             }
         }
 
@@ -137,17 +137,12 @@ class UserController extends Controller
      */
     public function checkAction(Request $request)
     {
-        $this->checkIsAnonimous();
+        $this->checkIsAnonimous(); // @todo: remove it
 
         if ($request->isMethod('GET') && $request->query->has('hash')) {
-            try {
-                $this->get('command_bus')->handle(new Command\CheckTokenCommand($request->query->all()));
+            $this->get('command_bus')->handle(new Command\CheckTokenCommand($request->query->all()));
                 
-                return $this->redirectToRoute('user_restore_password');
-
-            } catch (\Exception $e) {
-                throw new BadRequestHttpException($e);
-            }
+            return $this->redirectToRoute('user_restore_password');
         }
         
         $command = new Command\CheckTokenCommand();
@@ -163,9 +158,7 @@ class UserController extends Controller
                     
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
-                }
+                } 
             }
         }    
 
@@ -180,7 +173,7 @@ class UserController extends Controller
      */
     public function restoreAction(Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
         
         $command = new Command\RestorePasswordCommand();
         $form = $this->createForm(Form\RestorePasswordType::class, $command);
@@ -195,9 +188,7 @@ class UserController extends Controller
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
-                }
+                } 
             }
         }
 
@@ -212,7 +203,7 @@ class UserController extends Controller
      */
     public function logoutAction(Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
         
         $this->get('command_bus')->handle(new Command\LogoutCommand());
 
@@ -224,9 +215,17 @@ class UserController extends Controller
      */
     public function accountAction(Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
 
-        $this->get('query_bus')->handle(new Query\GetAccountQuery(), $account);
+        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
+        $this->get('query_bus')->handle(new Query\GetContactsQuery(), $contacts);
+        $this->get('query_bus')->handle(new Query\GetAddressesQuery(), $addresses);
+
+        $account = [
+            'info' => $info,
+            'contacts' => $contacts,
+            'addresses' => $addresses,
+        ];
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
@@ -246,11 +245,11 @@ class UserController extends Controller
      */
     public function editAction(Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
 
         $command = new Command\UpdateCommand();
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new Query\GetQuery(), $info);
+            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
             $command->init((array) $info);  
             if ($info->cityId) {
                 $command->city = $this->getDoctrine()->getRepository(GeoCity::class)->find($info->cityId);
@@ -264,24 +263,25 @@ class UserController extends Controller
                 try {
                     $this->get('command_bus')->handle($command);
 
+                    $notice = 'Ваш профиль успешно обновлен';
+
                     if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetQuery(), $info);
+                        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
                         
                         return $this->json([
                             'html' => $this->renderView('AppBundle:User:account_info.html.twig', [
                                 'info' => $info, 
                             ]),
+                            'notice' => $notice,
                         ]);
-
-                        return $this->json([]);
                     }
+
+                    $this->get('session')->getFlashBag()->add('notice', $notice);
 
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -309,6 +309,7 @@ class UserController extends Controller
 
     /**
      * @VIA\Route(name="user_history", path="/user/history/", methods={"GET", "POST"})
+     * @todo: draft
      */
     public function historyAction(Request $request)
     {
@@ -334,7 +335,7 @@ class UserController extends Controller
      */
     public function passwordAction(Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
 
         $command = new Command\ChangePasswordCommand();
         $form = $this->createForm(Form\ChangePasswordType::class, $command);
@@ -345,16 +346,20 @@ class UserController extends Controller
                 try {
                     $this->get('command_bus')->handle($command);
 
+                    $notice = 'Новый пароль успешно сохранен';
+
                     if ($request->isXmlHttpRequest()) {
-                        return $this->json([]);
+                        return $this->json([
+                            'notice' => $notice,
+                        ]);
                     }
+
+                    $this->get('session')->getFlashBag()->add('notice', $notice);
                     
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
                 }
             }
 
@@ -373,8 +378,6 @@ class UserController extends Controller
             ]);
         }
 
-        // var_dump($command, $this->getFormErrors($form)); exit;
-
         return $this->render('AppBundle:User:password_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
@@ -383,71 +386,18 @@ class UserController extends Controller
 
     /**
      * @VIA\Route(name="user_contact_add", path="/user/contact/add/", methods={"GET", "POST"})
-     */
-    public function addContactAction(Request $request)
-    {
-        $this->checkIsAutorized();   
-
-        $command = new Command\CreateContactCommand();
-        $form = $this->createForm(Form\CreateContactType::class, $command);
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->get('command_bus')->handle($command);
-
-                    if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
-
-                        return $this->json([
-                            'html' => $this->renderView('AppBundle:User:contact.html.twig', [
-                                'contact' => $contact,
-                            ]),
-                        ]);
-                    }
-
-                    return $this->redirectToRoute('user_account');
-
-                } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
-                }
-            }
-
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'errors' => $this->getFormErrors($form),
-                ]);
-            }
-        }
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('AppBundle:User:contact_create_form_ajax.html.twig', [
-                    'form' => $form->createView(),
-                ]),
-            ]);
-        }  
-
-        return $this->render('AppBundle:User:contact_create_form.html.twig', [
-            'form' => $form->createView(),
-            'errors' => $this->getFormErrors($form),
-        ]); 
-    }
-
-    /**
      * @VIA\Route(name="user_contact_edit", path="/user/contact/{id}/", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
-    public function editContactAction(int $id, Request $request)
+    public function addContactAction(int $id = 0, Request $request)
     {
-        $this->checkIsAutorized(); 
+        $this->checkIsAutorized(); // @todo: remove it
 
-        $command = new Command\UpdateContactCommand(['id' => $id]);
-        if ($request->isMethod('GET')) {
+        $command = new Command\AddContactCommand(['id' => $id]);
+        if ($id && $request->isMethod('GET')) {
             $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
             $command->init((array) $contact);   
         }
-        $form = $this->createForm(Form\ContactEditType::class, $command);
+        $form = $this->createForm(Form\AddContactType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -455,15 +405,20 @@ class UserController extends Controller
                 try {
                     $this->get('command_bus')->handle($command);
 
+                    $notice = $id ? 'Контакт успешно обновлен' : 'Контакт успешно добавлен';
+
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
-                           
+
                         return $this->json([
                             'html' => $this->renderView('AppBundle:User:contact.html.twig', [
                                 'contact' => $contact,
                             ]),
+                            'notice' => $notice,
                         ]);
                     }
+
+                    $this->get('session')->getFlashBag()->add('notice', $notice);
 
                     return $this->redirectToRoute('user_account');
 
@@ -481,14 +436,14 @@ class UserController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('AppBundle:User:contact_edit_form_ajax.html.twig', [
+                'html' => $this->renderView('AppBundle:User:contact_form_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
         }  
 
-        return $this->render('AppBundle:User:contact_edit_form.html.twig', [
-            'id' => $id,
+        return $this->render('AppBundle:User:contact_form.html.twig', [
+            'command' => $command,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]); 
@@ -499,12 +454,16 @@ class UserController extends Controller
      */
     public function deleteContactAction(int $id, Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
 
         $this->get('command_bus')->handle(new Command\DeleteContactCommand(['id' => $id]));
         
+        $notice = 'Контакт успешно удален';
+
         if ($request->isXmlHttpRequest()) {
-            return $this->json([]);
+            return $this->json([
+                'notice' => $notice,
+            ]);
         }
 
         return $this->redirectToRoute('user_account');
@@ -512,23 +471,24 @@ class UserController extends Controller
 
     /**
      * @VIA\Route(name="user_address_add", path="/user/address/add/", methods={"GET", "POST"})
+     * @VIA\Route(name="user_address_edit", path="/user/address/{id}/", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
-    public function addAddressAction(Request $request)
+    public function addAddressAction(int $id = 0, Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
 
-        $variants = $this->get('session')->get('address-variants');
-        // print_r($variants);exit;
-        $command = new Command\CreateAddressCommand(['variants' => $variants, 'variant' => 0]);
-        $form = $this->createForm(Form\CreateAddressType::class, $command);
+        $command = new Command\AddAddressCommand(['id' => $id]);
+        if ($id && $request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]), $address);
+            $command->init((array) $address);
+        }
+        $form = $this->createForm(Form\AddAddressType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                // print_r($command);exit;
                 try {
                     $this->get('command_bus')->handle($command);
-                    $this->get('session')->remove('address-variants');
 
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
@@ -538,14 +498,19 @@ class UserController extends Controller
                                 'address' => $address,
                             ]),
                         ]);
+                    }
+
+                    $flashBag = $this->get('session')->getFlashBag();
+                    if ($command->id) {
+                        $flashBag->add('notice', 'Адрес доставки успешно изменен');
+                    } else {
+                        $flashBag->add('notice', 'Адрес доставки успешно добавлен');
                     }
 
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                    $this->get('session')->set('address-variants', $command->variants);
-                    // print_r($command);exit;
                 }
             }
 
@@ -563,73 +528,12 @@ class UserController extends Controller
                 ]),
             ]);
         }
-// print_r($command);exit;
+
         return $this->render('AppBundle:User:address_form.html.twig', [
-            'variants' => $command->variants,
+            'command' => $command,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);   
-    }
-
-
-    /**
-     * @VIA\Route(name="user_address_edit", path="/user/address/{id}/", requirements={"id" = "\d+"}, methods={"GET", "POST"})
-     */
-    public function editAddressAction(int $id, Request $request)
-    {
-        $this->checkIsAutorized();
-
-        $command = new Command\UpdateAddressCommand();
-        if ($Request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]), $address);
-            $command->init((array) $address);
-        }
-        $form = $this->createForm(Form\AddressType::class, $command);
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->get('command_bus')->handle($command);
-
-                    if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
-                           
-                        return $this->json([
-                            'html' => $this->renderView('AppBundle:User:address.html.twig', [
-                                'address' => $address,
-                            ]),
-                        ]);
-                    }
-
-                    return $this->redirectToRoute('user_addresses');
-
-                } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
-                } catch (\Exception $e) {
-                    throw new BadRequestHttpException($e);
-                }
-            }
-
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'errors' => $this->getFormErrors($form),
-                ]);
-            }
-        }
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('AppBundle:User:address_form_ajax.html.twig', [
-                    'form' => $form->createView(),
-                ]),
-            ]);
-        }
-
-        return $this->render('AppBundle:User:address_form.html.twig', [
-            'form' => $form->createView(),
-            'errors' => $this->getFormErrors($form),
-        ]);
     }
 
     /**
@@ -637,71 +541,20 @@ class UserController extends Controller
      */
     public function deleteAddressAction(int $id, Request $request)
     {
-        $this->checkIsAutorized();
+        $this->checkIsAutorized(); // @todo: remove it
 
         $this->get('command_bus')->handle(new Command\DeleteAddressCommand(['id' => $id]));
         
-        if ($Request->isXmlHttpRequest()) {
-            return $this->json([]);
+        $notice = 'Адрес доставки успешно удален';
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'notice' => $notice,
+            ]);
         }
+
+        $this->get('session')->getFlashBag()->add('notice', $notice);
 
         return $this->redirectToRoute('user_account');
-    }
-
-    protected function checkIsAnonimous()
-    {
-        if (!$this->get('user.identity')->isAnonimous()) {
-            throw new BadRequestHttpException();
-        }
-    }
-
-    protected function checkIsAutorized()
-    {
-        if (!$this->get('user.identity')->isAuthorized()) {
-            throw new BadRequestHttpException();
-        }
-    }
-
-    protected function getUserId()
-    {
-        return $this->get('user.identity')->getUser()->getId();
-    }
-
-    protected function setReturnUrl(Request $request)
-    {
-        $session = $this->get('session');
-        if (!$session->has('return_url')) {
-            $session->set('return_url', $request->headers->get('referer'));
-        }
-    }
-
-    protected function getReturnUrl()
-    {
-        $session = $this->get('session');
-        $returnUrl = $session->get('return_url') ?? $this->generateUrl('index');
-        $session->remove('return_url');
-
-        return $returnUrl;
-    }
-
-    protected function addFormErrors($form, array $messages) 
-    {
-        foreach ($messages as $key => $message) {
-            $form->get($key)->addError(new FormError($message));   
-        }
-    }
-
-    protected function getFormErrors($form)
-    {
-        $errors = [];
-        foreach ($form->all() as $child) {
-            if ($child->isSubmitted() && !$child->isValid()) {
-                foreach ($child->getErrors() as $error) {
-                    $errors[$child->getName()][] = $error->getMessage();
-                }
-            }
-        }
-
-        return $errors;
     }
 }

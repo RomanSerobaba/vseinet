@@ -1,6 +1,10 @@
 <tr>
     <td>
-        {{ address.address }}   
+        {% if address.structuredAddress is not empty %}
+            {{ address.structuredAddress }}
+        {% else %}
+            {{ address.address }}   
+        {% endif %}
     </td>
     <td>
         {{ address.floor }}

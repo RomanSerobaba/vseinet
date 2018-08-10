@@ -5,7 +5,7 @@ namespace AppBundle\Bus\User\Command;
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateAddressCommand extends Message
+class AddAddressCommand extends Message
 {
     /**
      * @Assert\Type(type="integer")
@@ -64,4 +64,9 @@ class CreateAddressCommand extends Message
      * @Assert\Type(type="array")
      */
     public $variants;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $structuredAddress;
 }

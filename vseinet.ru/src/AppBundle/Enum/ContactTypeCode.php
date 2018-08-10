@@ -21,4 +21,14 @@ class ContactTypeCode
             'ICQ' => self::ICQ,
         ];
     }
+
+    public static function getTitle($value)
+    {
+        $choices = array_flip(self::getChoices());
+        if (!isset($choices[$value])) {
+            throw new \InvalidArgumentException(sprintf('Value mast be in "%s"', implode(', ', array_keys($choices))));
+        }
+
+        return $choices[$value];
+    }
 }

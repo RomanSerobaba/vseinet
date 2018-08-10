@@ -34,8 +34,6 @@ class UpdateCommandHandler extends MessageHandler
         $em->persist($person);
         $em->flush();
 
-        $this->get('session')->getFlashBag()->add('notice', 'Ваш профиль успешно обновлен');
-
         $this->get('command_bus')->handle(new LoginCompleteCommand(['id' => $user->getId()]));
     }
 }

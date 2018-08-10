@@ -11,38 +11,36 @@ class GetAddressesQueryHandler extends MessageHandler
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\User\Query\DTO\Address (
-                    ga.id,
-                    gr.id,
+                    a.id,
+                    a.postalCode,
                     gr.name,
                     gr.unit,
-                    gc.id,
+                    ga.name,
+                    ga.unit,
                     gc.name,
                     gc.unit,
-                    gs.id,
                     gs.name,
                     gs.unit,
-                    ga.house,
-                    ga.building,
-                    ga.apartment,
-                    ga.office,
-                    gss.id,
-                    gss.name,
-                    ga.floor,
-                    ga.hasLift,
-                    gss.name,
-                    ga.coordinates,
-                    ga.comment,
-                    u2ga.isDefault
+                    a.house,
+                    a.building,
+                    a.apartment,
+                    a.office,
+                    a.floor,
+                    a.hasLift,
+                    a.coordinates,
+                    a.address,
+                    a.comment,
+                    ga2p.isMain
                 )
-            FROM AppBundle:UserToAddress AS u2ga
-            INNER JOIN GeoBundle:GeoAddress AS ga WITH ga.id = u2ga.geoAddressId
-            LEFT OUTER JOIN GeoBundle:GeoStreet AS gs WITH gs.id = ga.geoStreetId
-            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = gs.geoCityId
-            LEFT OUTER JOIN GeoBundle:GeoRegion gr WITH gr.id = gc.geoRegionId 
-            LEFT OUTER JOIN GeoBundle:GeoSubwayStation AS gss WITH gss.id = ga.geoSubwayStationId
-            WHERE u2ga.userId = :userId
+            FROM GeoBundle:GeoAddressToPerson AS ga2p
+            INNER JOIN GeoBundle:GeoAddress AS a WITH a.id = ga2p.geoAddressId
+            LEFT OUTER JOIN GeoBundle:GeoRegion gr WITH gr.id = a.geoRegionId 
+            LEFT OUTER JOIN GeoBundle:GeoArea AS ga WITH ga.id = a.geoAreaId
+            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = a.geoCityId
+            LEFT OUTER JOIN GeoBundle:GeoStreet AS gs WITH gs.id = a.geoStreetId
+            WHERE ga2p.personId = :personId
         ");
-        $q->setParameter('userId', $this->get('user.identity')->getUser()->getId());
+        $q->setParameter('personId', $this->get('user.identity')->getUser()->getPersonId());
         $addresses = $q->getResult();
 
         return $addresses;

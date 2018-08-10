@@ -1,18 +1,9 @@
-{% set isEmail = constant('AppBundle\\Enum\\ContactTypeCode::EMAIL') ==  contact.typeCode %}
-{% set isMobile = constant('AppBundle\\Enum\\ContactTypeCode::MOBILE') ==  contact.typeCode %}
-{% set isPhone = constant('AppBundle\\Enum\\ContactTypeCode::PHONE') ==  contact.typeCode %}
 <tr data-id="{{ contact.id }}"{% if contact.isMain %} class="main"{% endif %}>
     <td>
-        {% if isEmail %}
-            E-mail
-        {% elseif isMobile %}
-            Мобильный телефон
-        {% elseif isPhone %}
-            Телефон
-        {% endif %}    
+        {{ contact.typeCodeTitle }}
     </td>
     <td>
-        {% if isMobile or isPhone %} 
+        {% if contact.isPhone %} 
             {{ contact.value|phone_format }}
         {% else %}
             {{ contact.value }}

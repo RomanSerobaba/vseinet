@@ -433,7 +433,7 @@ class GeoAddress
      *
      * @return GeoAddress
      */
-    public function setCoordinates(\AppBundle\Doctrine\DBAL\ValueObject\Point $coordinates)
+    public function setCoordinates(?Point $coordinates)
     {
         $this->coordinates = $coordinates;
 

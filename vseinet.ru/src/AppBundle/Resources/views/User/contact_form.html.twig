@@ -1,16 +1,16 @@
 {% extends "AppBundle::layout.html.twig" %}
 
-{% set title = command.id ? 'Редактирование адреса' : 'Добавление нового адреса' %}
+{% set title = command.id ? 'Редактирование контакта' : 'Добавление нового контакта' %}
 
 {% block pageTitle %}
-    {{ title }}
+    {{ title }} 
 {% endblock %}
 
 {% block content %}
     <h1>{{ title }}</h1>
     <div class="block gray w60p">
         <div class="wrapper">
-            {% include 'AppBundle:User:address_form_ajax.html.twig' %}
+            {% include 'AppBundle:User:contact_form_ajax.html.twig' %}
         </div>
     </div>
 {% endblock %}
