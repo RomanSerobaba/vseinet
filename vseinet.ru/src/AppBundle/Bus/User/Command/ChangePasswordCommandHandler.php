@@ -21,19 +21,19 @@ class ChangePasswordCommandHandler extends MessageHandler
         $encoder = $this->get('security.password_encoder');
         if (!$encoder->isPasswordValid($user, $command->password)) {
             throw new ValidationException([
-                'password' => 'Неверный пароль', 
+                'password' => 'Введен неверный пароль', 
             ]);
         }
 
         if ($command->newPassword === $command->password) {
             throw new ValidationException([
-                'newPassword' => 'Совпадает со старым'
+                'newPassword' => 'Новый пароль совпадает со старым'
             ]);
         }
 
         if ($command->newPassword !== $command->newPasswordConfirm) {
             throw new ValidationException([
-                'newPasswordConfirm' => 'Пароли не совпадают',
+                'newPasswordConfirm' => 'Новые пароли не совпадают',
             ]);
         }
 

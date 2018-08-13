@@ -29,7 +29,6 @@ class Controller extends BaseController
         return $errors;
     }
 
-
     /**
      * @todo: remove it
      */

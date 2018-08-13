@@ -7,17 +7,21 @@
 {% block content %}
     <h1>Регистрация на сайте</h1>
     <div class="block gray w60p">
-        {{ form_start(form, { action: path('user_registr'), attr: { id: 'registr-form' }}) }}
-        <fieldset class="wrapper">
-            {% if errors|length %}
+        <div class="wrapper">
+
+            {{ form_start(form, { action: path('user_registr'), attr: { id: 'registr-form' }}) }}
+            
+            {% set count =  errors|length %}
+            {% if count %}
                 <div class="row h error-summary">
                     <span class="error">
-                        {{ errors|length|declension('Обнаружена;Обнаружено')}}
-                        {{ errors|length }}
-                        {{ errors|length|declension('ошибка;ошибок')}}
+                        {{ count|declension('Обнаружена;Обнаружено')}}
+                        {{ count }}
+                        {{ count|declension('ошибка;ошибок')}}
                     </span>
                 </div>
             {% endif %}
+
             <div class="row h{% if errors.lastname is defined %} error{% endif %}">
                 {{ form_label(form.lastname, 'Фамилия*:') }}
                 {{ form_widget(form.lastname, { attr: { class: 'txt' }}) }}
@@ -26,6 +30,7 @@
                     <div class="error">{{ errors.lastname.0 }}</div>
                 {% endif %}
             </div>    
+            
             <div class="row h{% if errors.firstname is defined %} error{% endif %}">
                 {{ form_label(form.firstname, 'Имя*:') }}
                 {{ form_widget(form.firstname, { attr: { class: 'txt' }}) }}
@@ -34,6 +39,7 @@
                     <div class="error">{{ errors.firstname.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.secondname is defined %} error{% endif %}">
                 {{ form_label(form.secondname, 'Отчество:') }}
                 {{ form_widget(form.secondname, { attr: { class: 'txt' }}) }}
@@ -42,6 +48,7 @@
                     <div class="error">{{ errors.secondname.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.gender is defined %} error{% endif %}">
                 {{ form_label(form.gender, 'Пол*:') }}
                 <div class="gender">
@@ -52,6 +59,7 @@
                     <div class="error">{{ errors.gender.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.birthday is defined %} error{% endif %}">
                 {{ form_label(form.birthday, 'Дата рождения:') }}
                 {{ form_widget(form.birthday, { attr: { class: 'txt' }}) }}
@@ -60,6 +68,7 @@
                     <div class="error">{{ errors.birthday.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.city is defined %} error{% endif %}">
                 {{ form_label(form.city, 'Город*:') }}
                 {{ form_widget(form.city, { attr: { class: 'txt' }}) }}
@@ -67,6 +76,7 @@
                     <div class="error">{{ errors.city.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.mobile is defined %} error{% endif %}">
                 {{ form_label(form.mobile, 'Мобильный телефон:') }}
                 {{ form_widget(form.mobile, { attr: { class: 'txt mobile' }}) }}
@@ -78,6 +88,7 @@
                     <b>Внимание!</b> Вам необходимо указать федеральный номер, чтобы получать информацию о статусе и сроках доставки вашего заказа. Пример: +7 (963) 100&ndash;445&ndash;55.
                 </div>
             </div>
+            
             <div class="row h">
                 {{ form_label(form.phones, 'Дополнительные телефонные номера:') }}
                 {{ form_widget(form.phones, { attr: { rows: 1, class: 'txt' }}) }}
@@ -86,6 +97,7 @@
                     В случае, если у вас отсутствует номер мобильного телефона или вы хотите оставить резервные телефонные номера, по которым мы могли бы с вами связаться, заполните поле «Дополнительные телефонные номера».
                 </div>
             </div>
+            
             <div class="row h{% if errors.email is defined %} error{% endif %}">
                 {{ form_label(form.email, 'Эл. почта*:') }}
                 {{ form_widget(form.email, { attr: { class: 'txt' }}) }}
@@ -97,12 +109,14 @@
                     На этот адрес мы будет высылать уведомления о вашем заказе.
                 </div>
             </div>
+            
             <div class="row h">
                 <div class="subscribe">
                     {{ form_widget(form.isMarketingSubscribed) }}
                     {{ form_label(form.isMarketingSubscribed, 'Получать уведомления о сезонных распродажах') }}
                 </div>
             </div>
+            
             <div class="row h{% if errors.password is defined %} error{% endif %}">
                 {{ form_label(form.password, 'Пароль*:') }}
                 {{ form_widget(form.password, { attr: { class: 'txt' }}) }}
@@ -111,6 +125,7 @@
                     <div class="error">{{ errors.password.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.passwordConfirm is defined %} error{% endif %}">
                 {{ form_label(form.passwordConfirm, 'Повторите пароль*:') }}
                 {{ form_widget(form.passwordConfirm, { attr: { class: 'txt' }}) }}
@@ -119,6 +134,7 @@
                     <div class="error">{{ errors.passwordConfirm.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h{% if errors.isHuman is defined %} error{% endif %}">
                 {{ form_label(form.isHuman, 'Я человек!*') }}
                 {{ form_widget(form.isHuman, { attr: { style: 'margin-top:6px' }}) }}
@@ -126,10 +142,14 @@
                     <div class="error">{{ errors.isHuman.0 }}</div>
                 {% endif %}
             </div>
+            
             <div class="row h">
                 {{ form_widget(form.submit, { label: 'Зарегистрироваться', attr: { class: 'bttn green' }}) }} 
                 {{ form_widget(form._token) }}
             </div>
-        </fieldset>
+
+            {{ form_emd(form)}}
+            
+        </div>
     </div>
 {% endblock %}

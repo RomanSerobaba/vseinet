@@ -14,4 +14,11 @@ class PersonGender
             'женский' => self::FEMALE,
         ];
     }
+
+    public static function getTitle($value)
+    {
+        $choices = array_flip(self::getChoices());
+        
+        return isset($choices[$value]) ? $choices[$value] : '';
+    }
 }

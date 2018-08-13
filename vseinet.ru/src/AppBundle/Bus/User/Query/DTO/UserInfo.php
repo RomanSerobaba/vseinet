@@ -5,6 +5,7 @@ namespace AppBundle\Bus\User\Query\DTO;
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
+use AppBundle\Enum\PersonGender;
 
 class UserInfo 
 {
@@ -53,6 +54,11 @@ class UserInfo
      */
     public $isMarketingSubscribed;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $genderTitle;
+
 
     public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $cityId, $cityName, $isMarketingSubscribed)
     {
@@ -65,5 +71,6 @@ class UserInfo
         $this->cityId = $cityId;
         $this->cityName = $cityName;
         $this->isMarketingSubscribed = $isMarketingSubscribed;
+        $this->genderTitle = PersonGender::getTitle($gender);
     }
 }

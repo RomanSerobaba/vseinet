@@ -8,7 +8,9 @@
     <h1>Восстановление пароля</h1>
     <div class="block gray w40p">
         <div class="wrapper">
+
             {{ form_start(form, { action: path('user_check_token'), attr: { id: 'check-form' }}) }}
+
             <div class="row{% if errors.code is defined %} error{% endif %}">
                 {{ form_label(form.code, 'Код подтвержения:') }}
                 {{ form_widget(form.code, { attr: { class: 'txt' }}) }}
@@ -16,14 +18,18 @@
                     <div class="error">{{ errors.code.0 }}</div>
                 {% endif %}
             </div>
+
             <div class="row">
                 <a href="{{ path('forgot') }}">Выслать еще раз</a>
             </div>
+
             <div class="row">
                 {{ form_widget(form.submit, { label: 'Восстановить пароль', attr: { class: 'bttn blue r' }}) }}  
                 {{ form_widget(form._token) }}
             </div> 
+
             {{ form_end(form) }}
+            
         </div>
     </div>
 {% endblock %}

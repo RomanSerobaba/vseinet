@@ -26,3 +26,5 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt123123123
 
     cookie_secure: true
+
+    site_backend_password: secret
