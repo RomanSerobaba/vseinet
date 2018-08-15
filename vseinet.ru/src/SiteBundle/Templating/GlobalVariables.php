@@ -22,14 +22,14 @@ class GlobalVariables extends BaseGlobalVariables
     /**
      * Stores City.
      * 
-     * @var SiteBundle\Bus\Geo\Command\DTO\City
+     * @var SiteBundle\Bus\Geo\Query\DTO\City
      */
     protected $city;
 
     /**
      * Stores Representative.
      * 
-     * @var SiteBundle\Bus\Representative\Command\DTO\Representative
+     * @var SiteBundle\Bus\Representative\Query\DTO\Representative
      */
     protected $representative;
 
