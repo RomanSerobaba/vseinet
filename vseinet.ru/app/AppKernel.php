@@ -37,7 +37,7 @@ class AppKernel extends Kernel
             // new OrderBundle\OrderBundle(),
             // new AccountingBundle\AccountingBundle(),
             // new ClaimsBundle\ClaimsBundle(),
-            // new RegisterBundle\RegisterBundle(),
+            new RegisterBundle\RegisterBundle(),
             // new SuppliersBundle\SuppliersBundle(),
             // new MatrixBundle\MatrixBundle(),
             // new DeliveryBundle\DeliveryBundle(),
