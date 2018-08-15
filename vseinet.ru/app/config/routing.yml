@@ -11,6 +11,11 @@ geo:
     type:     annotation
     prefix:   /
 
+register:
+    resource: "@RegisterBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 app:
     resource: "@AppBundle/Controller/"
     type: annotation
