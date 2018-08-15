@@ -305,7 +305,7 @@ class CategoryProductFinder extends ProductFinder
                     }
                 }
             }
-            for ($i = $index + 1; $i < count($results); $i += 2) {
+            for ($i = ($index ?? 0) + 1; $i < count($results); $i += 2) {
                 foreach ($results[$i] as $row) {
                     $keys = array_keys($row);
                     $values = array_values($row);
