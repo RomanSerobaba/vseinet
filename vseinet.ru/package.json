@@ -3,7 +3,10 @@
     "@symfony/webpack-encore": "^0.20.1"
   },
   "scripts": {
-     "start": "encore dev --watch",
-     "build": "encore production" 
+    "start": "encore dev --watch",
+    "build": "encore production"
+  },
+  "dependencies": {
+    "yarn": "^1.9.4"
   }
 }
