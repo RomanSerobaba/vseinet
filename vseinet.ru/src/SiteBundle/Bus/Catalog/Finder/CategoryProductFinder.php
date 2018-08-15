@@ -155,7 +155,7 @@ class CategoryProductFinder extends ProductFinder
                 }
             }
         }      
-        $valueIds = [];
+        $valueIds = $this->filter->details = [];
         foreach ($details as $id => $detail) {
             if (empty($detail->values)) {
                 continue;
