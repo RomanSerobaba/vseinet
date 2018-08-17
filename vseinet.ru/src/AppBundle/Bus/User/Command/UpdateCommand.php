@@ -38,7 +38,7 @@ class UpdateCommand extends Message
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш город")
-     * @Assert\Type(type="GeoBundle\Entity\GeoCity")
+     * @Assert\Type(type="AppBundle\Entity\GeoCity")
      */
     public $city;
     

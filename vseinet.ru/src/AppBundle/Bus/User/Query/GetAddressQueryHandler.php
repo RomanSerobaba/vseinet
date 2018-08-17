@@ -33,12 +33,12 @@ class GetAddressQueryHandler extends MessageHandler
                     a.comment,
                     ga2p.isMain
                 )
-            FROM GeoBundle:GeoAddressToPerson AS ga2p
-            INNER JOIN GeoBundle:GeoAddress AS a WITH a.id = ga2p.geoAddressId
-            LEFT OUTER JOIN GeoBundle:GeoRegion gr WITH gr.id = a.geoRegionId 
-            LEFT OUTER JOIN GeoBundle:GeoArea AS ga WITH ga.id = a.geoAreaId
-            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = a.geoCityId
-            LEFT OUTER JOIN GeoBundle:GeoStreet AS gs WITH gs.id = a.geoStreetId
+            FROM AppBundle:GeoAddressToPerson AS ga2p
+            INNER JOIN AppBundle:GeoAddress AS a WITH a.id = ga2p.geoAddressId
+            LEFT OUTER JOIN AppBundle:GeoRegion gr WITH gr.id = a.geoRegionId 
+            LEFT OUTER JOIN AppBundle:GeoArea AS ga WITH ga.id = a.geoAreaId
+            LEFT OUTER JOIN AppBundle:GeoCity AS gc WITH gc.id = a.geoCityId
+            LEFT OUTER JOIN AppBundle:GeoStreet AS gs WITH gs.id = a.geoStreetId
             WHERE a.id = :id
         ");
         $q->setParameter('id', $query->id);

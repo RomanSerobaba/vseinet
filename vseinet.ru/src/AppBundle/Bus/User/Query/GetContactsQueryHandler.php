@@ -21,8 +21,8 @@ class GetContactsQueryHandler extends MessageHandler
             WHERE c.personId = :personId
             ORDER BY c.contactTypeCode ASC, c.isMain DESC
         ");
-        $q->setParameter('personId', $this->get('user.identity')->getUser()->getPersonId());
-        $contacts = $q->getResult();
+        $q->setParameter('personId', $this->getUser()->getPersonId());
+        $contacts = $q->getArrayResult();
 
         return $contacts;
     }

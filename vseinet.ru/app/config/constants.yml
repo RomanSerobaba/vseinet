@@ -1,7 +1,0 @@
-parameters:
-    default.city.id: 1
-    default.point.id: 141
-    default.pageLimit: 25
-
-    default.page.title: 'DEFAULT PAGE TITLE'
-    default.page.description: 'DEFAULT PAGE DESCRIPTION'

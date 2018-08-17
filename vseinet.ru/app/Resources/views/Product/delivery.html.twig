@@ -1,0 +1,85 @@
+<div class="delivery">
+    <dl>
+        <dt>Ваш город:</dt>
+        <dd>
+            <a 
+                href="javascript:void(0)" 
+                class="ajax city" 
+                data-popup="City" 
+            >
+                {{ app.geoCity.name }}
+            </a>
+        </dd>
+        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
+            <dt>Магазин:</dt>
+            <dd class="address">
+                {% for point in points %}
+                    {% if loop.first %}
+                        <a href="javascript:void(0)" class="ajax gray">{#{ point.address }#}</a>
+                    {% else %}
+                        <span>{#{ point.address }#}</span>
+                    {% endif %}
+                {% endfor %}
+                &nbsp;
+            </dd>
+        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availability %}
+            <dt content="out_of_stock" class="status not-available">Нет в продаже</dt>
+            <dd>&nbsp;</dd>
+        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availability %}
+            <dt class="status on-order">Ожидается</dt>
+            <dd>&nbsp;</dd>
+        {% else %}
+            <dt content="preorder" class="status on-order">На заказ:</dt>
+            <dd><span>{# delivery date #}</span></dd>
+        {% endif %}
+    </dl>
+{#
+                <ul>
+                    {if $deliveryStatus.courier}
+                        <li class="type courier">
+                            <p>доставка</p>
+                            <div>курьером</div>
+                        </li>
+                    {/if}
+                    {if $deliveryStatus.courier && $deliveryStatus.point}
+                        <li class="or">или</li>
+                    {/if}
+                    {if $deliveryStatus.point}
+                        <li class="type self">
+                            <p>забрать</p>
+                            <div>самовывозом</div>
+                        </li>
+                    {/if}
+                    {if !$deliveryStatus.courier && !$deliveryStatus.point}
+                        <li class="type">
+                            <p>доставка</p>
+                            <div>транспортной компанией</div>
+                        </li>
+                    {/if}
+                </ul>
+#}
+    <div class="payments">
+        <a href="/payment#cash" class="cash" title="Оплата наличными"></a>
+        <a href="/payment#card" class="visa" title="Оплата переводом на банковскую карту"></a>
+        <a href="/payment#card" class="master" title="Оплата переводом на банковскую карту"></a>
+        <a href="/payment#webmoney" class="webmoney" title="Оплата на кошелёк Webmoney"></a>
+        <a href="/payment#cashless" class="cashless" title="Оплата по безналичному расчету (перевод на р/с)"></a>
+    </div>
+    <p class="links">
+        {% if app.userIsEmployee %}
+            <a href="javascript:void(0)" class="ajax green" data-popup="Delivery">О доставке</a>
+        {% else %}
+            <a href="{{ path('delivery_page') }}" class="green">О доставке</a>
+        {% endif %} 
+        и <a href="{{ path('payment_page') }}" class="green">оплате</a>
+    </p>
+</div>
+<div class="help">
+    <strong>Затрудняетесь с выбором товара?</strong>
+    <p>Мы поможем вам:</p>
+    <ul>
+        {#% for contact in app.representative.contacts %}
+            <li>{{ contact.value|raw }}</li>
+        {% endfor %#}
+    </ul>
+</div>

@@ -1,6 +1,6 @@
 $(function() {
     $('#login-form-trigger').ajaxcontent({
-        url: Routing.generate('user_login'),
+        url: Routing.generate('login'),
         dialog: {
             title: 'Вход на сайт',
             minWidth: 400
@@ -16,7 +16,7 @@ $(function() {
             form.on('submit', function(e) {
                 e.preventDefault();
                 form.toggleState();
-                sp.post(Routing.generate('user_login'), form.serializeArray()).then(function(response) {
+                sp.post(Routing.generate('login'), form.serializeArray()).then(function(response) {
                     if (response.errors) {
                         form.toggleState(true);   
                     } else {

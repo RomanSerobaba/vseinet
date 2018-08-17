@@ -1,0 +1,35 @@
+<div id="product-{{ product.id }}" class="product clearfix" data-id="{{ product.id }}">
+    <a href="{{ path('catalog_product', { id: product.id }) }}" class="image">
+        <img 
+            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" 
+            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+        />
+    </a>
+    <div class="details">
+        <div class="title">
+            <a href="{{ path('catalog_product', { id: product.id }) }}" class="title">
+                {{ product.name }}
+            </a>
+            <small>Код товара: 
+                <b class="sku">{{ product.id }}</b>
+            </small>
+        </div>
+        <div class="rating" data-rating="{#$product.estimate#}"><span>Рейтинг:</span></div>
+        {% if product.minQuantity > 1 %}
+            <div style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</div>
+        {% endif %}
+        <div class="content">
+            {{ product.description|raw }}
+        </div>
+    </div>
+    <div 
+        class="
+            sale
+            {% if product.quantityInCart %}in-cart{% else %}to-cart{% endif %}
+            {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}sale-discount{% endif %}
+        " 
+        id="sale{{ product.id }}"
+    >
+        {% include 'Catalog/sale.html.twig' %}
+    </div>
+</div>

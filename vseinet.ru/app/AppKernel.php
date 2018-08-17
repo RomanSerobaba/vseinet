@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -15,39 +16,14 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            // new FOS\RestBundle\FOSRestBundle(),
-            // new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
-            new JMS\SerializerBundle\JMSSerializerBundle(),
             new SimpleBus\SymfonyBridge\SimpleBusCommandBusBundle(),
             new SimpleBus\SymfonyBridge\SimpleBusEventBusBundle(),
             new Warezgibzzz\QueryBusBundle\WarezgibzzzQueryBusBundle(),
             new SimpleBus\SymfonyBridge\DoctrineOrmBridgeBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
-            // new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
             new Http\HttplugBundle\HttplugBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new AppBundle\AppBundle(),
-            new ContentBundle\ContentBundle(),
-            // new ThirdPartyBundle\ThirdPartyBundle(),
-            // new SupplyBundle\SupplyBundle(),
-            // new ServiceBundle\ServiceBundle(),
-            // new ReservesBundle\ReservesBundle(),
-            new OrgBundle\OrgBundle(),
-            new PricingBundle\PricingBundle(),
-            // new OrderBundle\OrderBundle(),
-            // new AccountingBundle\AccountingBundle(),
-            // new ClaimsBundle\ClaimsBundle(),
-            // new RegisterBundle\RegisterBundle(),
-            // new SuppliersBundle\SuppliersBundle(),
-            // new MatrixBundle\MatrixBundle(),
-            // new DeliveryBundle\DeliveryBundle(),
-            new GeoBundle\GeoBundle(),
-            // new CatalogBundle\CatalogBundle(),
-            // new PromoBundle\PromoBundle(),
-            new ShopBundle\ShopBundle(),
-            // new DocumentBundle\DocumentBundle(),
-            new SiteBundle\SiteBundle(),
-            // new FinanseBundle\FinanseBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
@@ -81,6 +57,12 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
+        $loader->load(function (ContainerBuilder $container) {
+            $container->setParameter('container.autowiring.strict_mode', true);
+            $container->setParameter('container.dumper.inline_class_loader', true);
+
+            $container->addObjectResource($this);
+        });
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
 }

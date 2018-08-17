@@ -1,0 +1,17 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+    Избранное / Интернет-магазин "Vseinet.ru"
+{% endblock %}
+
+{% block content %}
+    <div class="breadcrumbs"> <a href="{{ path('catalog_category') }}">Каталог</a></div>
+    <div id="user-account">
+        {% include 'User/account_menu.html.twig' with { current: 'favorite' } %}
+        <h1>Избранное <small>{{ favorites|length }} {{ favorites|length|declension('товар;товара;товаров') }}</small></h1>
+        <div id="favorite">
+            {% include 'Favorite/page.html.twig' %}
+        </div>
+    </div>
+{% endblock %}
+

@@ -14,7 +14,7 @@ class SearchCityQueryHandler extends MessageHandler
                     c.id, 
                     c.name 
                 )
-            FROM GeoBundle:GeoCity as c 
+            FROM AppBundle:GeoCity as c 
             WHERE LOWER(c.name) LIKE LOWER(:name)
             ORDER BY c.\"AOLEVEL\", c.name 
         ");

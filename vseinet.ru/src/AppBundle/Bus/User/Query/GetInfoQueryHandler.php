@@ -23,10 +23,10 @@ class GetInfoQueryHandler extends MessageHandler
                 )
             FROM AppBundle:User AS u
             INNER JOIN AppBundle:Person AS p WITH u.personId = p.id
-            LEFT OUTER JOIN GeoBundle:GeoCity AS gc WITH gc.id = u.cityId
+            LEFT OUTER JOIN AppBundle:GeoCity AS gc WITH gc.id = u.geoCityId
             WHERE u.id = :id
         ");
-        $q->setParameter('id', $this->get('user.identity')->getUser()->getId());
+        $q->setParameter('id', $this->getUser()->getId());
         $info = $q->getSingleResult();
 
         return $info;

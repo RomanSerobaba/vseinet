@@ -1,0 +1,95 @@
+<a href="#" class="mob-top-btn"></a>
+
+{% if not app.userIsEmployee %}
+    <a href="{{ path('complaint') }}" class="bttn light claim">Жалоба директору</a>
+{% endif %}
+    
+<nav>
+    {{ render(controller('AppBundle:Cart:getInfo')) }}
+    {{ render(controller('AppBundle:Favorite:getInfo')) }}
+    <a href="{{ path('order_status_check') }}" class="status" data-popup="Status">Статус заказа</a>
+    {% if app.userIsEmployee %}
+        {% if not app.user.isFired and (not app.user.ipAddress or not app.user.ipAddress == app.request.clientIp) %}
+            <a  {# brocken url #}
+                href="/org/clockin?action={% if app.user.clockInTime %}rest{% else %}work{% endif %}" 
+                onclick="if(!confirm('Выполнить {% if app.user.clockInTime %}выход{% else %}вход{% endif %}?'))return false" 
+                id="clock-in-out" 
+                class="{% if app.user.clockInTime %}work{% else %}rest{% endif %}"
+                title="{% if app.user.clockInTime %}{{ app.user.clockInTime|date('%H:%M') }}{% endif %}"
+            >
+            </a>
+            {% if app.user.isContenter %}
+                {# brocken url #}
+                <a href="/content/stats/full" class="employee-statistics">Статистика</a>   
+                {# brocken url #}
+            {% else %}  
+                <a href="/admin/org/lockscreen" class="employee-cabinet" title="Личный кабинет сотрудника">ЛК сотрудника</a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</nav>
+
+<div class="auth">
+    {% if app.user %}
+        <a href="{{ path('user_account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ logout_path() }}">Выйти</a>   
+    {% else %}
+        <a href="{{ path('login') }}" data-popup="Login">Вход</a> или <a href="{{ path('registr') }}">регистрация</a>
+    {% endif %}
+</div>
+
+{#
+<div class="mobile-collapsed">
+    <div class="auth">
+        {if $app->getUserIdentity()->isAuthorized()}
+            <a href="/user/account/">{$user.firstname}</a> | <a href="/user/logout/">Выйти</a>
+        {else}
+            <a href="/user/login/" data-popup="Login">Вход</a> или <a href="/user/registration/">регистрация</a>
+        {/if}
+    </div>
+    <nav class="mobile-top-menu">
+        <ul>
+            <li><a href="/about/">О компании</a></li>
+            <li><a href="/delivery/">Доставка</a></li>
+            <li><a href="/payment/">Оплата</a></li>
+            <li><a href="/garanty/">Гарантия</a></li>
+            <li><a href="/credit/">Рассрочка и кредит</a></li>
+            <li><a href="/contacts/">Контакты</a></li>
+            <li><a href="/promo/">Акции</a> <span style="color: red; font-size: 11px; vertical-align: sub;">new</span></li>
+        </ul>
+    </nav>
+    {if $app->getUserIdentity()->isEmployee()}
+        <div style="margin-bottom: 10px; margin-top: -10px;">
+            {if $app->getUserIdentity()->isContenter()}
+                <a href="/content/stats/full">Статистика</a>
+            {else}
+                <a href="/admin/org/lockscreen" title="Личный кабинет сотрудника">ЛК сотрудника</a>
+            {/if}
+        </div>
+    {/if}
+    <a href="/complaint/" class="bttn light claim">Жалоба директору</a>
+    <a href="/partnership/#wholesale" class="bttn intro wholesalers">Оптовикам</a>
+    <a href="/partnership/#franchising" class="bttn intro franchising">Франчайзинг</a>
+    {assign var=representative value=$app->getRepresentative()}
+    <ul class="location">
+        <li><em>Ваш город</em></li>
+        <li>
+            <a href="javascript:void(0)" class="ajax city" data-popup="City" data-rid={$representative.region_id} data-cid="{$representative.id}" data-url="/city/set/">{$representative.city}</a>
+            {if $representative.count_points}
+                и еще <a href="javascript:void(0)" class="ajax" data-popup="City">{$representative.count_points} {$representative.count_points|declension:'пункт;пункта;пунктов'} по области</a>
+            {/if}
+        </li>
+        <li class="phone">
+            <strong>8 {$representative.phone_top1}</strong>
+            <br />
+            <strong>8 {$representative.phone_top2}</strong>
+            <span class="time">
+                <a href="/contacts/{$representative.representative_id}/">{$representative.schedule_top}</a>
+            </span>
+        </li>
+        <li>
+            <a href="/contacts/" class="black address">Адреса магазинов</a>
+            <span class="new">{if $representative.newPoints}+{$representative.newPoints} {if $representative.newPoints=='1'}новый!{else}новых!{/if}{/if}</span>
+        </li>
+    </ul>
+</div>
+#}

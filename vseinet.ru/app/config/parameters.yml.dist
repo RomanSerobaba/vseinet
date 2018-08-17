@@ -1,8 +1,8 @@
-# This file is a "template" of what your parameters.yml file should look like 
-# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production. 
-# https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration 
-parameters: 
-    
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+
     pgsql_host: 136.243.178.124 # 127.0.0.1
     pgsql_port: 5432
     pgsql_dbname: dev # symfony
@@ -27,4 +27,14 @@ parameters:
 
     cookie_secure: true
 
-    site_backend_password: secret
+    images.path: ''
+    brands.path: ''
+    banner.path: ''
+
+    default.city.id: 1
+    default.point.id: 141
+
+    default.page.title: 'DEFAULT PAGE TITLE'
+    default.page.description: 'DEFAULT PAGE DESCRIPTION'
+
+    catalog.page.limit: 25

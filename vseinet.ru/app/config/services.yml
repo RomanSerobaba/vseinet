@@ -4,77 +4,40 @@ parameters:
     #parameter_name: value
 
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        # automatically injects dependencies in your services
-        autowire: true
-        # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: true
-        # this means you cannot fetch services directly from the container via $container->get()
-        # if you need to do this, you can override this setting on individual services
-        public: false
-
     user.provider:
         class: 'AppBundle\Security\UserProvider'
         public: false
-        arguments: [ '@doctrine.orm.entity_manager', 'AppBundle\Entity\User' ]
+        arguments: [ '@doctrine.orm.entity_manager' ]
 
-    user.identity:
-        class: 'AppBundle\Security\UserIdentity'
-        public: true
-        arguments: [ '@session' ]
-
-    api.doc.generator:
-        class: AppBundle\ApiDoc\Generator 
-        public: true 
-        arguments: [ '@router', '@annotation_reader', '@jms_serializer.metadata_factory', '@jms_serializer.serialized_name_annotation_strategy' ]
-
-    # options.listener:
-    #     class: AppBundle\EventListener\OptionsListener
-    #     public: false
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
-
-    # access.control.listener:
-    #     class: AppBundle\EventListener\AccessControlListener
-    #     public: false
-    #     arguments: [ '@doctrine.orm.entity_manager', '@user.identity', '@annotation_reader', '%kernel.root_dir%' ]
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
-    param.fetcher.listener:
-        class: AppBundle\EventListener\ParamFetcherListener
-        public: false
-        arguments: [ '@api.doc.generator' ]
-        tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
-    command_bus.middleware.logger:
-        class: AppBundle\Bus\Middleware\CommandLoggerMiddleware
+    security.authentication.rememberme.services.simplehash: 
+        class: 'AppBundle\Security\RememberMeServices'
+        parent: 'security.authentication.rememberme.services.abstract'
         public: false 
-        arguments: [ '@user.identity', '%kernel.logs_dir%' ]
-        tags:
-            - { name: command_bus_middleware }
+        abstract: true
 
-    command_bus.middleware.validation:
-        class: AppBundle\Bus\Middleware\CommandValidationMiddleware
-        public: false
-        arguments: [ '@validator' ]
-        tags: 
-            - { name: command_bus_middleware }
-            
-    query_bus.middleware.validation:
-        class: AppBundle\Bus\Middleware\QueryValidationMiddleware
-        public: false
-        arguments: [ '@validator' ]
-        tags: 
-            - { name: query_bus_middleware }
-
-    # uuid.manager:
-    #     class: AppBundle\ORM\UuidManager
-    #     public: true
-    #     arguments: [ '@doctrine.orm.entity_manager' ]
-
-    spreadsheet.reader:
-        class: AppBundle\PhpSpreadsheet\Reader 
+    geo_city.identity:
+        class: 'AppBundle\Service\GeoCityIdentity'
         public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    representative.identity:
+        class: 'AppBundle\Service\RepresentativeIdentity'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    delivery.date:
+        class: 'AppBundle\Service\DeliveryDate'
+        public: true 
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    phone.formatter:
+        class: 'AppBundle\Service\PhoneFormatter'
+        public: true 
+
+    address.formatter:
+        class: 'AppBundle\Service\AddressFormatter'
+        public: true 
+        arguments: [ '@doctrine.orm.entity_manager' ]

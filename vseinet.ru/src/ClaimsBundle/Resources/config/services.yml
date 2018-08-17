@@ -1,4 +1,0 @@
-services:
-#    claims.example:
-#        class: ClaimsBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]

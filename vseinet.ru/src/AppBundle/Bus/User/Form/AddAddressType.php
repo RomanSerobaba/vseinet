@@ -11,33 +11,15 @@ class AddAddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('address', TextType::class, [
-                'required' => true,
-            ])
-            ->add('variant', IntegerType::class, [
-                'required' => false,
-            ])
-            ->add('house', TextType::class, [
-                'required' => true,
-            ])
-            ->add('building', TextType::class,[
-                'required' => false,
-            ])
-            ->add('apartment', TextType::class, [
-                'required' => false,
-            ])
-            ->add('floor', IntegerType::class, [
-                'required' => false,
-            ])
-            ->add('hasLift', CheckboxType::class, [
-                'required' => false,
-            ])
-            ->add('comment', TextType::class, [
-                'required' => false,
-            ])
-            ->add('isMain', CheckboxType::class, [
-                'required' => false,
-            ])
+            ->add('address', TextType::class)
+            ->add('variant', IntegerType::class, ['required' => false])
+            ->add('house', TextType::class)
+            ->add('building', TextType::class, ['required' => false])
+            ->add('apartment', TextType::class, ['required' => false])
+            ->add('floor', IntegerType::class, ['required' => false])
+            ->add('hasLift', CheckboxType::class, ['required' => false])
+            ->add('comment', TextType::class, ['required' => false])
+            ->add('isMain', CheckboxType::class, ['required' => false])
             ->add('submit', SubmitType::class)
         ;
     }

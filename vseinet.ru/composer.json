@@ -5,7 +5,7 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "AppBundle\\": "src/AppBundle"
         },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
@@ -17,38 +17,23 @@
         "php": ">=5.5.9",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
-        "dragonmantank/cron-expression": "^2.2",
-        "fresh/doctrine-enum-bundle": "~5.3",
-        "friendsofsymfony/jsrouting-bundle": "^2.2",
-        "friendsofsymfony/oauth-server-bundle": "dev-master",
-        "friendsofsymfony/oauth2-php": "^1.2.1",
-        "friendsofsymfony/rest-bundle": "^2.0",
-        "guzzlehttp/psr7": "^1.4",
-        "hisamu/php-xbase": "^1.0",
         "incenteev/composer-parameter-handler": "^2.0",
-        "jms/metadata": "^1.1",
-        "jms/parser-lib": ">=1.0",
-        "jms/serializer": "^1.8.1",
-        "jms/serializer-bundle": "^2.0",
+        "sensio/distribution-bundle": "^5.0.19",
+        "sensio/framework-extra-bundle": "^5.0.0",
+        "symfony/monolog-bundle": "^3.1.0",
+        "symfony/polyfill-apcu": "^1.0",
+        "symfony/swiftmailer-bundle": "^2.6.4",
+        "symfony/symfony": "3.4.*",
+        "twig/twig": "^1.0||^2.0",
+        "friendsofsymfony/jsrouting-bundle": "^2.2",
+        "guzzlehttp/psr7": "^1.4",
         "oro/doctrine-extensions": "dev-master",
-        "pear/numbers_words": "^0.18.2",
         "php-amqplib/rabbitmq-bundle": "^1.6",
         "php-http/curl-client": "^1.7",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/httplug-bundle": "^1.11",
-        "phpoffice/phpspreadsheet": "~1.0",
-        "picqer/php-barcode-generator": "dev-master",
-        "sendgrid/sendgrid": "^6.0",
-        "sensio/distribution-bundle": "^5.0.19",
-        "sensio/framework-extra-bundle": "^3.0.2",
         "simple-bus/doctrine-orm-bridge": "^4.0",
         "simple-bus/symfony-bridge": "^4.1",
-        "symfony/monolog-bundle": "^3.1.0",
-        "symfony/polyfill-apcu": "^1.0",
-        "symfony/swiftmailer-bundle": "^2.3.10",
-        "symfony/symfony": "3.4.*",
-        "tecnickcom/tcpdf": "^6.2",
-        "twig/twig": "^2.0",
         "warezgibzzz/query-bus-bundle": "dev-master"
     },
     "require-dev": {
@@ -73,7 +58,7 @@
     },
     "config": {
         "platform": {
-            "php": "7.1.8"
+            "php": "5.5.9"
         },
         "sort-packages": true
     },
@@ -88,7 +73,7 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": {
-            "dev-master": "3.3-dev"
+            "dev-master": "3.4-dev"
         }
     }
 }

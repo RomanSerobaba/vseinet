@@ -4,32 +4,22 @@ namespace AppBundle\Bus\User\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type;
+use Symfony\Component\Form\Extension\Core\Type\{ CheckboxType, ChoiceType, DateType, TextType, SubmitType };
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use AppBundle\Enum\PersonGender;
-use GeoBundle\Entity\GeoCity;
-use GeoBundle\Repository\GeoCityRepository;
+use AppBundle\Entity\GeoCity;
+use AppBundle\Repository\GeoCityRepository;
 
 class EditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('lastname', Type\TextType::class, [
-                'required' => true,
-            ])
-            ->add('firstname', Type\TextType::class, [
-                'required' => true,
-            ])
-            ->add('secondname', Type\TextType::class, [
-                'required' => false,
-            ])
-            ->add('gender', Type\ChoiceType::class, [
-                'required' => true, 
-                'expanded' => true, 
-                'choices' => PersonGender::getChoices(),
-            ])
-            ->add('birthday', Type\DateType::class, [
+            ->add('lastname', TextType::class)
+            ->add('firstname', TextType::class)
+            ->add('secondname', TextType::class, ['required' => false])
+            ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => PersonGender::getChoices()])
+            ->add('birthday', DateType::class, [
                 'required' => false, 
                 'widget' => 'single_text', 
                 'html5' => false, 
@@ -43,10 +33,8 @@ class EditType extends AbstractType
                 'choice_label' => 'name',
                 'choice_value' => 'id',
             ])
-            ->add('isMarketingSubscribed', Type\CheckboxType::class, [
-                'required' => false,
-            ])
-            ->add('submit', Type\SubmitType::class)
+            ->add('isMarketingSubscribed', CheckboxType::class, ['required' => false])
+            ->add('submit', SubmitType::class)
         ;
     }
 }

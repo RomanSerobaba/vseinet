@@ -10,20 +10,31 @@ security:
     providers:
         user.provider:
             id: user.provider
-    
+
     firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        app:
+        main:
             pattern: ^/
             anonymous: ~
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            form_login: 
+                login_path: login
+                check_path: login
+                csrf_token_generator: security.csrf.token_manager
+                use_referer: true
+            remember_me: 
+                secret: lksjfcmxzn
             logout_on_user_change: true
+            logout:
+                path: /logout
+                target: /
+                invalidate_session: true
+                delete_cookies: ~
 
+    access_control:
+        - { path: ^/admin, roles: IS_AUTHENTICATED_FULLY }
 
-    # access_control:
-        # - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/forgot, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/logout, roles: [ IS_AUTHENTICATED_FULLY ] }

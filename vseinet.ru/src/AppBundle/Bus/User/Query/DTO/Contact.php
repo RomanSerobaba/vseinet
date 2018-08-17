@@ -41,6 +41,7 @@ class Contact
      * @Assert\Type(type="boolean")
      */
     public $isPhone;
+    
 
     public function __construct($id, $typeCode, $value, $comment, $isMain)
     {

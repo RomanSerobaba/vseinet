@@ -6,8 +6,8 @@ use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use Doctrine\ORM\NoResultException;
-use GeoBundle\Entity\GeoAddress;
-use GeoBundle\Entity\GeoAddressToPerson;
+use AppBundle\Entity\GeoAddress;
+use AppBundle\Entity\GeoAddressToPerson;
 use AppBundle\Doctrine\DBAL\ValueObject\Point;
 
 class AddAddressCommandHandler extends MessageHandler
@@ -20,7 +20,7 @@ class AddAddressCommandHandler extends MessageHandler
         $this->check($command, $result);
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('user.identity')->getUser();
+        $user = $this->getUser();
 
         if ($command->id) {
             $address = $em->getRepository(GeoAddress::class)->find($command->id);
@@ -62,7 +62,7 @@ class AddAddressCommandHandler extends MessageHandler
 
         if ($command->isMain) {
             $q = $em->createQuery("
-                UPDATE GeoBundle:GeoAddressToPerson ga2p 
+                UPDATE AppBundle:GeoAddressToPerson ga2p 
                 SET ga2p.isMain = false
                 WHERE ga2p.geoAddressId != :geoAddressId AND ga2p.personId = :personId
             ");
@@ -73,7 +73,7 @@ class AddAddressCommandHandler extends MessageHandler
 
         $ga2p = $em->getRepository(GeoAddressToPerson::class)->findOneBy([
             'geoAddressId' => $address->getId(),
-            'personId' => $user->person->getId(),
+            'personId' => $user->getPersonId(),
         ]);
         if (!$ga2p instanceof GeoAddressToPerson) {
             $ga2p = new GeoAddressToPerson();
@@ -214,7 +214,7 @@ class AddAddressCommandHandler extends MessageHandler
     protected function check($command, $result)
     {
         $criteria[] = "ga2p.personId = :personId";
-        $parameters['personId'] = $this->get('user.identity')->getUser()->getPersonId();
+        $parameters['personId'] = $this->getUser()->getPersonId();
 
         if ($command->id) {
             $criteria[] = "a.id != :id";
@@ -263,8 +263,8 @@ class AddAddressCommandHandler extends MessageHandler
 
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT 1 
-            FROM GeoBundle:GeoAddress AS a 
-            INNER JOIN GeoBundle:GeoAddressToPerson AS ga2p WITH ga2p.geoAddressId = a.id 
+            FROM AppBundle:GeoAddress AS a 
+            INNER JOIN AppBundle:GeoAddressToPerson AS ga2p WITH ga2p.geoAddressId = a.id 
             WHERE {$where}
         ");
         $q->setParameters($parameters);

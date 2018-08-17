@@ -25,6 +25,11 @@ class User implements UserInterface
 
     /**
      * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
      * 
      * @ORM\Column(name="password", type="string")
      */
@@ -56,7 +61,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="geo_city_id", type="integer")
      */
-    private $cityId;
+    private $geoCityId;
 
     /**
      * @var boolean
@@ -73,24 +78,9 @@ class User implements UserInterface
     private $isTransactionalSubscribed;
 
     /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var array<string>
+     * @var string[]
      */
     public $roles = [];
-
-    /**
-     * @var array<string>
-     */
-    public $rules = [];
-
-    /**
-     * @var UserData
-     */
-    public $data;
 
     /**
      * @var Person
@@ -98,9 +88,20 @@ class User implements UserInterface
     public $person;
 
     /**
-     * @var Contact[]
+     * @var boolean
      */
-    public $contacts;
+    public $isFired;
+
+    /**
+     * @var \DateTime
+     */
+    public $clockInTime;
+
+    /**
+     * @var string
+     */
+    public $ipAddress;
+
 
     /**
      * Get id
@@ -113,13 +114,27 @@ class User implements UserInterface
     }
 
     /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
      * Get id as username for security service
      * 
      * @return string
      */
     public function getUsername()
     {
-        return strval($this->id);
+        return $this->username;
     }
 
     /**
@@ -217,27 +232,27 @@ class User implements UserInterface
     }
 
     /**
-     * Set cityId
+     * Set geoCityId
      *
-     * @param integer $cityId
+     * @param integer $geoCityId
      *
      * @return User
      */
-    public function setCityId($cityId)
+    public function setGeoCityId($geoCityId)
     {
-        $this->cityId = $cityId;
+        $this->geoCityId = $geoCityId;
 
         return $this;
     }
 
     /**
-     * Get cityId 
+     * Get geoCityId 
      *
      * @return int
      */
-    public function getCityId()
+    public function getGeoCityId()
     {
-        return $this->cityId;
+        return $this->geoCityId;
     }
 
     /**
@@ -289,48 +304,53 @@ class User implements UserInterface
     }
 
     /**
-     * Check role
-     * 
-     * @param string $role
-     * 
-     * @return boolean
-     */
-    public function hasRole($role)
-    {
-        return in_array($role, $this->roles);
-    }
-
-    /**
-     * Check is employee
-     *
-     * @return boolean
-     */
-    public function isEmployee()
-    {
-        return !empty($this->roles) 
-            && !$this->hasRole(UserRole::CLIENT) 
-            && !$this->hasRole(UserRole::WHOLESALER) 
-            && !$this->hasRole(UserRole::FRANCHISER);    
-    }
-
-    /**
-     * Check rule
-     * 
-     * @param string $rule
-     * 
-     * @return boolean
-     */
-    public function hasRule($rule)
-    {
-        return in_array($rule, $this->rules);
-    }
-
-    /**
      * @inheritdoc
      */
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * Check role
+     * 
+     * @param string $role
+     * 
+     * @return bool
+     */
+    public function isRole($role)
+    {
+        return in_array($role, $this->roles);
+    }
+
+    /**
+     * Check is client 
+     * 
+     * @return bool 
+     */
+    public function isClient()
+    {
+        return $this->isRole(UserRole::CLIENT);
+    }
+
+    /**
+     * Check is employee
+     * 
+     * @return bool
+     */
+    public function isEmployee()
+    {
+        return $this->isRole(UserRole::EMPLOYEE);
+    }
+
+    /**
+     * Check is contenter
+     * 
+     * @return bool
+     */
+    public function isContenter()
+    {
+        return $this->isRole(UserRole::CONTENTER);
     }
 
     /**
@@ -346,6 +366,6 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-
+        $this->person = null;
     }
 }
