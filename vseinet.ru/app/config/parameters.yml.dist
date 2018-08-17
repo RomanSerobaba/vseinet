@@ -31,10 +31,12 @@ parameters:
     brands.path: ''
     banner.path: ''
 
-    default.city.id: 1
-    default.point.id: 141
+    default.geo_city_id: 1
+    default.geo_point_id: 141
 
-    default.page.title: 'DEFAULT PAGE TITLE'
-    default.page.description: 'DEFAULT PAGE DESCRIPTION'
+    default.page_title: 'DEFAULT PAGE TITLE'
+    default.page_description: 'DEFAULT PAGE DESCRIPTION'
 
-    catalog.page.limit: 25
+    catalog.page_limit: 25
+
+    profiler.only_exceptions: false
