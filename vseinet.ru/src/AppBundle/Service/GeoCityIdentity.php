@@ -64,8 +64,12 @@ class GeoCityIdentity extends ContainerAware
         ");
         $q->setParameter('longIp', ip2long($this->get('request_stack')->getMasterRequest()->getClientIp()));
         $q->setMaxResults(1);
+        try {
+            return $q->getSingleScalarResult();
+        } catch (\Exception $e) {
+        }
 
-        return $q->getOneOrNullResult() ?? $this->getParameter('default.geo_city_id');
+        return $this->getParameter('default.geo_city_id');
     } 
 
     protected function loadGeoCity(int $geoCityId): GeoCity
