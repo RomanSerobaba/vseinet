@@ -71,7 +71,7 @@
         {% else %}
             <a href="{{ path('delivery_page') }}" class="green">О доставке</a>
         {% endif %} 
-        и <a href="{{ path('payment_page') }}" class="green">оплате</a>
+        и <a href="{{ path('content_page', { slug: 'payment' }) }}" class="green">оплате</a>
     </p>
 </div>
 <div class="help">
