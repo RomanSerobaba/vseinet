@@ -13,29 +13,18 @@ class AddContactType extends AbstractType
     {
         if ($options['data']->id) {
             $builder
-                ->add('typeCode', HiddenType::class, [
-                    'required' => true,
-                ])
-                ->add('typeCodeTitle', TextType::class, [
-                    'required' => false,
-                ]);
+                ->add('typeCode', HiddenType::class)
+                ->add('typeCodeTitle', TextType::class, ['required' => false])
+            ;
         } else {
             $builder
-                ->add('typeCode', ChoiceType::class, [
-                    'required' => true,
-                    'choices' => ContactTypeCode::getChoices(),
-                ]);
+                ->add('typeCode', ChoiceType::class, ['required' => true, 'choices' => ContactTypeCode::getChoices()])
+            ;
         }
         $builder
-            ->add('value', TextType::class, [
-                'required' => true,
-            ])
-            ->add('comment', TextType::class, [
-                'required' => false,
-            ])
-            ->add('isMain', CheckboxType::class, [
-                'required' => false,
-            ])
+            ->add('value', TextType::class)
+            ->add('comment', TextType::class, ['required' => false])
+            ->add('isMain', CheckboxType::class, ['required' => false])
             ->add('submit', SubmitType::class)
         ;
     }

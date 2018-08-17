@@ -1,0 +1,21 @@
+<div class="block">
+    <div class="wrapper">
+        <h2>Адреса доставки</h2>
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <td>Адрес</td>
+                    <td style="width:50px">Этаж</td>
+                    <td style="width:50px">Лифт</td>
+                    <td style="width:40px"></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for address in account.addresses %}
+                    {% include 'User/address.html.twig' with { address: address } %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('user_address_add') }}" class="address-add">Добавить адрес</a>
+    </div>
+</div>

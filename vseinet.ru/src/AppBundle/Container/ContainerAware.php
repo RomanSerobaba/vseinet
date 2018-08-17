@@ -63,13 +63,33 @@ class ContainerAware implements ContainerAwareInterface
         return $this->container->get('doctrine');
     }
 
-    public function serialize($entity)
+    public function getUser()
     {
-        return $this->get('fos_rest.serializer')->serialize($entity, 'json', new Context());
+        $token = $this->get('security.token_storage')->getToken();
+        if (null === $token) {
+            return null;
+        }
+
+        $user = $token->getUser();
+        if (is_object($user)) {
+            return $user;
+        }
+
+        return null;
     }
 
-    public function deserialize($data, $type) 
+    public function getGeoCity()
     {
-        return $this->get('fos_rest.serializer')->deserialize($data, $type, 'json', new Context());
+        return $this->get('geo_city.identity')->getGeoCity();
+    }
+
+    public function getUserIsEmployee()
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return false;
+        }
+
+        return $user->isEmployee();
     }
 }

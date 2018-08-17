@@ -13,11 +13,11 @@ class UpdateCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository(User::class)->find($this->get('user.identity')->getUser()->getId());
+        $user = $em->getRepository(User::class)->find($this->getUser()->getId());
         if (!$user instanceof User) {
             throw new NotFoundHttpException();
         }
-        $user->setCityId($command->city->getId());
+        $user->setGeoCityId($command->city->getId());
         $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
         $em->persist($user);
 
@@ -33,7 +33,5 @@ class UpdateCommandHandler extends MessageHandler
         
         $em->persist($person);
         $em->flush();
-
-        $this->get('command_bus')->handle(new LoginCompleteCommand(['id' => $user->getId()]));
     }
 }

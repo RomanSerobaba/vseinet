@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use AppBundle\Bus\Exception\ValidationException;
 
-class ExceptionController extends RestController
+class ExceptionController extends Controller
 {
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {

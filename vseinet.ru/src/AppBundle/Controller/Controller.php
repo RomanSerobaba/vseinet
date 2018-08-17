@@ -29,31 +29,18 @@ class Controller extends BaseController
         return $errors;
     }
 
-    /**
-     * @todo: remove it
-     */
-    protected function checkIsAnonimous()
+    public function getGeoCity()
     {
-        if (!$this->get('user.identity')->isAnonimous()) {
-            throw new BadRequestHttpException();
-        }
+        return $this->get('geo_city.identity')->getGeoCity();
     }
 
-    /**
-     * @todo: remove it
-     */
-    protected function checkIsAutorized()
+    public function getUserIsEmployee()
     {
-        if (!$this->get('user.identity')->isAuthorized()) {
-            throw new BadRequestHttpException();
+        $user = $this->getUser();
+        if (null === $user) {
+            return false;
         }
-    }
 
-    /**
-     * @todo: remove it
-     */
-    protected function getUserId()
-    {
-        return $this->get('user.identity')->getUser()->getId();
+        return $user->isEmployee();
     }
 }

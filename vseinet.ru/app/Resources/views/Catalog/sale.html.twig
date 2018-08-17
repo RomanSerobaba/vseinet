@@ -1,0 +1,72 @@
+{% macro availability(product) %}
+    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
+        <div class="status in-stock">Есть в наличии</div>
+    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availability %}
+        <div class="status not-available"{% if product.updatedAt %} style="cursor:help" title="Последний заход: {{ product.aupdateAt|date('d.m.Y') }}"{% endif %}>Нет в продаже</div>
+    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availability %}
+        <div class="status on-order">Ожидается</div>
+    {% else %}
+        <div class="status on-order">
+            На заказ,<br/>
+            <span>{#$product.id|delivery_time:1:0#}</span>
+        </div>
+    {% endif %}
+{% endmacro %}
+{% import _self as macro %}
+{% set isAvailable = constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
+{% set isInTransit = constant('AppBundle\\Enum\\ProductAvailabilityCode::IN_TRANSIT') == product.availability %}
+{% set isOnDemand = constant('AppBundle\\Enum\\ProductAvailabilityCode::ON_DEMAND') == product.availability %}
+<div class="price-wrapper{% if not app.userIsEmployee %} client{% endif %}">
+    <div class="status-mobile-screens">
+        {{ macro.availability(product) }}
+    </div>  
+    {% if isAvailable %}
+        <div class="price">
+            <b class="old">{{ product.price|discount_price|price_format }} <span class="RUR">Р</span></b>
+            <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
+        </div>
+    {% else %}
+        <strong class="price"{% if product.price|default(0) %}>{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</strong>
+    {% endif %}
+    <div class="status-all-screens">
+        {{ macro.availability(product) }}
+    </div>
+</div>
+<div class="sale-btns-wrapper">
+    <div class="sale-btns to-cart">
+        <a 
+            href="{{ path('cart_add', { id: product.id }) }}"
+            {#onclick="yaCounter13639594.reachGoal('cartadd');return true;" #}
+            class="bttn {% if isAvailable or isInTransit or isOnDemand %}green{% else %}greengray{% endif %} cart-add"
+            rel="nofollow"
+        >
+            {% if isAvailable or isInTransit or isOnDemand %}
+                Добавить в корзину
+            {% else %}
+                Сообщить<br/>о поступлении
+            {% endif %}    
+        </a>
+            {% if (isAvailable or isInTransit or isOnDemand) and 300000 < product.price %}
+                {% set credit = product.price*1.2582/24 %}
+                <a 
+                    href="{{ path('cart_add', { id: product.id }) }}" 
+                    class="bttn blue credit" 
+                    rel="nofollow"
+                >
+                    Кредит от {{ credit|round(-2)|price_format }} <span class="RUR">Р</span>
+                </a>
+            {% endif %}
+            {% if (isAvailable or isInTransit or isOnDemand) and product.price and app.geoCity.geoRegionId in [44, 59] %}
+                <a 
+                    class="bttn orange cheaper"
+                    href="{{ path('catalog_product_cheaper', { id: product.id }) }}"
+                    rel="nofollow"
+                >
+                    Нашли дешевле?
+                </a>   
+            {% endif %}
+    </div>
+    <div class="sale-btns in-cart">
+        <a href="{{ path('cart') }}" class="bttn green">Перейти в корзину</a>
+    </div>
+</div>

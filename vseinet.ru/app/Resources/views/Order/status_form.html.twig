@@ -1,0 +1,33 @@
+{{ form_start(form, { attr: { class: 'popup', title: 'Проверить заказ', 'data-class': 'popup-status', id: 'Status' }}) }}
+    <div class="request">
+        <p>Введите{% if isGranted('ORDER_CHECKING_BY_CONTACT_INFO') %} номер вашего мобильного телефона указанного при оформлении заказа или{% endif %} номер заказа</p>
+        <div class="row">
+            {% if isGranted('ORDER_CHECKING_BY_CONTACT_INFO')  %}
+                {{ form_label(form.number, 'Номер заказа, телефон или имя:') }}
+            {% else %}
+                {{ form_label(form.number, 'Номер заказа:') }}
+            {% endif %}
+            {{ form_widget(form.number, { attr: { class: 'txt' }}) }}
+        </div>
+        <div class="row">
+            {{ form_widget(form.submit, { label: 'Проверить статус', attr: { class: 'bttn blue' }}) }}
+        </div>
+        {% if app.user is null %}
+            <div class="row linker">
+                или <a href="{{ path('login') }}" data-popup="Login">войдите</a> на сайт и проверьте статус в истории заказов
+            </div>
+        {% endif %}
+    </div>
+    <div class="response">
+        <div class="row">
+        </div>
+        <div class="row">
+            {{ form_widget(form.submit, { label: 'Подробнее', attr: { class: 'bttn blue' }}) }}
+        </div>
+        <div class="row center">
+            <a href="javascript:void(0)" class="reset">Проверить другой заказ</a>
+        </div>
+    </div>
+    <div class="row loading">
+    </div>
+{{ form_end(form) }}

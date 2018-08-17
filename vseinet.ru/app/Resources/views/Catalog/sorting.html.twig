@@ -1,0 +1,25 @@
+{% if sorting %}
+    <span class="sort_title">Сортировать по</span> <span class="sort_title hide">По</span>
+    <ul>   
+    {% for sort, options in sorting.options %}
+            {% if sort == sorting.sort %}
+                <li class="sorted {{ sorting.sortDirection }}">
+                    <span>
+                        <a href="{{ options.url }}" class="ajax black" rel="nofollow">
+                            {{ options.title }}
+                            {% if constant('AppBundle\\Bus\\Catalog\\Enum\\Sort::RATING') != sort %}
+                                <span class="icon-{{ sorting.sortDirection }}"></span>
+                            {% endif %}
+                        </a>    
+                    </span>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{{ options.url }}" class="ajax green" rel="nofollow">
+                        {{ options.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}

@@ -7,3 +7,17 @@ services:
     query_bus:
         alias: simple_bus.query_bus
         public: true
+
+    command_bus.middleware.validation:
+        class: AppBundle\Bus\Middleware\CommandValidationMiddleware
+        public: false
+        arguments: [ '@validator' ]
+        tags: 
+            - { name: command_bus_middleware }
+            
+    query_bus.middleware.validation:
+        class: AppBundle\Bus\Middleware\QueryValidationMiddleware
+        public: false
+        arguments: [ '@validator' ]
+        tags: 
+            - { name: query_bus_middleware }

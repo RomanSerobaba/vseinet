@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
@@ -16,9 +17,11 @@ register:
     type:     annotation
     prefix:   /
 
+=======
+>>>>>>> 958dfbdf55ccea6307e187445d24ce3c38b34adf
 app:
-    resource: "@AppBundle/Controller/"
+    resource: '@AppBundle/Controller/'
     type: annotation
-    prefix: /
 
-
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

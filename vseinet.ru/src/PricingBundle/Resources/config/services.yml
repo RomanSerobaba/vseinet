@@ -1,4 +1,0 @@
-services:
-#    pricing.example:
-#        class: PricingBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]

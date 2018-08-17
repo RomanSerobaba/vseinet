@@ -42,7 +42,7 @@ class AddContactCommandHandler extends MessageHandler
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('user.identity')->getUser();
+        $user = $this->getUser();
 
         $q = $em->createQuery("
             SELECT 1 

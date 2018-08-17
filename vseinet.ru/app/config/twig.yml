@@ -20,14 +20,28 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    twig.extension.image:
+        class: 'AppBundle\Twig\Extension\ImageExtension'
+        arguments: [ '%images.path%' ]
+        tags:
+            - { name: 'twig.extension' }
 
-    app.templating.globals:
-        class: 'SiteBundle\Templating\GlobalVariables'
+    twig.extension.discount:
+        class: 'AppBundle\Twig\Extension\DiscountExtension'
+        tags:
+            - { name: 'twig.extension' }
+
+    twig.extension.autocut:
+        class: 'AppBundle\Twig\Extension\AutocutExtension'
+        tags:
+            - { name: 'twig.extension' }
+
+    app.twig.globals:
+        class: 'AppBundle\Twig\GlobalVariables'
         arguments: [ '@service_container' ]
 
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        app: '@app.templating.globals'
-
+        app: '@app.twig.globals'

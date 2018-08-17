@@ -1,0 +1,378 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+    О компании
+{% endblock %}
+
+{% block content %}
+<div id="about">
+    <section class="holder">
+        <ul class="tabs">
+            <li><a href="javascript:void(0)" data-hash="#befinits" class="green">Преимущества</a></li>
+            <li><a href="javascript:void(0)" data-hash="#cheaps" class="green">Причины низких цен</a></li>
+            <li><a href="javascript:void(0)" data-hash="#properties" class="green">Реквизиты</a></li>
+            <li><a href="javascript:void(0)" data-hash="#vacancies" class="green">Вакансии</a></li>
+            <li><a href="javascript:void(0)" data-hash="#social" class="green">Мы в соц.сетях</a></li>
+        </ul>
+        <h1>Интернет-магазин Vseinet.ru</h1>
+        <div class="intro">
+            Многие привыкли, что за низкие цены приходится расплачиваться плохим сервисом, проблемами с гарантией и большими сроками доставки товара.<br/><br/><span>Наш магазин опровергает эти устоявшиеся стереотипы!</span><br/><br/>
+            Мы осуществляем розничную торговлю посредством интернет-витрины и доставляем товар под заказ в кратчайшие сроки.
+        </div>
+        <div class="wrapper">
+            <div class="benifits">
+                <a class="benifit delivery">
+                    <span></span>
+                    <h4>Доставка по всей России</h4>
+                    <p>Быстрая доставка внутри городов и областей.</p>
+                </a>
+                <a class="benifit price">
+                    <span></span>
+                    <h4>Гарантия низких цен</h4>
+                    <p>Нашли дешевле?<br />Мы сделаем ниже!</p>
+                </a>
+                <a class="benifit credit">
+                    <span></span>
+                    <h4>Рассрочка и кредит</h4>
+                    <p>Максимально выгодные и прозрачные условия.</p>
+                </a>
+                <a class="benifit assortment">
+                    <span>250</span>
+                    <h4>Огромный ассортимент</h4>
+                    <p>1 млн. товаров на сайте, 100 тыс. в наличии.</p>
+                </a>
+                <a class="benifit warranty">
+                    <span></span>
+                    <h4>Гарантия на все</h4>
+                    <p>Только оригинальный товар от производителей.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="cheap" id="cheaps">
+        <div class="holder">
+            <h1>Почему у нас такие низкие цены?</h1>
+            <dl>
+                <dt>1.</dt>
+                <dd>
+                    <h3>Экономия на рекламе</h3>
+                    <p>Благодаря отличному сервису, широкому ассортименту и конкурентным ценам наши клиенты сами рассказывают о нас своим друзьям и знакомым. Как показала практика, довольные клиенты - и есть самая эффективная реклама!</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>2.</dt>
+                <dd>
+                    <h3>Эффективные закупки</h3>
+                    <p>Работа с большими объемами и множеством поставщиков позволяет нам выбирать самые выгодные предложения по каждой товарной позиции.</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>3.</dt>
+                <dd>
+                    <h3>Высокая оборачиваемость</h3>
+                    <p>В нашем магазине выставлены только самые ходовые и популярные товары. Весь остальной ассортимент, многократно превышающий ассортимент любого гипермаркета, мы привозим под заказ в кратчайшие сроки.</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>4.</dt>
+                <dd>
+                    <h3>Оптимизация площадей</h3>
+                    <p>Мы содержим небольшие торговые залы только с самым ходовым ассортиментом, остальной каталог товаров вы всегда можете просмортеть на нашем сайте и оформить покупку, связавшись с специалистом нашего кол-центра.</p>
+                </dd>
+            </dl>
+        </div>
+    </section>
+    <div class="holder">
+        <section id="properties" class="columns">
+            <h2>Наши реквизиты</h2>
+            <div class="row">
+                <div class="content">
+                    <p><strong>Юридическое наименование:</strong> ИП Мокиевская Надежда Евгеньевна</p>
+
+                    <p><strong>Юридический адрес:</strong> г. Пенза, ул. Леонова 37-171 </p>
+
+                    <p><strong>Почтовый адрес:</strong> 440018, г. Пенза, ул. Суворова, 225</p>
+
+                    <p><strong>ИНН:</strong> 583502363760 </p>
+
+                    <p><strong>ОГРН:</strong> 315583500000191</p>
+
+                    <p><strong>Банк:</strong> ОАО &quot;РОССЕЛЬХОЗБАНК&quot; Пензенский региональный филиал</p>
+
+                    <p><strong>Р/с:</strong> 40802810015000001163</p>
+                </div>
+            </div>
+        </section>
+        <section id="vacancies" class="columns">
+            <h2>Работа во vseinet.ru</h2>
+            <div class="row">
+                {% for vacancy in vacancies %}
+                    <div class="content">
+                        <h4><a href="{{  path('vacancy', { id: vacancy.id }) }}">{{ vacancy.position }}</a></h4>
+                        {{ vacancy.description|autocut|raw }}
+                    </div>
+                    {% if loop.index % 3 == 0 and not loop.last %}
+                        </div><div class="row">
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="row resume">Свои резюме отправляйте на <a href="mailto:personal@vseinet.ru">personal@vseinet.ru</a></div>
+        </section>
+        <section id="social" class="columns">
+            <h2>Мы в социальных сетях</h2>
+            <div class="row">
+                <div class="content">
+                    <script type="text/javascript" src="//vk.com/js/api/openapi.js?121"></script>
+                    <!-- VK Widget -->
+                    <div id="vk_groups"></div>
+                    <script type="text/javascript">
+                        VK.Widgets.Group("vk_groups", { mode: 0, width: "300", height: "300", color1: 'FFFFFF', color2: '2B587A', color3: '5B7FA6' }, 9666105);
+                    </script>
+                </div>
+                <div class="content">
+                    <div id="fb-root"></div>
+                    <script>
+                        (function(d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s); js.id = id;
+                            js.src = "//connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));
+                    </script>
+                    <div class="fb-page" data-href="https://www.facebook.com/MagazinVseinet/" data-tabs="timeline" data-width="300" data-height="300" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/MagazinVseinet/"><a href="https://www.facebook.com/MagazinVseinet/">Магазин Всеинет - оф. страница</a></blockquote></div></div>
+                </div>
+                <div class="content">
+                    <div id="ok_group_widget"></div>
+                    <script>
+                        !function (d, id, did, st) {
+                            var js = d.createElement("script");
+                            js.src = "https://connect.ok.ru/connect.js";
+                            js.onload = js.onreadystatechange = function () {
+                                if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                                    if (!this.executed) {
+                                        this.executed = true;
+                                        setTimeout(function () {
+                                            OK.CONNECT.insertGroupWidget(id,did,st);
+                                        }, 0);
+                                    }
+                                }}
+                            d.documentElement.appendChild(js);
+                        }(document,"ok_group_widget","52950211035223","{ width:300,height:300 }");
+                    </script>
+                </div>
+                <div class="content">
+                    <!-- InstaWidget -->
+                    <a href="https://instawidget.net/v/user/vseinet.ru" id="link-f0ff7ce9ecbf6cc6f60cfdc409d61124ed92dca05842f679be0de9e4d52d509e">@vseinet.ru</a>
+                    <script src="https://instawidget.net/js/instawidget.js?u=f0ff7ce9ecbf6cc6f60cfdc409d61124ed92dca05842f679be0de9e4d52d509e&width=300px"></script>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(function() {
+        var hash = window.location.hash, active = $('a[data-hash=' + hash + ']').parent().index();
+        $('#about').tabs({
+            active: active > -1 ? active : 0,
+            beforeLoad: function(event, ui) {
+                return false;
+            },
+            beforeActivate: function(event, ui) {
+                window.location = ui.newTab.find('a').data('hash');
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    #about .tabs {
+        float: right;
+        margin-top: 19px;
+    }
+    #about .intro {
+        clear: both;
+        font: 24px/1.3 Intro;
+        margin: 0 auto 50px;
+        padding-top: 30px;
+        width: 73%;
+    }
+    #about .intro SPAN {
+        font-family: Intro Inline;
+    }
+    
+    .benifits,
+    #cheaps,
+    .columns {
+        border-top: 45px solid transparent;
+        margin-top: -45px;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+    }
+    #about .cheap {
+        background: #6bc800;
+        color: #fff;
+        margin: 0 0 36px;
+        overflow: hidden;
+        padding: 30px 0 50px;
+        font-size: 14px;
+    }
+    #about .cheap H1 {
+        font: 36px/1.3 Intro;
+        text-align: center;
+        color: #fff;
+        text-transform: uppercase;
+    }
+    #about .cheap DL {
+        float: left;
+        width: 25%;
+        margin-right: 8%;
+    }
+    #about #cheaps .holder DL:nth-child(5) {
+        display: none;
+    }  
+    #about .cheap DT {
+        float: left;
+        font: 36px/1.3 Intro;
+        width: 40px;
+    }
+    #about .cheap DD {
+        overflow: hidden;
+    }
+    #about .cheap H3 {
+        font: 18px/1 Intro;
+        padding-top: 6px;
+        color: #fff;
+        text-transform: uppercase;
+    }
+    @media screen and (min-width: 1580px) {
+        #about .cheap DL {
+            width: 21%;
+            margin-right: 4%;
+        }  
+        #about #cheaps .holder DL:nth-child(5) {
+            display: block;
+        }  
+    }
+
+    .benifits {
+        width: 200%;
+    }
+    .benifits .benifit {
+        margin-right: 0 ! important;
+        padding: 0 2% 0 0 ! important;
+        width: 8% ! important;
+    }
+    .benifits .benifit SPAN {
+        display: block;
+        float: none;
+        font-size: 25px;
+        height: 46px;
+        line-height: 46px;
+        margin: 23px 0 33px;
+        width: 80px;
+    }
+    .benifits .benifit SPAN:before,
+    .benifits .benifit SPAN:after {
+        border-left-width: 40px;
+        border-right-width: 40px;
+    }
+    .benifits .benifit SPAN:before {
+        top: -23px;
+        border-bottom-width: 23px;
+    }
+    .benifits .benifit SPAN:after {
+        bottom: -23px;
+        border-top-width: 23px;
+    }
+    .benifits .benifit.delivery SPAN {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAoCAMAAACsAtiWAAAAh1BMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD////i8iEyAAAALHRSTlOXpTUsEHCGy63u6NufSB19YpJW4cnQDIEjGAN2B2hcTMNSQj0JvfOLtfj9AN1iqnEAAAGASURBVHgBhc7ZkoIwEIVhx20QRUAQ2bcACZx+/+ebSqVGuyYj/rf9VXI2+Ngm/xq3H0hGtMhhlaCaiM5ilSAdiZYwWSOAfihKVgmuishbJxhmkh8IWorxqvyPPGgxY3CtL9GUwCY9UQN9PpPOs4gZU5uzTlrEjDnSs2+LmDHdiyx7m+gx3fwyHSdsTPsiIQCUYssJWvr2n//Et1z440xzxoge05izbLxCTQbXnOgx0V12vT4/u3BSziSHAz/rIk4w0r0iqysnPi2dTQJG9JjbbJEvRvSYcLSIy4ke45PVjhE9prFJxYkg6iaLOJzoMcoiMScYo7BrF2Kd1CHjBBmuaZ5dyDSpoveOY8EJqmhyTzI5mHNz1C/SzMnmLoBUxcOt6WRsPpzbmpEm2gulAiiZ/p4f/QAwoqqdM+SPYOfmZ5pGX5TQcXLeFgLIHcxZJ3I8Y+TeVwGQXoYlAYsTuRnGImjTOsY7kp1uZVPvd673lkC4TlCHpwrvCfYHRx1T/OkHJU3SZ8CSCIsAAAAASUVORK5CYII=);
+    }
+    .benifits .benifit.price SPAN {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAtCAMAAADm86mrAAAAjVBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///9PA8iaAAAALnRSTlOxoqVsqsQ4CXuJykq3T4MO7EE93Vwau0ePNC/2d1YnIZhxBdHmZdYW8foC4/4A8JhhaQAAAn5JREFUeF6N1dm2qjAMBmCcJxSZZ61AFZD0/R/vkBbaytajudFVPlyh/ikGvCnHqNxlDG/qHd92rK+G/sZvTFSX/8KPDRsqXX/nHur0RvGjdj7x9kDMVRAE7thG3uGXMgj2ZTkLJ9xaMa0yXDrpK6R94ZGuT2Jtp/ubztta4WcuH9pVvGo1fkG38yjNFnYBstqYZhn1CPqrxu1en+FTtbhLa40fcNc4KA7e5Y9Pex5r3MFN411hu+ZjdBezPPRg2kyCCxuAjXi4fTHoirHGhw1yS+Ox4BiX+9ZlzJOaMQcK5L7Gs6H3PWuu2JmpdFkAnOXGGzJVJt+CEvBqpfQDEeY553zMd+MAFB1z+X/mKj3uM+tugp9UTu64v0fG5nB5Ki0J8pzr3fgM1TxlLFRaFM9z54CxwRabIUGFCKYptSy7xgUwwpcxs0jKumUstSp0zDFoz++gykr8K9f3R2L7mscuqPj1ELQadNI31s2tAYtHjI0CL6bhH+3vGdaqFfqY8i4MOPJdX0z0w+sjTfrvlOusE00Y47lyetVgYmbXjAVyNpuFCMGiQWLrGpPg9u7Jo3RAXYdjZnL0S6V9PhKV5CYOW6ISSRABWK7UUGIeYhFOHHxvMqs1wFFpjP4zqpCJ8bhMpikF8FOpodjLwbKmwxcP42GvZjIn1rzrNb9ZcTXaFUzLP8TqJEimB0f733MmmZ4E5Jbtom1YKGd5p902W8ymzRQVk1XJNNNardaF4uoFo00WEH0tAp1D1E1P7EjXy80rh5gE5iyKAn4bHYP3XBJCdrfk47vJPmP4ticea9p+ffOtUzZU5wF84+pN2VD4ymWeWZ3DbxyS+dMlPrypfx9JTJuS0ZCeAAAAAElFTkSuQmCC);
+    }
+    .benifits .benifit.credit SPAN {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAjCAMAAADGxShVAAAAaVBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///+dpIfAAAAAInRSTlOhGtSd2OmQmyVFeoK1KvFtPDKu9gNmV8ZL/AnhER6I7t0A+oyuhAAAAOVJREFUeF7V0dtuwjAMgOFsQM+nnJfUTWu//0NuYSA0Qbxr/rvInyxZEfjcKP88XxCrV2AJKCJSHFlWys1FYvpA17QskM3TvU/zkrj9DryFpndPJNY3cKlGmD2Rf5AIABHlmXJhcOBUoFwT8wCFnfLiZtYZHN221BPd6jui0KE49phvTbnWwJwe5ctlABFI7+U8rJsgvvZ/8vVmZEGGaJVSGhOzxX8s1tqByuQCvyOGJEenpWKJq7VBozlie5I4sluGbZqGicjHIiEnh3XfTy2USajGiGje7KeVEYEnLaLozgeTiojf+Z2SV/62VJMAAAAASUVORK5CYII=);
+    }
+    .benifits .benifit.warranty SPAN {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAMAAABwfJv6AAAARVBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////9SnXPCAAAAFnRSTlMAVnuWJDKAiPUZtqcI6D7La2BzSNjEnyrN1AAAAPlJREFUeF6NlNuKBCEMRNvbGNvWvtf/f+qyQZjdnomx3gKHUxIwUydpy7ef9GwFuHRsyQCw6yBzcxvSInInfhPadG8iuAJAboPHJSkrC2ubHHAK4IE/xgAgCqADx/AwA3ACGMEpIXm/oQMacECFiN2HaHwkfOfsk5sHfeTHOJiv3OvD9xrylTjQa/f9TJPe2yp13yAXZc7q3Pj7UvCH7kvbSiCdOwoDau/OgO4LNMYtFwP6no3qa8kPjpIA3gDIGnPGRtbO7XDt+3KMbGxtnrpG915v7L6xsvDdneUDl/8tKohg8G3za7sxWiwXLyq3FIDspKdeqwsd4AdJHyi05KPqDAAAAABJRU5ErkJggg==);
+    }
+    #about .columns {
+        margin: 12px;
+        overflow: hidden;
+    }
+    #about .columns H2 {
+        font-family: Intro;
+        font-size: 24px;
+        margin: 0 0 36px;
+        text-transform: uppercase;
+        line-height: 28px;
+    }
+    #about .columns .row {
+        overflow: hidden;
+    }
+    #about .columns .content {
+        float: left;
+        margin: 0 0 24px;
+        padding-right: 3%;
+        width: 30%;
+    }
+    #about .columns .content * {
+        font-size: 12px;
+        line-height: 18px !important;
+    }
+    #about .columns .content H4 {
+        margin: 0 0 10px;
+    }
+    #about .columns .content H4 A {
+        font: bold 16px/18px Arial ! important;
+    }
+    #about #properties H2 {
+        text-align: center;
+    }
+    #about #properties.columns .content {
+        float: none;
+        padding-right: 0;
+        width: auto;
+    }
+    #about #properties .row {
+        margin: 0 0 24px;
+    }
+    #about #vacancies H2 {
+        text-align: center;
+    }
+    #about #social H2 {
+        text-align: left;
+    }
+    #about #vacancies .row {
+        margin: 0 0 15px;
+    }
+    #about #vacancies TH {
+        text-align: left;
+        vertical-align: top;
+        width: 105px;
+    }
+    #about .resume {
+        text-align: center;
+        width: 100%;
+        font-size: 16px;
+        padding-top: 23px;
+        padding-bottom: 23px;
+        border-top: 1px dashed #dcdcde;
+    }
+    #about #properties p, #about #properties strong{
+        font-size: 14px!important;
+    }
+    #about .benifits p, #about .benifits H4{
+        font-size: 14px!important;
+    }
+    #about #vacancies th, #about #vacancies td, #about #vacancies li{
+        font-size: 14px!important;
+    }
+</style>
+{% endblock %}

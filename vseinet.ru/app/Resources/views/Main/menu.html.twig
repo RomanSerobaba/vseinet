@@ -1,0 +1,91 @@
+{% macro render_product(product) %}
+    <div class="product">
+        <a href="{{ url("catalog_product", { id: product.id }) }}" class="image">
+            <img 
+                src="{{ product|image(constant("AppBundle\\Enum\\BaseProductImage::SIZE_MD")) }}" 
+                alt="{{ product.name }}" 
+            />
+        </a>
+        <h6><a href="{{ url("catalog_product", { id: product.id }) }}">{{ product.name }}</a></h6>
+        <strong class="price">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
+        <span class="discount">Акция</span>
+    </div>
+{% endmacro %}
+{% import _self as macro %}
+<div id="tree">
+    <h3 class="tree-title">Каталог</h3>
+    <ul>
+        <li>
+            <a href="{{ path('catalog_specials') }}" style="color:white;background-color:#ff4921;text-transform:uppercase;font-weight:bold">Тотальная распродажа</a>
+        </li>
+        {% for category1 in menu %}
+            <li data-id="{{ category1.id }}">
+                <a href="{{ path('catalog_category', { id: category1.id}) }}"{% if category1.id == 33536 %} class="special service"{% elseif category1.id == 5086104 %} class="special on-order"{% endif %}>
+                    {{ category1.name }}
+                    {% if category1.id == 7707 %}
+                        <span class="new"></span>
+                        <span style="display: block; font-size: 10px;">более 500 тыс. товаров</span>
+                    {% endif %} 
+                    <span class="go-to-category">Перейти в раздел</span>
+                </a>
+                <div id="subtree-{{ category1.id }}" class="subtree">
+                    {% for category2 in category1.children %}
+                        {% if category1.count == 6 and loop.last and category1.product %}
+                            {{ macro.render_product(category1.product) }}
+                        {% endif %}
+                        <ul>
+                            <li class="top">
+                                <h4>
+                                    <a href="{{ path('catalog_category', { id: category2.id }) }}">
+                                        {{ category2.name }}
+                                        {% if category2.id == 4590 %}
+                                            <span class="new"></span>
+                                        {% endif %} 
+                                        <span class="go-to-category">Перейти в раздел</span>
+                                    </a>
+                                </h4>
+                            </li>
+                            {% for category3 in category2.children %}
+                                <li>
+                                    <a href="{{ path('catalog_category', { id: category3.id }) }}">
+                                        {{ category3.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                            {% if category2.isAll %}
+                                <li class="all">
+                                    <a href="{{ path('catalog_category', { id: category2.id }) }}">Все разделы</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endfor %}
+                    {% for categories in category1.last %}
+                        <ul>
+                            {% for category in categories %}
+                                <li>
+                                    <h4>
+                                        <a href="{{ path('catalog_category', { id: category.id }) }}">
+                                            {{ category.name }}
+                                        </a>
+                                    </h4>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                    {% if category1.last %}
+                        <ul class="mobile-all">
+                            <li class="top">
+                                <h4>
+                                    <a href="{{ path('catalog_category', { id: category1.id}) }}" class="all go-to-category">Все разделы</a>  
+                                </h4>   
+                            </li>
+                        </ul>
+                    {% endif %}
+                    {% if category1.count != 6 and category1.product %}
+                        {{ macro.render_product(category1.product) }}
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

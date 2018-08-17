@@ -4,7 +4,7 @@ namespace AppBundle\Twig\Extension;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-use GeoBundle\Service\PhoneFormatter;
+use AppBundle\Service\PhoneFormatter;
 
 class PhoneFormatExtension extends AbstractExtension
 {

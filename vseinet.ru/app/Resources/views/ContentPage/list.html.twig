@@ -1,0 +1,15 @@
+<div id="services">
+    <h3>{{ category.title }}</a></h3> 
+    <ul>
+        {% for page in pages %}
+            <li>
+                <a 
+                    href="{{ path('content_page', { slug : page.slug }) }}"
+                    {% if page.slug == slug %} class="current"{% endif %}
+                >
+                    {{ page.shortTitle }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

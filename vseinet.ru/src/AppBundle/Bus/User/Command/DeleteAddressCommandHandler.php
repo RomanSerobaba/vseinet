@@ -4,7 +4,7 @@ namespace AppBundle\Bus\User\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use GeoBundle\Entity\GeoAddress;
+use AppBundle\Entity\GeoAddress;
 
 class DeleteAddressCommandHandler extends MessageHandler
 {

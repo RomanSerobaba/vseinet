@@ -1,0 +1,41 @@
+services:
+    catalog.query_string:
+        class: 'AppBundle\Bus\Catalog\QueryString'
+        public: true 
+        arguments: [ '@doctrine.orm.entity_manager', '@security.token_storage' ]
+
+    catalog.search_product_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\SearchProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.category_product_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\CategoryProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.brand_product_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\BrandProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.supplier_product_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\SupplierProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.specials_product_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\SpecialsProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.autocomplete_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\AutocompleteFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]

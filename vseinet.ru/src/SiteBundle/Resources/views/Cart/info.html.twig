@@ -1,8 +1,0 @@
-<a href="{{ path('cart') }}" class="cart">
-    {% if info.total %}
-        {{ info.total }} {{ info.total|declension('товар;товара;товаров') }}
-        на сумму {{ info.amount|price_format({ decimals: 0, ds: '.', ts: ' ' }) }} <span class="RUR">Р</span>
-    {% else %}
-        Корзина пустая
-    {% endif %}
-</a>
