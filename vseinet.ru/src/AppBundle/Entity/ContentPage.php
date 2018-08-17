@@ -22,25 +22,11 @@ class ContentPage
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="category_id", type="integer")
-     */
-    private $categoryId;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string")
      */
     private $title;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="short_title", type="string")
-     */
-    private $shortTitle;
 
     /**
      * @var string
@@ -55,13 +41,6 @@ class ContentPage
      * @ORM\Column(name="slug", type="string")
      */
     private $slug;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="sort_order", type="integer")
-     */
-    private $sortOrder;
 
     /**
      * @var bool
@@ -79,30 +58,6 @@ class ContentPage
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set categoryId.
-     *
-     * @param int $categoryId
-     *
-     * @return ContentPage
-     */
-    public function setCategoryId($categoryId)
-    {
-        $this->categoryId = $categoryId;
-
-        return $this;
-    }
-
-    /**
-     * Get categoryId.
-     *
-     * @return int
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
     }
 
     /**
@@ -129,29 +84,6 @@ class ContentPage
         return $this->title;
     }
 
-    /**
-     * Set shortTitle.
-     *
-     * @param string $shortTitle
-     *
-     * @return ContentPage
-     */
-    public function setShortTitle($shortTitle)
-    {
-        $this->shortTitle = $shortTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get shortTitle.
-     *
-     * @return string
-     */
-    public function getShortTitle()
-    {
-        return $this->shortTitle;
-    }
 
     /**
      * Set content.
@@ -199,31 +131,6 @@ class ContentPage
     public function getSlug()
     {
         return $this->slug;
-    }
-
-
-    /**
-     * Set sortOrder.
-     *
-     * @param int $sortOrder
-     *
-     * @return ContentPage
-     */
-    public function setSortOrder($sortOrder)
-    {
-        $this->sortOrder = $sortOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get sortOrder.
-     *
-     * @return int
-     */
-    public function getSortOrder()
-    {
-        return $this->sortOrder;
     }
 
     /**

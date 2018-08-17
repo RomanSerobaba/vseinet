@@ -69,7 +69,10 @@ class GeoController extends Controller
     }
 
     /**
-     * @VIA\Get(name="contacts_page", path="/contacts/")
+     * @VIA\Get(
+     *     name="contacts_page", 
+     *     path="/contacts/"
+     * )
      */
     public function getContactsAction()
     {
@@ -82,12 +85,12 @@ class GeoController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="contacts_representaive",
-     *     path="/contacts/{id}/",
-     *     requirements={"id" = "\d+"}
+     *     name="contacts_representative",
+     *     path="/contacts/{geoPointId}/",
+     *     requirements={"geoPointId" = "\d+"}
      * )
      */
-    public function getContactAction(int $id, Request $request)
+    public function getContactAction(int $geoPointId, Request $request)
     {
 
     }

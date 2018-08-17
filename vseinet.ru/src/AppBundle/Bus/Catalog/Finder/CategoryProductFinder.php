@@ -154,47 +154,49 @@ class CategoryProductFinder extends ProductFinder
                     }
                 }
             }
-        }      
-        $valueIds = [];
-        foreach ($details as $id => $detail) {
-            if (empty($detail->values)) {
-                continue;
-            }
-            if (DetailType::CODE_ENUM === $detail->typeCode) {
-                if (1 === count($detail->values)) {
+        }  
+        if ($this->category->isTplEnabled) {
+            $valueIds = [];
+            foreach ($details as $id => $detail) {
+                if (empty($detail->values)) {
                     continue;
                 }
-                $valueIds = array_merge($valueIds, array_keys($detail->values)); 
-            } elseif (DetailType::CODE_NUMBER === $detail->typeCode && $detail->values->min === $detail->values->max) {
-                continue;
+                if (DetailType::CODE_ENUM === $detail->typeCode) {
+                    if (1 === count($detail->values)) {
+                        continue;
+                    }
+                    $valueIds = array_merge($valueIds, array_keys($detail->values)); 
+                } elseif (DetailType::CODE_NUMBER === $detail->typeCode && $detail->values->min === $detail->values->max) {
+                    continue;
+                }
+                $this->filter->details[$id] = $detail;
             }
-            $this->filter->details[$id] = $detail;
-        }
-        if (!empty($valueIds)) {
-            $q = $em->createQuery("
-                SELECT
-                    NEW AppBundle\Bus\Catalog\Query\DTO\Filter\DetailValue (
-                        dv.id,
-                        dv.value 
-                    )
-                FROM AppBundle:DetailValue dv 
-                WHERE dv.id IN (:ids)
-                ORDER BY dv.value 
-            ");
-            $q->setParameter('ids', $valueIds);
-            $this->filter->values = $q->getResult('IndexByHydrator');
-        }
-        foreach ($this->filter->details as $id => $detail) {
-            if (isset($this->filter->sections[$detail->sectionId])) { 
-                $this->filter->sections[$detail->sectionId]->detailIds[] = $id;
+            if (!empty($valueIds)) {
+                $q = $em->createQuery("
+                    SELECT
+                        NEW AppBundle\Bus\Catalog\Query\DTO\Filter\DetailValue (
+                            dv.id,
+                            dv.value 
+                        )
+                    FROM AppBundle:DetailValue dv 
+                    WHERE dv.id IN (:ids)
+                    ORDER BY dv.value 
+                ");
+                $q->setParameter('ids', $valueIds);
+                $this->filter->values = $q->getResult('IndexByHydrator');
             }
-            if (0 !== $detail->sectionId) {
-                $this->filter->sections[0]->detailIds[] = $id;
-            } 
-        }
-        if (2 === count($this->filter->sections)) {
-            $this->filter->sections = array_filter($this->filter->sections, function($section) { return 0 == $section->id; });
-        }
+            foreach ($this->filter->details as $id => $detail) {
+                if (isset($this->filter->sections[$detail->sectionId])) { 
+                    $this->filter->sections[$detail->sectionId]->detailIds[] = $id;
+                }
+                if (0 !== $detail->sectionId) {
+                    $this->filter->sections[0]->detailIds[] = $id;
+                } 
+            }
+            if (2 === count($this->filter->sections)) {
+                $this->filter->sections = array_filter($this->filter->sections, function($section) { return 0 == $section->id; });
+            }            
+        }    
 
         $brandId2count = [];
         foreach ($results[$index + 1] as $row) {
@@ -305,7 +307,7 @@ class CategoryProductFinder extends ProductFinder
                     }
                 }
             }
-            for ($i = $index + 1; $i < count($results); $i += 2) {
+            for ($i = ($index ?? 0) + 1; $i < count($results); $i += 2) {
                 foreach ($results[$i] as $row) {
                     $keys = array_keys($row);
                     $values = array_values($row);

@@ -1,1 +1,69 @@
-vacancies index page
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+    О компании
+{% endblock %}
+
+{% block content %}
+<nav id="nav">
+    <h3>Вакансии</h3>
+    <ul>
+        {% for vacancy from vacancies %}
+            <li>
+                <a href="{{ path('vacancy', { id: vacancy.id }) }}"
+                {% if current is defined and current.id == vacancy.id %} class="current"{/if}>{$vacancy.position}</a></li>
+        {/foreach}
+    </ul>
+</nav>
+<div class="wrapper" id="vacancy">
+    {if $current}
+        {include file='vacancy/vacancy.tpl'}
+    {elseif $page}
+        <div class="content text_page">
+            {$page.text}
+        </div>
+    {/if}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(function() {
+    var nav = $('#nav a').click(function() {
+        var a = $(this);
+        if ( ! a.is('.current')) {
+            nav.removeClass('current');
+            sp.get(a.prop('href')).done(function(data) {
+                a.addClass('current');
+                $('#vacancy').html(data.html);
+            });
+        }
+        return false;
+    });
+});
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+#nav {
+    padding-top: 24px;
+}
+#nav LI {
+    margin: 0 0 5px;
+}
+#nav .current {
+    border: none !important;
+    color: #333;
+    cursor: default;
+}
+#vacancy TH {
+    text-align: left;
+    vertical-align: top;
+    width: 170px;
+}
+#vacancy TD {
+    padding-bottom: 12px;
+}
+</style>
+{% endblock %}

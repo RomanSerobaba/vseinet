@@ -31,6 +31,11 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    twig.extension.autocut:
+        class: 'AppBundle\Twig\Extension\AutocutExtension'
+        tags:
+            - { name: 'twig.extension' }
+
     app.twig.globals:
         class: 'AppBundle\Twig\GlobalVariables'
         arguments: [ '@service_container' ]

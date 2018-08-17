@@ -5,42 +5,26 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
+use AppBundle\Bus\ContentPage\Query\GetQuery;
+use AppBundle\Bus\Vacancy\Query\GetListQuery as GetVacanciesQuery;
+use AppBundle\Bus\Category\Query\GetDeliveryTaxesQuery;
+use AppBundle\Bus\Geo\Query\GetRepresentativeListQuery;
 
 class ContentPageController extends Controller
 {
     /**
      * @VIA\Get(
      *     name="content_page", 
-     *     path="/pages/{slug}/",
-     *     requirements={"slug" = "[^\/]*"},
+     *     path="/{slug}/",
+     *     requirements={"slug" = "payment|garanty|credit|promo|partnership|help"},
      *     parameters={
      *         @VIA\Parameter(name="slug", type="string")
      *     }
      * )
      */
-    public function getAction($slug)
+    public function pageAction($slug)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(['slug' => $slug]), $page);
-
-        return $this->render('ContentPage/page.html.smarty', [
-            'page' => $page,
-        ]);
-    }
-
-    /**
-     * @internal
-     * @deprecated
-     */
-    public function listAction($type)
-    {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
-        }
-
-        $this->get('query_bus')->handle(new Query\GetListQuery(['type' => $type]), $result);
-        $result->slug = $masterRequest->query->get('slug', '');
-
-        return $this->render('ContentPage/list.html.smarty', $result);
+        return $this->show($slug);
     }
 
     /**
@@ -51,11 +35,9 @@ class ContentPageController extends Controller
      */
     public function aboutAction()
     {
-        $this->get('query_bus')->handle(new Query\GetVacanciesQuery(), $vacancies);
+        $this->get('query_bus')->handle(new GetVacanciesQuery(), $vacancies);
 
-        return $this->render('ContentPage/about.html.twig', [
-            'vacancies' => $vacancies,
-        ]);
+        return $this->show('about', ['vacancies' => $vacancies]);
     }
 
     /**
@@ -66,18 +48,17 @@ class ContentPageController extends Controller
      */
     public function deliveryAction()
     {
+        $this->get('query_bus')->handle(new GetDeliveryTaxesQuery(), $deliveryTaxes);
+        $this->get('query_bus')->handle(new GetRepresentativeListQuery(), $representatives);
 
-        return $this->render('ContentPage/delivery.html.twig');
+        return $this->show('delivery', ['deliveryTaxes' => $deliveryTaxes, 'representatives' => $representatives]);
     }
 
-    /**
-     * @VIA\Get(
-     *     name="payment_page",
-     *     path="/payment/"
-     * )
-     */
-    public function paymentAction()
+    protected function show($slug, array $data = [])
     {
-        
+        $this->get('query_bus')->handle(new GetQuery(['slug' => $slug]), $page);
+        $template = empty($data) ? 'page' : $slug; 
+
+        return $this->render("ContentPage/{$template}.html.twig", $data + ['page' => $page]);  
     }
 }

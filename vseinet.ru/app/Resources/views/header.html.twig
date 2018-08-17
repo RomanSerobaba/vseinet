@@ -54,11 +54,13 @@
             <strong>{{ representative.phone2 }}</strong>
         {% endif %}
         <span class="time">
-            <a href="{{ path('contacts_representaive', { id: representative.geoPointId }) }}">{{ representative.schedule }}</a>
+            <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
+                {{ representative.schedule }}
+            </a>
         </span>
     </li>
     <li>
-        <a href="/contacts/" class="black address">Адреса магазинов</a>
+        <a href="{{ path('contacts_page') }}" class="black address">Адреса магазинов</a>
         {% if geoCity.countNewGeoPoints %}
             <span class="new">
                 +{{ geoCity.countNewGeoPoints }} {{ geoCity.countNewGeoPoints|declension('новый;новых') }}! 

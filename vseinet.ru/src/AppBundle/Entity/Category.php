@@ -99,7 +99,19 @@ class Category
      */
     private $rating;
 
-
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="delivery_tax", type="integer")
+     */
+    private $deliveryTax;
+    
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="rise_tax", type="integer")
+     */
+    private $riseTax;
 
     /**
      * @var Category[]
@@ -410,6 +422,54 @@ class Category
     public function getRating()
     {
         return $this->rating;
+    }
+
+    /**
+     * Set deliveryTax
+     *
+     * @param integer $deliveryTax
+     *
+     * @return Category
+     */
+    public function setDeliveryTax($deliveryTax)
+    {
+        $this->deliveryTax = $deliveryTax;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveryTax
+     *
+     * @return int
+     */
+    public function getDeliveryTax()
+    {
+        return $this->deliveryTax;
+    }
+
+    /**
+     * Set riseTax
+     *
+     * @param integer $riseTax
+     *
+     * @return Category
+     */
+    public function setRiseTax($riseTax)
+    {
+        $this->riseTax = $riseTax;
+
+        return $this;
+    }
+
+    /**
+     * Get riseTax
+     *
+     * @return int
+     */
+    public function getRiseTax()
+    {
+        return $this->riseTax;
     }
 }
 

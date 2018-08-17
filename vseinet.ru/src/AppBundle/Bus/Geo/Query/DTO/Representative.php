@@ -3,13 +3,30 @@
 namespace AppBundle\Bus\Geo\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\Enum;
+use AppBundle\Enum\RepresentativeTypeCode;
 
 class Representative
 {
     /**
      * @Assert\Type(type="integer")
      */
+    public $geoPointId;
+
+    /**
+     * @Enum("AppBundle\Enum\RepresentativeTypeCode")
+     */
+    public $type;
+ 
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $geoRegionId;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $geoRegionName;
 
     /**
      * @Assert\Type(type="integer")
@@ -22,34 +39,34 @@ class Representative
     public $geoCityName;
 
     /**
-     * @Assert\Type(type="integer")
-     */
-    public $geoPointId;
-
-    /**
      * @Assert\Type(type="string")
      */
-    public $geoPointName;
+    public $address;
 
     /**
      * @Assert\Type(type="boolean")
      */
-    public $isCentral;
+    public $hasRetail;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $hasDelivery;
 
     /**
      * @Assert\Type(type="integer")
      */
-    public $geoAddressId;
+    public $deliveryTax;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\GeoAddress")
+     * @Assert\Type(type="boolean")
      */
-    public $geoAddress;
+    public $isOur;
 
     /**
-     * @Assert\Type(type="array<string>")
+     * @Assert\Type(type="string")
      */
-    public $contacts = [];
+    public $phone;
 
     /**
      * @Assert\Type(type="AppBundle\Bus\Geo\Query\DTO\Schedule")
@@ -57,14 +74,28 @@ class Representative
     public $schedule;
 
 
-    public function __construct($geoRegionId, $geoCityId, $geoCityName, $geoPointId, $geoPointName, $isCentral, $geoAddressId)
-    {
+    public function __construct(
+        $geoPointId, 
+        $type,
+        $geoRegionId, 
+        $geoRegionName,
+        $geoCityId, 
+        $geoCityName, 
+        $address, 
+        $hasRetail,
+        $hasDelivery,
+        $deliveryTax
+    ) {
+        $this->geoPointId = $geoPointId;
+        $this->type = $type;
         $this->geoRegionId = $geoRegionId;
+        $this->geoRegionName = $geoRegionName;
         $this->geoCityId = $geoCityId;
         $this->geoCityName = $geoCityName;
-        $this->geoPointId = $geoPointId;
-        $this->geoPointName = $geoPointName;
-        $this->isCentral = $isCentral;
-        $this->geoAddressId = $geoAddressId;
+        $this->address = $address;
+        $this->hasRetail = $hasRetail;
+        $this->hasDelivery = $hasDelivery;
+        $this->deliveryTax = $deliveryTax;
+        $this->isOur = RepresentativeTypeCode::OUR === $type; 
     }
 }
