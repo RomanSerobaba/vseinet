@@ -25,6 +25,15 @@ class SecurityController extends Controller
             '_username' => $helper->getLastUsername(),
         ]);
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Security/login_form.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => $helper->getLastAuthenticationError(),
+                ]),
+            ]);
+        }
+
         return $this->render('Security/login.html.twig', [
             'form' => $form->createView(),
             'error' => $helper->getLastAuthenticationError(),

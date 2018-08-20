@@ -33,63 +33,72 @@
     {% if app.user %}
         <a href="{{ path('user_account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ logout_path() }}">Выйти</a>   
     {% else %}
-        <a href="{{ path('login') }}" data-popup="Login">Вход</a> или <a href="{{ path('registr') }}">регистрация</a>
+        <a href="{{ path('login') }}" id="login-form-trigger">Вход</a> или <a href="{{ path('registr') }}">регистрация</a>
     {% endif %}
 </div>
 
-{#
 <div class="mobile-collapsed">
     <div class="auth">
-        {if $app->getUserIdentity()->isAuthorized()}
-            <a href="/user/account/">{$user.firstname}</a> | <a href="/user/logout/">Выйти</a>
-        {else}
-            <a href="/user/login/" data-popup="Login">Вход</a> или <a href="/user/registration/">регистрация</a>
-        {/if}
+        {% if app.user %}
+            <a href="{{ path('user_account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ logout_path() }}">Выйти</a>
+        {% else %}
+            <a href="{{ path('login') }}">Вход</a> или <a href="{{ path('registr') }}">регистрация</a>
+        {% endif %}
     </div>
     <nav class="mobile-top-menu">
         <ul>
-            <li><a href="/about/">О компании</a></li>
-            <li><a href="/delivery/">Доставка</a></li>
-            <li><a href="/payment/">Оплата</a></li>
-            <li><a href="/garanty/">Гарантия</a></li>
-            <li><a href="/credit/">Рассрочка и кредит</a></li>
-            <li><a href="/contacts/">Контакты</a></li>
-            <li><a href="/promo/">Акции</a> <span style="color: red; font-size: 11px; vertical-align: sub;">new</span></li>
+            <li><a href="{{ path('about_page') }}">О компании</a></li>
+            <li><a href="{{ path('delivery_page') }}">Доставка</a></li>
+            <li><a href="{{ path('content_page', { slug: 'payment' }) }}">Оплата</a></li>
+            <li><a href="{{ path('content_page', { slug: 'garanty' }) }}">Гарантия</a></li>
+            <li><a href="{{ path('content_page', { slug: 'credit' }) }}">Рассрочка и кредит</a></li>
+            <li><a href="{{ path('contacts_page') }}">Контакты</a></li>
+            <li><a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a> <span style="color: red; font-size: 11px; vertical-align: sub;">new</span></li>
         </ul>
     </nav>
-    {if $app->getUserIdentity()->isEmployee()}
+    {% if app.userIsEmployee %}
         <div style="margin-bottom: 10px; margin-top: -10px;">
-            {if $app->getUserIdentity()->isContenter()}
+            {% if app.user.isContenter %}
                 <a href="/content/stats/full">Статистика</a>
-            {else}
+            {% else %}
                 <a href="/admin/org/lockscreen" title="Личный кабинет сотрудника">ЛК сотрудника</a>
-            {/if}
+            {% endif %}
         </div>
-    {/if}
-    <a href="/complaint/" class="bttn light claim">Жалоба директору</a>
-    <a href="/partnership/#wholesale" class="bttn intro wholesalers">Оптовикам</a>
-    <a href="/partnership/#franchising" class="bttn intro franchising">Франчайзинг</a>
-    {assign var=representative value=$app->getRepresentative()}
+    {% endif %}
+    <a href="{{ path('complaint') }}" class="bttn light claim">Жалоба директору</a>
+    <a href="{{ path('content_page', { slug: 'partnership' }) }}#wholesale" class="bttn intro wholesalers">Оптовикам</a>
+    <a href="{{ path('content_page', { slug: 'partnership' }) }}#franchising" class="bttn intro franchising">Франчайзинг</a>
+    {% set geoCity = app.geoCity %}
+    {% set representative = app.representative %}
     <ul class="location">
         <li><em>Ваш город</em></li>
         <li>
-            <a href="javascript:void(0)" class="ajax city" data-popup="City" data-rid={$representative.region_id} data-cid="{$representative.id}" data-url="/city/set/">{$representative.city}</a>
-            {if $representative.count_points}
-                и еще <a href="javascript:void(0)" class="ajax" data-popup="City">{$representative.count_points} {$representative.count_points|declension:'пункт;пункта;пунктов'} по области</a>
-            {/if}
+            <a href="javascript:void(0)" class="ajax city" data-popup="City" data-rid="{{ geoCity.geoRegionId }}" data-cid="{{ geoCity.id }}" data-url="{{ path('set_geo_city') }}">{{ geoCity.name }}</a>
+            {% if geoCity.countGeoPoints %}
+                и еще <a href="javascript:void(0)" class="ajax" data-popup="City">
+                    {{ geoCity.countGeoPoints }} 
+                    {{ geoCity.countGeoPoints|declension('пункт;пункта;пунктов') }} по области
+                </a>
+            {% endif%}
         </li>
         <li class="phone">
-            <strong>8 {$representative.phone_top1}</strong>
+            <strong>8 {{ representative.phone1 }}</strong>
             <br />
-            <strong>8 {$representative.phone_top2}</strong>
+            <strong>8 {{ representative.phone2 }}</strong>
             <span class="time">
-                <a href="/contacts/{$representative.representative_id}/">{$representative.schedule_top}</a>
+                <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
+                    {{ representative.schedule }}
+                </a>
             </span>
         </li>
         <li>
-            <a href="/contacts/" class="black address">Адреса магазинов</a>
-            <span class="new">{if $representative.newPoints}+{$representative.newPoints} {if $representative.newPoints=='1'}новый!{else}новых!{/if}{/if}</span>
+            <a href="{{ path('contacts_page') }}" class="black address">Адреса магазинов</a>
+            {% if geoCity.countNewGeoPoints %}
+                <span class="new">
+                    +{{ geoCity.countNewGeoPoints }} 
+                    {{ geoCity.countNewGeoPoints|declension('новый!;новых!') }}
+                </span>
+            {% endif %}
         </li>
     </ul>
 </div>
-#}

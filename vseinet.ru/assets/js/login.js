@@ -17,7 +17,7 @@ $(function() {
                 e.preventDefault();
                 form.toggleState();
                 sp.post(Routing.generate('login'), form.serializeArray()).then(function(response) {
-                    if (response.errors) {
+                    if (response.error) {
                         form.toggleState(true);   
                     } else {
                         window.location.reload();

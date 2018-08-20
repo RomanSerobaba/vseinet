@@ -15,6 +15,11 @@ services:
         public: false 
         abstract: true
 
+    app.security.authentication_handler:
+        class: 'AppBundle\Security\AuthenticationHandler'
+        public: false
+        arguments: [ '@router', '@session' ]
+
     geo_city.identity:
         class: 'AppBundle\Service\GeoCityIdentity'
         public: true

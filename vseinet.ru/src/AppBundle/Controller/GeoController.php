@@ -52,7 +52,7 @@ class GeoController extends Controller
     /**
      * @VIA\Post(
      *     name="set_geo_city",
-     *     path="/cities/{id}/",
+     *     path="/cities/",
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
      *     },
