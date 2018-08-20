@@ -157,7 +157,7 @@ class CategoryProductFinder extends ProductFinder
 
         }  
         if ($this->category->isTplEnabled) {
-            $valueIds = [];
+            $valueIds = $this->filter->details = [];
             foreach ($details as $id => $detail) {
                 if (empty($detail->values)) {
                     continue;
