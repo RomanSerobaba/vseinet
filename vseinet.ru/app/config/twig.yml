@@ -45,3 +45,8 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         app: '@app.twig.globals'
+
+    number_format:
+        decimals: 0
+        decimal_point: ','
+        thousands_separator: ' '

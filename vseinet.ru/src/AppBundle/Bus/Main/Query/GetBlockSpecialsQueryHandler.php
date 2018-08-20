@@ -22,7 +22,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
         }
 
         $products = [];
-        while ($query->count -= 1) {
+        while ($query->count--) {
             $q = $em->createQuery("
                 SELECT
                     NEW AppBundle\Bus\Main\Query\DTO\Product (
@@ -55,7 +55,6 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                 $product = $q->getSingleResult();
                 $products[$product->id] = $product;
             } catch (\Exception $e) {
-                $query->count += 1;   
             }
         }
 

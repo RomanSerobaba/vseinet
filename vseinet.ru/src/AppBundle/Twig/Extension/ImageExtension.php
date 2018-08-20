@@ -31,6 +31,6 @@ class ImageExtension extends AbstractExtension
             return BaseProductImage::buildSrc($this->path, $image->baseSrc, $size);
         }
 
-        return 'nofoto.jpg';
+        return '/images/nophoto_'.BaseProductImage::getSize($size).'.jpg';
     }
 }

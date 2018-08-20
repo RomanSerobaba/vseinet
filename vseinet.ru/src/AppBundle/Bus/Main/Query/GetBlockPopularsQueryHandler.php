@@ -23,7 +23,7 @@ class GetBlockPopularsQueryHandler extends MessageHandler
 
         $products = [];
         $categoryIds = [0];
-        while ($query->count -= 1) {
+        while ($query->count--) {
             $q = $em->createQuery("
                 SELECT
                     NEW AppBundle\Bus\Main\Query\DTO\Product (
@@ -55,7 +55,6 @@ class GetBlockPopularsQueryHandler extends MessageHandler
                 $products[] = $product;
                 $categoryIds[] = $product->categoryId;
             } catch (\Exception $e) {
-                $query->count += 1;   
             }
         }
 
