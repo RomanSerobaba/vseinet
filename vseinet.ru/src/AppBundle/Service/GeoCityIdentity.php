@@ -11,13 +11,13 @@ class GeoCityIdentity extends ContainerAware
     {
         $request = $this->get('request_stack')->getMasterRequest();
         $session = $request->getSession();
-
+        
         $geoCity = $session->get('geo_city');
         if (null === $geoCity) {
             $geoCity = $this->loadGeoCity($this->detectGeoCityId());
             $session->set('geo_city', $geoCity);
         }
-
+        
         return $geoCity;
     }
 

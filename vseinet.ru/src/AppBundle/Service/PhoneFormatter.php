@@ -21,8 +21,8 @@ class PhoneFormatter
 
             return "+7 ({$matches[1]}) {$matches[2]}-{$matches[3]}-{$matches[4]}";
         }
-
-        $codes = explode("\n", file_get_contents(__DIR__.'/data/phone_codes'));
+        
+        $codes = explode("\r\n", file_get_contents(__DIR__.'/data/phone_codes'));
         foreach ($codes as $code) {
             if (0 === strpos($phone, $code)) {
                 $codelen = strlen($code);
@@ -64,13 +64,13 @@ class PhoneFormatter
 
     public function sort(): void
     {
-        $codes = explode("\n", file_get_contents(__DIR__.'/data/phone_codes'));
+        $codes = explode("\r\n", file_get_contents(__DIR__.'/data/phone_codes'));
         usort($codes, function($code1, $code2) {
             return strlen($code1) < strlen($code2);
         });
         array_walk($codes, function(&$code) {
             $code = trim($code);
         });
-        file_put_contents(__DIR__.'/data/phone_codes', implode("\n", $codes));
+        file_put_contents(__DIR__.'/data/phone_codes', implode("\r\n", $codes));
     }
 }
