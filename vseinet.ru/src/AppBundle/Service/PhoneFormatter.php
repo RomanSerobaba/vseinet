@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 class PhoneFormatter 
 {
-    public function format(string $phone): ?string 
+    public function format(string $phone): string 
     {
         $phone = preg_replace('~\D+~', '', $phone);
 
