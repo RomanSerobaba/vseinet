@@ -1,35 +1,26 @@
 {% extends "layout.html.twig" %}
 
 {% block pageTitle %}
-    О компании
+   Вакансии
 {% endblock %}
 
 {% block content %}
-<nav id="nav">
-    <h3>Вакансии</h3>
-    <ul>
-        {% for vacancy from vacancies %}
-            <li>
-                <a href="{{ path('vacancy', { id: vacancy.id }) }}"
-                {% if current is defined and current.id == vacancy.id %} class="current"{/if}>{$vacancy.position}</a></li>
-        {/foreach}
-    </ul>
-</nav>
-<div class="wrapper" id="vacancy">
-    {if $current}
-        {include file='vacancy/vacancy.tpl'}
-    {elseif $page}
-        <div class="content text_page">
-            {$page.text}
-        </div>
-    {/if}
-</div>
+    {{ render(controller('AppBundle:Vacancy:getList')) }}
+    <div class="wrapper" id="vacancy">
+        {% if vacancy is defined %}
+            {% include 'Vacancy/vacancy.html.twig' %}
+        {% else %}
+            <div class="content text_page">
+                {{ page.content|raw }}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}
 <script>
 $(function() {
-    var nav = $('#nav a').click(function() {
+    var nav = $('#nav a').click(function(e) {
         var a = $(this);
         if ( ! a.is('.current')) {
             nav.removeClass('current');
@@ -38,8 +29,11 @@ $(function() {
                 $('#vacancy').html(data.html);
             });
         }
-        return false;
+        e.preventDefault();
     });
+    {% if vacancy is defined %}
+        nav.filter('[data-id={{ vacancy.id }}]').addClass('current');
+    {% endif %}
 });
 </script>
 {% endblock %}

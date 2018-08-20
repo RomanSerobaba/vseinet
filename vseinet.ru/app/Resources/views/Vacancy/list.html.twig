@@ -1,1 +1,12 @@
-vacancies block
+<nav id="nav">
+    <h3>Вакансии</h3>
+    <ul>
+        {% for item in list %}
+            <li>
+                <a href="{{ path('vacancy', { id: item.id }) }}" data-id="{{ item.id }}">
+                    {{ item.position }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>

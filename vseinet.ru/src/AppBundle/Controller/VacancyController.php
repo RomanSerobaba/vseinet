@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
-use AppBundle\Bus\ContentPage\Bus\Query\GetQuery as GetPageQuery;
+use AppBundle\Bus\ContentPage\Query\GetQuery as GetPageQuery;
 use AppBundle\Bus\Vacancy\Query;
 
 class VacancyController extends Controller
@@ -17,7 +17,7 @@ class VacancyController extends Controller
     {
         $this->get('query_bus')->handle(new GetPageQuery(['slug' => 'vacancy']), $page);
 
-        return $this->render('Vacancy/index.html.smarty', [
+        return $this->render('Vacancy/index.html.twig', [
             'page' => $page,
         ]);
     }
@@ -25,11 +25,19 @@ class VacancyController extends Controller
     /**
      * @VIA\Get(name="vacancy", path="/vacancies/{id}/")
      */
-    public function getAction(int $id)
+    public function getAction(int $id, Request $request)
     {
         $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]), $vacancy);
 
-        return $this->render('Vacancy/vacancy.html.twig', [
+        if ($request->isXMLHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Vacancy/vacancy.html.twig', [
+                    'vacancy' => $vacancy,
+                ]),
+            ]);
+        }
+
+        return $this->render('Vacancy/index.html.twig', [
             'vacancy' => $vacancy,
         ]);
     }
@@ -37,7 +45,7 @@ class VacancyController extends Controller
     /**
      * @internal 
      */
-    public function listAction()
+    public function getListAction()
     {
         if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
             throw new NotFoundHttpException(); 
@@ -45,7 +53,7 @@ class VacancyController extends Controller
 
         $this->get('query_bus')->handle(new Query\GetListQuery(), $list);
 
-        return $this->render('Vacancy/list.html.smarty', [
+        return $this->render('Vacancy/list.html.twig', [
             'list' => $list,
         ]);
     }
