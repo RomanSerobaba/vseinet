@@ -1,0 +1,10 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+    Оформление заказа
+{% endblock %}
+
+{% block content %}
+    <h1>Оформление заказа</h1>
+    {% include 'Order/creation_ajax.html.twig'  %}
+{% endblock %}
