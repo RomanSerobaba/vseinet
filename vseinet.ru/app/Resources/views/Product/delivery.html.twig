@@ -5,7 +5,7 @@
             <a 
                 href="javascript:void(0)" 
                 class="ajax city" 
-                data-popup="City" 
+                data-id="City" 
             >
                 {{ app.geoCity.name }}
             </a>
@@ -30,12 +30,13 @@
             <dd>&nbsp;</dd>
         {% else %}
             <dt content="preorder" class="status on-order">На заказ:</dt>
-            <dd><span>{# delivery date #}</span></dd>
+            <dd><span>&nbsp;{# delivery date #}</span></dd>
         {% endif %}
     </dl>
-{#
+
                 <ul>
-                    {if $deliveryStatus.courier}
+                    <li>&nbsp;</li>
+                    {#if $deliveryStatus.courier}
                         <li class="type courier">
                             <p>доставка</p>
                             <div>курьером</div>
@@ -55,22 +56,18 @@
                             <p>доставка</p>
                             <div>транспортной компанией</div>
                         </li>
-                    {/if}
+                    {/if#}
                 </ul>
-#}
+
     <div class="payments">
-        <a href="/payment#cash" class="cash" title="Оплата наличными"></a>
-        <a href="/payment#card" class="visa" title="Оплата переводом на банковскую карту"></a>
-        <a href="/payment#card" class="master" title="Оплата переводом на банковскую карту"></a>
-        <a href="/payment#webmoney" class="webmoney" title="Оплата на кошелёк Webmoney"></a>
-        <a href="/payment#cashless" class="cashless" title="Оплата по безналичному расчету (перевод на р/с)"></a>
+        <a href="{{ path('content_page', { slug: 'payment' }) }}#cash" class="cash" title="Оплата наличными"></a>
+        <a href="{{ path('content_page', { slug: 'payment' }) }}#card" class="visa" title="Оплата переводом на банковскую карту"></a>
+        <a href="{{ path('content_page', { slug: 'payment' }) }}#card" class="master" title="Оплата переводом на банковскую карту"></a>
+        <a href="{{ path('content_page', { slug: 'payment' }) }}#webmoney" class="webmoney" title="Оплата на кошелёк Webmoney"></a>
+        <a href="{{ path('content_page', { slug: 'payment' }) }}#cashless" class="cashless" title="Оплата по безналичному расчету (перевод на р/с)"></a>
     </div>
     <p class="links">
-        {% if app.userIsEmployee %}
-            <a href="javascript:void(0)" class="ajax green" data-popup="Delivery">О доставке</a>
-        {% else %}
-            <a href="{{ path('delivery_page') }}" class="green">О доставке</a>
-        {% endif %} 
+        <a href="{{ path('delivery_page') }}" class="green">О доставке</a>
         и <a href="{{ path('content_page', { slug: 'payment' }) }}" class="green">оплате</a>
     </p>
 </div>
@@ -78,8 +75,8 @@
     <strong>Затрудняетесь с выбором товара?</strong>
     <p>Мы поможем вам:</p>
     <ul>
-        {#% for contact in app.representative.contacts %}
-            <li>{{ contact.value|raw }}</li>
-        {% endfor %#}
+        {% for contact in app.representative.contacts %}
+            <li>{{ contact|raw }}</li>
+        {% endfor %}
     </ul>
 </div>

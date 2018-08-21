@@ -63,7 +63,7 @@ class SearchProductFinder extends ProductFinder
         }
 
         array_shift($results);
-        $geoCityId = $this->getgetGeoCity()->getRealId();
+        $geoCityId = $this->getGeoCity()->getRealId();
         foreach (array_shift($results) as $row) {
             $availability[$row['availability.'.$geoCityId]] = $row['count(*)'];
         }

@@ -39,28 +39,28 @@ class Categories
             } else {
                 $id2 = $category['id2'];
                 if (empty($tree[$id2])) {
-                    $tree[$id2] =  new Category($id2, $category['name2']);
+                    $tree[$id2] = new Category($id2, $category['name2']);
                 }
-                $tree[$id]->children[$id] = new Category($id, $category['name'], $categoryId2count[$id]);
+                $tree[$id2]->children[$id] = new Category($id, $category['name'], $categoryId2count[$id]);
                 $tree[$id2]->countProducts += $categoryId2count[$id];
             }
             if (!empty($main)) {
                 $tree[0] = new Category(0, 'Каталог', 0, $main);
             }
-            if (!empty($tree)) {
-                if (20 < count($tree)) {
-                    $other = new Category(-1, 'Прочие');
-                    foreach ($tree as $id2 => $cat2) {
-                        if (1 == count($cat2->children)) {
-                            $cat2->name .= ' » '.reset($cat2->children)->name;
-                            $other->children[$cat2->id] = $cat2;
-                        }
-                    }
-                    if (!empty($other->children)) {
-                        $tree[-1] = $other;
-                    }
-                }
-            }
+            // if (!empty($tree)) {
+            //     if (20 < count($tree)) {
+            //         $other = new Category(-1, 'Прочие');
+            //         foreach ($tree as $id2 => $cat2) {
+            //             if (1 == count($cat2->children)) {
+            //                 $cat2->name .= ' » '.reset($cat2->children)->name;
+            //                 $other->children[$cat2->id] = $cat2;
+            //             }
+            //         }
+            //         if (!empty($other->children)) {
+            //             $tree[-1] = $other;
+            //         }
+            //     }
+            // }
         }
 
         return $tree;

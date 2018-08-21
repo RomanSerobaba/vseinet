@@ -20,7 +20,7 @@ class AddCommandHandler extends MessageHandler
         }
 
         if (null !== $user) {
-            $favorite = $em->getRepository(Favorite::class)->findOnBy([
+            $favorite = $em->getRepository(Favorite::class)->findOneBy([
                 'userId' => $user->getId(),
                 'baseProductId' => $baseProduct->getId(), 
             ]);
@@ -28,7 +28,7 @@ class AddCommandHandler extends MessageHandler
                 $favorite = new Favorite();
                 $favorite->setBaseProductId($baseProduct->getId());
                 $favorite->setUserId($user->getId());
-                $em->persist($item);
+                $em->persist($favorite);
             }
         }
         else {

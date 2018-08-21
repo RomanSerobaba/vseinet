@@ -31,7 +31,7 @@ class GetQueryHandler extends MessageHandler
             ");
             $q->setParameter('userId', $user->getId());
             $q->setParameter('geoCityId', $geoCity->getId());
-            $products = $q->getResult('ListAssocHydrator');
+            $products = $q->getResult('IndexByHydrator');
         }
         else {
             $products = $this->get('session')->get('cart', []);
@@ -52,13 +52,13 @@ class GetQueryHandler extends MessageHandler
                 ");
                 $q->setParameter('ids', array_keys($products));
                 $q->setParameter('geoCityId', $geoCity->getId());
-                foreach ($q->getArrayResult() as $product) {
+                foreach ($q->getResult() as $product) {
                     $product->quantity = $products[$product->id]['quantity'];
                     $products[$product->id] = $product;
                 }
             }
         }
-
-        return new DTO\Cart(...$products);
+        
+        return new DTO\Cart($products);
     }
 }

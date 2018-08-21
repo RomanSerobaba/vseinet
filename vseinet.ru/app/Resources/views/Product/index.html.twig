@@ -94,7 +94,7 @@
             <div style="clear:both" class="uitab-wrapper">
                 <ul class="tabs">
                     <li><a href="#tab-overview" class="green">Обзор</a></li>
-                    {% if details is defined %}
+                    {% if details is not empty %}
                         <li><a href="#tab-details" class="green">Характеристики</a></li>
                     {% endif %}
                     {#<li><a href="#tab-reviews" class="green">Отзывы</a> <span>{{ reviews|length }}</span></li>#}
@@ -103,7 +103,7 @@
             <div id="tab-overview" class="ui-tabs-panel">
                 {% include 'Product/overview.html.twig' %}
             </div>
-            {% if details is defined %}
+            {% if details is not empty %}
                 <div id="tab-details" class="ui-tabs-panel">
                     {% include 'Product/details.html.twig' %}
                 </div>
@@ -117,7 +117,6 @@
 
 {% block javascripts %}
 <script src="https://yandex.st/share/share.js" charset="utf-8"></script>
-{#<script src="{{ asset('media/Nifty/plugins/typeahead/bootstrap3-typeahead.min.js') }}"></script>#}
 <script>
 $(function() {
     $('[itemprop]').removeAttr('itemprop');
@@ -154,38 +153,6 @@ $(function() {
             hint.hide();
     });
 
-    function recalculate() {
-        sp.post('/shipping/city/calculate', {
-            'cityId' : $('#Delivery [name="Delivery[city_id]"]').val(),
-            'quantity' : $('#Delivery [name="Delivery[quantity]"]').val(),
-            'hasLift' : $('#Delivery [name="Delivery[has_lift]"]').is(':checked'),
-            'floor' : $('#Delivery [name="Delivery[floor]"]').val(),
-            'productId' : {{ product.id }}
-        }).done(
-            function(response) {
-                $('#Delivery #calculation').html(response.html);
-            }
-        );
-    }
-    {#$('#Delivery [name="Delivery[city]"]').typeahead({
-        source: function(query, process) {
-            return sp.post('/shipping/city/search', {
-                q: query,
-                type: 'all'
-            }).done(function(response) {
-                if (response.cities) {
-                    process(response.cities);
-                }
-            });
-        },
-        afterSelect: function(data) {
-            $('#Delivery [name="Delivery[city_id]"]').val(data.id);
-            recalculate();
-        }
-    });
-    $('#Delivery [name="Delivery[quantity]"], #Delivery [name="Delivery[has_lift]"], #Delivery [name="Delivery[floor]"]').on('change', function(){
-        recalculate();
-    });#}
     {% if images|length %}
         product.find('.image img').ajaxcontent({
             data: function() {
@@ -196,7 +163,7 @@ $(function() {
                 title: '{{ product.name }}'
             },
             method: 'get',
-            onload: function() {
+            load: function() {
                 var thumbs = this.find('.thumbs img')
                 if (thumbs.length) {
                     var view = this.find('.view img');
@@ -234,9 +201,9 @@ $(function() {
         var YaShareInstance = new Ya.share({
             element: 'YaShare',
             l10n: 'ru',
-            link: '{{ app.request.requestUri }}',
+            link: "{{ url('catalog_product', { id: product.id }) }}",
             title: "{{ product.name|e('js') }}",
-            description: "{{ product.description|e('js') }}",
+            description: "{{ product.description|autocut|e('js') }}",
             {% if images|length %}
             image: "{{ images[0]|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}",
             {% endif %}

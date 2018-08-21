@@ -130,6 +130,11 @@ class Representative
     public $address;
 
     /**
+     * @var array<string>
+     */
+    public $contacts;
+
+    /**
      * @var string
      */
     public $phone1;

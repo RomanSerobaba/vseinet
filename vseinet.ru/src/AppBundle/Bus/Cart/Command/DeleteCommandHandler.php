@@ -20,7 +20,7 @@ class DeleteCommandHandler extends MessageHandler
         }
 
         if (null !== $user) {
-            $item = $em->getRepository(Cart::class)->findOnBy([
+            $item = $em->getRepository(Cart::class)->findOneBy([
                 'userId' => $user->getId(),
                 'baseProductId' => $baseProduct->getId(), 
             ]);

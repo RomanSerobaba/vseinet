@@ -40,7 +40,7 @@ class Cart
     public $products;
 
 
-    public function __construct(Product ...$products)
+    public function __construct(array $products)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;

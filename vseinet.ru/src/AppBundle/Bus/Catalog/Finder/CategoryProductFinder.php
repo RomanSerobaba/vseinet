@@ -148,6 +148,11 @@ class CategoryProductFinder extends ProductFinder
                 $keys = array_keys($row);
                 $values = array_values($row);
                 if (null !== $values[0]) {
+                    if (!is_int($values[1])) {
+                        $this->get('simple.logger')->setName('search')
+                            ->error(sprintf('Value id in to integer, category = %d', $this->category->id));
+                        continue;
+                    }
                     $id = str_replace('details.', '', $keys[0]);
                     if (isset($details[$id])) {
                         $details[$id]->values[$values[0]] = $values[1];

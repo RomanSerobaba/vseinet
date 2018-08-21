@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Main\Query;
+use AppBundle\Bus\Main\Command;
 
 class MainController extends Controller
 {
@@ -17,6 +18,25 @@ class MainController extends Controller
     public function indexAction()
     {
         return $this->render('Main/index.html.twig');
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="error_report",
+     *     path="/error/report/",
+     *     parameters={
+     *         @VIA\Parameter(model="AppBundle\Bus\Main\Command\ErrorReportCommand")
+     *     },
+     *     condition="request.isXmlHttpRequest()"
+     * )    
+     */
+    public function errorReportAction(Request $request)
+    {
+        $this->get('command_bus')->handle(new Command\ErrorReportCommand($request->request->all()));
+
+        return $this->json([
+            'notice' => 'Спасибо, Ваше замечание принято!',
+        ]);
     }
 
     /**

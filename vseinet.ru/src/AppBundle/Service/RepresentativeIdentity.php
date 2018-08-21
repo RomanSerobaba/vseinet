@@ -114,6 +114,7 @@ class RepresentativeIdentity extends ContainerAware
                 $matches[$index][1] = '';
                 $matches[$index][2] = '';    
             }
+            $representative->contacts[] = $contact['value'];
         }
 
         if (2 === count($contacts)) {

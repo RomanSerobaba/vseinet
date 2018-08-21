@@ -139,3 +139,8 @@ Number.prototype.formatPrice = function(decimals) {
     }
     return price;
 }
+
+$.extend($.ui.keyCode, {
+    CTRL: 17,
+    NUMPAD_LOCK: 144
+});

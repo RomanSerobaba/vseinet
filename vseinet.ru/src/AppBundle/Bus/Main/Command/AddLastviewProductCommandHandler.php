@@ -29,9 +29,17 @@ class AddLastviewProductCommandHandler extends MessageHandler
                 ORDER BY bplv.viewedAt DESC 
             ");
             $q->setParameter('userId', $user->getId());
-            $baseProductIds = $q->getArrayResult('ListHydrator');
+            $baseProductIds = $q->getResult('ListHydrator');
             if (!empty($baseProductIds)) {
-                unset($baseProductIds[$command->baseProductId]);
+                if (isset($baseProductIds[$command->baseProductId])) {
+                    $q = $em->createQuery("
+                        DELETE FROM AppBundle:BaseProductLastview AS bplv
+                        WHERE bplv.baseProductId = :baseProductId
+                    ");
+                    $q->setParameter('baseProductId', $command->baseProductId);
+                    $q->execute();
+                    unset($baseProductIds[$command->baseProductId]);
+                }
                 if (self::LIMIT < count($baseProductIds)) {
                     $deleteIds = array_slice($baseProductIds, self::LIMIT);
                     $q = $em->createQuery("

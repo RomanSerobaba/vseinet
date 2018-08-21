@@ -12,9 +12,10 @@ use AppBundle\Bus\Security\Form;
 class SecurityController extends Controller
 {
     /**
-     * @VIA\Get(
+     * @VIA\Route(
      *     name="login", 
-     *     path="/login/"
+     *     path="/login/",
+     *     methods={"GET", "POST"}
      * )
      */
     public function loginAction(Request $request)

@@ -5,7 +5,24 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ app.user.person.fullname }}</h1>
-    {% include 'User/account_menu.html.twig' with { active: 'account' }  %}
-    {% include 'User/account_ajax.html.twig' %}
+    <div class="breadcrumbs"> <a href="{{ path('catalog_category') }}">Каталог</a></div>
+    <div id="user-account">
+        {% include 'User/account_menu.html.twig' with { active: 'account' }  %}
+        <h1>{{ app.user.person.fullname }}</h1>
+        {% include 'User/account_ajax.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(function() {
+    $('#user-account').tabs({
+        active: 0,
+        beforeActivate: function(event, ui) {
+            window.location = ui.newTab.find('a').prop('href');
+            return false;
+        }
+    });
+});
+</script>
 {% endblock %}

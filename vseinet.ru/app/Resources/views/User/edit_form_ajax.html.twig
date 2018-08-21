@@ -1,4 +1,4 @@
-{{ form_start(form, { action: path('user_edit'), attr: { id: 'edit-form' }}) }}
+{{ form_start(form, { action: path('user_edit'), attr: { id: 'user-edit-form' }}) }}
 
 {% set count = errors|length %}
 {% if count %}
@@ -51,7 +51,7 @@
 
 <div class="row h{% if errors.birthday is defined %} error{% endif %}">
     {{ form_label(form.birthday, 'Дата рождения:') }}
-    {{ form_widget(form.birthday, { attr: { class: 'txt' }}) }}
+    {{ form_widget(form.birthday, { attr: { class: 'txt datepicker', autocomplete: 'off' }}) }}
     <span class="status"></span>
     {% if errors.birthday is defined %}
         <div class="error">{{ errors.birthday.0 }}</div>

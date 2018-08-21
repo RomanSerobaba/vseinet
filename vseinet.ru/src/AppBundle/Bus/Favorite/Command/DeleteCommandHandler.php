@@ -20,9 +20,7 @@ class DeleteCommandHandler extends MessageHandler
         }
 
         if (null !== $user) {
-            $user = $this->get('user.identity')->getUser();
-
-            $favorite = $em->getRepository(Favorite::class)->findOnBy([
+            $favorite = $em->getRepository(Favorite::class)->findOneBy([
                 'userId' => $user->getId(),
                 'baseProductId' => $baseProduct->getId(), 
             ]);

@@ -41,23 +41,23 @@
     background: url('../images/delete.gif');
 }
 
-#edit-form .gender {
+#user-edit-form .gender {
     padding-top: 6px;
 }
-#edit-form .gender INPUT {
+#user-edit-form .gender INPUT {
     float: left;
 }
-#edit-form .gender LABEL {
+#user-edit-form .gender LABEL {
     margin: 0 0 0 3px;
     padding: 0;
 }
-#edit-form .gender .status {
+#user-edit-form .gender .status {
     margin-top: 0;
 }
-#edit-form .subscribe INPUT {
+#user-edit-form .subscribe INPUT {
     float: left;
 }
-#edit-form .subscribe LABEL {
+#user-edit-form .subscribe LABEL {
     margin: 0 0 0 3px;
     padding: 0;
     width: auto;

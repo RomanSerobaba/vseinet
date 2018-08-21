@@ -75,6 +75,7 @@
 #City.popup H3 {
 	color: #333;
     height: 24px;
+    line-height: 24px;
 	margin: 10px 0;
 }
 #City.popup FORM {

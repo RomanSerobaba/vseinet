@@ -16,3 +16,7 @@ require('./js/login.js');
 require('./js/order.js');
 require('./js/oauth.js');
 require('./js/geo.js');
+require('./js/datepicker.js');
+require('./js/account.js');
+require('./js/dialogs.js');
+require('./js/error-report.js');

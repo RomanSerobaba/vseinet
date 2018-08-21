@@ -12,6 +12,7 @@ imports:
     - { resource: 'httplug.yml' }
     - { resource: 'swift.yml' }
     - { resource: 'twig.yml' }
+    - { resource: 'js-routing.yml' }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -42,14 +43,3 @@ framework:
         json_manifest_path: '%kernel.project_dir%/web/bundles/manifest.json'
     php_errors:
         log: true
-
-fos_js_routing:
-    routes_to_expose: 
-        - 'login$'
-        - 'catalog_category$'
-        - 'catalog_product$'
-        - 'catalog_search_autocomplete$'
-        - 'geo_cities'
-        - 'select_geo_region'
-        - 'select_geo_city'
-        - 'search_geo_city'
