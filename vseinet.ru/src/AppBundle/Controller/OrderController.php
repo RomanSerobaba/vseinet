@@ -58,8 +58,28 @@ class OrderController extends Controller
     /**
      * @VIA\Get(name="order_create", path="/order/")
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        
+        // $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
+        // $this->get('query_bus')->handle(new Query\GetContactsQuery(), $contacts);
+        // $this->get('query_bus')->handle(new Query\GetAddressesQuery(), $addresses);
+
+        $account = [
+            // 'info' => $info,
+            // 'contacts' => $contacts,
+            // 'addresses' => $addresses,
+        ];
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Order/creation_ajax.html.twig', [
+                    'account' => $account,
+                ]),
+            ]);
+        }
+
+        return $this->render('Order/creation.html.twig', [
+            'account' => $account,
+        ]);        
     }
 }

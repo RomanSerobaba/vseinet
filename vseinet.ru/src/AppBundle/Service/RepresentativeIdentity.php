@@ -11,20 +11,20 @@ class RepresentativeIdentity extends ContainerAware
     public function getRepresentative(): Representative
     {
         $session = $this->get('request_stack')->getMasterRequest()->getSession();
-
+        
         $geoCity = $this->getGeoCity();
         if (0 === $geoCity->getCountGeoPoints()) {
             $geoCityId = $this->getParameter('default.geo_city_id');
         } else {
             $geoCityId = $geoCity->getId();
         }
-
+        
         $representative = $session->get('representative');
         if (null === $representative || $representative->geoCityId !== $geoCityId) {
             $representative = $this->loadRepresentative($geoCityId);
             $session->set('representative', $representative);
         }
-
+        
         return $representative;
     }
 
@@ -93,8 +93,8 @@ class RepresentativeIdentity extends ContainerAware
     protected function formatContacts(Representative $representative, array $contacts): Representative
     {
         if (1 === count($contacts)) {
-            $representative->phoneTop1 = $contacts[0]['value'];
-            $representative->phoneFoolter = $contacts[0]['value'];
+            $representative->phone1 = $contacts[0]['value'];
+            $representative->phone3 = $contacts[0]['value'];
 
             return $representative;
         }
