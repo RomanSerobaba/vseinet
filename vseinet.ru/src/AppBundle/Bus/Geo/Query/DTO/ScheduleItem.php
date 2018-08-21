@@ -1,31 +1,26 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Geo\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ScheduleBlock
+class ScheduleItem
 {
     /**
      * @Assert\Type(type="string")
      */
-    public $period;
+    public $count;
 
     /**
      * @Assert\Type(type="string")
      */
     public $time;
 
-    /**
-     * @Assert\type(type="boolean")
-     */
-    public $current;
 
-
-    public function __construct($period, $time, $current)
+    public function __construct($count, $time)
     {
-        $this->period = $period;
+        $this->count = $count;
         $this->time = $time;
-        $this->current = $current;
     }
 }
+ 

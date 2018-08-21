@@ -15,6 +15,6 @@ class SetCityCurrentCommandHandler extends MessageHandler
             throw new NotFoundHttpException('Город не найден');
         }
 
-        $this->get('session')->set('geo_city_id', $geoCity->getId());
+        $this->get('geo_city.identity')->setGeoCityId($geoCity->getId());
     }
 }

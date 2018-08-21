@@ -22,6 +22,10 @@ class PointType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
+        if (null === $value) {
+            return null;
+        }
+        
         list($longitude, $latitude) = explode(',', $value);
 
         return new Point($latitude, $longitude);
@@ -40,14 +44,4 @@ class PointType extends Type
     {
         return true;
     }
-
-    // public function convertToPHPValueSQL($sqlExpr, $platform)
-    // {
-    //     return sprintf('AsText(%s)', $sqlExpr);
-    // }
-
-    // public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
-    // {
-    //     return sprintf('PointFromText(%s)', $sqlExpr);
-    // }
 }

@@ -15,3 +15,4 @@ require('./js/popup.js');
 require('./js/login.js');
 require('./js/order.js');
 require('./js/oauth.js');
+require('./js/geo.js');

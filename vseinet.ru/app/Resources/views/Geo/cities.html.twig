@@ -1,29 +1,28 @@
-{% if geoCityCentral is defined %}
-    <H3 class="city central{% if geoCityCentral.isCurrent %} current{% endif %}">
-        <a href="{{ path('set_geo_city', { id : geoCityCentral.id }) }}" class="ajax">
-            {{ geoCityCentral.name }}
-        </a>
-    </H3>
-{% endif %}
-{% for group in geoCityGroups %}
-    <div class="column">
-        {% for geoCities, letter in group %}
-            <div class="letter">{{ letter }}</div>
-            {% for geoCity in geoCities %}
-                <div class="city{% if geoCity.isCurrent %} current{% endif %}">
-                    <a href="{{ path('set_geo_city', { id : geoCity.id }) }}" class="ajax">
-                        {{ geoCity.name }}
-                    </a>
-                    {% if geoCity.hasRetail %}
-                        <img style="opacity:0.9;cursor:help;" src="/media/images/office.png" title="Есть точка самовывоза" alt=""/>
-                    {% elseif geoCity.hasDelivery %}
-                        <span class="point-ico" title="Есть курьерская доставка"></span>
-                    {% endif %}
-                    {% if geoCity->countNewPoints %}
-                        <span class="new_point">новая!</span>
-                    {% endif %}
+<div class="popup" title="Выберите ваш город" data-min-width="860" id="City">
+    <p>В зависимости от выбранного города, на странице товара и в корзине будут отображаться стоимость и сроки доставки.</p>
+    <H3 class="title current">{{ app.geoCity.name }}</H3>
+    <form action="{{ path('search_geo_city') }}" method="post">
+        <div class="row">
+            <input type="text" name="q" value="" class="txt" placeholder="Выберите ваш город" />
+        </div>
+    </form>
+    <table>
+        <tr>
+            <td class="regions">
+                <div>
+                    {% set geoRegionId = app.geoCity.geoRegionId %}
+                    {% for geoRegion in geoRegions %}
+                        <div class="region{% if geoRegion.id == geoRegionId %} current{% endif %}" data-id="{{ geoRegion.id }}">
+                            <a href="javascript:void(0)" class="ajax">{{ geoRegion.name }} {{ geoRegion.unit }}</a>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        {% endfor %}
-    </div>
-{% endfor %}
+            </td>
+            <td class="cities">
+                <div>
+                    {% include 'Geo/cities_block.html.twig' %}
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

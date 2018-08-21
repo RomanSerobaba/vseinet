@@ -9,7 +9,7 @@ class SetCityCurrentCommand extends Message
 {
     /**
      * @Assert\NotBlank(message="Выберите город")
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="numeric")
      */
     public $id;
 }

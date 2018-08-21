@@ -11,5 +11,5 @@ class GetRepresentativeQuery extends Message
      * @Assert\NotBlank
      * @Assert\Type(type="integer")
      */
-    public $geoCityId;
+    public $geoPointId;
 }

@@ -73,9 +73,11 @@
     <ul class="location">
         <li><em>Ваш город</em></li>
         <li>
-            <a href="javascript:void(0)" class="ajax city" data-popup="City" data-rid="{{ geoCity.geoRegionId }}" data-cid="{{ geoCity.id }}" data-url="{{ path('set_geo_city') }}">{{ geoCity.name }}</a>
+            <a href="javascript:void(0)" class="ajax city" data-id="City" data-rid="{{ geoCity.geoRegionId }}" data-cid="{{ geoCity.id }}">
+                {{ geoCity.name }}
+            </a>
             {% if geoCity.countGeoPoints %}
-                и еще <a href="javascript:void(0)" class="ajax" data-popup="City">
+                и еще <a href="javascript:void(0)" class="ajax" data-id="City">
                     {{ geoCity.countGeoPoints }} 
                     {{ geoCity.countGeoPoints|declension('пункт;пункта;пунктов') }} по области
                 </a>

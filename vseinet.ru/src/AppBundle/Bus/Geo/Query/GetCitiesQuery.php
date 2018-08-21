@@ -9,7 +9,7 @@ class GetCitiesQuery extends Message
 {
     /**
      * @Assert\NotBlank(message="Выберите регион")
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="numeric")
      */
-    public $regionId;
+    public $geoRegionId;
 }

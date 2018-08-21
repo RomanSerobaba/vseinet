@@ -7,8 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\ContentPage\Query\GetQuery;
 use AppBundle\Bus\Vacancy\Query\GetListQuery as GetVacanciesQuery;
-use AppBundle\Bus\Category\Query\GetDeliveryTaxesQuery;
-use AppBundle\Bus\Geo\Query\GetRepresentativeListQuery;
+use AppBundle\Bus\Category\Query\GetDeliveryTaxesQuery as GetCategoryDeliveryTaxesQuery;
+use AppBundle\Bus\Geo\Query\GetDeliveryTaxesQuery as GetRepresentativeDeleiveryTaxesQuery;
 
 class ContentPageController extends Controller
 {
@@ -48,8 +48,8 @@ class ContentPageController extends Controller
      */
     public function deliveryAction()
     {
-        $this->get('query_bus')->handle(new GetDeliveryTaxesQuery(), $deliveryTaxes);
-        $this->get('query_bus')->handle(new GetRepresentativeListQuery(), $representatives);
+        $this->get('query_bus')->handle(new GetCategoryDeliveryTaxesQuery(), $deliveryTaxes);
+        $this->get('query_bus')->handle(new GetRepresentativeDeleiveryTaxesQuery(), $representatives);
 
         return $this->show('delivery', ['deliveryTaxes' => $deliveryTaxes, 'representatives' => $representatives]);
     }

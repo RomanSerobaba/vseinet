@@ -127,6 +127,11 @@ class Representative
     /**
      * @var string
      */
+    public $address;
+
+    /**
+     * @var string
+     */
     public $phone1;
 
     /**

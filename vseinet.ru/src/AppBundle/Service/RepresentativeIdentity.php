@@ -46,6 +46,18 @@ class RepresentativeIdentity extends ContainerAware
         }
 
         $q = $em->createQuery("
+            SELECT ga.address 
+            FROM AppBundle:GeoAddress AS ga 
+            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.geoAddressId = ga.id 
+            WHERE gp.id = :id 
+        ");
+        $q->setParameter('id', $representative->getGeoPointId());
+        try {
+            $representative->address = $q->getSingleScalarResult();
+        } catch (\Exception $e) {
+        }
+
+        $q = $em->createQuery("
             SELECT
                 c.value,
                 CASE WHEN c.isMain = true THEN 1 ELSE CASE WHEN c.contactTypeCode = :phoneOrd THEN 2 ELSE 3 END END AS ORD

@@ -12,8 +12,8 @@ class GetCitiesQueryHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $region = $em->getRepository(GeoRegion::class)->find($query->regionId);
-        if (!$region instanceof GeoRegion) {
+        $geoRegion = $em->getRepository(GeoRegion::class)->find($query->geoRegionId);
+        if (!$geoRegion instanceof GeoRegion) {
             throw new NotFoundHttpException('Регион не найден');
         }
 
@@ -24,11 +24,19 @@ class GetCitiesQueryHandler extends MessageHandler
                     gc.name,
                     gc.isCentral
                 )
-            FROM AppBundle:GeoCity gc 
-            WHERE gs.geoRegionId = :regionId 
-            ORDER BY gr.name 
+            FROM AppBundle:GeoCity AS gc 
+            WHERE gc.geoRegionId = :geoRegionId AND gc.isListed = true
+            ORDER BY gc.name 
         ");
-        $cities = $q->getResult('IndexByHydrator');
+        $q->setParameter('geoRegionId', $query->geoRegionId);
+        $geoCities = $q->getResult('IndexByHydrator');
+
+        if (empty($geoCities)) {
+            return [
+                'geoCityCentral' => null,
+                'geoCityGroups' => [],
+            ];   
+        }
 
         $q = $em->createQuery("
             SELECT
@@ -36,59 +44,56 @@ class GetCitiesQueryHandler extends MessageHandler
                     gp.geoCityId,
                     r.hasRetail,
                     r.hasDelivery,
-                    CASE WHEN TIMESTAMPDIFF(MONTH, r.openingDate, NOW()) < 2 THEN true ELSE false END 
+                    CASE WHEN TIMESTAMPDIFF(MONTH, r.openingDate, CURRENT_TIMESTAMP()) < 2 THEN true ELSE false END 
                 )
-            FROM AppBundle:GetPoint gp
-            INNER JOIN AppBundle:Representative r WITH r.geoPointId = gp.id 
-            WHERE gp.geoCityId IN (:cityIds) AND r.isActive = true 
+            FROM AppBundle:GeoPoint AS gp
+            INNER JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id 
+            WHERE gp.geoCityId IN (:geoCityIds) AND r.isActive = true 
         ");
-        $q->setParameter('cityIds', array_keys($cities));
-        $points = $q->getArrayResult();
+        $q->setParameter('geoCityIds', array_keys($geoCities));
+        $geoPoints = $q->getArrayResult();
 
-        foreach ($points as $point) {
-            if ($point->hasRetail) {
-                $cities[$point->geoCityId]->hasRetail = true;
+        foreach ($geoPoints as $geoPoint) {
+            if ($geoPoint->hasRetail) {
+                $geoCities[$geoPoint->geoCityId]->hasRetail = true;
             }
-            if ($point->hasDelivery) {
-                $cities[$point->geoCityId]->hasDelivery = true;
+            if ($geoPoint->hasDelivery) {
+                $geoCities[$geoPoint->geoCityId]->hasDelivery = true;
             }
-            if ($point->isNew) {
-                $cities[$point->geoCityId]->countNewPoints += 1;
+            if ($geoPoint->isNew) {
+                $geoCities[$geoPoint->geoCityId]->countNewPoints += 1;
             }
         }
 
         $geoCityId = $this->getGeoCity()->getId();
 
-        $cityCentral = null;
+        $geoCityCentral = null;
         $alphabetIndex = [];
-        foreach ($cities as $city) {
-            $city->isCurrent = $city->id === $geoCityId;
-            if (preg_match('~^(п\.|пос\.)\s*(.+)~uD', $city->name, $matches)) {
-                $city->name = $matches[2].' '.$matches[1];
+        foreach ($geoCities as $geoCity) {
+            $geoCity->isCurrent = $geoCity->id === $geoCityId;
+            if ($geoCity->isCentral) {
+                $geoCityCentral = $geoCity;
             }
-            if ($city->isCentral) {
-                $cityCentral = $city;
-            }
-            $alphabetIndex[mb_substr($city->name, 0, 1)][] = $city;
+            $alphabetIndex[mb_substr($geoCity->name, 0, 1)][] = $geoCity;
         }
         
         $groupCount = 3;
-        $cityPerGroup = ceil(count($cities) / $groupCount);
-        $cityGroups = [];
+        $getCityPerGroup = ceil(count($geoCities) / $groupCount);
+        $geoCityGroups = [];
         $counter = 0;
         $index = 0;
-        foreach ($alphabetIndex as $letter => $cities) {
-            $counter += count($cities);
-            $cityGroups[$index][$letter] = $cities;
-            if ($counter >= $cityPerGroup) {
+        foreach ($alphabetIndex as $letter => $geoCities) {
+            $counter += count($geoCities);
+            $geoCityGroups[$index][$letter] = $geoCities;
+            if ($counter >= $getCityPerGroup) {
                 $counter = 0;
                 $index++;
             }
         }
 
         return [
-            'cityCentral' => $cityCentral,
-            'cityGroups' => $cityGroups,
+            'geoCityCentral' => $geoCityCentral,
+            'geoCityGroups' => $geoCityGroups,
         ];
     }
 }

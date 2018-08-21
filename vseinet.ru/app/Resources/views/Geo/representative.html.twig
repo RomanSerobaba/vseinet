@@ -1,0 +1,71 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+   Контакты
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs">
+    <a href="/contacts">Контакты</a>
+</div>
+
+<h1>{{ representative.geoPointName }}</h1>
+<h3>Адрес</h3>
+<p>{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}</p><br/>
+<h3>Телефон</h3>
+<p>
+    {% for phone in representative.phones %}
+        {{ phone.value }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+</p>
+<br/>
+
+<h3>График работы</h3>
+<table class="schedule">
+    <tr>
+        {% for day in ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'] %}
+            <td>{{ day }}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for schedule in representative.schedule %}
+            <td colspan="{{ schedule.count }}">{{ schedule.time }}</td>
+        {% endfor %}
+    </tr>
+</table>
+<br/>
+
+<h3>Процесс оформления заказа</h3>
+<p>
+    1) Вы можете оформить заказ через наш сайт или по указанным телефонам.<br/>
+    2) В течение суток с вами свяжется менеджер и сообщит точную информацию по наличию и срокам доставки, конечную стоимость товара, а также необходимо ли вам будет вносить предоплату и способы ее внесения.
+</p>
+
+<div class="content">
+    <p>
+        {% for photo in representative.photos %}
+            {% if not loop.first and loop.index % 2 == 0 %}
+                </p><p>
+            {% endif %}
+            <img src="{{ photo.url }}" alt="" />
+            {% if loop.index % 2 == 1 %}
+                &nbsp;
+            {% endif %}
+        {% endfor %}
+    </p>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .schedule TD {
+        border: 1px solid #ccc;
+        padding: 3px 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .content {
+        margin-top: 15px;
+    }
+</style>
+{% endblock %}

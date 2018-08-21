@@ -2,7 +2,7 @@
 
 namespace AppBundle\Annotation;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as BaseRoute;
+use Symfony\Component\Routing\Annotation\Route as BaseRoute;
 
 /**
  * Route annotation class.
@@ -25,10 +25,17 @@ class Route extends BaseRoute
      * @var string
      */
     protected $description;
+
+
+    public function __construct(array $data)
+    {
+        if (empty($data['methods'])) {
+            $data['methods'] = $this->getMethod();
+        }
+
+        parent::__construct($data);
+    }
     
-    /**
-     * @return string|null
-     */
     public function getMethod()
     {
         return strtoupper((new \ReflectionClass($this))->getShortName());

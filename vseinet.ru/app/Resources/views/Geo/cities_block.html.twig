@@ -1,0 +1,29 @@
+{% if geoCityCentral is not null %}
+    <H3 class="city central{% if geoCityCentral.isCurrent %} current{% endif %}" data-id="{{ geoCityCentral.id }}">
+        <a href="javascript:void(0)" class="ajax">
+            {{ geoCityCentral.name }}
+        </a>
+    </H3>
+{% endif %}
+{% for group in geoCityGroups %}
+    <div class="column">
+        {% for letter, geoCities in group %}
+            <div class="letter">{{ letter }}</div>
+            {% for geoCity in geoCities %}
+                <div class="city{% if geoCity.isCurrent %} current{% endif %}" data-id="{{ geoCity.id }}">
+                    <a href="javascript:void(0)" class="ajax">
+                        {{ geoCity.name }}
+                    </a>
+                    {% if geoCity.hasRetail %}
+                        <img style="opacity:0.9;cursor:help;" src="/media/images/office.png" title="Есть точка самовывоза" alt=""/>
+                    {% elseif geoCity.hasDelivery %}
+                        <span class="point-ico" title="Есть курьерская доставка"></span>
+                    {% endif %}
+                    {% if geoCity.countNewPoints %}
+                        <span class="new_point">новая!</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endfor %}

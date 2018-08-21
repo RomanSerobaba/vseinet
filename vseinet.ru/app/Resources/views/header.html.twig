@@ -36,13 +36,13 @@
         <a 
             href="javascript:void(0)" 
             class="ajax city" 
-            data-popup="City"
+            data-id="City"
         >
             {{ geoCity.name }}
         </a>
         {% if geoCity.countGeoPoints %}
             и еще 
-            <a href="javascript:void(0)" class="ajax" data-popup="City">
+            <a href="javascript:void(0)" class="ajax" data-id="City">
                 {{ geoCity.countGeoPoints }} {{ geoCity.countGeoPoints|declension('пункт;пункта;пунктов') }} по области
             </a>
         {% endif %}

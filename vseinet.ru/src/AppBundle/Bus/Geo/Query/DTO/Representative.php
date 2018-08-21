@@ -3,8 +3,6 @@
 namespace AppBundle\Bus\Geo\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\Enum;
-use AppBundle\Enum\RepresentativeTypeCode;
 
 class Representative
 {
@@ -14,24 +12,9 @@ class Representative
     public $geoPointId;
 
     /**
-     * @Enum("AppBundle\Enum\RepresentativeTypeCode")
-     */
-    public $type;
- 
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $geoRegionId;
-
-    /**
      * @Assert\Type(type="string")
      */
-    public $geoRegionName;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $geoCityId;
+    public $geoPointName;
 
     /**
      * @Assert\Type(type="string")
@@ -49,53 +32,32 @@ class Representative
     public $hasRetail;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="array<AppBundle\Entity\RepresentativePhoto>")
      */
-    public $hasDelivery;
+    public $photos;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="array<string>")
      */
-    public $deliveryTax;
+    public $phones;
 
     /**
-     * @Assert\Type(type="boolean")
-     */
-    public $isOur;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $phone;
-
-    /**
-     * @Assert\Type(type="AppBundle\Bus\Geo\Query\DTO\Schedule")
+     * @Assert\Type(type="array<AppBundle\Bus\Geo\Query\DTO\ScheduleItem>")
      */
     public $schedule;
 
 
     public function __construct(
         $geoPointId, 
-        $type,
-        $geoRegionId, 
-        $geoRegionName,
-        $geoCityId, 
+        $geoPointName,
         $geoCityName, 
         $address, 
-        $hasRetail,
-        $hasDelivery,
-        $deliveryTax
+        $hasRetail
     ) {
         $this->geoPointId = $geoPointId;
-        $this->type = $type;
-        $this->geoRegionId = $geoRegionId;
-        $this->geoRegionName = $geoRegionName;
-        $this->geoCityId = $geoCityId;
+        $this->geoPointName = $geoPointName;
         $this->geoCityName = $geoCityName;
         $this->address = $address;
         $this->hasRetail = $hasRetail;
-        $this->hasDelivery = $hasDelivery;
-        $this->deliveryTax = $deliveryTax;
-        $this->isOur = RepresentativeTypeCode::OUR === $type; 
     }
 }

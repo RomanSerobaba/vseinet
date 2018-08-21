@@ -1,0 +1,34 @@
+<div 
+    class="city" 
+    data-id="{{ contact.geoPointId }}" 
+    data-type="{{ contact.type }}"
+    {% if contact.coordinates %} data-coordinates="{{ contact.coordinates }}"{% endif %}
+>
+    <div class="wrapper">
+        <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}" class="image">
+            <img src="/u/contacts/{{ contact.geoPointId }}_p.jpg" alt="" />
+        </a>
+        <h4>
+            <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}">
+                <span class="name">{{ contact.geoCityName }}</span>
+                {% if contact.address %}, <span class="address">{{ contact.address }}</span>{% endif %}
+            </a>
+            {% if contact.isNew %} 
+                <span class="new_point">новая!</span>
+            {% endif %}
+        </h4>
+        {% if contact.schedule %}
+            {% for schedule in contact.schedule.blocks %}
+                <time class="point_time{% if schedule.current %} point_time_current{% endif %}">
+                    {{ schedule.period }} {{ schedule.time }}
+                </time>
+            {% endfor %}
+        {% endif %}
+        {% if contact.phones is not empty %}
+            <div class="phone">{{ contact.phones.0 }}</div>
+        {% endif %}
+        {% if contact.coordinates %}
+            <a href="javascript:void(0)" class="ajax gray">Показать на карте</a>
+        {% endif %}
+    </div>
+</div>

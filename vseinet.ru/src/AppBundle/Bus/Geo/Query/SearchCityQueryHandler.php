@@ -11,17 +11,22 @@ class SearchCityQueryHandler extends MessageHandler
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT 
                 NEW AppBundle\Bus\Geo\Query\DTO\CityFound (
-                    c.id, 
-                    c.name 
-                )
-            FROM AppBundle:GeoCity as c 
-            WHERE LOWER(c.name) LIKE LOWER(:name)
-            ORDER BY c.\"AOLEVEL\", c.name 
+                    gc.id, 
+                    CONCAT(gc.name, ' ', gc.unit),
+                    CONCAT(gr.name, ' ', gr.unit),
+                    CONCAT(ga.name, ' ', ga.unit)
+                ),
+                CASE WHEN gc.isListed = true THEN 1 ELSE 2 AS HIDDEN ORD
+            FROM AppBundle:GeoCity AS gc
+            INNER JOIN AppBundle:GeoRegion AS gr WITH gr.id = gc.geoRegionId 
+            LEFT OUTER JOIN AppBundle:GeoArea AS ga WITH ga.id = gc.geoAreaId 
+            WHERE LOWER(gc.name) LIKE LOWER(:name) AND gc.id > 0
+            ORDER BY ORD, gc.AOLEVEL, gc.name 
         ");
-        $q->setParameter('name', $query->q);
+        $q->setParameter('name', $query->q.'%');
         $q->setMaxResults($query->limit);
-        $cities = $q->getArrayResult();
+        $geoCities = $q->getResult();
 
-        return $cities; 
+        return $geoCities; 
     }
 }

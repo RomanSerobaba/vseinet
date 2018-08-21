@@ -8,4 +8,6 @@ class RepresentativeTypeCode
     const FRANCHISER = 'franchiser';
     const PARTNER = 'partner';
     const TORG = 'torg';
+    const COURIER = 'courier';
+    const RETAIL = 'retail';
 }

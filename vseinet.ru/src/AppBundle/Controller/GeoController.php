@@ -12,56 +12,72 @@ class GeoController extends Controller
 {
     /**
      * @VIA\Get(
-     *     name="geo_regions",
-     *     path="geo/regions/",
-     *     condition="request.isXmlHttpRequest()"
-     * )
-     */
-    public function getRegionsAction()
-    {
-        $this->get('query_bus')->handle(new Query\GetRegionsQuery(), $regions);
-
-        return $this->json([
-            'html' => $this->renderView('Geo/regions.html.twig', [
-                'regions' => $regions,
-            ]),
-        ]);
-    }
-
-    /**
-     * @VIA\Get(
      *     name="geo_cities",
      *     path="/geo/cities/",
-     *     parameters={
-     *         @VIA\Parameter(name="regionId", type="integer")
-     *     },
      *     condition="request.isXmlHttpRequest()"
      * )
      */
-    public function getCitiesAction(int $regionId)
+    public function citiesAction()
     {
-        $this->get('query_bus')->handle(new Query\GetCitiesQuery(['regionId' => $regionId]), $cities);
+        $this->get('query_bus')->handle(new Query\GetRegionsQuery(), $geoRegions);
+        $geoRegionId = $this->getGeoCity()->getGeoRegionId();
+        $this->get('query_bus')->handle(new Query\GetCitiesQuery(['geoRegionId' => $geoRegionId]), $data);
 
         return $this->json([
-            'html' => $this->renderView('Geo/cities.html.twig', [
-                'cities' => $cities,
+            'html' => $this->renderView('Geo/cities.html.twig', $data + [
+                'geoRegions' => $geoRegions,
             ]),
         ]);
     }
 
     /**
      * @VIA\Post(
-     *     name="set_geo_city",
-     *     path="/cities/",
+     *     name="search_geo_city",
+     *     path="/geo/cities/search/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function searchAction(Request $request)
+    {
+        $this->get('query_bus')->handle(new Query\SearchCityQuery($request->request->all()), $geoCities);
+
+        return $this->json([
+            'geoCities' => $geoCities,
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="select_geo_region",
+     *     path="/geo/regions/",
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer")
+     *         @VIA\Parameter(model="AppBundle\Bus\Geo\Query\GetCitiesQuery")
      *     },
      *     condition="request.isXmlHttpRequest()"
      * )
      */
-    public function setGeoCityCurrentAction(int $id)
+    public function selectGeoRegionAction(Request $request)
     {
-        $this->get('command_bus')->handle(new Command\SetGeoCityCurrentCommand(['id' => $id]));
+        $this->get('query_bus')->handle(new Query\GetCitiesQuery($request->request->all()), $data);
+
+        return $this->json([
+            'html' => $this->renderView('Geo/cities_block.html.twig', $data),
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="select_geo_city",
+     *     path="/geo/cities/",
+     *     parameters={
+     *         @VIA\Parameter(model="AppBundle\Bus\Geo\Command\SetGeoCityCurrentCommand")
+     *     },
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function selectGeoCityAction(Request $request)
+    {
+        $this->get('command_bus')->handle(new Command\SetCityCurrentCommand($request->request->all()));
 
         return $this->json([
             'notice' => 'Город изменен',
@@ -78,7 +94,7 @@ class GeoController extends Controller
     {
         $this->get('query_bus')->handle(new Query\GetContactsQuery(), $contacts);
 
-        return $this->render('Geo/contacts.html.smarty', [
+        return $this->render('Geo/contacts.html.twig', [
             'contacts' => $contacts,
         ]);
     }
@@ -92,6 +108,18 @@ class GeoController extends Controller
      */
     public function getContactAction(int $geoPointId, Request $request)
     {
+        $this->get('query_bus')->handle(new Query\GetRepresentativeQuery(['geoPointId' => $geoPointId]), $representative);
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Geo/representative_short.html.twig', [
+                    'representative' => $representative,
+                ]),
+            ]);
+        }
+
+        return $this->render('Geo/representative.html.twig', [
+            'representative' => $representative,
+        ]);
     }
 }

@@ -1,0 +1,127 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+   Контакты
+{% endblock %}
+
+{% block content %}
+<h1 class="holder">Контактная информация</h1>
+<div id="map"></div>
+
+<div id="contacts" class="holder">
+    <div class="location">
+        <dl>
+            <dt>Телефоны:</dt>
+            <dd>{{ app.representative.phone3[3:] }}</dd>
+        </dl>
+        <dl class="email">
+            <dt>Электронная почта:</dt>
+            <dd><a href="mailto:mail@vseinet.ru">mail@vseinet.ru</a></dd>
+        </dl>
+        <dl>
+            <dt>Адрес:</dt>
+            <dd>{{ app.geoCity.name }}{% if app.representative.address %}, {{ representative.address }}{% endif %}</dd>
+        </dl>
+        <dl class="smaller">
+            <dt>Skype:</dt>
+            <dd><a href="skype:vseinet?chat" class="contact skype online">vseinet</a></dd>
+        </dl>
+        <dl class="smaller">
+            <dt>ICQ:</dt>
+            <dd><a href="http://www.icq.com/people/432075982/" rel="nofollow" target="_blank" class="contact icq online">432075982</a></dd>
+        </dl>
+    </div>
+
+    {% for geoRegion in contacts %}
+        <h3 class="contact_sections_title">{{ geoRegion.name }}</h3>
+        {% for type, contactsByGeoRegion in geoRegion.contacts %}
+            <h4 class="contact_sections_title" style="margin-bottom: 20px">
+                {% if constant('AppBundle\\Enum\\RepresentativeTypeCode::COURIER') == type %}
+                    Курьеры<span style="color: rgb(153, 153, 153); font-weight: normal;">, звонить по доставке; уточнить информацию по заказам можно по тел. (8412) 296-222</span>
+                {% else %}
+                    Представительства (точки самовывоза)<span style="color: rgb(153, 153, 153); font-weight: normal;">, звонить по заказам и доставке</span>
+                {% endif %}                            
+            </h4>
+            <div class="representatives">
+                {% for contact in contactsByGeoRegion %}
+                    {% if not loop.first and loop.index % 3 == 1 %}
+                    </div><div class="representatives">
+                    {% endif %}
+                    {% include 'Geo/contact_short.html.twig' with { contact: contact } %}
+                {% endfor %}
+                {% set count = contactsByGeoRegion|length %}
+                {% if count % 3 != 0 %}
+                    {% set emptyCount = count % 3 %}
+                    {% for i in 0..emptyCount %}
+                        <div class="city"></div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://api-maps.yandex.ru/2.0/?lang=ru-RU&load=package.full&coordorder=longlat"></script>
+<script> 
+    $(function() {
+        $('#content > .holder').css({width: '100%'});
+        ymaps.ready(function() {
+            map = new ymaps.Map('map', {center: [44.979877,53.203737], zoom: 7});
+            map.controls.add('zoomControl').add('mapTools');
+            map.controls.add(new ymaps.control.MiniMap({}, {zoomOffset: 4}));
+            $.map($('.representatives .city[data-coordinates]'), function(point) {
+                point = $(point);
+                point.find('.ajax').click(function() {
+                    map.balloon.close();
+                    var top = $('#map').offset().top - 55;
+                    if (sp.window.scrollTop() > top)
+                        $('html, body').animate({scrollTop: top}, 300);
+                    map.panTo([parseFloat(coordinates[0]), parseFloat(coordinates[1])], {callback: function() {
+                        placemark.balloon.open();
+                    }});
+                    return false;
+                });
+                var coordinates = point.data('coordinates').split(',')
+                var placemark = new ymaps.Placemark(coordinates, {
+                    hintContent: point.find('.name').text()
+                }, {
+                    openEmptyBalloon: true,
+                    iconImageHref: '/media/images/placemark'+(point.data('type')==='courier'?'Courier':'')+'.png',
+                    iconImageSize: [41, 44],
+                    iconImageOffset: [-14, -44]
+                });
+                placemark.events.add('balloonopen', function (e) {
+                    placemark.properties.set('balloonContent', '<div class="loading"></div>');
+                    $.getJSON('/contacts/' + point.data('id') + '/').done(function(response) {
+                        placemark.properties.set('balloonContent', response.html);
+                    });
+                });
+                map.geoObjects.add(placemark);
+            });
+            var bounds = map.geoObjects.getBounds();
+            if (bounds) {
+                if (bounds[0][0] == bounds[1][0] && bounds[0][1] == bounds[1][1])
+                    map.setCenter(bounds[0], 16);
+                else
+                    map.setBounds(bounds, {
+                        zoomMargin: [20, 0, 0, 0]
+                    });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<style type="text/css">
+    .point_time {
+        display: block;
+    }
+    .point_time_current {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

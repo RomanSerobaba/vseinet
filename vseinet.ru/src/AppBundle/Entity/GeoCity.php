@@ -71,6 +71,20 @@ class GeoCity
     private $AOLEVEL;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="geo_area_id", type="integer")
+     */
+    private $geoAreaId;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_listed", type="boolean")
+     */
+    private $isListed;
+
+    /**
      * @var array<GeoPoint>
      */
     private $geoPoints;
@@ -252,6 +266,54 @@ class GeoCity
     public function getAOLEVEL()
     {
         return $this->AOLEVEL;
+    }
+
+    /**
+     * Set geoAreaId.
+     *
+     * @param string $geoAreaId
+     *
+     * @return GeoCity
+     */
+    public function setGeoAreaId($geoAreaId)
+    {
+        $this->geoAreaId = $geoAreaId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoAreaId.
+     *
+     * @return string
+     */
+    public function getGeoAreaId()
+    {
+        return $this->geoAreaId;
+    }
+
+    /**
+     * Set isListed.
+     *
+     * @param bool $isListed
+     *
+     * @return GeoCity
+     */
+    public function setIsListed($isListed)
+    {
+        $this->isListed = $isListed;
+
+        return $this;
+    }
+
+    /**
+     * Get isListed.
+     *
+     * @return bool
+     */
+    public function getIsListed()
+    {
+        return $this->isListed;
     }
 
     /**
