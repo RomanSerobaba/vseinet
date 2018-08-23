@@ -16,10 +16,14 @@ class GetMenuQueryHandler extends MessageHandler
                     c.name,
                     cp.level
                 ),
-                CASE WHEN c.id = 33536 THEN 2 ELSE 1 END AS HIDDEN ORD 
+                CASE 
+                    WHEN c.id = 5086104 THEN 3 
+                    WHEN c.id = 33536 THEN 2 
+                    ELSE 1 
+                END AS HIDDEN ORD 
             FROM AppBundle:Category AS c 
             INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = c.id AND cp.id = cp.pid 
-            WHERE cp.level <= 3 AND c.id > 0 
+            WHERE cp.level <= 3 AND c.id > 0 AND cp.pid != 7562
             ORDER BY cp.plevel ASC, ORD ASC, c.rating ASC  
         ");
         $categories = $q->getArrayResult();
