@@ -74,7 +74,7 @@
                     <div 
                         class="photoBlock blockPhone"
                         data-pos-x="{{ banner.posBackgroundPhoneX }}"
-                        style="max-width: 480px; height: 240px; background: {{ banner.backgroundColor }}{% if banner.imBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
+                        style="max-width: 480px; height: 240px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
                     >
                         <div class="infoPosition">
                             <div class="titleBanner">{{ banner.titlePhone|raw }}</div>
