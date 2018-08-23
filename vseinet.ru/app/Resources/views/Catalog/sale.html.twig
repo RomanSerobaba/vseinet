@@ -2,7 +2,7 @@
     {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
         <div class="status in-stock">Есть в наличии</div>
     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availability %}
-        <div class="status not-available"{% if product.updatedAt %} style="cursor:help" title="Последний заход: {{ product.aupdateAt|date('d.m.Y') }}"{% endif %}>Нет в продаже</div>
+        <div class="status not-available"{% if product.updatedAt %} style="cursor:help" title="Последний заход: {{ product.updatedAt|date('d.m.Y') }}"{% endif %}>Нет в продаже</div>
     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availability %}
         <div class="status on-order">Ожидается</div>
     {% else %}

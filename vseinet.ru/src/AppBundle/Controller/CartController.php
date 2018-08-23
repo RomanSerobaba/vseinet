@@ -22,7 +22,7 @@ class CartController extends Controller
     {
         $this->get('query_bus')->handle(new Query\GetQuery(), $cart);
 
-        if ($request->isXMLHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'html' => $this->renderView('Cart/page.html.twig', [
                     'cart' => $cart,
@@ -158,10 +158,10 @@ class CartController extends Controller
      *     path="/cart/clear/"
      * )
      */
-    public function clearAction()
+    public function clearAction(Request $request)
     {
         $this->get('command_bus')->handle(new Command\ClearCommand());
-        if ($this->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             return $this->json([]);
         }
 
@@ -183,7 +183,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
         $this->get('command_bus')->handle(new AddFavoriteCommand(['id' => $id]));
 
-        if ($request->isXMLHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);    
             $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);    
 

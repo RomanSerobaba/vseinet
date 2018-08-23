@@ -118,12 +118,12 @@ class FavoriteController extends Controller
         $this->get('command_bus')->handle(new AddCartCommand(['id' => $id]));
 
         if ($request->isXMLHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);    
-            $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);    
+            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $favorites);    
+            $this->get('query_bus')->handle(new GetCartInfoQuery(), $cart);    
 
             return $this->json([
-                'cart' => $cart, 
                 'favorites' => $favorites,
+                'cart' => $cart, 
             ]);
         }
 

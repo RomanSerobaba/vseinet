@@ -25,7 +25,7 @@
                         </div>
                     </div>                    
                     <div class="quantity coll-md-3">
-                        <a href="{{ url('favorite_to_cart', { id: product.id }) }}" class="bttn green">В корзину</a>
+                        <a href="{{ url('favorite_to_cart', { id: product.id }) }}" class="bttn green delete" data-favorite="{{ product.id }}">В корзину</a>
                     </div>
                     <div class="price coll-md-2">
                         {{ product.price|price_format }} <span class="RUR">Р</span>
@@ -33,7 +33,7 @@
                     <div class="delete coll-md-1">
                         <a 
                             href="{{ url('favorite_del', { id: product.id }) }}" 
-                            class="action" 
+                            class="delete action" 
                             title="Удалить" 
                             tabindex="-1" 
                             data-favorite="{{ product.id }}"

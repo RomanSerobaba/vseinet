@@ -11,6 +11,9 @@ $(function() {
             if (response.cart) {
                 sp.cartupdate(response);
             }
+            if (a.is('.delete')) {
+                a.closest('.row').remove();
+            }
         });
     });
 });

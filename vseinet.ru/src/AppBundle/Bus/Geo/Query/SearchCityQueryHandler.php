@@ -16,7 +16,7 @@ class SearchCityQueryHandler extends MessageHandler
                     CONCAT(gr.name, ' ', gr.unit),
                     CONCAT(ga.name, ' ', ga.unit)
                 ),
-                CASE WHEN gc.isListed = true THEN 1 ELSE 2 AS HIDDEN ORD
+                CASE WHEN gc.isListed = true THEN 1 ELSE 2 END AS HIDDEN ORD
             FROM AppBundle:GeoCity AS gc
             INNER JOIN AppBundle:GeoRegion AS gr WITH gr.id = gc.geoRegionId 
             LEFT OUTER JOIN AppBundle:GeoArea AS ga WITH ga.id = gc.geoAreaId 
