@@ -27,7 +27,7 @@ class ImageExtension extends AbstractExtension
 
     public function getImageSrc($image, $size)
     {
-        if ($image->baseSrc) {
+        if (null !== $image && $image->baseSrc) {
             return BaseProductImage::buildSrc($this->path, $image->baseSrc, $size);
         }
 

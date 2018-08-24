@@ -16,7 +16,7 @@ class Brands
     public static function build(array $brandId2count, EntityManager $em): array 
     {
         if (empty($brandId2count)) {
-            return null;
+            return [];
         }
 
         arsort($brandId2count);

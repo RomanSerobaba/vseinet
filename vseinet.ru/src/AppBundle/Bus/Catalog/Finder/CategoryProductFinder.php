@@ -109,6 +109,7 @@ class CategoryProductFinder extends ProductFinder
         $results = $this->get('sphinxql')->execute($query);
 
         $this->filter = new Filter();
+        $this->filter->price = new Filter\Range(0, 0);
 
         foreach (array_shift($results) as $row) {
             $this->filter->price = new Filter\Range($row['min_price'], $row['max_price']);
@@ -139,8 +140,10 @@ class CategoryProductFinder extends ProductFinder
             $row = array_shift($results);
             $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
         }
-
         foreach ($results as $index => $result) {
+            if (empty($result)) {
+                continue;
+            }
             if (array_key_exists('total', $result[0])) {
                 break;
             }
