@@ -14,7 +14,7 @@
         {% if brand.url %}
             <dl>
                 <dt><span>Сайт производителя</span></dt>
-                <dd><a href="{{ brand.url }}" target="_blank" rel="nofollow">{{ brand.url }}</a></dd>
+                <dd><a href="{{ brand.url|external_link }}" target="_blank" rel="nofollow">{{ brand.url }}</a></dd>
             </dl>
         {% endif %}
     {% endif %}

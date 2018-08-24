@@ -36,6 +36,11 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    twig.extension.external_link:
+        class: 'AppBundle\Twig\Extension\ExternalLinkExtension'
+        tags:
+            - { name: 'twig.extension' }
+
     app.twig.globals:
         class: 'AppBundle\Twig\GlobalVariables'
         arguments: [ '@service_container' ]

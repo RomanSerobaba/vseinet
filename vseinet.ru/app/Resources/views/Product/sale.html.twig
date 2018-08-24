@@ -72,7 +72,8 @@
         </a>
         {% if 300000 < product.price %}
             <a 
-                href="{{ path ('cart_add', { id: product.id }) }}"
+                href="{{ path('cart_add', { id: product.id }) }}"
+                data-url="{{ path('credit_calculators', { id: product.id }) }}"
                 class="bttn blue credit"
                 rel="nofollow"
             >

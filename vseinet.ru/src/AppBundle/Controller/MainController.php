@@ -104,6 +104,29 @@ class MainController extends Controller
     }
 
     /**
+     * @VIA\Get(
+     *     name="credit_calculators",
+     *     path="/credit/calculators/{id}/",
+     *     requirements={"id" = "\d+"},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function creditCalculatorsAction(int $id)
+    {
+        $product = $this->getDoctrine()->getManager()->getRepository(BaseProduct::class)->find($id);
+        if (!$product instanceof BaseProduct) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->json([
+            'html' => $this->renderView('Main/credit_calculators.html.twig', [
+                'product' => $product,
+            ]),
+        ]);
+    }
+
+
+    /**
      * @internal 
      */
     public function getMenuAction()
