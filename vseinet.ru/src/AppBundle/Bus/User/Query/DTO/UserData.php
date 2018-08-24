@@ -17,6 +17,7 @@ class UserData
     public $comuserId;
     
     /**
+     * @Assert\NotBlank(message="Укажите Ваше ФИО")
      * @Assert\Type(type="string")
      */
     public $fullname;
@@ -29,6 +30,7 @@ class UserData
     public $phoneList;
 
     /**
+     * @Assert\NotBlank(message="Укажите Ваш телефон")
      * @Assert\Type(type="string")
      */
     public $phone;

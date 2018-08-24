@@ -37,6 +37,12 @@
         {{ form_widget(form.competitorLink, { attr: { class: 'txt' }}) }}
         <span class="status"></span>
         <div class="notice">Карточка товара на сайте конкурента, например, <a href="https://vseinet.ru/product/{{ product.id }}/" style="white-space:nowrap">https://vseinet.ru/product/{{ product.id }}/</a>.</div>
+        <div class="notice">
+            Заявки принимаются с сайтов:
+            {% for competitor in competitors %}
+                {{ competitor.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </div>
         {% if errors.competitorLink is defined %}<div class="error">{{ errors.competitorLink.0 }}</div>{% endif %}
     </div>
 
@@ -58,7 +64,7 @@
     {% include 'User/is_human_form.html.twig' with { form: form } only %}
 
     <div class="row h">
-        {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
+        {{ form_widget(form.submit, { label: 'Отправить запрос', attr: { class: 'bttn orange r' }}) }} 
         {{ form_widget(form._token) }}
     </div>
 

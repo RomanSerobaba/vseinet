@@ -18,19 +18,21 @@ class Controller extends BaseController
     protected function getFormErrors(FormInterface $form)
     {
         $errors = [];
+        $this->getFormErrorsRecursive($form, $form->getName(), $errors);
+
+        return $errors;
+    }
+
+    private function getFormErrorsRecursive(FormInterface $form, $prefix, &$errors)
+    {
         foreach ($form->all() as $child) {
             if ($child->isSubmitted() && !$child->isValid()) {
                 foreach ($child->getErrors() as $error) {
-                    $errors[$child->getName()][] = $error->getMessage();
+                    $errors[$prefix.'_'.$child->getName()][] = $error->getMessage();
                 }
-            }
-            $childErrors = $this->getFormErrorsRecursive($child);    
-            if (!empty($childErrors)) {
-                $errors[$child->getName()] = $childErrors;
+                $this->getFormErrorsRecursive($child, $prefix.'_'.$child->getName(), $errors);
             }
         }
-
-        return $errors;
     }
 
     public function getGeoCity()

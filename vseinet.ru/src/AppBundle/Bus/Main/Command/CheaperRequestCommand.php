@@ -20,7 +20,7 @@ class CheaperRequestCommand extends Message
 
     /**
      * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
-     * @Assert\Valid()
+     * @Assert\Valid
      */
     public $userData;
 
@@ -40,4 +40,11 @@ class CheaperRequestCommand extends Message
      * @Assert\Type(type="string")
      */
     public $comment;
+
+    /**
+     * @Assert\All({
+     *     @Assert\Type(type="AppBundle\Entity\Competitor")
+     * })
+     */
+    public $competitors;
 }

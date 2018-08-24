@@ -4,11 +4,13 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Bus\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Main\Query;
 use AppBundle\Bus\Main\Command;
 use AppBundle\Bus\Main\Form;
 use AppBundle\Entity\BaseProduct;
+use AppBundle\Entity\Competitor;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
 
@@ -63,6 +65,7 @@ class MainController extends Controller
         if (!$command->product instanceof BaseProduct) {
             throw new NotFoundHttpException();
         }
+        $command->competitors = $em->getRepository(Competitor::class)->findBy(['isActive' => true]);
 
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
@@ -95,6 +98,7 @@ class MainController extends Controller
             'html' => $this->renderView('Main/cheaper_request_form.html.twig', [
                 'form' => $form->createView(),
                 'product' => $command->product,
+                'competitors' => $command->competitors,
             ]),
         ]);
     }
