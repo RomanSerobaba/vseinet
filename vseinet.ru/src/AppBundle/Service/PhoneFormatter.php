@@ -12,7 +12,19 @@ class PhoneFormatter
             $phone = substr($phone, 1);
         }
 
-        if (10 !== strlen($phone)) {
+        $digits = strlen($phone);
+        
+        if (6 === $digits) {
+            return implode('-', str_split($phone, 2));    
+        }
+        
+        if (7 === $digits) {
+            preg_match('~(\d{3})(\d{2})(\d{2})~', $phone, $matches);
+            
+            return "{$matches[1]}-{$matches[2]}-{$matches[3]}";   
+        }
+
+        if (10 !== $digits) {
             return null;
         }
 

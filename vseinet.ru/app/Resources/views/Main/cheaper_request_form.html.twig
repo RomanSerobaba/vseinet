@@ -1,0 +1,67 @@
+<div id="cheaper_desc">
+    {#<p>По техническим причинам сервис временно не работает. Приносим свои извинения.</p>#}
+    <p>Мы не уследили за ценником и вы нашли товар дешевле у наших конкурентов?</p>
+    <p>Сообщите нам, и мы гарантируем, что <strong>в 95% случаев сможем сделать вам более выгодное предложение</strong> и помочь сэкономить ваши деньги. Заполните нижеприведенные поля формы и отправьте нам заявку, предварительно ознакомившись с <a class="ajax rules_trigger" href="javascript:void(0)">правилами акции</a>.</p>
+    <div class="rules">
+        <h3>Правила акции.</h3>
+        <ol>
+            <li>У конкурента в вашем регионе должна находиться торговая точка (либо <em>представительство</em>) или существовать возможность доставки до региона.</li>
+            <li><em>Конечную стоимость</em> товара у конкурента следует расчитывать на основе цены для вашего региона (например, Пензы), включая дополнительные расходы по доставке.</li>
+            <li>Товар должен быть в <em>наличии</em> на складах конкурента.</li>
+            <li>Товар конкурента должен быть ввезен в Россию легально и обслуживаться в авторизованных сервисных центрах, а также обладать комплектацией и цветом,<em> аналогичными</em> товару на нашем сайте.</li>
+        </ol>
+    </div>
+    <p>Запрос обрабатывается в течение одного рабочего дня. В выходные и праздничные дни запросы не обрабатываются.</p>
+    <hr/>
+    <p style="font-style:italic">Внимание! Поля, отмеченные <label><b>*</b></label>, являются обязательными для заполнения.</p>
+</div>
+
+{{ form_start(form, { action: path('cheaper_request', { id: product.id }), attr: { id: 'cheaper-request-form' }}) }}
+
+<fieldset>
+    
+    <div class="row h">
+        <label>Наименование</label>
+        <p style="font-size:14px;padding-top:5px">{{ product.name }}</p>
+    </div>
+    
+    <div class="row h{% if errors.competitorPrice is defined %} error{% endif %}">
+        {{ form_label(form.competitorPrice, 'Цена конкурента*') }}
+        {{ form_widget(form.competitorPrice, { attr: { class: 'txt' }}) }}
+        <span class="status"></span>
+        {% if errors.competitorPrice is defined %}<div class="error">{{ errors.competitorPrice.0 }}</div>{% endif %}
+    </div>
+
+    <div class="row h{% if errors.competitorLink is defined %} error{% endif %}">
+        {{ form_label(form.competitorLink, 'Ссылка на товар*') }}
+        {{ form_widget(form.competitorLink, { attr: { class: 'txt' }}) }}
+        <span class="status"></span>
+        <div class="notice">Карточка товара на сайте конкурента, например, <a href="https://vseinet.ru/product/{{ product.id }}/" style="white-space:nowrap">https://vseinet.ru/product/{{ product.id }}/</a>.</div>
+        {% if errors.competitorLink is defined %}<div class="error">{{ errors.competitorLink.0 }}</div>{% endif %}
+    </div>
+
+    <div class="row h{% if errors.geoCityId is defined %} error{% endif %}">
+        {{ form_label(form.geoCityId, 'Населенный пункт*:') }}
+        {{ form_widget(form.geoCityId, { attr: { class: 'txt' }}) }}
+        {% if errors.geoCityId is defined %}
+            <div class="error">{{ errors.geoCityId.0 }}</div>
+        {% endif %}
+    </div>
+
+    {% include 'User/user_data_form.html.twig' with { form: form } only %}
+    
+    <div class="row h">
+        {{ form_label(form.comment, 'Комментарий') }}
+        {{ form_widget(form.comment, { attr: { class: 'txt' }}) }}
+    </div>
+
+    {% include 'User/is_human_form.html.twig' with { form: form } only %}
+
+    <div class="row h">
+        {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
+        {{ form_widget(form._token) }}
+    </div>
+
+</fieldset>
+
+{{ form_end(form, { render_rest: false }) }}

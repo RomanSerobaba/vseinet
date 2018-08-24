@@ -1,0 +1,7 @@
+<div class="row h{% if errors.geoCityId is defined %} error{% endif %}">
+    {{ form_label(form.geoCityId, 'Населенный пункт*:') }}
+    {{ form_widget(form.geoCityId, { attr: { class: 'txt' }}) }}
+    {% if errors.geoCityId is defined %}
+        <div class="error">{{ errors.geoCityId.0 }}</div>
+    {% endif %}
+</div>

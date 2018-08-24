@@ -24,6 +24,10 @@ class Controller extends BaseController
                     $errors[$child->getName()][] = $error->getMessage();
                 }
             }
+            $childErrors = $this->getFormErrorsRecursive($child);    
+            if (!empty($childErrors)) {
+                $errors[$child->getName()] = $childErrors;
+            }
         }
 
         return $errors;

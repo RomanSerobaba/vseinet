@@ -3,9 +3,14 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Main\Query;
 use AppBundle\Bus\Main\Command;
+use AppBundle\Bus\Main\Form;
+use AppBundle\Entity\BaseProduct;
+use AppBundle\Bus\User\Query\GetUserDataQuery;
+use AppBundle\Bus\User\Command\IdentifyCommand;
 
 class MainController extends Controller
 {
@@ -40,14 +45,65 @@ class MainController extends Controller
     }
 
     /**
+     * @VIA\Route(
+     *     name="cheaper_request",
+     *     path="/cheaper/request/{id}/",
+     *     requirements={"id" = "\d+"},
+     *     methods={"GET", "POST"},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function cheaperRequestAction(int $id, Request $request)
+    {
+        $command = new Command\CheaperRequestCommand();
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $command->product = $em->getRepository(BaseProduct::class)->find($id);
+        if (!$command->product instanceof BaseProduct) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->geoCityId = $this->getGeoCity()->getId();
+        }
+        $form = $this->createForm(Form\CheaperRequestType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $this->get('command_bus')->handle($command);
+
+                    return $this->json([
+                        'notice' => 'Ваш запрос отправлен',
+                    ]);
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessages());
+                }
+            }
+
+            return $this->json([
+                'errors' => $this->getFormErrors($form),
+            ]);
+        }
+
+        return $this->json([
+            'html' => $this->renderView('Main/cheaper_request_form.html.twig', [
+                'form' => $form->createView(),
+                'product' => $command->product,
+            ]),
+        ]);
+    }
+
+    /**
      * @internal 
      */
     public function getMenuAction()
     {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
-        }
-
         $this->get('query_bus')->handle(new Query\GetMenuQuery(), $menu);
         foreach ($menu as &$item) {
             $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $item->id, 'count' => 1]), $products);
@@ -66,10 +122,6 @@ class MainController extends Controller
      */
     public function getBannerMainAction()
     {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
-        }
-
         $this->get('query_bus')->handle(new Query\GetBannerMainQuery(), $data);
 
         return $this->render('Main/banner_main.html.twig', $data);
@@ -80,10 +132,6 @@ class MainController extends Controller
      */
     public function getBlockSpecialsAction(int $categoryId = 0)
     {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
-        }
-
         $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $categoryId, 'count' => 6]), $products);
 
         return $this->render('Main/block_specials.html.twig', [
@@ -96,10 +144,6 @@ class MainController extends Controller
      */
     public function getBlockPopularsAction()
     {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
-        }
-
         $this->get('query_bus')->handle(new Query\GetBlockPopularsQuery(['count' => 4]), $products);
 
         return $this->render('Main/block_populars.html.twig', [
@@ -112,10 +156,6 @@ class MainController extends Controller
      */
     public function getBlockLastviewAction()
     {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
-        }
-
         $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 4]), $products);
 
         return $this->render('Main/block_lastview.html.twig', [

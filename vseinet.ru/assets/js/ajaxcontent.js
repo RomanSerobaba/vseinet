@@ -23,7 +23,7 @@ $.widget('sp.ajaxcontent', {
         this._on({
             click: function(e) {
                 e.preventDefault();
-                this.load(this.options.url, this.options.data.call(e.target));
+                this.load(this.options.url || this.element.prop('href'), this.options.data.call(e.target));
             }
         });
     },

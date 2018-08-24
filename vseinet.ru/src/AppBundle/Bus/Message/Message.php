@@ -32,6 +32,15 @@ abstract class Message
         }     
     }
 
+    protected function from($object, array $keyMap = [])
+    {
+        $values = (array) $object;
+        foreach ($keyMap as $original => $key) {
+            $values[$key] = $object->$original;
+        }
+        $this->init($values);
+    }
+
     protected function empty2null($value) 
     {
         if (is_array($value)) {

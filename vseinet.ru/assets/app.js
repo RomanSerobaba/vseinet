@@ -20,3 +20,4 @@ require('./js/datepicker.js');
 require('./js/account.js');
 require('./js/dialogs.js');
 require('./js/error-report.js');
+require('./js/cheaper-request.js');

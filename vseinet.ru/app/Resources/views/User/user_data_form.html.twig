@@ -1,0 +1,35 @@
+<div class="row h{% if errors.userData.fullname is defined %} error{% endif %}">
+    {{ form_label(form.userData.fullname, 'ФИО*:') }}
+    {{ form_widget(form.userData.fullname, { attr: { class: 'txt' }})  }}
+    <span class="status"></span>
+    {% if errors.userData.fullname is defined %}
+        <div class="error">{{ errors.userData.fullname.0 }}</div>
+    {% endif %}
+</div>
+
+<div class="row h{% if error.userData.phone is defined %} error{% endif %}">
+    {{ form_label(form.userData.phone, 'Телефон*:') }}
+    {{ form_widget(form.userData.phone, { attr: { class: 'txt' }}) }}
+    <span class="status"></span>
+    {% if errors.userData.phone is defined %}
+        <div class="error">{{ errors.userName.phone.0 }}</div>
+    {% endif %}
+</div>
+
+<div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
+    {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
+    {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
+    <span class="status"></span>
+    {% if errors.userData.additionalPhone is defined %}
+        <div class="error">{{ errors.userName.additionalPhone.0 }}</div>
+    {% endif %}
+</div>
+
+<div class="row h{% if error.userData.email is defined %} error{% endif %}">
+    {{ form_label(form.userData.email, 'Email:') }}
+    {{ form_widget(form.userData.email, { attr: { class: 'txt' }}) }}
+    <span class="status"></span>
+    {% if errors.userData.email is defined %}
+        <div class="error">{{ errors.userName.email.0 }}</div>
+    {% endif %}
+</div>
