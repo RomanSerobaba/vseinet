@@ -5,9 +5,9 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
-use AppBundle\Bus\Cart\Query;
-use AppBundle\Bus\Cart\Command;
 use AppBundle\Form;
+use AppBundle\Bus\Order\Command;
+use AppBundle\Bus\Order\Query;
 
 class OrderController extends Controller
 {
@@ -56,30 +56,88 @@ class OrderController extends Controller
     }
 
     /**
-     * @VIA\Get(name="order_create", path="/order/")
+     * @VIA\Get(name="order_creation_page", path="/order/")
      */
-    public function createAction(Request $request)
+    public function creationPageAction(Request $request)
     {
-        // $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
-        // $this->get('query_bus')->handle(new Query\GetContactsQuery(), $contacts);
-        // $this->get('query_bus')->handle(new Query\GetAddressesQuery(), $addresses);
+        // $command = new Command\AddAddressCommand(['id' => $id]);
+        // if ($id && $request->isMethod('GET')) {
+        //     $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]), $address);
+        //     $command->init((array) $address);
+        // }
+        // $form = $this->createForm(Form\AddAddressType::class, $command);
 
-        $account = [
-            // 'info' => $info,
-            // 'contacts' => $contacts,
-            // 'addresses' => $addresses,
-        ];
+        // if ($request->isMethod('POST')) {
+        //     $form->handleRequest($request);
+        //     if ($form->isSubmitted() && $form->isValid()) {
+        //         try {
+        //             $this->get('command_bus')->handle($command);
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('Order/creation_ajax.html.twig', [
-                    'account' => $account,
-                ]),
+        //             if ($request->isXmlHttpRequest()) {
+        //                 $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
+
+        //                 return $this->json([
+        //                     'html' => $this->renderView('User/address.html.twig', [
+        //                         'address' => $address,
+        //                     ]),
+        //                 ]);
+        //             }
+
+        //             $flashBag = $this->get('session')->getFlashBag();
+        //             if ($command->id) {
+        //                 $flashBag->add('notice', 'Адрес доставки успешно изменен');
+        //             } else {
+        //                 $flashBag->add('notice', 'Адрес доставки успешно добавлен');
+        //             }
+
+        //             return $this->redirectToRoute('user_account');
+
+        //         } catch (ValidationException $e) {
+        //             $this->addFormErrors($form, $e->getMessages());
+        //         }
+        //     }
+
+        //     if ($request->isXmlHttpRequest()) {
+        //         return $this->json([
+        //             'errors' => $this->getFormErrors($form),
+        //         ]);
+        //     }
+        // }
+        $command = new Command\CreateCommand();
+
+        if ($this->getUser()) {
+            if ($this->getUserIsEmployee()) {
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'html' => $this->renderView('Order/manager_creation_ajax.html.twig', [
+                        ]),
+                    ]);
+                }
+    
+                return $this->render('Order/manager_creation.html.twig', [
+                ]);
+            } else {
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'html' => $this->renderView('Order/creation_ajax.html.twig', [
+                        ]),
+                    ]);
+                }
+    
+                return $this->render('Order/creation.html.twig', [
+                ]);
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'html' => $this->renderView('Order/creation_ajax.html.twig', [
+                    ]),
+                ]);
+            }
+
+            return $this->render('Order/creation.html.twig', [
             ]);
         }
-
-        return $this->render('Order/creation.html.twig', [
-            'account' => $account,
-        ]);        
+        
     }
 }
