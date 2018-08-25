@@ -1,0 +1,63 @@
+{% extends "layout.html.twig" %}
+
+{% block pageDescription %}
+    Пожаловаться директору
+{% endblock %}
+
+{% block content %}
+<h1>Пожаловаться директору</h1>
+
+{{ form_start(form, { action: path('complaint'), attr: { id: 'complaint-form', class: 'w60p' }}) }}
+
+<fieldset class="block gray">
+    <div class="wrapper">
+        <h2>1. Жалоба:</h2>
+        <div class="row h{% if errors.type is defined %} error{% endif %}">
+            {{ form_label(form.type, 'Причина жалобы:*') }}
+            {{ form_widget(form.type, { attr: { class: 'txt' }}) }}
+            <span class="status"></span>
+            {% if errors.type is defined %}
+                <div class="error">{{ errors.type.0 }}</div>
+            {% endif %}
+        </div>
+        <div class="row h">
+            {{ form_label(form.managerName, 'Менеджер, с которым Вы общались:') }}
+            {{ form_widget(form.managerName, { attr: { class: 'txt' }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.managerPhone, 'Телефон, с которого Вам звонили:') }}
+            {{ form_widget(form.managerPhone, { attr: { class: 'txt' }}) }}
+        </div>
+        <div class="row h{% if errors.text is defined %} error{% endif %}">
+            {{ form_label(form.text, 'Сообщение:*') }}
+            {{ form_widget(form.text, { attr: { rows: 8, class: 'txt' }}) }}
+            <span class="status"></span>
+            {% if errors.text is defined %}
+                <div class="error">{{ errors.text.0 }}</div>
+            {% endif %}
+        </div>
+    </div>
+</fieldset>
+
+<fieldset class="block">
+    <div class="wrapper">
+        <h2>2. Контакты:</h2>
+        {% include 'User/user_data_form.html.twig' with { form: form, hideAdditionalPhone: true } only %}
+        {% include 'User/is_human_form.html.twig' with { form: form } only %}
+    </div>
+</fieldset>
+
+<div class="row h">
+    {{ form_widget(form.submit, { label: 'Отправить жалобу', attr: { class: 'bttn green r' }}) }} 
+    {{ form_widget(form._token) }}
+</div>
+
+{{ form_end(form, { render_rest: false }) }}
+
+<div class="block w40p r">
+    <div class="wrapper content">
+        <p>Данный сервис создан для того, чтобы улучшить работу обслуживающего персонала и магазина вцелом. Если у вас возникли какие-либо претензии к качеству обслуживания, работе наших менеджеров, функционированию сайта или качеству товара во время работы с нашим магазином, пишите и мы примем меры.</p>
+        <p style="line-height: 28px;margin:0">Вы также можете <span style="color:darkviolet;font-size:24px">связаться</span> с нами по горячей линии претензионного отдела <span style="color:darkviolet;font-size:24px">ежедневно</span> (кроме выходных) <span style="color:darkviolet;font-size:24px;white-space: nowrap">с 12 до 16</span> часов по <span style="color:darkviolet;font-size:24px;white-space: nowrap">тел. 294-114</span>.</p>
+    </div>
+</div>
+{% endblock %}

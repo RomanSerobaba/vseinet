@@ -16,14 +16,16 @@
     {% endif %}
 </div>
 
-<div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
-    {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
-    {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
-    <span class="status"></span>
-    {% if errors.userData.additionalPhone is defined %}
-        <div class="error">{{ errors.userName.additionalPhone.0 }}</div>
-    {% endif %}
-</div>
+{% if hideAdditionalPhone is not defined %}
+    <div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
+        {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
+        {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
+        <span class="status"></span>
+        {% if errors.userData.additionalPhone is defined %}
+            <div class="error">{{ errors.userName.additionalPhone.0 }}</div>
+        {% endif %}
+    </div>
+{% endif %}
 
 <div class="row h{% if error.userData.email is defined %} error{% endif %}">
     {{ form_label(form.userData.email, 'Email:') }}

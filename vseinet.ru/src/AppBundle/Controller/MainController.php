@@ -125,6 +125,46 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * @VIA\Route(
+     *     name="complaint",
+     *     path="/complaint/",
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function complaintAction(Request $request) 
+    {
+        $command = new Command\ComplaintCommand();
+
+        if ($request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->geoCityId = $this->getGeoCity()->getId();   
+        }
+        $form = $this->createForm(Form\ComplaintFormType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $this->get('command_bus')->handle($command);
+
+                    $this->addFlash('notice', 'Спасибо за Ваше сообщение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');
+
+                    return $this->redirectToRoute('index');
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessage());
+                }
+            }
+        }
+
+        return $this->render('Main/complaint_form.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $this->getFormErrors($form),
+        ]);
+    }
+
 
     /**
      * @internal 

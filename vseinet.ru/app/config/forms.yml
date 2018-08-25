@@ -19,3 +19,10 @@ services:
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:
             - { name: 'form.type' }
+
+    complaint.form:
+        class: 'AppBundle\Bus\Main\Form\ComplaintFormType'
+        public: false 
+        arguments: [ '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: 'form.type' }
