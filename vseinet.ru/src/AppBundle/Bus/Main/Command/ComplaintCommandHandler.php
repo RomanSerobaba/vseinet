@@ -21,7 +21,7 @@ class ComplaintCommandHandler extends MessageHandler
             $complaint->setUserId($command->userData->userId);
             // @todo: save contactIds
         } else {
-            $complaint->setComuserId($command->comuserId);
+            $complaint->setComuserId($command->userData->comuserId);
         }
         $complaint->setIsChecked(false);
         

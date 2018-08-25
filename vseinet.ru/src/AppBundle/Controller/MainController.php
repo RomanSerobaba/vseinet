@@ -138,7 +138,6 @@ class MainController extends Controller
 
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
-            $command->geoCityId = $this->getGeoCity()->getId();   
         }
         $form = $this->createForm(Form\ComplaintFormType::class, $command);
 
@@ -160,6 +159,44 @@ class MainController extends Controller
         }
 
         return $this->render('Main/complaint_form.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $this->getFormErrors($form),
+        ]);
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="suggestion", 
+     *     path="/suggestion/",
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function suggestionAction(Request $request)
+    {
+        $command = new Command\SuggestionCommand();
+        if ($request->isMethod('GET')) {
+            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+        }
+        $form = $this->createForm(Form\SuggestionFormType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $this->get('command_bus')->handle($command);
+
+                    $this->addFlash('notice', 'Спасибо за Ваше предложение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');
+
+                    return $this->redirectToRoute('index');
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessage());
+                }
+            }
+        }    
+
+        return $this->render('Main/suggestion_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
