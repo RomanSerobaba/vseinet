@@ -9,7 +9,7 @@
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
         {% block meta %}{% endblock %}
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
         <link rel="stylesheet" href="{{ asset('bundles/styles.css') }}" media="all" />
         {% block stylesheets %}{% endblock %}
     </head>
@@ -60,7 +60,7 @@
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
         <script src="{{ asset('js/router.min.js') }}"></script>
-        <script src="{{ url('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="{{ asset('bundles/libs.js') }}"></script>
         <script src="{{ asset('bundles/scripts.js')}}"></script>
         {% block javascripts %}{% endblock %} 
