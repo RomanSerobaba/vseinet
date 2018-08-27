@@ -5,9 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
-use AppBundle\Form;
-use AppBundle\Bus\Order\Command;
-use AppBundle\Bus\Order\Query;
+use AppBundle\Bus\Order\{ Command, Query, Form };
 
 class OrderController extends Controller
 {
@@ -103,41 +101,41 @@ class OrderController extends Controller
         //         ]);
         //     }
         // }
-        $command = new Command\CreateCommand();
-
-        if ($this->getUser()) {
-            if ($this->getUserIsEmployee()) {
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'html' => $this->renderView('Order/manager_creation_ajax.html.twig', [
-                        ]),
-                    ]);
-                }
-    
-                return $this->render('Order/manager_creation.html.twig', [
-                ]);
-            } else {
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'html' => $this->renderView('Order/creation_ajax.html.twig', [
-                        ]),
-                    ]);
-                }
-    
-                return $this->render('Order/creation.html.twig', [
-                ]);
-            }
+        if ($this->getUserIsEmployee()) {
+            $types = [
+                'natural' => 'На физ. лицо',
+                'legal' => 'На юр. лицо',
+                'retail' => 'Продажа с магазина',
+                'resupply' => 'Пополнение складских запасов',
+                'consumables' => 'Расходные материалы',
+                'equipment' => 'Оборудование',
+            ];
         } else {
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'html' => $this->renderView('Order/creation_ajax.html.twig', [
-                    ]),
-                ]);
-            }
+            $types = [
+                'natural' => 'На физ. лицо',
+                'legal' => 'На юр. лицо',
+            ];
+        }
 
-            return $this->render('Order/creation.html.twig', [
+        $type = $request->query->get('type') ?? key($types);
+
+        $command = new Command\CreateCommand();
+        $command->typeCode = $type;
+        $form = $this->createForm(Form\CreateFormType::class, $command);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Order/' . $type . '_creation_ajax.html.twig', [
+                ]),
             ]);
         }
+
+        return $this->render('Order/creation.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $this->getFormErrors($form),
+            'choicesTypes' => $types,
+            'currentType' => $type,
+        ]);
         
     }
 }

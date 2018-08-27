@@ -26,3 +26,10 @@ services:
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:
             - { name: 'form.type' }
+
+    order_creation.form:
+        class: 'AppBundle\Bus\Order\Form\CreateFormType'
+        public: false 
+        arguments: [ '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: 'form.type' }
