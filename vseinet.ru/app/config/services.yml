@@ -15,6 +15,11 @@ services:
         public: false 
         abstract: true
 
+    session.storage.native:
+        class: 'AppBundle\Session\NativeSessionStorage'
+        arguments: [ '%session.storage.options%', '@session.handler', '@session.storage.metadata_bag' ]
+        public: true    
+
     app.security.authentication_handler:
         class: 'AppBundle\Security\AuthenticationHandler'
         public: false

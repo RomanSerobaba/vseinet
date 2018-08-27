@@ -47,6 +47,11 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
+        $credentials = [
+            'username' => $request->request->get('_username'),
+            'password' => $request->request->get('_password'),
+        ];
+        $this->session->set('credentials', $credentials);
 
         if ($request->isXmlHttpRequest()) {
             $response = new Response(json_encode(['success' => true]));

@@ -27,3 +27,4 @@
 /bin/sphinx/*
 /composer.lock
 /yarn.lock
+/front/*

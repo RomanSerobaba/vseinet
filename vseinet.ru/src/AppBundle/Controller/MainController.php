@@ -24,6 +24,7 @@ class MainController extends Controller
      */
     public function indexAction()
     {
+        // print_r($this->getUser());exit;
         return $this->render('Main/index.html.twig');
     }
 

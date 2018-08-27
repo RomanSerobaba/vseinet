@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <title>Админка / Интернет-магазин "Vseinet.ru"</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            document.addEventListener('DOMContentLoaded', function(e) {
+                var auth = {
+                    accessToken: '"{{ accessToken|raw }}"',
+                    csrfToken: '"{{ csrfToken|raw }}"',
+                    expiresAt: ({{ expiresIn }} - 10)*1000 + Date.now(),
+                    isAuthorized: true
+                };
+                localStorage.setItem('persist:auth', JSON.stringify(auth));
+
+                var user = {{ user|json_encode|raw }};
+                user.person = JSON.stringify(user.person);
+                localStorage.setItem('persist:user', JSON.stringify(user));
+
+                setTimeout(function() {
+                    window.location = '{{ targetUrl|raw }}';
+                }, 4);
+            });
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

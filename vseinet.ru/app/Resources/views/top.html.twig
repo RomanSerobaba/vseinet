@@ -8,23 +8,28 @@
     {{ render(controller('AppBundle:Cart:getInfo')) }}
     {{ render(controller('AppBundle:Favorite:getInfo')) }}
     <a href="{{ path('order_status_check') }}" class="status" data-popup="Status">Статус заказа</a>
-    {% if app.userIsEmployee %}
-        {% if not app.user.isFired and (not app.user.ipAddress or not app.user.ipAddress == app.request.clientIp) %}
-            <a  {# brocken url #}
-                href="/org/clockin?action={% if app.user.clockInTime %}rest{% else %}work{% endif %}" 
-                onclick="if(!confirm('Выполнить {% if app.user.clockInTime %}выход{% else %}вход{% endif %}?'))return false" 
+    {% if app.userIsEmployee and not app.user.isFired %}
+        {% if not app.user.ipAddress or app.user.ipAddress != app.request.clientIp %}
+            <a  
+                href="{{ path('clockin') }}" 
                 id="clock-in-out" 
                 class="{% if app.user.clockInTime %}work{% else %}rest{% endif %}"
                 title="{% if app.user.clockInTime %}{{ app.user.clockInTime|date('%H:%M') }}{% endif %}"
             >
             </a>
-            {% if app.user.isContenter %}
-                {# brocken url #}
-                <a href="/content/stats/full" class="employee-statistics">Статистика</a>   
-                {# brocken url #}
-            {% else %}  
-                <a href="/admin/org/lockscreen" class="employee-cabinet" title="Личный кабинет сотрудника">ЛК сотрудника</a>
-            {% endif %}
+        {% endif %}
+        {% if app.user.isContenter %}
+            {# brocken url #}
+            <a href="/content/stats/full" class="employee-statistics">Статистика</a>   
+            {# brocken url #}
+        {% else %}  
+            <a 
+                href="{{ path('authority', { targetUrl: '/admin/employees/employee/' ~ app.user.id ~ '/personalData' }) }}" 
+                class="employee-cabinet" 
+                title="Личный кабинет сотрудника"
+            >
+                ЛК сотрудника
+            </a>
         {% endif %}
     {% endif %}
 </nav>
