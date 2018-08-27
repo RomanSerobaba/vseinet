@@ -9,13 +9,15 @@
                 var auth = {
                     accessToken: '"{{ accessToken|raw }}"',
                     csrfToken: '"{{ csrfToken|raw }}"',
-                    expiresAt: ({{ expiresIn }} - 10)*1000 + Date.now(),
-                    isAuthorized: true
+                    expiresAt: JSON.stringify(({{ expiresIn }} - 10)*1000 + Date.now()),
+                    isAuthorized: "true"
                 };
                 localStorage.setItem('persist:auth', JSON.stringify(auth));
 
                 var user = {{ user|json_encode|raw }};
-                user.person = JSON.stringify(user.person);
+                for (var key in user) {
+                    user[key] = JSON.stringify(user[key]);
+                }
                 localStorage.setItem('persist:user', JSON.stringify(user));
 
                 setTimeout(function() {
