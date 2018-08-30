@@ -6,19 +6,5 @@
 
 {% block content %}
     <h1>Оформление заказа</h1>
-    <div id="Order" class="w60p">
-    <fieldset class="block">
-        <div class="wrapper">
-            <h2>Заказ на</h2>
-            {% for typeCode, typeLabel in choicesTypes %}
-                <div class="row v">
-                    <label for="type_{{ typeCode }}">
-                        {{ typeLabel }}
-                        <input type="radio" id="type_{{ typeCode }}" name="type" value="{{ typeCode }}"{% if (typeCode == currentType)  %} checked="checked"{% endif %} />
-                    </label>
-                </div>
-            {% endfor %}
-        </div>
-    </fieldset></div>
-    {% include 'Order/creation_ajax.html.twig' %}
+    {% include ['Order/', currentType, '_creation_ajax.html.twig']|join with { form: form } only %}
 {% endblock %}

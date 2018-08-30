@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
+use AppBundle\Enum\OrderType;
 use AppBundle\Bus\Order\{ Command, Query, Form };
 
 class OrderController extends Controller
@@ -108,23 +109,8 @@ class OrderController extends Controller
         //         ]);
         //     }
         // }
-        if ($this->getUserIsEmployee()) {
-            $types = [
-                'natural' => 'На физ. лицо',
-                'legal' => 'На юр. лицо',
-                'retail' => 'Продажа с магазина',
-                'resupply' => 'Пополнение складских запасов',
-                'consumables' => 'Расходные материалы',
-                'equipment' => 'Оборудование',
-            ];
-        } else {
-            $types = [
-                'natural' => 'На физ. лицо',
-                'legal' => 'На юр. лицо',
-            ];
-        }
 
-        $type = $request->query->get('type') ?? key($types);
+        $type = $request->query->get('type') ?? OrderType::NATURAL;
 
         $command = new Command\CreateCommand();
         $command->typeCode = $type;
@@ -133,6 +119,7 @@ class OrderController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'html' => $this->renderView('Order/' . $type . '_creation_ajax.html.twig', [
+                    'form' => $form->createView(),
                 ]),
             ]);
         }
@@ -140,7 +127,6 @@ class OrderController extends Controller
         return $this->render('Order/creation.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
-            'choicesTypes' => $types,
             'currentType' => $type,
         ]);
         

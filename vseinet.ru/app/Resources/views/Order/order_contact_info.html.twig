@@ -1,0 +1,101 @@
+<fieldset class="block">
+    <div class="wrapper">
+        <h2>Контактная информация</h2>
+            <div class="row h{% if form.lfs.vars.errors %} error{% endif %}" style="position: relative">
+                {{ form_label(form.lfs, 'Ф.И.О.*:') }}
+                {{ form_widget(form.lfs, { attr: { class: 'txt', placeholder: 'Фамилия Имя Отчество' }}) }}
+                <span id="lfsHelp" onclick="$('#create_form_lfs').focus()">Фамилия Имя Отчество</span>
+                <span class="status"></span>
+                {% if form.lfs.vars.errors is not defined %}
+                    <div class="error">{{ form.lfs.vars.errors.0 }}</div>
+                {% endif %}
+                {# 
+                <div class="notice fio"{if $form->getData('registration') || $form->getData('need_passport')} style="display: none;"{/if}>Достаточно указать имя.</div>
+                {if $form->getData('customer') == 'client'}
+                    <div>
+                    {$form->hidden('user_id')}
+                    </div>
+                {/if} #}
+            </div>
+                {# 
+                <div class="row h position">
+                    {$form->label('position', 'Должность:', false)}
+                    {$form->text('position', ['class' => 'txt position'])}
+                </div>
+                <div class="row h{if $errors.phone|default:0} error{/if}">
+                    {$form->label('phone', 'Телефон:', true)}
+                    {$form->input('tel', 'phone', ['class' => 'txt phone'])}
+                    <span class="status"></span>
+                    {if $errors.phone|default:0}
+                        <div class="error">{$errors.phone.0}</div>
+                    {/if}
+                    <div class="notice"><b>Внимание!</b> Вам необходимо указать федеральный номер, чтобы получать информацию о статусе и сроках доставки вашего заказа. Пример: +7 (963) 100&ndash;44&ndash;55.</div>
+                </div>
+                <div class="row h">
+                    {$form->label('additional_phones', 'Альтернативные телефонные номера:')}
+                    {$form->textarea('additional_phones', ['class' => 'txt', 'rows' => 1])}
+                    <span class="status"></span>
+                    <div class="notice">Поле заполняется в случае отсутствия мобильного телефона или при желании оставить запасные номера.</div>
+                </div>
+                {if Model::factory('User')->is('ORDER_FOR_SALES_CREATION')}
+                    <div class="row h">
+                        {$form->hidden('need_call', ['value' => 'need_call_false'])}
+                        {$form->checkbox('need_prepay') assign=checkbox}
+                        {$form->label($checkbox, 'Требуется предоплата', false, ['class' => 'inline need_prepay'])}
+                    </div>
+                {/if}
+                <div class="row h{if $errors.email|default:0} error{/if}">
+                    {if $is_city_available==0 || $form->getData('registration')}
+                        {$form->label('email', 'Эл. почта:', true)}
+                    {else}
+                        {$form->label('email', 'Эл. почта:')}
+                    {/if}
+                    {if $form->getCustomer() == 'guest'}
+                        {$form->text('email', ['class' => 'txt'])}
+                    {else}
+                        {$form->text('email', ['class' => 'txt', 'readonly' => 'readonly'])}
+                    {/if}
+                    <span class="status"></span>
+                    {if $errors.email|default:0}
+                        <div class="error">{$errors.email.0}</div>
+                    {/if}
+                    <div class="notice">На этот адрес мы будет высылать уведомления о вашем заказе.</div>
+                </div>
+                <div class="row h" style="padding-top:0">
+                    {$form->checkbox('is_subscribed') assign=checkbox}
+                    {$form->label($checkbox, 'Получать уведомления о сезонных распродажах', false, ['class' => 'inline notice'])}
+                </div>
+                {if ! $user}
+                    <div class="row h">
+                        {$form->checkbox('registration') assign=checkbox}
+                        {$form->label($checkbox, 'Я хочу зарегистрироваться на сайте', false, ['class' => 'inline'])}
+                    </div>
+                    <div{if ! $form->getData('registration')} style="display:none"{/if}>
+                        <div class="row h{if $errors.sex|default:0} error{/if}">
+                                <div class="col w150">
+                                {$form->label('sex', 'Пол:', true)}
+                                </div>
+                                <div class="col w100">
+                                {$form->radiobox('sex', 'male') assign=radiobox}
+                                {$form->label($radiobox, 'муж.', false)}
+                                </div>
+                                {$form->radiobox('sex', 'female') assign=radiobox}
+                                {$form->label($radiobox, 'жен.', false)}
+                                <span class="status"></span>
+                                {if $errors.sex|default:0}
+                                        <div class="error">{$errors.sex.0}</div>
+                                {/if}
+                        </div>
+                        <div class="row h">
+                            {$form->label('password', 'Пароль:', true)}
+                            {$form->password('password', ['class' => 'txt'])}
+                        </div>
+                        <div class="row h">
+                            {$form->label('password_confirm', 'Повторите пароль:', true)}
+                            {$form->password('password_confirm', ['class' => 'txt'])}
+                        </div>
+                    </div>
+                {/if}
+                <label class="inline"><b>*</b> — поля обязательные для заполнения</label> #}
+    </div>
+</fieldset>

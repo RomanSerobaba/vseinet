@@ -1,52 +1,52 @@
 /* order
 -------------------------------------------------------------------*/
-	#Order .note {
+	#order-creation-form .note {
 		font-size: 13px;
 		margin: 0 0 25px;
 	}
-		#Order .note SPAN {
+		#order-creation-form .note SPAN {
 			padding-left: 15px;
 		}
-		#Order .block .note {
+		#order-creation-form .block .note {
 			margin: 0;
 			padding-left: 150px;
 		}
-	#Order .notice2 {
+	#order-creation-form .notice2 {
 		color: #666;
 		font-size: 13px;
 		line-height: 15px;
 		padding-left: 25px;
 	}
-	#Order .address, #Order .passport {
+	#order-creation-form .address, #order-creation-form .passport {
 		border-top: 1px dashed #dcdcde;
 	}
 
-	#Order .info {
+	#order-creation-form .info {
 		font-size: 14px;
 		margin: 0 0 36px;
 	}
-		#Order .info STRONG {
+		#order-creation-form .info STRONG {
 			white-space: nowrap;
 		}
-	#Order .name > DIV {
+	#order-creation-form .name > DIV {
 		width: 87%;
 	}
-	#Order .name .txt {
+	#order-creation-form .name .txt {
 		width: 70%;
 	}
-	#Order .name .r {
+	#order-creation-form .name .r {
 		float: right;
 		width: 50%;
 	}
-		#Order .name .r LABEL {
+		#order-creation-form .name .r LABEL {
 			margin-left: -20px;
 			width: auto;
 		}
-		#Order .name .r .txt {
+		#order-creation-form .name .r .txt {
 			float: right;
 		}
         #Product_Application #nameHelp,
-        #Order #lfsHelp {
+        #order-creation-form #lfsHelp {
             position: absolute; 
             color: #A9A9A9; 
             font-weight: 700; 
@@ -92,43 +92,13 @@
 		font-size: 13px;
 		padding-left: 35px;
 	}
-
-#Order .order_txt_info{
-	padding: 20px 30px 30px;
-	background: #f5f5f5;
-	border: 1px solid #dcdcde;
-	border-radius: 6px;
-	margin-bottom: 30px;
-}
-#Order .order_txt_info h3{
-	font-size: 14px;
-	margin-bottom: 25px;
-}
-#Order .order_txt_info .change_info{
-	float: right;
-	margin-top: -50px;
-}
-#Order .order_txt_info p{
-	line-height: 1.8;
-}
-#Order .order_txt_info p span.title{
-	display: block;
-	min-width: 180px;
-	float: left;
-}
-#Order .order_txt_info p span.info{
-	font-weight: 700;
-	display: block;
-	overflow: hidden;
-	margin-bottom: 0;
-}
-#Order fieldset.block.gray{
+#order-creation-form fieldset.block.gray{
 		background: #fff;
 }
-#Order fieldset .wrapper{
+#order-creation-form fieldset .wrapper{
 	padding-top: 0;
 }
-#Order fieldset .wrapper h2{
+#order-creation-form fieldset .wrapper h2{
 	font-size: 14px;
 	padding-top: 20px;
 	padding-bottom: 20px;
@@ -139,12 +109,12 @@
 	border-radius: 6px 6px 0 0;
 }
 
-#Order fieldset.block{
-	display: none;
-}
-#Order fieldset.block .row{
+#order-creation-form fieldset.block .row{
 	margin-left: 0;
 	margin-right: 0;
+}
+#order-creation-form fieldset .row{
+	padding-bottom: 12px;
 }
 #favorite .cart-table .row{
 	clear: both;

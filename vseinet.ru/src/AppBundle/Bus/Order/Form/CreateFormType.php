@@ -5,10 +5,11 @@ namespace AppBundle\Bus\Order\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ ChoiceType, SubmitType, TextareaType };
+use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, SubmitType, TextareaType };
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Bus\User\Form\{ UserDataType, IsHumanType };
 use AppBundle\Bus\Order\Command\CreateCommand;
+use AppBundle\Enum\OrderType;
 
 class CreateFormType extends AbstractType
 {
@@ -26,22 +27,6 @@ class CreateFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // $stmt = $this->em->getConnection()->query("
-        //     SELECT p.firstname
-        //     FROM person AS p
-        //     INNER JOIN \"user\" AS u ON u.person_id = p.id 
-        //     INNER JOIN org_employee AS oe ON oe.user_id = u.id 
-        //     WHERE LENGTH(p.firstname) > 0 AND p.firstname NOT LIKE '%Test%' AND EXISTS (
-        //         SELECT 1 
-        //         FROM org_employment_history 
-        //         WHERE org_employee_user_id = oe.user_id AND fired_at IS NULL
-        //     ) 
-        //     GROUP BY p.firstname
-        //     ORDER BY p.firstname
-        // ");
-        // $managers = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-        // $choicesManagers = array_combine($managers, $managers);
-
-        // $stmt = $this->em->getConnection()->query("
         //     SELECT c.value 
         //     FROM contact AS c 
         //     INNER JOIN org_contact AS oc ON oc.contact_id = c.id 
@@ -58,10 +43,9 @@ class CreateFormType extends AbstractType
         // $choicesPhones = array_combine($phones, $phones);
 
         $builder
-            // ->add('type', ChoiceType::class, ['choices' => array_flip(ComplaintType::getChoices())])
-            // ->add('managerName', ChoiceType::class, ['choices' => $choicesManagers, 'required' => false, 'placeholder' => 'не помню'])
+            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices()),])
+            ->add('lfs', TextType::class)
             // ->add('managerPhone', ChoiceType::class, ['choices' => $choicesPhones, 'required' => false, 'placeholder' => 'не помню'])
-            // ->add('text', TextareaType::class)
             // ->add('userData', UserDataType::class)
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class)
