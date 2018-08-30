@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Bus\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Order\{ Command, Query, Form };
@@ -10,47 +11,53 @@ use AppBundle\Bus\Order\{ Command, Query, Form };
 class OrderController extends Controller
 {
     /**
-     * @internal order status form.
+     * @VIA\Route(
+     *     name="order_status",
+     *     path="/order/status/",
+     *     methods={"GET", "POST"}
+     * )
      */
-    public function statusFormAction()
+    public function statusAction(Request $request)
     {
-        if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
+        $query = new Query\GetStatusQuery();
+        $form = $this->createForm(Form\GetStatusFormType::class, $query);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('query_bus')->handle($query, $orderItems);
+
+                    if ($request->isXmlHttpRequest()) {
+                        return $this->json([
+                            'status' => $status,
+                        ]);
+                    }
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessages());
+                }
+            }
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'errors' => $this->getFormErrors($form),
+                ]);
+            }   
         }
 
-        $status = new Form\OrderStatus();
-        $form = $this->createForm(Form\OrderStatusType::class, $status); 
-
-        return $this->render('AppBundle:Order:status_form.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @VIA\Post(name="order_status_check", path="orders/status")
-     */
-    public function checkStatusAction()
-    {
-        $status = new Form\OrderStatus();
-        $form = $this->createForm(Form\OrderStatusType::class, $status);
-        $form->handleRequest($this->get('request_stack')->getCurrentRequest());
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            //return $this->redirectToRoute('task_success');
-
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Order/status_form.html.twig', [
+                    'form' => $form->createView(),
+                ]),
+            ]);
         }
 
-        return $this->render('AppBundle:Order:status_form.html.twig', [
+        return $this->render('Order/status_tracker.html.twig', [
             'form' => $form->createView(),
+            'errors' => $this->getFormErrors($form),
         ]);
-    }
-
-    /**
-     * @VIA\Get(name="order_status_page", path="/orders/status/")
-     */
-    public function statusPageAction()
-    {
-        
     }
 
     /**

@@ -1,0 +1,17 @@
+{% extends "layout.html.twig" %}
+
+{% block pageDescription %}
+    Проверка статуса заказа
+{% endblock %}
+
+{% block content %}
+<h1>Проверить статус заказа</h1>
+<div class="block gray w40p">
+    <div class="wrapper">
+        {% include 'Order/status_form.html.twig' %}
+    </div>
+</div>
+
+<div class="status_tracker">
+</div>
+{% endblock %}

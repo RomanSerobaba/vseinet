@@ -18,7 +18,7 @@ class EditType extends AbstractType
             ->add('lastname', TextType::class)
             ->add('firstname', TextType::class)
             ->add('secondname', TextType::class, ['required' => false])
-            ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => PersonGender::getChoices()])
+            ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => array_flip(PersonGender::getChoices())])
             ->add('birthday', DateType::class, [
                 'required' => false, 
                 'widget' => 'single_text', 

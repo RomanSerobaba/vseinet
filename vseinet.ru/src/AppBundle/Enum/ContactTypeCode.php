@@ -14,17 +14,17 @@ class ContactTypeCode
     public static function getChoices()
     {
         return [
-            'Мобильный телефон' => self::MOBILE,
-            'Телефон' => self::PHONE,
-            'Email' => self::EMAIL,
-            'Skype' => self::SKYPE,
-            'ICQ' => self::ICQ,
+            self::MOBILE => 'Мобильный телефон',
+            self::PHONE => 'Телефон',
+            self::EMAIL => 'Email',
+            self::SKYPE => 'Skype',
+            self::ICQ => 'ICQ',
         ];
     }
 
     public static function getTitle($value)
     {
-        $choices = array_flip(self::getChoices());
+        $choices = self::getChoices();
 
         return isset($choices[$value]) ? $choices[$value] : '';
     }

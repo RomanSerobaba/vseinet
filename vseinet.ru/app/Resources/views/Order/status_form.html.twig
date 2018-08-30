@@ -1,33 +1,36 @@
-{{ form_start(form, { attr: { class: 'popup', title: 'Проверить заказ', 'data-class': 'popup-status', id: 'Status' }}) }}
-    <div class="request">
-        <p>Введите{% if isGranted('ORDER_CHECKING_BY_CONTACT_INFO') %} номер вашего мобильного телефона указанного при оформлении заказа или{% endif %} номер заказа</p>
-        <div class="row">
-            {% if isGranted('ORDER_CHECKING_BY_CONTACT_INFO')  %}
-                {{ form_label(form.number, 'Номер заказа, телефон или имя:') }}
-            {% else %}
-                {{ form_label(form.number, 'Номер заказа:') }}
-            {% endif %}
-            {{ form_widget(form.number, { attr: { class: 'txt' }}) }}
-        </div>
-        <div class="row">
-            {{ form_widget(form.submit, { label: 'Проверить статус', attr: { class: 'bttn blue' }}) }}
-        </div>
-        {% if app.user is null %}
-            <div class="row linker">
-                или <a href="{{ path('login') }}" data-popup="Login">войдите</a> на сайт и проверьте статус в истории заказов
-            </div>
-        {% endif %}
+{{ form_start(form, { action: path('order_status'), attr: { title: 'Проверить заказ', id: 'order-status-form' }}) }}
+
+<div class="request">
+    <div class="row{% if errors.number is defined %} error{% endif %}">
+        {{ form_label(form.number, 'Номер заказа:') }}
+        {{ form_widget(form.number, { attr: { class: 'txt' }}) }}
+        <span class="status"></span>
+        {% if errors.number is defined %}<div class="error">{{ errors.number.0 }}</div>{% endif %} 
     </div>
-    <div class="response">
-        <div class="row">
-        </div>
-        <div class="row">
-            {{ form_widget(form.submit, { label: 'Подробнее', attr: { class: 'bttn blue' }}) }}
-        </div>
-        <div class="row center">
-            <a href="javascript:void(0)" class="reset">Проверить другой заказ</a>
-        </div>
+    
+    <div class="row">
+        {{ form_widget(form.submit, { label: 'Проверить статус', attr: { class: 'bttn blue' }}) }}
+        {{ form_widget(form._token) }}
     </div>
-    <div class="row loading">
+    
+    {% if app.user is null %}
+        <div class="row linker">
+            или <a href="{{ path('login') }}" data-popup="Login">войдите</a> на сайт и проверьте статус в истории заказов
+        </div>
+    {% endif %}
+</div>
+
+<div class="response hidden">
+    <div class="row">
     </div>
-{{ form_end(form) }}
+    <div class="row">
+        {{ form_widget(form.submit, { label: 'Подробнее', attr: { class: 'bttn blue' }}) }}
+    </div>
+    <div class="row center">
+        <a href="javascript:void(0)" class="reset">Проверить другой заказ</a>
+    </div>
+</div>
+
+<div class="row loading hidden"></div>
+
+{{ form_end(form, { render_rest: false }) }}

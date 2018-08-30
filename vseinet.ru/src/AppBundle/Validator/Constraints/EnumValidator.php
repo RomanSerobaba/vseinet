@@ -28,6 +28,32 @@ class EnumValidator extends ConstraintValidator
 
         $reflector = new \ReflectionClass($constraint->ref);
         $constants = $reflector->getConstants();
+
+        if ($constraint->choices) {
+            if (is_string($constraint->choices)) {
+                $getter = 'get'.str_replace('_', '', ucwords($constraint->choices, '_'));
+                $choices = call_user_func([$constraint->ref, $getter]);
+                if (!is_array($choices)) {
+                    throw new ConstraintDefinitionException(
+                        sprintf('Method "%s::%s" should be returns an array', $constraint->ref, $getter)
+                    );
+                }
+            } elseif (is_array($constraint->choices)) {
+                $choices = $constraint->choices;
+            } else {
+                throw new ConstraintDefinitionException('Property "choices" must be an array or function on constraint Enum');
+            }
+            
+            $invalid = array_diff($choices, $constants);
+            if ($invalid) {
+                throw new ConstraintDefinitionException(
+                    sprintf('Constants [%s] not found in class "%s"', implode(', ', $invalid), $constraint->ref)
+                );
+            }
+
+            $constants = array_intersect($constants, $choices);
+        }
+
         if (!in_array($value, $constants, $constraint->strict)) {
             $this->context->buildViolation($constraint->message)->addViolation();
             

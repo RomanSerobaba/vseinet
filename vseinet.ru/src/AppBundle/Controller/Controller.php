@@ -18,7 +18,7 @@ class Controller extends BaseController
     protected function getFormErrors(FormInterface $form)
     {
         $errors = [];
-        $this->getFormErrorsRecursive($form, $form->getName(), $errors);
+        $this->getFormErrorsRecursive($form, '', $errors);
 
         return $errors;
     }
@@ -28,9 +28,9 @@ class Controller extends BaseController
         foreach ($form->all() as $child) {
             if ($child->isSubmitted() && !$child->isValid()) {
                 foreach ($child->getErrors() as $error) {
-                    $errors[$prefix.'_'.$child->getName()][] = $error->getMessage();
+                    $errors[$prefix.$child->getName()][] = $error->getMessage();
                 }
-                $this->getFormErrorsRecursive($child, $prefix.'_'.$child->getName(), $errors);
+                $this->getFormErrorsRecursive($child, $prefix.$child->getName().'_', $errors);
             }
         }
     }

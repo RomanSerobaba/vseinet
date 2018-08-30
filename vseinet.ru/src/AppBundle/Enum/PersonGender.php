@@ -10,14 +10,14 @@ class PersonGender
     public static function getChoices()
     {
         return [
-            'мужской' => self::MALE,
-            'женский' => self::FEMALE,
+            self::MALE => 'мужской',
+            self::FEMALE => 'женский',
         ];
     }
 
     public static function getTitle($value)
     {
-        $choices = array_flip(self::getChoices());
+        $choices = self::getChoices();
         
         return isset($choices[$value]) ? $choices[$value] : '';
     }

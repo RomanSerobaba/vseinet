@@ -40,3 +40,7 @@ parameters:
     catalog.page_limit: 25
 
     profiler.only_exceptions: false
+
+    api.host: 'https://dev.vseinet.ru'
+    api.public_id: '10_2dn1xykyvjwgs4ok00wk888sgc0sg8skww0kwkswsswgk0kso8'
+    api.secret: '24v1kfg5asu88g4k88wc408gc8g0osccokwcc8sc0kkc8cwkgo'

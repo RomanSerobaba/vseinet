@@ -15,7 +15,7 @@ class RegistrType extends AbstractType
             ->add('lastname', TextType::class)
             ->add('firstname', TextType::class)
             ->add('secondname', TextType::class, ['required' => false])
-            ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => PersonGender::getChoices()])
+            ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => array_flip(PersonGender::getChoices())])
             ->add('birthday', TextType::class, ['required' => false])
             ->add('city', TextType::class)
             ->add('mobile', TextType::class, ['required' => false])

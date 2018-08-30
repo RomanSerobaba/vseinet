@@ -19,7 +19,8 @@ class AdminController extends Controller
     /**
      * @VIA\Get(
      *     name="admin",
-     *     path="/admin/"
+     *     path="/admin/",
+     *     description="Stab for Admin page on localhost"
      * )
      */
     public function adminAction()
@@ -47,10 +48,11 @@ class AdminController extends Controller
 
         $factory = $this->container->get('httplug.message_factory');
         $client = $this->container->get('httplug.client.guzzle');
+        $apiHost = $this->getParameter('api.host');
 
         $headers = ['Content-Type' => 'application/json'];
 
-        $apiRequest = $factory->createRequest('GET', self::API.'/user/request/', $headers);
+        $apiRequest = $factory->createRequest('GET', $apiHost.'/user/request/', $headers);
         $apiResponse = $client->sendRequest($apiRequest);
         if (200 !== $apiResponse->getStatusCode()) {
             throw new BadRequestHttpException();
@@ -68,7 +70,7 @@ class AdminController extends Controller
         $credentials = $this->get('session')->get('credentials', []);
         $body = json_encode($credentials + ['clientId' => 1]);
 
-        $apiRequest = $cookies->withCookieHeader($factory->createRequest('POST', self::API.'/user/login/', $headers, $body));
+        $apiRequest = $cookies->withCookieHeader($factory->createRequest('POST', $apiHost.'/user/login/', $headers, $body));
         $apiResponse = $client->sendRequest($apiRequest);
         if (200 !== $apiResponse->getStatusCode()) {
             throw new BadRequestHttpException();
@@ -77,7 +79,7 @@ class AdminController extends Controller
         $data = json_decode($apiResponse->getBody()->getContents(), true);
         $data['expiresAt'] = new \DateTime(sprintf('+%d seconds', $data['expiresIn'] - 10));
 
-        $this->get('session')->set('api_authority_data', $data);        
+        $this->get('session')->set('api.authority_data', $data);        
 
         return $this->render('Admin/authority.html.twig', $data + ['targetUrl' => $targetUrl, 'csrfToken' => $csrfToken]);
     }
@@ -100,8 +102,9 @@ class AdminController extends Controller
 
         $factory = $this->container->get('httplug.message_factory');
         $client = $this->container->get('httplug.client.guzzle');
+        $apiHost = $this->getParameter('api.host');
 
-        $url = sprintf('%s/api/v1/work/%s/', self::API, null === $user->clockInTime ? 'start' : 'stop');
+        $url = sprintf('%s/api/v1/work/%s/', $apiHost, null === $user->clockInTime ? 'start' : 'stop');
         $headers['Authorization'] = 'Bearer '.$auth['accessToken'];
 
         $apiRequest = $factory->createRequest('PUT', $url, $headers);
@@ -117,7 +120,7 @@ class AdminController extends Controller
 
     protected function getAuth()
     {
-        $auth = $this->get('session')->get('api_authority_data');
+        $auth = $this->get('session')->get('api.authority_data');
         if (null !== $auth && $auth['expiresAt'] > new \DateTime()) {
             return $auth;
         }

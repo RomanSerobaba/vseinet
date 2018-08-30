@@ -6,4 +6,4 @@ httplug:
             factory: 'httplug.factory.guzzle6'
             plugins: [ 'httplug.plugin.logger' ]
             config:
-                timeout: 2
+                timeout: 30

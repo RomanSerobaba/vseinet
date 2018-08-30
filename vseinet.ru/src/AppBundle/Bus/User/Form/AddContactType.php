@@ -18,7 +18,7 @@ class AddContactType extends AbstractType
             ;
         } else {
             $builder
-                ->add('typeCode', ChoiceType::class, ['required' => true, 'choices' => ContactTypeCode::getChoices()])
+                ->add('typeCode', ChoiceType::class, ['choices' => array_flip(ContactTypeCode::getChoices())])
             ;
         }
         $builder

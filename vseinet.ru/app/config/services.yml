@@ -1,8 +1,3 @@
-# Learn more about services, parameters and containers at
-# https://symfony.com/doc/current/service_container.html
-parameters:
-    #parameter_name: value
-
 services:
     user.provider:
         class: 'AppBundle\Security\UserProvider'
@@ -24,6 +19,11 @@ services:
         class: 'AppBundle\Security\AuthenticationHandler'
         public: false
         arguments: [ '@router', '@session' ]
+
+    api.client:
+        class: 'AppBundle\Security\ApiClient'
+        arguments: [ '%api.host%', '%api.public_id%', '%api.secret%', '@session', '@httplug.message_factory', '@httplug.client.guzzle' ]
+        public: true
 
     geo_city.identity:
         class: 'AppBundle\Service\GeoCityIdentity'
