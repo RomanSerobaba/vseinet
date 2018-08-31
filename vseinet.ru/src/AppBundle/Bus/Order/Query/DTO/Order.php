@@ -3,6 +3,7 @@
 namespace AppBundle\Bus\Order\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Enum\OrderItemStatus;
 
 class Order
 {
@@ -43,7 +44,14 @@ class Order
                 $item['baseProductId'], 
                 $item['retailPrice']
             );
-            $this->amount += $item['quantity'] * $item['retailPrice'];
+            switch ($item['statusCode']) {
+                case OrderItemStatus::ANNULLED:
+                case OrderItemStatus::CANCELED:
+                    break;
+
+                default:
+                    $this->amount += $item['quantity'] * $item['retailPrice'];
+            }
         }
     }
 }
