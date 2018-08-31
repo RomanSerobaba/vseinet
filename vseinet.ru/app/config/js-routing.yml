@@ -9,3 +9,4 @@ fos_js_routing:
         - 'select_geo_city'
         - 'search_geo_city'
         - 'error_report'
+        - 'order_status'

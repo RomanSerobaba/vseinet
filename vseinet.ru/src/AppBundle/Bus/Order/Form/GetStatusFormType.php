@@ -16,6 +16,7 @@ class GetStatusFormType extends AbstractType
         $builder
             ->add('number', IntegerType::class)
             ->add('submit', SubmitType::class)
+            ->add('tracker', SubmitType::class)
         ;
     }
 

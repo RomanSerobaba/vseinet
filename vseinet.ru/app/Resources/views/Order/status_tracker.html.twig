@@ -12,6 +12,71 @@
     </div>
 </div>
 
-<div class="status_tracker">
-</div>
+{% if order is not null %}
+    <div class="status_tracker">
+        <h4>
+            <span class="price" title="Указана сумма всех неотмененных позиций">
+                на сумму {{ order.amount|price_format }} <span class="RUR">Р</span>
+            </span>
+            Заказ №{{ order.id }} от {{ order.createdAt|date('d.m.Y') }}
+            {# if $curr.can_payed && 7 == $curr.payment_type_id} <a data-popup="Sberbank-{$curr.id}" href="javascript:void(0)" target="_blank" style="margin-left:15px;" class="bttn green">Оплатить</a>{/if}{if 7 == $curr.payment_type_id && $curr.prepay}<span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {$curr.prepay|@price_format} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>{/if#}
+        </h4>
+        {% for item in order.items %}
+            <div class="position">
+                <div class="product">
+                    <span class="price">
+                        <strong>{{ item.quantity }}</strong> 
+                        по цене 
+                        <strong>{{ item.retailPrice|price_format }}</strong> <span class="RUR">Р</span>
+                    </span>
+                    <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">{{ item.productName }}</a>
+                </div>
+                {#foreach from=$curr1.price_changes item=change}
+                    <div class="product" style="overflow:hidden">
+                        <span class="price">
+                            +{$change.name} <strong>{$change.amount|@price_format}</strong> <span class="RUR">Р</span>
+                        </span>
+                    </div>
+                {/foreach#}
+                <table>
+                    <tr>
+                        {% for statusCode, isActive in item.tracker %}
+                            <th>{{ statuses[statusCode] }}</th>
+                        {% endfor %}  
+                        {% for i in [item.tracker|length..6] %}
+                            <th></th>
+                        {% endfor %}  
+                    </tr>
+                    <tr>
+                        {% for statusCode, isActive in item.tracker %}
+                            <td{% if isActive %} class="status-{{ statusCode }}"{% endif %}></td>
+                        {% endfor %}
+                        {% for i in [item.tracker|length..6] %}
+                            <td></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for statusCode, isActive in item.tracker %}
+                            <th>{% if statusCode == item.statusCode %}&uarr;{% endif %}</th>
+                        {% endfor %}
+                        {% for i in [item.tracker|length..6] %}
+                            <th></th>
+                        {% endfor %}
+                    </tr>
+                </table>
+                {#% if item.comment and (
+                    constant('AppBundle\\Enum\\OrderItemStatus::IN_TRANSIT') == item.statusCode or 
+                    constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') == item.statusCode) 
+                %}
+                    <p class="comment">Комментарий: <i>{{ item.comment }}</i></p>
+                {% endif %#}
+            </div>
+        {% endfor %}
+        {#if $curr.can_payed}
+            {assign var=order value="$curr"}
+            {include file='order/_sberbank_payment_form.tpl' form_class='popup'}
+        {/if#}
+        <p>* Внимание! Указанная дата прибытия является ожидаемой (приблизительной).</p>
+    </div>
+{% endif %}
 {% endblock %}

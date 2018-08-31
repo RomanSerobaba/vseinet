@@ -6,6 +6,7 @@ use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use AppBundle\Entity\ClientOrder;
+use AppBundle\Entity\OrderDoc;
 
 class GetStatusQueryHandler extends MessageHandler
 {
@@ -22,12 +23,15 @@ class GetStatusQueryHandler extends MessageHandler
 
         $api = $this->get('api.client');
         try {
-            return $api->get('/api/v1/orderItems/?orderIds[]='.$query->number);
-
+            $items = $api->get('/api/v1/orderItems/?orderIds[]='.$query->number);
         } catch (BadRequestHttpException $e) {
             throw new ValidationException([
                 'number' => $e->getMessage(),
             ]);
         }
+
+        $doc = $em->getRepository(OrderDoc::class)->findOneBy(['number' => $query->number]);
+
+        return new DTO\Order($order->getId(), $doc->getCreatedAt(), $items);
     }
 }

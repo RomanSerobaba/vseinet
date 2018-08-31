@@ -1,0 +1,9 @@
+<p>Статус заказа по номеру: <b>{{ order.id }}</b></p>
+{% for item in order.items %}
+    <div class="position">
+        {{ item.productName }} &ndash; <strong>{{ item.statusTitle }}</strong>
+    </div>
+{% endfor %}
+{% if more > 0 %}
+    <p>и еще {{ more }} {{ more|declension('позиция;позиции;позиций') }}</p>
+{% endif %}

@@ -7,6 +7,7 @@ use AppBundle\Bus\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Order\{ Command, Query, Form };
+use AppBundle\Enum\OrderItemStatus;
 
 class OrderController extends Controller
 {
@@ -26,11 +27,22 @@ class OrderController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('query_bus')->handle($query, $orderItems);
+                    $this->get('query_bus')->handle($query, $order);
 
                     if ($request->isXmlHttpRequest()) {
+                        $count = count($order->items);
+                        if (5 < $count) {
+                            $order->items = array_slice($order->items, 0, 5);
+                            $more = $count - 5;
+                        } else {
+                            $more = 0;
+                        }
+
                         return $this->json([
-                            'status' => $status,
+                            'html' => $this->renderView('Order/status.html.twig', [
+                                'order' => $order,
+                                'more' => $more, 
+                            ]),
                         ]);
                     }
 
@@ -57,6 +69,8 @@ class OrderController extends Controller
         return $this->render('Order/status_tracker.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
+            'order' => $order ?? null,
+            'statuses' => OrderItemStatus::getChoices(),
         ]);
     }
 
