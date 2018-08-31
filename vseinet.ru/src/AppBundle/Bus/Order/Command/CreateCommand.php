@@ -13,4 +13,9 @@ class CreateCommand extends Message
      * @VIC\Enum("AppBundle\Enum\OrderType")
      */
     public $typeCode;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $lfs;
 }
