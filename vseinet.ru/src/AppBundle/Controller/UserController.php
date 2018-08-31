@@ -114,30 +114,6 @@ class UserController extends Controller
         ]);    
     }
 
-
-    /**
-     * @VIA\Route(name="user_history", path="/user/history/", methods={"GET", "POST"})
-     * @todo: draft
-     */
-    public function historyAction(Request $request)
-    {
-        $this->checkIsAutorized();
-
-        $this->get('query_bus')->handle(new Query\GetHistoryQuery(), $history);
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('User/history_ajax.html.twig', [
-                    'history' => $history,
-                ]),
-            ]);
-        }
-
-        return $this->render('User/history.html.twig', [
-            'history' => $history,
-        ]);
-    }
-
     /**
      * @VIA\Route(
      *     name="user_contact_add", 

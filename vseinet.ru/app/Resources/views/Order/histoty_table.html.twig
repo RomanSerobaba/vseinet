@@ -1,0 +1,120 @@
+<div class="order-history block gray">
+    <div class="wrapper">
+        <div class="column">
+            <h2>
+                Заказ № 
+                {% if app.userIsEmployee %}
+                    <a href="{{ path('authority', { targetUrl: '/admin/orders?id=' ~ order.id })}}" target="_blank">{{ order.id }}</a>
+                {% else %}
+                    {{ order.id }}
+                {% endif %}
+                <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+            </h2>
+            <dl>
+                <dt>Фамилия и имя:</dt><dd>{{ order.username }}</dd>
+                {% for contact in order.contacts %}
+                    <dt>{{ contact.typeCodeTitle }}</dt>
+                    {% if contact.isPhone %}
+                        <dd>{{ contact.value|phone_format }}</dd>
+                    {% else %}
+                        <dd>{{ contact.value }}</dd>
+                    {% endif %}
+                {% endfor %}
+                <dt>Адрес:</dt><dd>{{ order.address }}</dd>
+            </dl>
+        </div>
+        <div class="column">
+            <h2>&nbsp;</h2>
+            <dl>
+                <dt>Способ оплаты:</dt><dd>{{ order.paymentTypeName }}</dd>
+                {#% if order.discount %}
+                    <dt>Скидка:</dt>
+                    <dd>{{ order.discount|price_format }} <span class="RUR">Р</span></dd>
+                {% endif %#}
+            </dl>
+        </div>
+        <div class="column">
+            <h2>&nbsp;</h2>
+            {#<dl>
+                <dt>Способ доставки:</dt>
+                <dd>{$order.delivery_type}{if $order.delivery_type=='Курьерская' && $order.city_id==299} до проходной{/if}</dd>
+                {if $order.delivery_type=='Транспортная компания'}
+                    <dt>Название компании:</dt><dd>{$order.trading}</dd>
+                    {if $order.trading_code}
+                        <dt>Код груза:</dt><dd>{$order.trading_code}{if $order.trading_link}, <a href="{$order.trading_link}" onclick="window.open(this.href);return false;">проверить статус</a>{/if}</dd>
+                    {/if}
+                {elseif $order.delivery_type=='Почта России' && $order.trading_code}
+                    <dt>Код груза:</dt><dd>{$order.trading_code}</dd>
+                {elseif $order.delivery_type=='Курьерская' && $order.address}
+                    <dt>Адрес:</dt><dd>{$order.address}</dd>
+                {/if}
+            </dl>#}
+        </div>
+    </div>
+    <div class="wrapper white Cart" style="padding-left:25px;padding-right:25px;">
+        <table style="margin-bottom:0;width: 100%">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Товар</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td class="text">
+                            {#<img src="{{ item|image:60 }}" alt="" />#}
+                        </td>
+                        <td class="text">
+                            <h6>
+                                <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">
+                                    {{ item.productName }}
+                                </a>
+                            </h6>
+                            <p class="code" style="color:#999">Код товара: {{ item.baseProductId }}</p>
+                        </td>
+                        {% set cssclass = constant('AppBundle\\Enum\\Order::CANCELED') == item.statusCode ? ' CANCELED' : '' %}
+                        <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
+                        <td class="price{{ cssclass }}">{{ item.retailPrice|price_format }} <span class="RUR">Р</span></td>
+                        <td class="status">
+                            <span class="{{ item.status_code }}">{{ item.statusCodeTitle }}</span>
+                            {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)},<p class="code" style="color:#999">будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if} *</p>
+                            {/if#}
+                        </td>
+                    </tr>
+                    {#if $position.price_changes}
+                        {foreach from=$position.price_changes item=change}
+                            <tr>
+                                <td></td>
+                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
+                                <td></td>
+                                {if Model::factory('User')->isRole('USER_FRANCHISER')}
+                                    <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}"></td>
+                                    <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $position.client_price|default:0!=0}{$change.amount|price_format} <span class="RUR">Р</span>{if $position.status_code!='IS_CANCELED'}{assign var=amount value=$amount+$change.amount}{/if}{/if}</td>
+                                {else}
+                                    <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if !Model::factory('User')->isRole('USER_WHOLESALER')}{$change.amount|price_format} <span class="RUR">Р</span>{/if}</td>
+                                {/if}
+                                <td class="status">
+
+                                </td>
+                            </tr>
+                        {/foreach}
+                    {/if#}
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>Итого</strong></td>
+                    <td class="price" style="font-size: 24px;white-space: nowrap">
+                        {{ order.amount|price_format }} <span class="RUR">Р</span>
+                    </td>
+                    <td class="price" style="font-size: 24px;white-space: nowrap"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

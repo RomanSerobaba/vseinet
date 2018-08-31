@@ -1,0 +1,31 @@
+<div id="history">
+    {% if history is null %}
+        <p>У Вас еще нет истории заказов.</p>
+    {% else %}
+        {% if mode == 'light' %}
+            <table class="order-history-light-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+        {% endif %}    
+        {% for order in history.orders %}
+            {% if mode == 'list' %}
+                {% include 'Order/history_list.html.twig' %}
+            {% elseif mode == 'table' %}
+                {% include 'Order/history_table.html.twig' %}
+            {% elseif mode == 'light' %}
+                {% include 'Order/history_light.html.twig' %}
+            {% endif %}
+        {% endfor %}
+        {% if mode == 'light' %}
+            </table>
+        {% endif %}
+    {% endif %}
+</div>
+<p>* Внимание! Указанная дата прибытия является ожидаемой (приблизительной).</p>
+{% include 'Catalog/paging.html.twig' %}

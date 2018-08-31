@@ -1,0 +1,105 @@
+<tbody class="order-history order-history-light">
+    <tr class="wrapper block gray">
+        <td colspan="4">
+            <h2>
+                Заказ № 
+                {% if app.userIsEmployee %}
+                    <a href="{{ path('authority', { targetUrl: '/admin/orders/?id=' ~ order.id }) }}">{{ order.id }}</a>
+                {% else %}
+                    {{ order.id }}
+                {% endif %} 
+                <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+            </h2>
+            <span class="info">
+                Фамилия и имя: {{ order.username }}
+                {% for contact in order.contacts %}
+                    | {{ contact.typeCodeTitle }}
+                    {% if contact.isPhone %}
+                        {{ contact.value|phone_phormat }}
+                    {% else %}
+                        {{ contact.value }}
+                    {% endif %}
+                {% endfor %}
+            </span>
+            <span class="info">
+                Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
+                {#if $order.discount}
+                    Скидка: {$order.discount|price_format} <span class="RUR">Р</span>
+                {/if#}
+            </span>
+            <span class="info">
+                {#Доставка: {$order.delivery_type}{if $order.delivery_type=='Курьерская' && $order.city_id==299} до проходной{/if}
+                {if $order.delivery_type=='Транспортная компания'}
+                    Название компании: {$order.trading}
+                    {if $order.trading_code}
+                        Код груза: {$order.trading_code}{if $order.trading_link}, <a href="{$order.trading_link}" onclick="window.open(this.href);return false;">проверить статус</a>{/if}
+                    {/if}
+                {elseif $order.delivery_type=='Почта России' && $order.trading_code}
+                    Код груза: {$order.trading_code}
+                {elseif $order.delivery_type=='Курьерская' && $order.address}
+                    Адрес: {$order.address}
+                {/if#}
+            </span>
+        </td>
+    </tr>
+    {% for item in order.items %}
+        <tr>
+            <td class="text">
+                <h6>
+                    <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">
+                        {{ item.productName }}
+                    </a> 
+                    <span style="font-size:0.9em">код товара {{ item.baseProductId }}</span>
+                </h6>
+            </td>    
+            {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == ite,statusCode ? ' CANCELED' : '' %}
+            <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
+            <td class="price{{ cssclass }}" style="white-space: nowrap">
+                {{ item.retailPrice|price_format }} <span class="RUR">Р</span>
+            </td>
+            <td class="status">
+                {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)}
+                    <span title="будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if}" class="{$position.status_code}">{$position.status}     
+                        <span>*</span>
+                    </span>
+
+                {else#}
+                    <span class="{{ item.statusCode }}">{{ item.statusCodeTitle }}</span> 
+                {#/if#}
+            </td>
+        </tr>
+        {#if $position.price_changes}
+            {foreach from=$position.price_changes item=change}
+                <tr>
+                    <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
+                    <td></td>
+                    {if Model::factory('User')->isRole('USER_FRANCHISER')}
+                        <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}"></td>
+                        <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $position.client_price|default:0!=0}{$change.amount|price_format} <span class="RUR">Р</span>{if $position.status_code!='IS_CANCELED'}{assign var=amount value=$amount+$change.amount}{/if}{/if}</td>
+                    {else}
+                        <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if !Model::factory('User')->isRole('USER_WHOLESALER')}{$change.amount|price_format} <span class="RUR">Р</span>{/if}</td>
+                    {/if}
+                    <td class="status"></td>
+                </tr>
+            {/foreach}
+        {/if#}
+    {% endfor %}
+    <tr>
+        <td></td>
+        <td><strong>Итого</strong></td>
+        <td class="price" style="font-size: 14px;white-space: nowrap">
+            {{ order.amount|price_format }} <span class="RUR">Р</span>
+        </td>
+        <td class="price" style="font-size: 14px;white-space: nowrap"></td>
+    </tr>
+    {#if order.notice && Model::factory('User')->isRole('USER_FRANCHISER')}<tr><td>
+            <ul class="tabs r" style="float:left;background-color: #ffd589">
+                <li>Комментарии к заказу:</li>
+            </ul>
+            <br/>
+            {foreach from=$order.notice key=noticeKey item=notice}
+                {assign var=noticeInfo value=explode('_',$noticeKey)}
+                <p style="margin-left:200px"><span style="font-weight: bold">{$noticeInfo[0]|date_format:'%d %b, %Y'}:</span> {$notice}</p>
+            {/foreach}
+    </td></tr>{/if#}
+</tbody>

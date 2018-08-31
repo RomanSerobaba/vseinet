@@ -1,0 +1,116 @@
+<div class="order-history block gray">
+    <div class="wrapper">
+        <div class="column">
+            <h2>
+                Заказ № 
+                {% if app.userIsEmployee %}
+                    <a href="{ path('authority', { targetUrl: '/admin/orders?id=' ~ order.id }) }}">
+                        {{ order.id }}
+                    </a>
+                {% else %}
+                    {{ order.id }}
+                {% endif %} 
+                <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+            </h2>
+            <dl>
+                <dt><span title="Указана сумма всех неотмененных позиций">Сумма заказа:</span></dt>
+                <dd>{{ order.amount|price_format }} <span class="RUR">Р</span></dd>
+                <dt>Способ оплаты:</dt>
+                <dd>{{ order.paymentTypeName }}</dd>
+                <dt>Способ доставки:</dt>
+                <dd>{{ order.deliveryTypeName }}</dd>
+                {#if $order.delivery_type=='Транспортная компания'}
+                <dt>Название компании:</dt><dd>&nbsp;{$order.trading}</dd>
+                {if $order.trading_code}
+                <dt>Код груза:</dt><dd>&nbsp;{$order.trading_code}{if $order.trading_link},&nbsp; <a href="{$order.trading_link}" onclick="window.open(this.href);return false;">проверить статус</a>{/if}</dd>
+                {/if}
+                {elseif $order.delivery_type=='Почта России' && $order.trading_code}
+                <dt>Код груза:</dt><dd>&nbsp;{$order.trading_code}</dd>
+                {/if#}
+                {#if $order.discount}
+                <dt>Скидка:</dt><dd>&nbsp;{$order.discount|price_format} <span class="RUR">Р</span></dd>
+                {/if#}
+                <dt>Статус:</dt>
+                <dd class="{{ order.statusCode }}">{{ order.statusCodeName }}</dd>
+            </dl>
+        </div>
+        <div class="column">
+            <h2>Данные покупателя</h2>
+            <dl>
+                <dt>Фамилия и имя:</dt>
+                <dd>{{ order.username }}</dd>
+                {% for contact in order.contacts %}
+                    <dt>{{ contact.typeCodeTitle }}</dt>
+                    {% if contact.isPhone %}
+                        <dd>{{ contact.value|phone_format }}</dd>
+                    {% else %}
+                        <dd>{{ contact.value }}</dd>
+                    {% endif %}
+                {% endfor %}
+                <dt>Адрес:</dt>
+                <dd>{{ order.address }}</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="wrapper white">
+        <h2>
+            Состав заказа
+            {% if constant('AppBundle\\Enum\\OrderItemStatus::CREATED') == order.statusCode %} 
+                <span style="font-size: 0.7em; font-weight: normal; vertical-align: top;">Внимание! Обращаем Ваше внимание, что окончательная стоимость заказа, будет подтверждена после обработки заказа сотрудником компании.</span>
+            {% endif %}
+        </h2>
+        <div class="row">
+            {% for item in order.items %}
+                {% if not loop.first and loop.index % 3 == 1 %}
+                    </div><div class="row border">
+                {% endif %}
+                <div class="product{% if loop.index % 3 %} border{% endif %}">
+                    <a href="{{ path('catalog_product', { id: item.baseProductId }) }}" class="image">
+                        <img src="{#$position|image:60#}" alt="">
+                    </a>
+                    <p>
+                        <a href="{ path('catalog_product', { id: item.baseProductId }) }}">
+                            {{ item.productName }}
+                        </a>
+                    </p>
+                    <p>{{ item.quantity }} шт <span class="RUR">Р</span></p>
+                    {#if $position.price_changes && (!Model::factory('User')->get('is_wholesaler') || (Model::factory('User')->get('is_wholesaler') && $user.id != $order.user_id))}
+                    {foreach from=$position.price_changes item=change}
+                    <p>{$change.name} <strong>{$change.amount|price_format} <span class="RUR">Р</span></strong></p>
+                    {/foreach}
+                    {/if#}
+                    <p>Код товара: {{ item.baseProductId }}</p>
+                    <p>
+                        Статус: <span class="{{ item.statusCode }}">{{ item.statusCodeTitle }}</span>
+                        {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)}, будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{elseif $position.delivery_date}{$position.product_id|delivery_time:0:0:$position.warehouse_id}{else}{$position.product_id|delivery_time:0}{/if} *{/if#}
+                    </p>
+                </div>
+            {% endfor %}
+            {% set countEmptyBlocks = order.items|length % 3 %}
+            {% for i in [0..countEmptyBlocks] %}
+                <div class="product"></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .sber-unpaid {
+        margin: 20px 0;
+    }
+    div[id^=Sberbank] strong {
+        font-size: 1.1em;
+    }
+    div[id^=Sberbank] ol {
+        list-style: decimal outside;
+        color: #333;
+        margin-top: 15px;
+    }
+    div[id^=Sberbank] li {
+        margin-top: 25px;
+    }
+    div[id^=Sberbank] .info {
+        color: #333;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+</style>

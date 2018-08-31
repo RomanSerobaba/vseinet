@@ -43,7 +43,7 @@ class Contact
     public $isPhone;
     
 
-    public function __construct($id, $typeCode, $value, $comment, $isMain)
+    public function __construct($id, $typeCode, $value, $comment = '', $isMain = false)
     {
         $this->id = $id;
         $this->typeCode = $typeCode;

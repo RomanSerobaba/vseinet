@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="breadcrumbs"> <a href="{{ path('catalog_category') }}">Каталог</a></div>
     <div id="user-account">
-        {% include 'User/account_menu.html.twig' with { active: 'account' }  %}
+        {% include 'User/account_menu.html.twig' with { active: 'account' } %}
         <h1>{{ app.user.person.fullname }}</h1>
         {% include 'User/account_ajax.html.twig' %}
     </div>

@@ -32,6 +32,10 @@ class GetStatusQueryHandler extends MessageHandler
 
         $doc = $em->getRepository(OrderDoc::class)->findOneBy(['number' => $query->number]);
 
-        return new DTO\Order($order->getId(), $doc->getCreatedAt(), $items);
+        return new DTO\Order([
+            'id' => $order->getId(), 
+            'createdAt' => $doc->getCreatedAt(), 
+            'items' => $items,
+        ]);
     }
 }

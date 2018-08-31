@@ -4,11 +4,13 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Bus\Exception\ValidationException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Enum\OrderType;
 use AppBundle\Bus\Order\{ Command, Query, Form };
 use AppBundle\Enum\OrderItemStatus;
+use AppBundle\Bus\Catalog\Paging;
 
 class OrderController extends Controller
 {
@@ -72,6 +74,45 @@ class OrderController extends Controller
             'errors' => $this->getFormErrors($form),
             'order' => $order ?? null,
             'statuses' => OrderItemStatus::getChoices(),
+        ]);
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="order_history",
+     *     path="/order/history/",
+     *     parameters={
+     *         @VIA\Parameter(model="AppBundle\Bus\Order\Query\GetHistoryQuery")
+     *     }
+     * )
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     */
+    public function historyAction(Request $request)
+    {   
+        $query = new Query\GetHistoryQuery($request->query->all());
+        $this->get('query_bus')->handle($query, $history);
+
+        $paging = new Paging([
+            'total' => $history->total,
+            'page' => $query->page,
+            'perpage' => $query->limit,
+            'lines' => 8,
+            'baseUrl' => $this->generateUrl('order_history'),
+            'attributes' => ['mode' => $query->mode],
+        ]);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Order/history_ajax.html.twig', (array) $query + [
+                    'history' => $history,
+                    'paging' => $paging,
+                ]),
+            ]);
+        }
+
+        return $this->render('Order/history.html.twig', (array) $query + [
+            'history' => $history,
+            'paging' => $paging,
         ]);
     }
 

@@ -1,0 +1,50 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}
+    История заказов
+{% endblock %}
+
+{% block content %}
+    <div id="user-account">
+        {% include 'User/account_menu.html.twig' with { active: 'history' } %}
+        <h1>
+            {{ app.user.person.fullname }}
+            {% if mode == 'list' %}
+                <img src="/images/list.png" alt="Отображение списком" title="Отображение списком">
+            {% else %}
+                <a href="{{ path('order_history') }}?mode=list">
+                    <img src="/images/list.png" alt="Отображение списком" title="Отображение списком">
+                </a> 
+            {% endif %}
+            {% if mode == 'table' %}
+                <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей">
+            {% else %}
+                <a href="{{ path('order_history') }}?mode=table">
+                    <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей">
+                </a> 
+            {% endif %}
+            {% if mode == 'light' %}
+                <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно"> 
+            {% else %}
+                <a href="{{ path('order_history') }}?mode=light">
+                    <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно"> 
+                </a>
+            {% endif %}
+        </h1>
+        {% include 'Order/history_ajax.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(function() {
+    $('#user-account').tabs({
+        active: 1,
+        beforeActivate: function(event, ui) {
+            window.location = ui.newTab.find('a').prop('href');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -21,7 +21,7 @@ class OrderItem
     /**
      * @Assert\Type(type="string")
      */
-    public $statusTitle;
+    public $statusCodeTitle;
 
     /**
      * @Assert\All({
@@ -61,18 +61,17 @@ class OrderItem
     public $requiredPrepayment;
 
 
-    public function __construct($quantity, $statusCode, $productName, $baseProductId, $retailPrice)
+    public function __construct(array $item)
     {
-        $this->quantity = $quantity;
-        $this->statusCode = $statusCode;
-        $this->statusTitle = OrderItemStatus::getTitle($statusCode);
-        $this->tracker = OrderItemStatus::getTracker($statusCode);
-        $this->productName = $productName;
-        $this->baseProductId = $baseProductId;
-        $this->retailPrice = $retailPrice;
-        // @todo: delivery date & prepayment
-        $this->deliveryDate = new \DateTime();
-        $this->prepaymentAmount = 0;
-        $this->requiredPrepayment = 0;
+        $this->quantity = $item['quantity'];
+        $this->statusCode = $item['statusCode'];
+        $this->statusTitle = OrderItemStatus::getTitle($item['statusCode']);
+        $this->tracker = OrderItemStatus::getTracker($item['statusCode']);
+        $this->productName = $item['productName'];
+        $this->baseProductId = $item['baseProductId'];
+        $this->retailPrice = $item['retailPrice'];
+        $this->deliveryDate = $item['deliveryDate'];
+        $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
+        $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
     }
 }
