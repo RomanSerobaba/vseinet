@@ -96,7 +96,7 @@ class OrderItemStatus
                     self::COMPLETED => false,
                 ];
 
-            case self:TRANSPORT:
+            case self::TRANSPORT:
             case self::POST:
             case self::COURIER:
                 return [
