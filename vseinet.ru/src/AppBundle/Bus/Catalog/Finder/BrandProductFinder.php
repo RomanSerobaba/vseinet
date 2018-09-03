@@ -4,7 +4,7 @@ namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Bus\Catalog\Enum\Availability;
 use AppBundle\Bus\Catalog\Enum\Nofilled;
-use AppBundle\Bus\Catalog\Query\DTO\Brand;
+use AppBundle\Bus\Brand\Query\DTO\Brand;
 use AppBundle\Bus\Catalog\Query\DTO\Filter;
 
 class BrandProductFinder extends ProductFinder
@@ -36,18 +36,22 @@ class BrandProductFinder extends ProductFinder
         $query = "
             SELECT {$this->getSelectPrice()}
             FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             FACET category_id LIMIT 1000
+            ;
+            SELECT COUNT(*) AS total 
+            FROM base_product
+            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} 
             {$this->getFacetsNofilled()}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
             {$this->getFacetAvailability()}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product 
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
@@ -63,15 +67,18 @@ class BrandProductFinder extends ProductFinder
         }
         $this->filter->categories = Block\Categories::build($categoryId2count, $this->getDoctrine()->getManager());
 
+        array_shift($results);
+
         foreach (Nofilled::getOptions() as $type => $_) {
             $row = array_shift($results);
             $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
         }
 
         array_shift($results);
+
         $geoCityId = $this->getGeoCity()->getRealId();
         foreach (array_shift($results) as $row) {
-            $availability[$row['availability.'.$cityId]] = $row['count(*)'];
+            $availability[$row['availability.'.$geoCityId]] = $row['count(*)'];
         }
         foreach (Availability::getOptions($this->getUserIsEmployee()) as $type => $_) {
             if (!isset($availability[$type])) {
@@ -130,7 +137,7 @@ class BrandProductFinder extends ProductFinder
     {
         $filter = $this->getFilter();
 
-        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}";
+        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}";
         if ('price' != $exclude && ($condition = $this->getCriteriaPrice())) {
             $criteria .= " AND $condition";
         }

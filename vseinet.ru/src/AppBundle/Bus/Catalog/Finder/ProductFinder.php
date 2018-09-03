@@ -121,6 +121,20 @@ abstract class ProductFinder extends ContainerAware
         return "availability.{$this->getGeoCity()->getRealId()} <= {$availability}";
     }
 
+    protected function getCriteriaNofilled(): ?string 
+    {
+        if (!$this->getUserIsEmployee() || null === $this->data->nofilled) {
+            return "";
+        }
+
+        $criteria = [];
+        foreach ($this->data->nofilled as $nofilled) {
+            $criteria[] = "nofilled.{$nofilled} = 1";
+        }
+
+        return ' AND '.implode(' AND ', $criteria);
+    }
+
     protected function getCriteriaPrice(): ?string
     {
         if (empty($this->data->price)) {

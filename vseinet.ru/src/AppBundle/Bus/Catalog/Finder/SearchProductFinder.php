@@ -23,19 +23,23 @@ class SearchProductFinder extends ProductFinder
         $query = "
             SELECT {$this->getSelectPrice()}
             FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             FACET category_id LIMIT 1000
             FACET brand_id LIMIT 1000
+            ;
+            SELECT COUNT(*) AS total 
+            FROM base_product
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
             {$this->getFacetsNofilled()}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
             {$this->getFacetAvailability()}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product 
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
@@ -56,6 +60,8 @@ class SearchProductFinder extends ProductFinder
             $brandId2count[$row['brand_id']] = $row['count(*)'];
         }
         $this->filter->brands = Block\Brands::build($brandId2count, $this->getDoctrine()->getManager());
+
+        array_shift($results);
 
         foreach (Nofilled::getOptions() as $type => $_) {
             $row = array_shift($results);
@@ -138,7 +144,7 @@ class SearchProductFinder extends ProductFinder
     {
         $filter = $this->getFilter();
 
-        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}";
+        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}";
         if ('price' != $exclude && ($condition = $this->getCriteriaPrice())) {
             $criteria .= " AND $condition";
         }

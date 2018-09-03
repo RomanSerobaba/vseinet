@@ -5,7 +5,8 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Annotation as VIA;
-use AppBundle\Bus\Catalog\Query;
+use AppBundle\Bus\Brand\Query\GetByNameQuery;
+use AppBundle\Bus\Catalog\Query\GetProductsQuery;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Bus\Catalog\Sorting;
 use AppBundle\Bus\Catalog\Enum\Availability;
@@ -28,7 +29,7 @@ class BrandController extends Controller
      */
     public function indexAction(string $name, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetBrandQuery(['name' => $name]), $brand);
+        $this->get('query_bus')->handle(new GetByNameQuery(['name' => $name]), $brand);
         
         if ($request->isMethod('POST')) {
             $data = $this->get('catalog.query_string')->fromPost($request->request->get('filter'), $request->query->all());
@@ -57,7 +58,7 @@ class BrandController extends Controller
         $facets = $finder->getFacets();
         $productIds = $facets->total ? $finder->getProductIds() : [];
         if (!empty($productIds)) {
-            $this->get('query_bus')->handle(new Query\GetProductsQuery(['ids' => $productIds]), $products);
+            $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $productIds]), $products);
             $paging = new Paging([
                 'total' => $facets->total,
                 'page' => $data->page,

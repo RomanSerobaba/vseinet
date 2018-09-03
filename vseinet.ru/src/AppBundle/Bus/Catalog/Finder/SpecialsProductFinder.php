@@ -23,14 +23,18 @@ class SpecialsProductFinder extends ProductFinder
         $query = "
             SELECT {$this->getSelectPrice()}
             FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
             FACET category_id LIMIT 1000
             FACET brand_id LIMIT 1000
+            ;
+            SELECT COUNT(*) AS total 
+            FROM base_product 
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} 
             {$this->getFacetsNofilled()}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product 
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()}
+            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
@@ -51,6 +55,8 @@ class SpecialsProductFinder extends ProductFinder
             $brandId2count[$row['brand_id']] = $row['count(*)'];
         }
         $this->filter->brands = Block\Brands::build($brandId2count, $this->getDoctrine()->getManager());
+
+        array_shift($results);
 
         foreach (Nofilled::getOptions() as $type => $_) {
             $row = array_shift($results);
@@ -121,7 +127,7 @@ class SpecialsProductFinder extends ProductFinder
     {
         $filter = $this->getFilter();
 
-        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()}";
+        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}";
         if ('price' != $exclude && ($condition = $this->getCriteriaPrice())) {
             $criteria .= " AND $condition";
         }

@@ -86,24 +86,28 @@ class CategoryProductFinder extends ProductFinder
         $query = "
             SELECT {$this->getSelectPrice()}{$detailSelect}
             FROM base_product
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             FACET section_id 
-            {$this->getFacetsNofilled()}
             {$detailFacets}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product
-            WHERE category_id = {$this->category->id} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} 
+            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} 
+            {$this->getFacetsNofilled()}
+            ;
+            SELECT COUNT(*) AS total 
+            FROM base_product
+            WHERE category_id = {$this->category->id} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             FACET brand_id
             ;
             SELECT COUNT(*) AS total 
             FROM base_product
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()}
+            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
             {$this->getFacetAvailability()}
             ;
             SELECT COUNT(*) AS total 
             FROM base_product 
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
@@ -136,10 +140,6 @@ class CategoryProductFinder extends ProductFinder
             $this->filter->sections = Block\CategorySections::build($sectionId2count, $em);
         }
 
-        foreach (Nofilled::getOptions() as $type => $_) {
-            $row = array_shift($results);
-            $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
-        }
         foreach ($results as $index => $result) {
             if (empty($result)) {
                 continue;
@@ -205,16 +205,27 @@ class CategoryProductFinder extends ProductFinder
             if (2 === count($this->filter->sections)) {
                 $this->filter->sections = array_filter($this->filter->sections, function($section) { return 0 == $section->id; });
             }            
-        }    
+        }  
+
+        $results = array_slice($results, $index + 1);
+
+        foreach (Nofilled::getOptions() as $type => $_) {
+            $row = array_shift($results);
+            $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
+        }  
+
+        array_shift($results);
 
         $brandId2count = [];
-        foreach ($results[$index + 1] as $row) {
+        foreach (array_shift($results) as $row) {
             $brandId2count[$row['brand_id']] = $row['count(*)'];
         }
         $this->filter->brands = Block\Brands::build($brandId2count, $em);
 
+        array_shift($results);
+
         $geoCityId = $this->getGeoCity()->getRealId();
-        foreach ($results[$index + 3] as $row) {
+        foreach (array_shift($results) as $row) {
             $availability[$row['availability.'.$geoCityId]] = $row['count(*)'];
         }
         foreach (Availability::getOptions($this->getUserIsEmployee()) as $type => $_) {
@@ -224,7 +235,7 @@ class CategoryProductFinder extends ProductFinder
         }
         $this->filter->availability = Block\Availability::build($availability);
 
-        $this->filter->total = $results[$index + 4][0]['total'];
+        $this->filter->total = $results[0][0]['total'];
 
         return $this->filter;
     }
@@ -335,7 +346,7 @@ class CategoryProductFinder extends ProductFinder
     {
         $filter = $this->getFilter();
 
-        $criteria = "{$this->getMainCriteria($exclude)} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}";
+        $criteria = "{$this->getMainCriteria($exclude)} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}";
         if ('price' != $exclude && ($condition = $this->getCriteriaPrice())) {
             $criteria .= " AND $condition";
         }
