@@ -29,6 +29,11 @@ class Order
     public $paymentTypeName;
 
     /**
+     * @Enum("AppBundle\Enum\DeliveryTypeCode")
+     */
+    public $deliveryType;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $deliveryTypeName;
@@ -78,7 +83,9 @@ class Order
         $this->id = $order['id'];
         $this->createdAt = new \DateTime($order['createdAt']);
         $this->amount = 0;
+        $this->paymentType = $order['paymentType'] ?? null;
         $this->paymentTypeName = $order['paymentTypeName'] ?? null;
+        $this->deliveryType = $order['deliveryType'] ?? null;
         $this->deliveryTypeName = $order['deliveryTypeName'] ?? null;
         $this->username = $order['financialCounteragentName'] ?? null;
         foreach ($order['contacts'] ?? [] as $contact) {
@@ -104,6 +111,6 @@ class Order
         }
         uasort($statuses, function($count1, $count2) { return $count1 > $count2 ? 1 : -1; });
         $this->statusCode = key($statuses);
-        $this->statusCodeName = OrderItemStatus::getTitle($this->statusCode);
+        $this->statusCodeName = OrderItemStatus::getName($this->statusCode);
     }
 }

@@ -1,4 +1,4 @@
-<div class="order-history block gray">
+<div class="order-history block gray order-history-table">
     <div class="wrapper">
         <div class="column">
             <h2>
@@ -10,21 +10,8 @@
                 {% endif %}
                 <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
             </h2>
-            <dl>
-                <dt>Фамилия и имя:</dt><dd>{{ order.username }}</dd>
-                {% for contact in order.contacts %}
-                    <dt>{{ contact.typeCodeTitle }}</dt>
-                    {% if contact.isPhone %}
-                        <dd>{{ contact.value|phone_format }}</dd>
-                    {% else %}
-                        <dd>{{ contact.value }}</dd>
-                    {% endif %}
-                {% endfor %}
-                <dt>Адрес:</dt><dd>{{ order.address }}</dd>
-            </dl>
         </div>
         <div class="column">
-            <h2>&nbsp;</h2>
             <dl>
                 <dt>Способ оплаты:</dt><dd>{{ order.paymentTypeName }}</dd>
                 {#% if order.discount %}
@@ -34,7 +21,6 @@
             </dl>
         </div>
         <div class="column">
-            <h2>&nbsp;</h2>
             {#<dl>
                 <dt>Способ доставки:</dt>
                 <dd>{$order.delivery_type}{if $order.delivery_type=='Курьерская' && $order.city_id==299} до проходной{/if}</dd>
@@ -55,11 +41,11 @@
         <table style="margin-bottom:0;width: 100%">
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
+                    <th style="width:100px">&nbsp;</th>
                     <th>Товар</th>
-                    <th>Количество</th>
-                    <th>Цена</th>
-                    <th>Статус</th>
+                    <th style="width:120px">Количество</th>
+                    <th style="width:120px">Цена</th>
+                    <th style="width:150px">Статус</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,11 +62,11 @@
                             </h6>
                             <p class="code" style="color:#999">Код товара: {{ item.baseProductId }}</p>
                         </td>
-                        {% set cssclass = constant('AppBundle\\Enum\\Order::CANCELED') == item.statusCode ? ' CANCELED' : '' %}
+                        {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == item.statusCode ? ' canceled' : '' %}
                         <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
                         <td class="price{{ cssclass }}">{{ item.retailPrice|price_format }} <span class="RUR">Р</span></td>
                         <td class="status">
-                            <span class="{{ item.status_code }}">{{ item.statusCodeTitle }}</span>
+                            <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
                             {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)},<p class="code" style="color:#999">будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if} *</p>
                             {/if#}
                         </td>

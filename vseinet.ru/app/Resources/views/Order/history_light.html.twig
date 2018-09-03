@@ -11,17 +11,6 @@
                 <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
             </h2>
             <span class="info">
-                Фамилия и имя: {{ order.username }}
-                {% for contact in order.contacts %}
-                    | {{ contact.typeCodeTitle }}
-                    {% if contact.isPhone %}
-                        {{ contact.value|phone_phormat }}
-                    {% else %}
-                        {{ contact.value }}
-                    {% endif %}
-                {% endfor %}
-            </span>
-            <span class="info">
                 Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
                 {#if $order.discount}
                     Скидка: {$order.discount|price_format} <span class="RUR">Р</span>
@@ -52,7 +41,7 @@
                     <span style="font-size:0.9em">код товара {{ item.baseProductId }}</span>
                 </h6>
             </td>    
-            {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == ite,statusCode ? ' CANCELED' : '' %}
+            {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == item.statusCode ? ' canceled' : '' %}
             <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
             <td class="price{{ cssclass }}" style="white-space: nowrap">
                 {{ item.retailPrice|price_format }} <span class="RUR">Р</span>
@@ -64,7 +53,7 @@
                     </span>
 
                 {else#}
-                    <span class="{{ item.statusCode }}">{{ item.statusCodeTitle }}</span> 
+                    <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span> 
                 {#/if#}
             </td>
         </tr>

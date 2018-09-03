@@ -14,7 +14,7 @@ class AddContactType extends AbstractType
         if ($options['data']->id) {
             $builder
                 ->add('typeCode', HiddenType::class)
-                ->add('typeCodeTitle', TextType::class, ['required' => false])
+                ->add('typeCodeName', TextType::class, ['required' => false])
             ;
         } else {
             $builder

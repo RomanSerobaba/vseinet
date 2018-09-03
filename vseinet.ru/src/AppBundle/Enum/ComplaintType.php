@@ -9,7 +9,7 @@ class ComplaintType
     const DELIVERY_TIME = 'delivery_time';
     const OTHER = 'other';
 
-    public static function getChoices()
+    public static function getChoices(): array
     {
         return [
             self::MANAGER => 'работа менеджера',

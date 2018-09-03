@@ -11,7 +11,7 @@ class ContactTypeCode
     const ICQ = 'icq';
     const CUSTOM = 'custom';
 
-    public static function getChoices()
+    public static function getChoices(): array
     {
         return [
             self::MOBILE => 'Мобильный телефон',
@@ -22,10 +22,14 @@ class ContactTypeCode
         ];
     }
 
-    public static function getTitle($value)
+    public static function getName(string $code): string
     {
         $choices = self::getChoices();
 
-        return isset($choices[$value]) ? $choices[$value] : '';
+        if (!isset($choices[$code])) {
+            throw new \LogicException(strintf('Choice "%s" in class "%s" not found.', $code, get_called_class()));
+        }
+
+        return $choices[$code];
     }
 }

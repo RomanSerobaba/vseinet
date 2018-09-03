@@ -7,24 +7,24 @@
 {% block content %}
     <div id="user-account">
         {% include 'User/account_menu.html.twig' with { active: 'history' } %}
-        <h1>
+        <h1 class="order-history-title">
             {{ app.user.person.fullname }}
             {% if mode == 'list' %}
-                <img src="/images/list.png" alt="Отображение списком" title="Отображение списком">
+                <img src="/images/list.png" alt="Отображение списком" title="Отображение списком" class="current">
             {% else %}
                 <a href="{{ path('order_history') }}?mode=list">
                     <img src="/images/list.png" alt="Отображение списком" title="Отображение списком">
                 </a> 
             {% endif %}
             {% if mode == 'table' %}
-                <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей">
+                <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей" class="current">
             {% else %}
                 <a href="{{ path('order_history') }}?mode=table">
                     <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей">
                 </a> 
             {% endif %}
             {% if mode == 'light' %}
-                <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно"> 
+                <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно" class="current"> 
             {% else %}
                 <a href="{{ path('order_history') }}?mode=light">
                     <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно"> 

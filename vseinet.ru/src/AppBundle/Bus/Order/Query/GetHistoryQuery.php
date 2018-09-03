@@ -13,12 +13,12 @@ class GetHistoryQuery extends Message
     public $mode = 'list';
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="numeric")
      */
     public $page = 1;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="numeric")
      */
-    public $limit = 25;
+    public $limit = 10;
 }

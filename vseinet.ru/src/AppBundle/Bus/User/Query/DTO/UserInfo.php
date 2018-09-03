@@ -57,7 +57,7 @@ class UserInfo
     /**
      * @Assert\Type(type="string")
      */
-    public $genderTitle;
+    public $genderName;
 
 
     public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $cityId, $cityName, $isMarketingSubscribed)
@@ -71,6 +71,6 @@ class UserInfo
         $this->cityId = $cityId;
         $this->cityName = $cityName;
         $this->isMarketingSubscribed = $isMarketingSubscribed;
-        $this->genderTitle = PersonGender::getTitle($gender);
+        $this->genderName = PersonGender::getName($gender);
     }
 }

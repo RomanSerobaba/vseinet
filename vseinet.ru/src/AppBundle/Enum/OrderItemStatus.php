@@ -45,7 +45,7 @@ class OrderItemStatus
         ];
     }
 
-    public static function getTitle(string $status): string
+    public static function getName(string $status): string
     {
         $choices = self::getChoices();
         if (!isset($choices[$status])) {

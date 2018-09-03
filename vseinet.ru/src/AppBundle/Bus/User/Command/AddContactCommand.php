@@ -22,7 +22,7 @@ class AddContactCommand extends Message
     /**
      * @Assert\Type(type="string")
      */
-    public $typeCodeTitle;
+    public $typeCodeName;
 
     /**
      * @Assert\NotBlank(message="Введите контакт")

@@ -35,7 +35,7 @@ class Contact
     /**
      * @Assert\Type(type="string")
      */
-    public $typeCodeTitle;
+    public $typeCodeName;
 
     /**
      * @Assert\Type(type="boolean")
@@ -50,7 +50,7 @@ class Contact
         $this->value = $value;
         $this->comment = $comment;
         $this->isMain = $isMain;
-        $this->typeCodeTitle = ContactTypeCode::getTitle($typeCode);
+        $this->typeCodeName = ContactTypeCode::getName($typeCode);
         $this->isPhone = ContactTypeCode::MOBILE === $typeCode || ContactTypeCode::PHONE === $typeCode;
     }
 }

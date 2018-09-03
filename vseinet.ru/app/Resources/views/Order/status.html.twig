@@ -1,7 +1,7 @@
 <p>Статус заказа по номеру: <b>{{ order.id }}</b></p>
 {% for item in order.items %}
     <div class="position">
-        {{ item.productName }} &ndash; <strong>{{ item.statusTitle }}</strong>
+        {{ item.productName }} &ndash; <strong>{{ item.statusCodeName }}</strong>
     </div>
 {% endfor %}
 {% if more > 0 %}

@@ -11,8 +11,8 @@
 {% if command.id %}
     <div class="row h">
         {{ form_widget(form.typeCode) }}    
-        {{ form_label(form.typeCodeTitle, 'Тип*:') }}
-        {{ form_widget(form.typeCodeTitle, { attr: { class: 'txt', readonly: true }}) }}    
+        {{ form_label(form.typeCodeName, 'Тип*:') }}
+        {{ form_widget(form.typeCodeName, { attr: { class: 'txt', readonly: true }}) }}    
     </div>
 {% else %}
     <div class="row h{% if errors.typeCode is defined %} error{% endif %}">

@@ -21,7 +21,7 @@ class OrderItem
     /**
      * @Assert\Type(type="string")
      */
-    public $statusCodeTitle;
+    public $statusCodeName;
 
     /**
      * @Assert\All({
@@ -65,7 +65,7 @@ class OrderItem
     {
         $this->quantity = $item['quantity'];
         $this->statusCode = $item['statusCode'];
-        $this->statusTitle = OrderItemStatus::getTitle($item['statusCode']);
+        $this->statusCodeName = OrderItemStatus::getName($item['statusCode']);
         $this->tracker = OrderItemStatus::getTracker($item['statusCode']);
         $this->productName = $item['productName'];
         $this->baseProductId = $item['baseProductId'];

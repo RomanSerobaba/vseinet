@@ -17,8 +17,10 @@
                 <dd>{{ order.amount|price_format }} <span class="RUR">Р</span></dd>
                 <dt>Способ оплаты:</dt>
                 <dd>{{ order.paymentTypeName }}</dd>
-                <dt>Способ доставки:</dt>
-                <dd>{{ order.deliveryTypeName }}</dd>
+                {% if order.deliveryType %}
+                    <dt>Способ доставки:</dt>
+                    <dd>{{ order.deliveryTypeName }}</dd>
+                {% endif %}
                 {#if $order.delivery_type=='Транспортная компания'}
                 <dt>Название компании:</dt><dd>&nbsp;{$order.trading}</dd>
                 {if $order.trading_code}
@@ -40,15 +42,17 @@
                 <dt>Фамилия и имя:</dt>
                 <dd>{{ order.username }}</dd>
                 {% for contact in order.contacts %}
-                    <dt>{{ contact.typeCodeTitle }}</dt>
+                    <dt>{{ contact.typeCodeName }}</dt>
                     {% if contact.isPhone %}
                         <dd>{{ contact.value|phone_format }}</dd>
                     {% else %}
                         <dd>{{ contact.value }}</dd>
                     {% endif %}
                 {% endfor %}
-                <dt>Адрес:</dt>
-                <dd>{{ order.address }}</dd>
+                {% if order.address %}
+                    <dt>Адрес:</dt>
+                    <dd>{{ order.address }}</dd>
+                {% endif %}
             </dl>
         </div>
     </div>
@@ -73,7 +77,13 @@
                             {{ item.productName }}
                         </a>
                     </p>
-                    <p>{{ item.quantity }} шт <span class="RUR">Р</span></p>
+                    <p>
+                        {{ item.quantity }} шт 
+                        <strong>
+                            {{ item.retailPrice|price_format }} 
+                            <span class="RUR">Р</span>
+                        </strong>
+                    </p>
                     {#if $position.price_changes && (!Model::factory('User')->get('is_wholesaler') || (Model::factory('User')->get('is_wholesaler') && $user.id != $order.user_id))}
                     {foreach from=$position.price_changes item=change}
                     <p>{$change.name} <strong>{$change.amount|price_format} <span class="RUR">Р</span></strong></p>
@@ -81,12 +91,15 @@
                     {/if#}
                     <p>Код товара: {{ item.baseProductId }}</p>
                     <p>
-                        Статус: <span class="{{ item.statusCode }}">{{ item.statusCodeTitle }}</span>
+                        Статус: 
+                        <strong>
+                            <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
+                        </strong>
                         {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)}, будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{elseif $position.delivery_date}{$position.product_id|delivery_time:0:0:$position.warehouse_id}{else}{$position.product_id|delivery_time:0}{/if} *{/if#}
                     </p>
                 </div>
             {% endfor %}
-            {% set countEmptyBlocks = order.items|length % 3 %}
+            {% set countEmptyBlocks = 3 - order.items|length % 3 %}
             {% for i in [0..countEmptyBlocks] %}
                 <div class="product"></div>
             {% endfor %}

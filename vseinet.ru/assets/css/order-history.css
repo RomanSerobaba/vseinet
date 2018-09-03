@@ -3,12 +3,16 @@
 #history table td,
 #history table th {
     padding: 5px 10px;
+    text-align: left;
 }
 
 DIV.order-history {
     box-shadow: none ! important;
     clear: both;
     margin-top: 30px;
+}
+DIV.order-history-table H2 {
+    margin-bottom: 0;
 }
 DIV.order-history-light {
     box-shadow: none ! important;
@@ -179,7 +183,7 @@ DIV.order-history .product P STRONG {
 }
 /* order statuses
 -------------------------------------------------------------------*/
-.order-history .PROCESS	{
+.order-history .created	{
     color: #00aeef;
     font-weight: bold;
 }
@@ -195,44 +199,57 @@ DIV.order-history .product P STRONG {
     color: #4d9901;
     font-weight: bold;
 }
-.order-history .IN_TRANSIT {
+.order-history .transit {
     color: #800000;
     font-weight: bold;
 }
-.order-history .IS_READY {
+.order-history .releasable,
+.order-history .arrived {
     color: #09169f;
     font-weight: bold;
 }
-.order-history .IS_TRANSFERED {
+.order-history .completed {
     color: #000;
     font-weight: bold;
 }
-.order-history .IS_CANCELED {
+.order-history .canceled {
     color: #CCC;
     font-weight: bold;
 
 }
-.order-history .IS_PREPAYED {
+.order-history .prepayable {
     color: #ef6b00;
     font-weight: bold;
 }
-.order-history .IS_PROCESSED {
+.order-history .callable {
     color: #f00;
     font-weight: bold;
 }
-.order-history .IS_RETURNED {
+.order-history .refunded {
     color: #aaa901;
     font-weight: bold;
 }
-.order-history .IN_RECLAMATION {
+.order-history .issued {
     color: #c811c7;
     font-weight: bold;
 }
-.order-history .ON_DELIVERY {
+.order-history .transport,
+.order-history .post,
+.order-history .courier {
     color: #4D92FF;
     font-weight: bold;
 }
-.order-history .ON_COMPLETION {
+.order-history .stationed {
     color:#03C18B;
     font-weight: bold;
+}
+
+.order-history-title A {
+    border: none;
+}
+.order-history-title IMG {
+    vertical-align: middle;
+}
+.order-history-title IMG.current {
+    opacity: 0.4;
 }

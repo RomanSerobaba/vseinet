@@ -12,7 +12,7 @@ class BaseProductImage
     const SIZE_LG = 'lg';
     const SIZE_XL = 'xl';
 
-    public static function getSize($size)
+    public static function getSize(string $size): string
     {
         switch ($size) {
             case self::SIZE_XS:
@@ -34,7 +34,7 @@ class BaseProductImage
         throw new \LogicException("Wrong image size");
     }
 
-    public static function buildSrc($webpath, $basename, $size)
+    public static function buildSrc(string $webpath, string $basename, string $size): string
     {
         return $webpath.DIRECTORY_SEPARATOR.$basename.'_'.self::getSize($size).'.jpg';
     }
