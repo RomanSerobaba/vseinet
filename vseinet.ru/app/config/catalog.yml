@@ -39,3 +39,9 @@ services:
         public: true
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
+
+    catalog.detail_product_finder:
+        class: 'AppBundle\Bus\Catalog\Finder\DetailProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
