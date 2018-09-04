@@ -12,6 +12,12 @@
     {{ product.name }}
 {% endblock %}
 
+{% block meta %}
+    {% if not product.isCanonical %}
+        <link rel="canonical" href="{{ path('catalog_product', { id: product.id }) }}">
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div itemscope itemtype="http://schema.org/Product" class="product" data-id="{$product.id}" id="product-{$product.id}">
         <div class="breadcrumbs">
