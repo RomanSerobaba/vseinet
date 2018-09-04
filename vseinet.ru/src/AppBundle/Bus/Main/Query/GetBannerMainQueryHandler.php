@@ -19,7 +19,7 @@ class GetBannerMainQueryHandler extends MessageHandler
                 b.isVisible = true 
                 AND (b.startVisibleDate IS NULL OR b.startVisibleDate >= CURRENT_TIMESTAMP())
                 AND (b.endVisibleDate IS NULL OR b.endVisibleDate <= CURRENT_TIMESTAMP()) 
-            ORDER BY b.id
+            ORDER BY b.weight, b.id
         ");
 
         $banners = [];

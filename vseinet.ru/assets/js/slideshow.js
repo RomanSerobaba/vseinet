@@ -52,13 +52,18 @@ $.widget('sp.slideshow', {
                 this.start();
                 this._move(event, true);
             },
-//            'click a': function(event) {
-//                event.preventDefault();
-//            },
+           // 'click a': function(event) {
+           //      event.stopPropagation();
+           //  },
             'mousedown .sheets': function(event) {
-                if (event.button == 0)
-                    this._hold(event);
-                event.preventDefault();
+                var a = $(event.target).closest('a');
+                if (a.length) {
+                    event.stopPropagation();
+                } else {
+                    if (event.button == 0)
+                        this._hold(event);
+                    event.preventDefault();
+                }
             },
             mousemove: function(event) {
                 this._move(event);
