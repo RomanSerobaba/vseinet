@@ -337,13 +337,6 @@ class BannerMainData
     private $textUrlPhone;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="product_id", type="integer", nullable=true)
-     */
-    private $productId;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(name="left_details_pc", type="string", length=255, nullable=true)
@@ -1488,30 +1481,6 @@ class BannerMainData
     public function getTextUrlPhone()
     {
         return $this->textUrlPhone;
-    }
-
-    /**
-     * Set productId.
-     *
-     * @param int|null $productId
-     *
-     * @return BannerMainData
-     */
-    public function setProductId($productId = null)
-    {
-        $this->productId = $productId;
-
-        return $this;
-    }
-
-    /**
-     * Get productId.
-     *
-     * @return int|null
-     */
-    public function getProductId()
-    {
-        return $this->productId;
     }
 
     /**
