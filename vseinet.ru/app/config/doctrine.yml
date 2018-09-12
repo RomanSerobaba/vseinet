@@ -100,8 +100,9 @@ doctrine:
                         cast:           Oro\ORM\Query\AST\Functions\Cast
                         replace:        Oro\ORM\Query\AST\Functions\String\Replace
                         date_format:    Oro\ORM\Query\AST\Functions\String\DateFormat
-                        round:          AppBundle\ORM\Query\AST\Round
-                        random:         AppBundle\ORM\Query\AST\Random
+                        round:          AppBundle\Doctrine\ORM\Query\AST\RoundFunction
+                        random:         AppBundle\Doctrine\ORM\Query\AST\RandomFunction
+                        first:          AppBundle\Doctrine\ORM\Query\AST\FirstFunction
 
                         
 doctrine_orm_bridge:

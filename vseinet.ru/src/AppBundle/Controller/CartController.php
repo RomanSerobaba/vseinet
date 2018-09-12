@@ -13,16 +13,23 @@ use AppBundle\Bus\Favorite\Command\AddCommand as AddFavoriteCommand;
 class CartController extends Controller
 {
     /**
-     * @VIA\Get(
+     * @VIA\Route(
      *     name="cart", 
-     *     path="/cart/"
+     *     path="/cart/",
+     *     methods={"GET", "POST"}
      * )
      */
     public function getAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(), $cart);
+        $this->get('query_bus')->handle(new Query\GetQuery($request->request->all()), $cart);
 
         if ($request->isXmlHttpRequest()) {
+            if ($request->isMethod('POST')) {
+                return $this->json([
+                    'cart' => $cart,
+                ]);
+            }
+
             return $this->json([
                 'html' => $this->renderView('Cart/page.html.twig', [
                     'cart' => $cart,
@@ -75,7 +82,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new Command\SetQuantityCommand($request->query->all(), ['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
+            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);
 
             return $this->json([
                 'cart' => $cart,
@@ -101,7 +108,7 @@ class CartController extends Controller
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
         }    
-        $request->query->set('quantity', $cart->products[$id]->quantity - 1);
+        $request->query->set('quantity', $cart->products[$id]->quantity - $cart->products[$id]->minQuantity);
 
         return $this->setQuantityAction($id, $request);
     }
@@ -122,7 +129,7 @@ class CartController extends Controller
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
         }    
-        $request->query->set('quantity', $cart->products[$id]->quantity + 1);
+        $request->query->set('quantity', $cart->products[$id]->quantity + $cart->products[$id]->minQuantity);
 
         return $this->setQuantityAction($id, $request);
     }
@@ -142,7 +149,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
+            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);
 
             return $this->json([
                 'cart' => $cart,
@@ -184,7 +191,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new AddFavoriteCommand(['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);    
+            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);    
             $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);    
 
             return $this->json([

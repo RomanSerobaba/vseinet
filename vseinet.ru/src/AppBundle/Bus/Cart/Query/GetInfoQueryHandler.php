@@ -18,10 +18,12 @@ class GetInfoQueryHandler extends MessageHandler
                     NEW AppBundle\Bus\Cart\Query\DTO\ProductInfo (
                         p.baseProductId,
                         p.price, 
+                        bp.minQuantity,
                         c.quantity
                     )
-                FROM AppBundle:Cart c
-                INNER JOIN AppBundle:Product p WITH p.baseProductId = c.baseProductId 
+                FROM AppBundle:Cart AS c
+                INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
+                INNER JOIN AppBundle:Product p WITH p.baseProductId = bp.id 
                 WHERE c.userId = :userId AND p.geoCityId = :geoCityId 
             ");
             $q->setParameter('userId', $user->getId());
@@ -35,15 +37,17 @@ class GetInfoQueryHandler extends MessageHandler
                     SELECT 
                         NEW AppBundle\Bus\Cart\Query\DTO\ProductInfo (
                             p.baseProductId, 
-                            p.price
+                            p.price,
+                            bp.minQuantity
                         ) 
                     FROM AppBundle:Product p 
-                    WHERE p.baseProductId IN (:ids) AND p.geoCityId = :geoCityId 
+                    INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = p.baseProductId
+                    WHERE bp.id IN (:ids) AND p.geoCityId = :geoCityId 
                 ");
                 $q->setParameter('ids', array_keys($products));
                 $q->setParameter('geoCityId', $geoCity->getId());
                 foreach ($q->getArrayResult() as $product) {
-                    $product->quantity = $products[$product->id]['quantity'];
+                    $product->quantity = intval($products[$product->id]['quantity']);
                     $products[$product->id] = $product;
                 }
             }

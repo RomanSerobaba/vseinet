@@ -32,7 +32,7 @@ class SetQuantityCommandHandler extends MessageHandler
             } else {
                 $quantity = $command->quantity;
                 if ($quantity % $baseProduct->getMinQuantity()) {
-                    $quantity = floor($quantity / $baseProduct->getMinQuantity()) + $baseProduct->getMinQuantity();
+                    $quantity = ceil($quantity / $baseProduct->getMinQuantity()) * $baseProduct->getMinQuantity();
                 }
                 $item->setQuantity($quantity);
                 $em->persist($item);
@@ -49,7 +49,7 @@ class SetQuantityCommandHandler extends MessageHandler
             } else {
                 $quantity = $command->quantity;
                 if ($quantity % $baseProduct->getMinQuantity()) {
-                    $quantity = floor($quantity / $baseProduct->getMinQuantity()) + $baseProduct->getMinQuantity();
+                    $quantity = ceil($quantity / $baseProduct->getMinQuantity()) * $baseProduct->getMinQuantity();
                 }
                 $cart[$baseProduct->getId()]['quantity'] = $quantity;
             }

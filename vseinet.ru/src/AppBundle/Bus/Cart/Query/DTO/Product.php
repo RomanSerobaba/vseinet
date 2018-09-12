@@ -32,9 +32,9 @@ class Product
     public $price;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="float")
      */
-    public $quantity;
+    public $discountPercent;
 
     /**
      * @Assert\Type(type="integer")
@@ -42,19 +42,25 @@ class Product
     public $priceDiscount;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $quantity;
+
+    /**
      * @Assert\Type(type="array")
      */
     public $points;
 
 
-    public function __construct($id, $name, $minQuantity, $baseSrc, $price, $quantity = 0)
+    public function __construct($id, $name, $minQuantity, $baseSrc, $price, $discountPercent, $quantity = 0)
     {
         $this->id = $id;
         $this->name = $name;
         $this->minQuantity = $minQuantity;
         $this->baseSrc = $baseSrc;
         $this->price = $price;
+        $this->discountPercent = $discountPercent;
+        $this->priceDiscount = round($price * (1 - $discountPercent / 100), -2);
         $this->quantity = $quantity;
-        $this->priceDiscount = $price;
     }
 }

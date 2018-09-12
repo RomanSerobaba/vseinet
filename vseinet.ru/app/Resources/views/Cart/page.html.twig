@@ -28,7 +28,7 @@
                     </div>                    
                     <div class="quantity coll-md-3">
                         <a href="{{ path('cart_dec', { id: product.id }) }}" class="action dec" title="Уменьшить" tabindex="-1">&minus;</a>
-                        <input type="text" name="Cart[quantity][{{ product.id }}]" value="{{ product.quantity }}" class="txt" />
+                        <input type="text" value="{{ product.quantity }}" class="txt" />
                         <a href="{{ path('cart_inc', { id: product.id }) }}" class="action inc" title="Добавить" tabindex="-1">+</a>
                     </div>
                     <div class="price coll-md-2">
@@ -60,7 +60,7 @@
         <strong>Сумма покупки: <span class="total-discount">{{ cart.amountDiscount|price_format }}</span> <span class="RUR">Р</span></strong>
         <label for="cart_discount_code">Код для получения скидки:</label>
         <p>
-            <input type="text" class="txt" name="Cart[discountCode]" id="cart_discount_code" value="{{ cart.discountCode }}" />
+            <input type="text" class="txt" name="discountCode" id="cart_discount_code" value="{{ cart.discountCode }}" />
             <button type="submit" class="bttn light">Пересчитать</button>
         </p>
     </div>

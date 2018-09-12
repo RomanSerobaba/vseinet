@@ -1,13 +1,13 @@
 <?php 
 
-namespace AppBundle\ORM\Query\AST;
+namespace AppBundle\Doctrine\ORM\Query\AST;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\SqlWalker;
 
-class Random extends FunctionNode
+class RandomFunction extends FunctionNode
 {
     public function getSql(SqlWalker $sqlWalker)
     {

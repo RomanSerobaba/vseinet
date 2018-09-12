@@ -10,3 +10,4 @@ fos_js_routing:
         - 'search_geo_city'
         - 'error_report'
         - 'order_status'
+        - 'cart_set_quantity'

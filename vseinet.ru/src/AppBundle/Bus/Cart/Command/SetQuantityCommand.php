@@ -15,7 +15,7 @@ class SetQuantityCommand extends Message
 
     /**
      * @Assert\NotBlank(message="Укажите количество")
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="numeric")
      */
     public $quantity;
 }

@@ -17,7 +17,7 @@
             {% endif %}
         </small>
     </h1>
-    <form action="{{ path('cart') }}" method="post" class="Cart validate" id="Cart">
+    <form action="{{ path('cart') }}" method="port" class="Cart validate" id="Cart">
         {% include 'Cart/page.html.twig' %}
     </form>
     {{ render(controller('AppBundle:Main:getBlockLastview')) }}
@@ -83,20 +83,10 @@
         cart.on('blur', '.quantity .txt', function() {
             clearTimeout(timer);
             var txt = $(this);
-            // var set = txt.closest('.row').find('.set_conditioner_input:checked');
-            sp.post(Routing.generate('cart_set_quantity', { id: txt.closest('.row').data('id') }), {
-                quantity: txt.val(),
-                set: set.length ? set.val() : 0,
+            sp.get(Routing.generate('cart_set_quantity', { id: txt.closest('.row').data('id') }), {
+                quantity: txt.val()
             }).done(cart.done);
         });
-        // cart.on('change', '.set_conditioner_input', function() {
-        //     var val = $(this).val();
-        //     var txt = $(this).parent().parent().parent().parent().parent().find('.quantity .txt');
-        //     sp.post('/cart/changeSetConditioner/' + txt.closest('.row').data('id'), {
-        //         quantity: txt.val(),
-        //         set: val
-        //     }).done(cart.done);
-        // });
     });
 </script>
 {% endblock %}

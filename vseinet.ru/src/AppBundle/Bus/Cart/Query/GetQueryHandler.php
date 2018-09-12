@@ -3,6 +3,7 @@
 namespace AppBundle\Bus\Cart\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
+use AppBundle\Entity\DiscountCode;
 
 class GetQueryHandler extends MessageHandler
 {
@@ -11,6 +12,21 @@ class GetQueryHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $geoCity = $this->getGeoCity();
+
+        $discount = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $query->discountCode]);
+        if ($discount instanceof DiscountCode) {
+            $spec = "
+                FIRST (
+                    SELECT 
+                        tm.discountPercent
+                    FROM AppBundle:TradeMargin AS tm 
+                    INNER JOIN AppBundle:CategoryPath AS cp WITH cp.pid = tm.categoryId
+                    WHERE cp.id = bp.categoryId AND p.price BETWEEN tm.lowerLimit AND tm.higherLimit
+                )   
+            ";
+        } else {
+            $spec = "0";
+        }
 
         if (null !== $user) {
             $q = $em->createQuery("
@@ -21,7 +37,8 @@ class GetQueryHandler extends MessageHandler
                         bp.minQuantity,
                         bpi.basename,
                         p.price, 
-                        c.quantity
+                        c.quantity,
+                        {$spec}
                     )
                 FROM AppBundle:Cart c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
@@ -43,7 +60,8 @@ class GetQueryHandler extends MessageHandler
                             bp.name,
                             bp.minQuantity,
                             bpi.basename,
-                            p.price 
+                            p.price,
+                            {$spec}
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 
@@ -53,12 +71,12 @@ class GetQueryHandler extends MessageHandler
                 $q->setParameter('ids', array_keys($products));
                 $q->setParameter('geoCityId', $geoCity->getId());
                 foreach ($q->getResult() as $product) {
-                    $product->quantity = $products[$product->id]['quantity'];
+                    $product->quantity = intval($products[$product->id]['quantity']);
                     $products[$product->id] = $product;
                 }
             }
         }
         
-        return new DTO\Cart($products);
+        return new DTO\Cart($products, $discount instanceof DiscountCode ? $discount->getCode() : null);
     }
 }

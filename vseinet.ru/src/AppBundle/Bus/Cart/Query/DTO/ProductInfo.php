@@ -19,13 +19,19 @@ class ProductInfo
     /**
      * @Assert\Type(type="integer")
      */
+    public $minQuantity;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $quantity;
 
 
-    public function __construct($id, $price, $quantity = 0)
+    public function __construct($id, $price, $minQuantity, $quantity = 0)
     {
         $this->id = $id;
         $this->price = $price;
+        $this->minQuantity = $minQuantity;
         $this->quantity = $quantity;
     }
 }
