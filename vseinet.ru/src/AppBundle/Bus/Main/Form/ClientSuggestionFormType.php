@@ -8,9 +8,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\{ SubmitType, TextareaType };
 use AppBundle\Bus\User\Form\UserDataType;
 use AppBundle\Bus\User\Form\IsHumanType;
-use AppBundle\Bus\Main\Command\SuggestionCommand;
+use AppBundle\Bus\Main\Command\ClientSuggestionCommand;
 
-class SuggestionFormType extends AbstractType
+class ClientSuggestionFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -25,7 +25,7 @@ class SuggestionFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SuggestionCommand::class,
+            'data_class' => ClientSuggestionCommand::class,
         ]);
     }
 }

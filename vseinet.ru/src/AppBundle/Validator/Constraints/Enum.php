@@ -2,16 +2,15 @@
 
 namespace AppBundle\Validator\Constraints;
 
-use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Choice;
 
 /**
  * @Annotation
  */
-class Enum extends Constraint
+class Enum extends Choice
 {
     public $ref;
-    public $strict = false;
-    public $multiple = false;
+    public $strict = true;
     public $message = 'The value you selected is not a valid enum constant.';
 
     /**

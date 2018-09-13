@@ -54,9 +54,13 @@ class EnumValidator extends ConstraintValidator
             $constants = array_intersect($constants, $choices);
         }
 
-        if (!in_array($value, $constants, $constraint->strict)) {
+        if (is_array($value)) {
+            $diff = array_diff($value, $constants);
+            if (!empty($diff)) {
+                $this->context->buildViolation($constraint->message)->addViolation();
+            }
+        } elseif (!in_array($value, $constants, $constraint->strict)) {
             $this->context->buildViolation($constraint->message)->addViolation();
-            
         }
     }
 }

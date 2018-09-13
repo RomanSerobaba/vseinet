@@ -66,9 +66,9 @@ class CheaperRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="comment", type="text")
+     * @ORM\Column(name="text", type="text")
      */
-    private $comment;
+    private $text;
 
 
     /**
@@ -226,27 +226,27 @@ class CheaperRequest
     }
 
     /**
-     * Set comment
+     * Set text
      *
-     * @param string $comment
+     * @param string $text
      *
      * @return CheaperRequest
      */
-    public function setComment($comment)
+    public function setText($text)
     {
-        $this->comment = $comment;
+        $this->text = $text;
 
         return $this;
     }
 
     /**
-     * Get comment
+     * Get text
      *
      * @return string
      */
-    public function getComment()
+    public function getText()
     {
-        return $this->comment;
+        return $this->text;
     }
 }
 

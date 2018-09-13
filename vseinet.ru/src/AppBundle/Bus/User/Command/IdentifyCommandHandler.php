@@ -5,6 +5,7 @@ namespace AppBundle\Bus\User\Command;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\Contact;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Comuser;
 use AppBundle\Enum\ContactTypeCode;
 
 class IdentifyCommandHandler extends MessageHandler
@@ -54,7 +55,7 @@ class IdentifyCommandHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         $contact = $em->getRepository(Contact::class)->findOneBy([
-            'personId' => $user->person->getId(),
+            'personId' => $user->getPersonId(),
             'value' => $userData->phone,
         ]);
         if (!$contact instanceof Contact) {
@@ -65,14 +66,14 @@ class IdentifyCommandHandler extends MessageHandler
                 $contact->setContactTypeCode(ContactTypeCode::PHONE);
             }
             $contact->setValue($userData->phone);
-            $contact->setPersonId($user->person->getId());
+            $contact->setPersonId($user->getPersonId());
             $em->persist($contact);
         }
         $userData->contactIds[] = $contact->getId();
 
         if ($userData->additionalPhone) {
             $contact = $em->getRepository(Contact::class)->findOneBy([
-                'personId' => $user->person->getId(),
+                'personId' => $user->getPersonId(),
                 'value' => $userData->additionalPhone,
             ]);
             if (!$contact instanceof Contact) {
@@ -83,7 +84,7 @@ class IdentifyCommandHandler extends MessageHandler
                     $contact->setContactTypeCode(ContactTypeCode::PHONE);
                 }
                 $contact->setValue($userData->value);
-                $contact->setPersonId($user->person->getId());
+                $contact->setPersonId($user->getPersonId());
                 $em->persist($contact);
             }
             $userData->contactIds[] = $contact->getId();
@@ -91,14 +92,14 @@ class IdentifyCommandHandler extends MessageHandler
 
         if ($userData->email) {
             $contact = $em->getRepository(Contact::class)->findOneBy([
-                'personId' => $user->person->getId(),
+                'personId' => $user->getPersonId(),
                 'value' => $userData->email,
             ]);
             if (!$contact instanceof Contact) {
                 $contact = new Contact();
                 $contact->setContactTypeCode(ContactTypeCode::EMAIL);
                 $contact->setValue($userData->email);
-                $contact->setPersonId($user->person->getId());
+                $contact->setPersonId($user->getPersonId());
                 $em->persist($contact);
             }
             $userData->contactIds[] = $contact->getId();

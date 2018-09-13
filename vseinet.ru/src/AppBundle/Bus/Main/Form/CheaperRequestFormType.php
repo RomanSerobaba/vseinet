@@ -13,7 +13,7 @@ use AppBundle\Bus\User\Form\UserDataType;
 use AppBundle\Bus\User\Form\IsHumanType;
 use AppBundle\Bus\Main\Command\CheaperRequestCommand;
 
-class CheaperRequestType extends AbstractType
+class CheaperRequestFormType extends AbstractType
 {
     /**
      * @var EntityManagerInterface
@@ -48,7 +48,7 @@ class CheaperRequestType extends AbstractType
             ->add('competitorLink', TextType::class)
             ->add('geoCityId', GeoCityType::class, ['choices' => $choicesGeoCities])
             ->add('userData', UserDataType::class)
-            ->add('comment', TextareaType::class, ['required' => false])
+            ->add('text', TextareaType::class, ['required' => false])
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class)
         ;

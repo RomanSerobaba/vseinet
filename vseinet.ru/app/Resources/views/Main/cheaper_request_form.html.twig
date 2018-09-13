@@ -57,8 +57,8 @@
     {% include 'User/user_data_form.html.twig' with { form: form } only %}
     
     <div class="row h">
-        {{ form_label(form.comment, 'Комментарий') }}
-        {{ form_widget(form.comment, { attr: { class: 'txt' }}) }}
+        {{ form_label(form.text, 'Комментарий') }}
+        {{ form_widget(form.text, { attr: { class: 'txt' }}) }}
     </div>
 
     {% include 'User/is_human_form.html.twig' with { form: form } only %}

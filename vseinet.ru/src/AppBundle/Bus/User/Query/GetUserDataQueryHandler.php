@@ -25,7 +25,7 @@ class GetUserDataQueryHandler extends MessageHandler
                 WHERE c.personId = :personId AND c.contactTypeCode IN (:mobile, :phone)
                 ORDER BY ORD1 ASC, ORD2 ASC
             ");
-            $q->setParameter('personId', $user->person->getId());
+            $q->setParameter('personId', $user->getPersonId());
             $q->setParameter('mobile', ContactTypeCode::MOBILE);
             $q->setParameter('mobileOrd', ContactTypeCode::MOBILE);
             $q->setParameter('phone', ContactTypeCode::PHONE);
@@ -42,7 +42,7 @@ class GetUserDataQueryHandler extends MessageHandler
                 WHERE c.personId = :personId AND c.contactTypeCode IN (:email)
                 ORDER BY ORD ASC
             ");
-            $q->setParameter('personId', $user->person->getId());
+            $q->setParameter('personId', $user->getPersonId());
             $q->setParameter('email', ContactTypeCode::EMAIL);
             $data->emailList = $q->getResult();
             if (!empty($data->emailList)) {

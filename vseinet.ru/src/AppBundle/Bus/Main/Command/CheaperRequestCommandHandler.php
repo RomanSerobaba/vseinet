@@ -23,7 +23,6 @@ class CheaperRequestCommandHandler extends MessageHandler
 
         if (null !== $command->userData->userId) {
             $request->setUserId($command->userData->userId);
-            // @todo: save contactdIds
         } else {
             $request->setComuserId($command->userData->comuserId);
         }
@@ -31,7 +30,7 @@ class CheaperRequestCommandHandler extends MessageHandler
         $request->setGeoCityId($command->geoCityId);
         $request->setCompetitorPrice($command->competitorPrice);
         $request->setCompetitorLink($command->competitorLink);
-        $request->setComment($command->comment);
+        $request->setText($command->text);
 
         $em->persist($request);
         $em->flush();

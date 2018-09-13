@@ -14,7 +14,7 @@ services:
             - { name: 'form.type' }
 
     cheaper_request.form:
-        class: 'AppBundle\Bus\Main\Form\CheaperRequestType'
+        class: 'AppBundle\Bus\Main\Form\CheaperRequestFormType'
         public: false
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:

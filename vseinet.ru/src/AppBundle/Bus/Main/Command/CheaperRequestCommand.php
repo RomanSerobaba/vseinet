@@ -39,7 +39,7 @@ class CheaperRequestCommand extends Message
     /**
      * @Assert\Type(type="string")
      */
-    public $comment;
+    public $text;
 
     /**
      * @Assert\All({

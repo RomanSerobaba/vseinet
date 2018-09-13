@@ -71,7 +71,7 @@ class MainController extends Controller
             $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
             $command->geoCityId = $this->getGeoCity()->getId();
         }
-        $form = $this->createForm(Form\CheaperRequestType::class, $command);
+        $form = $this->createForm(Form\CheaperRequestFormType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -173,11 +173,11 @@ class MainController extends Controller
      */
     public function suggestionAction(Request $request)
     {
-        $command = new Command\SuggestionCommand();
+        $command = new Command\ClientSuggestionCommand();
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
         }
-        $form = $this->createForm(Form\SuggestionFormType::class, $command);
+        $form = $this->createForm(Form\ClientSuggestionFormType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -196,7 +196,7 @@ class MainController extends Controller
             }
         }    
 
-        return $this->render('Main/suggestion_form.html.twig', [
+        return $this->render('Main/client_suggestion_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
