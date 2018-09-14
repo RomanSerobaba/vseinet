@@ -30,7 +30,7 @@ class CheaperRequestCommandHandler extends MessageHandler
         $request->setGeoCityId($command->geoCityId);
         $request->setCompetitorPrice($command->competitorPrice);
         $request->setCompetitorLink($command->competitorLink);
-        $request->setText($command->text);
+        $request->setComment($command->comment);
 
         $em->persist($request);
         $em->flush();

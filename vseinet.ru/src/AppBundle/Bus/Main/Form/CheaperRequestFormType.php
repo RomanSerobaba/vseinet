@@ -48,7 +48,7 @@ class CheaperRequestFormType extends AbstractType
             ->add('competitorLink', TextType::class)
             ->add('geoCityId', GeoCityType::class, ['choices' => $choicesGeoCities])
             ->add('userData', UserDataType::class)
-            ->add('text', TextareaType::class, ['required' => false])
+            ->add('comment', TextareaType::class, ['required' => false])
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class)
         ;
