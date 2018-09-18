@@ -1,0 +1,57 @@
+{% if app.userIsEmployee %}
+    <div class="admin-panel" data-id="{{ product.id }}">
+        <div class="actions">
+            <a 
+                href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}" 
+                class="edit" 
+                target="_blank" 
+                title="Редактировать"
+            ></a>
+            <a href="{{ path('admin_product_merge') }}" class="merge" title="Объединить"></a>
+            <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
+        </div>
+    </div>
+{% endif %}
+
+{#if $user and Model::factory('User')->is('PRODUCT_INFO')}
+    <div class="admin-panel" data-id="{$product.id}">
+        <div class="actions">
+            <a href="/content/product/edit/{$product.base_product_id}/" class="edit" target="_blank" title="Редактировать"></a>
+            <a href="/admin/product/toggleIsLoaded/{$product.base_product_id}/" title="Парсить" class="parse{if ! $product.is_loaded} inact{/if}"></a>
+            <a href="/admin/catalog/product/merge" title="Объединить" class="merge"></a>
+            {if Model::factory('User')->is('COMPETITORS_DIFFERENCE_INDICATION')}
+                <a href="/competitor/{$product.id}/" class="competitor{if ($product.competitor_price && $product.competitor_price<($product.price+$product.delivery_tax) || $product.competitor_price2 && $product.competitor_price2<($product.price+$product.delivery_tax))} warning{elseif ($product.competitor_price && $product.competitor_price>=($product.price+$product.delivery_tax) || $product.competitor_price2 && $product.competitor_price2>=($product.price+$product.delivery_tax))} ice{/if}" title="Цены конкурентов"></a>
+            {/if}
+            {if Model::factory('User')->is('EXTENDED_PRODUCT_INFO')}
+                <a href="/admin/product/toggleIsSpecial/{$product.id}/" class="special{if ! $product.is_special} inact{/if}" title="Акция">-30%</a>
+                {Model::admin('Product_Pricetag') assign=pricetag}
+                <a href="/admin/order/list/?product={$product.id}" target="_blank"><img src="/img/btns/order.png" title="История заказов" alt="История заказов"/></a>
+                    <a href="/admin/reclamation/list?product_id={$product.id}" target="_blank" class="defect" title="Товар в претензиях"></a>
+                <a href="/admin/product/addPricetag/{$product.id}/" data-size="180" class="pricetag{if ! $pricetag->has($product.id, 180)} inact{/if}" title="Печать ценника"><span>x48мм</span></a>
+                <a href="/admin/tracker/pricetag/?size=180" onclick="window.open(this.href);return false;" class="green pricetag-count s180">{$pricetag->count(180)}</a>
+                <a href="/admin/product/addPricetag/{$product.id}/" data-size="250" class="pricetag{if ! $pricetag->has($product.id, 250)} inact{/if}" title="Печать ценника"><span>x250</span></a>
+                <a href="/admin/tracker/pricetag/?size=250" onclick="window.open(this.href);return false;" class="green pricetag-count s250">{$pricetag->count(250)}</a>
+                <a href="/admin/product/addPricetag/{$product.id}/" data-size="350" class="pricetag{if ! $pricetag->has($product.id, 350)} inact{/if}" title="Печать ценника"><span>x350</span></a>
+                <a href="/admin/tracker/pricetag/?size=350" onclick="window.open(this.href);return false;" class="green pricetag-count s350">{$pricetag->count(350)}</a>
+                <a href="/admin/catalog/product/move/{$product.base_product_id}" class="move" title="Переместить"></a>
+                {*if $product.tpl}
+                    <span class="mods" data-id="{$product.category_id}">
+                        <a href="javascript:void(0)" class="new" data-id="{$product.base_product_id}" title="Создать модификацию">new</a>
+                        <a href="javascript:void(0)" class="add" data-id="{$product.base_product_id}" title="Добавить модификацию">add</a>
+                    </span>
+                {/if*}
+            {/if}
+        </div>
+        {if $product.reserve_office|default:null}
+            <div style="margin-top: 15px"><span style="background-color: rgb(180, 255, 194); color: rgb(145, 70, 6); font-weight: bold; padding: 2px 5px; margin-left: -5px;">{$product.point_name|default:'Всего доступно'}: {$product.reserve_office} шт.</span>
+            </div>
+        {/if}
+        <div class="competitors hidden"></div>
+    </div>
+
+    {*<div class="product_subblock" style="display:none" id="sp{$product.id}"></div>
+    <div class="product_subblock" style="display:none;" id="ok{$product.id}"></div>
+    <div class="product_subblock" style="display:none" id="rl{$product.id}"></div>
+    <div class="product_subblock" style="display:none" id="cp{$product.id}"></div>
+    <div class="product_subblock" style="display:none" id="pars{$product.id}"></div> *}
+{/if#}

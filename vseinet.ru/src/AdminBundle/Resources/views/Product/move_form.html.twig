@@ -1,0 +1,15 @@
+{{ form_start(form, { action: path('admin_product_move', { id: command.product.id }), attr: { id: 'move-form' }}) }}
+
+<div class="row product">
+    {{ command.product.name }}
+    {{ form_widget(form.id, { value: command.product.id }) }}
+</div>  
+
+{% include '@Admin/Category/choice_form.html.twig' with { form: form.category } only %}
+
+<div class="row">
+    {{ form_widget(form.submit, { label: 'Переместить', attr: { class: 'bttn green r' }}) }} 
+    {{ form_widget(form._token) }}
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,81 @@
+<div class="category_choice error">
+    <div class="row">
+        {{ form_label(form.q, 'Поиск:') }}
+        {{ form_widget(form.q, { attr: { class: 'txt q', autocomplete: 'off' }}) }}
+    </div>
+
+    <div class="row choice">
+    </div>
+
+    <div class="row">
+        <div class="treeview"></div>
+        {{ form_widget(form.id, { attr: { class: 'id' }}) }}
+    </div>
+</div>
+<link href="{{ asset('bootstrap/treeview/treeview.css') }}" rel="stylesheet" />
+<link href="{{ asset('bootstrap/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+<script src="{{ asset('bootstrap/treeview/treeview.js') }}"></script>
+<script>
+$(function() {
+    var $category = $('.category_choice');
+    var $q = $category.find('.q');
+    var $id = $category.find('.id');
+    var $tree = $category.find('.treeview').treeview().addClass('loading');
+    var $choice = $category.find('.choice');
+
+    sp.get(Routing.generate('admin_categories')).then(function(response) {
+        $tree.treeview('setData', response.categories).removeClass('loading');
+    });
+
+    $tree.on('select.node.treeview', function(e, node) {
+        if (0 == node.children) {
+            var bc = [], breadcrumbs = $tree.treeview('getBreadcrumbs', node.id);
+            for (var i = 0, len = breadcrumbs.length; i < len; i++) {
+                bc.push(breadcrumbs[i].name);
+            }
+            bc.push(node.name);
+            $choice.html(bc.join(' / ')).removeClass('error');
+            $id.val(node.id);
+        }
+        else {
+            $choice.html('Выберите конечную категорию').addClass('error');
+            $id.val('');
+        }
+    });
+
+    var cache = {}
+    $q.autocomplete({
+        minLength: 2,
+        select: function(event, ui) {
+            var node = $tree.treeview('revealNode', ui.item.id)
+            if (node) {
+                var selected = $tree.treeview('getSelected')
+                if (selected.length) {
+                    $tree.treeview('unselect', selected, { silent: true })
+                }
+                $tree.treeview('select', node)
+            }
+        },
+        source: function(request, response) {
+            var term = $.ui.autocomplete.escapeRegex(request.term)
+            if (term in cache) {
+                response(cache[term])
+                return false
+            }
+            sp.get(Routing.generate('admin_search_categories'), { q: request.term }).done(function(data) {
+                cache[term] = $.map(data.categories, function(category) {
+                    category.value = category.name
+                    return category
+                });
+                response(cache[term])
+            })
+        }
+    }).data('ui-autocomplete')._renderItem = function($ul, item) {
+        var $li = $('<li>').append('<a>' + item.label + '</a>');
+        $li.append('<div>' + $.map(item.path, function(name, id) {
+            return '<a href="javascript:void(0)">' + name + '</a>';
+        }).join(' / ') + '</div>');
+        return $li.appendTo($ul);
+    }
+});
+</script>

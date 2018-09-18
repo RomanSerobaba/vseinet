@@ -22,7 +22,7 @@ services:
 
     api.client:
         class: 'AppBundle\Security\ApiClient'
-        arguments: [ '%api.host%', '%api.public_id%', '%api.secret%', '@session', '@httplug.message_factory', '@httplug.client.guzzle' ]
+        arguments: [ '%api.host%', '@session', '@session.storage.native', '@httplug.message_factory', '@httplug.client.guzzle' ]
         public: true
 
     geo_city.identity:

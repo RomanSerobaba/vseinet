@@ -17,13 +17,15 @@ $.widget('sp.ajaxcontent', {
                 }
             }
         },
+        target: null,
         load: $.noop
     },
     _create: function() {
-        this._on({
-            click: function(e) {
+        var target = this.options.target ? $(this.options.target) : this.element;
+        this._on(target, {
+            'click': function(e) {
                 e.preventDefault();
-                this.load(this.options.url || this.element.data('url') || this.element.prop('href'), this.options.data.call(e.target));
+                this.load(this.options.url || target.data('url') || target.prop('href'), this.options.data.call(e.target));
             }
         });
     },

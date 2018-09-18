@@ -23,3 +23,4 @@ require('./js/error-report.js');
 require('./js/cheaper-request.js');
 require('./js/credit-calculators.js');
 require('./js/order-status.js');
+require('./js/admin-panel.js');
