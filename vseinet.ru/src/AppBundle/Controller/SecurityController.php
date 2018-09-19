@@ -59,7 +59,6 @@ class SecurityController extends Controller
      *     path="/registr/", 
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_ANONIMOUS')")
      */
     public function registrAction(Request $request) 
     {

@@ -19,6 +19,11 @@ class SearchProductFinder extends ProductFinder
         if ($this->filter instanceof Filter) {
             return $this->filter;
         }
+        $this->filter = new Filter();
+
+        if (empty($this->data->id)) {
+            return $this->filter;
+        }
 
         $query = "
             SELECT {$this->getSelectPrice()}
@@ -43,8 +48,6 @@ class SearchProductFinder extends ProductFinder
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
-
-        $this->filter = new Filter();
         
         $result = array_shift($results);
         $this->filter->price = new Filter\Range($result[0]['min_price'], $result[0]['max_price']);
@@ -88,6 +91,10 @@ class SearchProductFinder extends ProductFinder
     public function getFacets(): Filter\Facets
     {
         $filter = $this->getFilter();
+        $facets = new Filter\Facets();
+        if (empty($this->data->q)) {
+            return $facets;
+        }
 
         $query = "
             SELECT COUNT(*) AS total
@@ -110,8 +117,6 @@ class SearchProductFinder extends ProductFinder
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
-
-        $facets = new Filter\Facets();
 
         $result = array_shift($results);
         $facets->total = $result[0]['total'];

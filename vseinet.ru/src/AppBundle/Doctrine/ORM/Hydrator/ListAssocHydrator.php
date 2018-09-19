@@ -1,9 +1,9 @@
 <?php 
-namespace AppBundle\ORM\Hydrator;
+namespace AppBundle\Doctrine\ORM\Hydrator;
 
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 
-class IndexByNativeHydrator extends AbstractHydrator
+class ListAssocHydrator extends AbstractHydrator
 {     
     protected function hydrateAllData()     
     {         
@@ -18,7 +18,6 @@ class IndexByNativeHydrator extends AbstractHydrator
 
     protected function hydrateRowData(array $row, array &$result)
     {
-        $id = reset($row);
-        $result[$id] = $row;
+        $result[] = $row;
     }
 }

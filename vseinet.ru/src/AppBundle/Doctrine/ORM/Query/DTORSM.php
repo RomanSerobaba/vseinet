@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\ORM\Query;
+namespace AppBundle\Doctrine\ORM\Query;
 
 use Doctrine\ORM\Query\ResultSetMapping;
 

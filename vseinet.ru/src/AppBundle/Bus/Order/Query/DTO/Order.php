@@ -81,7 +81,7 @@ class Order
     public function __construct(array $order)
     {
         $this->id = $order['id'];
-        $this->createdAt = new \DateTime($order['createdAt']);
+        $this->createdAt = $order['createdAt'];
         $this->amount = 0;
         $this->paymentType = $order['paymentType'] ?? null;
         $this->paymentTypeName = $order['paymentTypeName'] ?? null;

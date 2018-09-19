@@ -19,6 +19,7 @@ class ContactTypeCode
             self::EMAIL => 'Email',
             self::SKYPE => 'Skype',
             self::ICQ => 'ICQ',
+            self::CUSTOM => '',
         ];
     }
 
@@ -27,7 +28,7 @@ class ContactTypeCode
         $choices = self::getChoices();
 
         if (!isset($choices[$code])) {
-            throw new \LogicException(strintf('Choice "%s" in class "%s" not found.', $code, get_called_class()));
+            throw new \LogicException(sprintf('Choice "%s" in class "%s" not found.', $code, get_called_class()));
         }
 
         return $choices[$code];

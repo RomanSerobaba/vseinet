@@ -1,0 +1,45 @@
+<h4 class="part_title"><span>Остатки поставщиков</span></h4>
+{% for remain in remains %}
+    <div style="margin-top:3px" class="supplier-product">
+        <span class="supplier-availability"
+            {% if remain.supplierCode is null %}
+                style="color:#cc8e00"
+            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == remain.productAvailabilityCode %}
+                style="color:green" title="в наличии"
+            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == remain.productAvailabilityCode %}
+                style="color:blue" title="ожидается"        
+            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == remain.productAvailabilityCode %}
+                style="color:red" title="отсутствует"        
+            {% else %}
+                style="color:#01c9ed" title="под заказ"
+            {% endif %}
+        >
+            {{ remain.priceTime|date('d.m.Y') }}
+        </span>
+        <b style="text-decoration:underline">
+            {% if remain.supplierCode is null %}
+                Наши резервы    
+            {% else %}
+                {{ remain.supplierCode }}
+            {% endif %}
+        </b>
+        {#% if remain.supplierCode is not null and constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != remain.productAvailabilityCode %#}
+            <a href="{{ path('admin_supplier_set_not_available') }}" class="supplier-set-not-available" data-id="{{ remain.id }}" title="Нет в наличии"></a>
+        {#% endif %#}
+        <span>{{ remain.name }}</span>
+        <b style="text-decoration:underline">{{ remain.price|price_format({ decimals: 2 }) }}</b>
+        {% if remain.article is not null %}
+            <span style="color:BlueViolet;font-weight:bold">Артикул:</span> <span>{{ remain.article }}</span>
+        {% endif %}
+        {% if remain.code is not null %}
+            <span style="color:BlueViolet;font-weight:bold">Код поставщика:</span> <span>{{ remain.code }}</span>
+        {% endif %}
+        {% if remain.transferedAt is not null %}
+            <span style="color:BlueViolet;font-weight:bold">Перенёс:</span> <span>{{ remain.transferedBy }} {{ remain.transferedAt }}</span>
+        {% endif %}
+        {% if remain.supplierCode is not null %}
+            <a href="{{ path('admin_supplier_unlink') }}" class="supplier-unlink" data-id="{{ remain.id }}" title="Удалить"></a>
+            <a href="{{ path('admin_supplier_restore') }}" class="supplier-restore" data-id="{{ remain.id }}" title="Восстановить" style="display:none"></a>
+        {% endif %}
+    </div>
+{% endfor %}

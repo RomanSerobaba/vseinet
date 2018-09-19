@@ -9,7 +9,7 @@ class Facets
     /**
      * @Assert\Type(type="integer")
      */
-    public $total;
+    public $total = 0;
     
     /**
      * @Assert\Type(type="AppBundle\Bus\Catalog\Query\DTO\Filter\Range")

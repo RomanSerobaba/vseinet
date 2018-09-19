@@ -121,4 +121,54 @@ $(function() {
         }
     });
 
+    // info pane
+    container.on('click', '.admin-panel .competitor', function(e) {
+        e.preventDefault();
+        var adminPanel = $(this).closest('.admin-panel');
+        var infoPane = adminPanel.find('.info-pane');
+        if (infoPane.is('.hidden')) {
+            infoPane.removeClass('hidden');
+
+            var supplierRemains = infoPane.find('.supplier-remains');
+            if (supplierRemains.is('.loading')) {
+                sp.get(Routing.generate('admin_supplier_remains'), { baseProductId: adminPanel.data('id') }).then(function(response) {
+                    supplierRemains.html(response.html).removeClass('loading');
+                });
+            }
+
+        } else {
+            infoPane.addClass('hidden');
+        }
+    });
+
+    // supplier remains
+    container.on('click', '.admin-panel .supplier-unlink', function(e) {
+        e.preventDefault();
+        sp.post(this.href, { 
+            baseProductId: this.closest('.admin-panel').dataset.id, 
+            supplierProductId: this.dataset.id 
+        }).then(function(response) {
+            e.target.style.display = 'none';
+            e.target.nextElementSibling.style.display = 'inline-block';
+        });
+    });
+    container.on('click', '.admin-panel .supplier-restore', function(e) {
+        e.preventDefault();
+        sp.post(this.href, { 
+            baseProductId: this.closest('.admin-panel').dataset.id, 
+            supplierProductId: this.dataset.id 
+        }).then(function(response) {
+            e.target.style.display = 'none';
+            e.target.previousElementSibling.style.display = 'inline-block';
+        });
+    });
+    container.on('click', '.admin-panel .supplier-set-not-available', function(e) {
+        e.preventDefault();
+        sp.post(this.href, { 
+            supplierProductId: this.dataset.id 
+        }).then(function(response) {
+            e.target.closest('.supplier-product').querySelector('.supplier-availability').style.color = 'red';
+            e.target.remove();
+        });
+    });
 });

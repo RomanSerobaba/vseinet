@@ -65,11 +65,11 @@ doctrine:
                 auto_mapping: true
                 mappings: ~
                 hydrators:
-                    ListHydrator: AppBundle\ORM\Hydrator\ListHydrator
-                    ListAssocHydrator: AppBundle\ORM\Hydrator\ListAssocHydrator
-                    IndexByHydrator: AppBundle\ORM\Hydrator\IndexByHydrator
-                    DTOHydrator: AppBundle\ORM\Hydrator\DTOHydrator
-                    IndexByNativeHydrator: AppBundle\ORM\Hydrator\IndexByNativeHydrator
+                    ListHydrator: AppBundle\Doctrine\ORM\Hydrator\ListHydrator
+                    ListAssocHydrator: AppBundle\Doctrine\ORM\Hydrator\ListAssocHydrator
+                    IndexByHydrator: AppBundle\Doctrine\ORM\Hydrator\IndexByHydrator
+                    DTOHydrator: AppBundle\Doctrine\ORM\Hydrator\DTOHydrator
+                    IndexByNativeHydrator: AppBundle\Doctrine\ORM\Hydrator\IndexByNativeHydrator
                 dql:
                     datetime_functions:
                         date:           Oro\ORM\Query\AST\Functions\SimpleFunction

@@ -9,6 +9,10 @@
             ></a>
             <a href="{{ path('admin_product_merge') }}" class="merge" title="Объединить"></a>
             <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
+            <a href="javascript:void(0)" title="Цены конкурентов" class="competitor"></a>
+        </div>
+        <div class="info-pane hidden">
+            <div class="supplier-remains loading competitors"></div>
         </div>
     </div>
 {% endif %}

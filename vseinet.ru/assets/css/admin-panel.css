@@ -83,13 +83,43 @@ H4 A.competitor {
     position: relative;
     /*top: -20px;*/
 }
-
+.admin-panel .actions {
+    overflow: hidden;
+}
 .admin-panel .actions A {
     border: none !important;
     float: left;
     height: 24px;
     margin-right: 5px;
     width: 24px;
+}
+.admin-panel .loading {
+    min-height: 60px;
+}
+
+.admin-panel A.supplier-unlink {
+    background: url(../images/delete.gif);
+    border: none;
+    display: inline-block;
+    height: 16px;
+    vertical-align: bottom;
+    width: 16px;
+}
+.admin-panel A.supplier-restore {
+    background: url(../images/restore.gif);
+    border: none;
+    display: inline-block;
+    height: 16px;
+    vertical-align: bottom;
+    width: 16px;
+}
+.admin-panel A.supplier-set-not-available {
+    background: url(../images/cancel.png);
+    border: none;
+    display: inline-block;
+    height: 16px;
+    vertical-align: bottom;
+    width: 16px;
 }
 
 .admin-panel A.edit-details {

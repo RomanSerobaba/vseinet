@@ -1,11 +1,12 @@
 <?php 
-namespace AppBundle\ORM\Hydrator;
+namespace AppBundle\Doctrine\ORM\Hydrator;
 
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
-use AppBundle\ORM\Query\DTORSM;
+use AppBundle\Doctrine\ORM\Query\DTORSM;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\Enum;
 
 class DTOHydrator extends AbstractHydrator 
 {     
@@ -158,8 +159,6 @@ class DTOHydrator extends AbstractHydrator
             throw new \InvalidArgumentException('ResultSetMapping must instance of DTORSM');
         }
 
-//        $origKeys = array_keys($row);
-//        $snakeKeys = array_map(function($idx, $key) { $suf = "_$idx"; return (substr($key, -strlen($suf)) == $suf) ? substr($key, 0, -strlen($suf)) : $key; }, range(0, count($origKeys)-1), $origKeys);
         $snakeKeys = array_keys($row);
         $camelKeys = array_map(function($key) { return Inflector::camelize($key); }, $snakeKeys);
 
@@ -186,6 +185,11 @@ class DTOHydrator extends AbstractHydrator
                             $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = $subtype;
                         }
                     }
+                    continue;
+                }
+                if ($annotation instanceof Enum) {
+                    $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'string';
+                    $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = null;
                 }
             }
         }
