@@ -1,0 +1,71 @@
+<h4 class="part_title"><span>Резервы на точках</span></h4>
+<table class="point_reserve">
+    <thead>
+        <tr>
+            <th>Точка</th>
+            <th>Свободных</th>  
+            <th>Своб. в пути</th>
+            <th>Заказанных</th>
+            <th>Заказ. в пути</th>
+            <th>В претензиях</th>
+            <th>Претензион. в пути</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for geoCity in reserves.geoCities %}
+            <tr class="category">
+                <td colspan="7">{{ geoCity.name }}</td>
+            </tr>
+            {% for geoPointId in geoCity.geoPointIds %}
+                {% set geoPoint = reserves.geoPoints[geoPointId] %}
+                <tr class="type">
+                    <td>{{ geoPoint.name }}</td>
+                    <td colspan="6"></td>
+                </tr>
+                {% for geoRoomId in geoPoint.geoRoomIds %}
+                    {% set geoRoom = reserves.geoRooms[geoRoomId] %}
+                    <tr class="room">
+                        <td>{{ geoRoom.name }}</td>
+                        <td colspan="6"></td>
+                    </tr>
+                    {% for supplyId in geoRoom.supplyIds %}
+                        {% set supply = reserves.supplies[supplyId] %}
+                        <tr class="supply">
+                            <td>{{ supply.code }}-{{ supply.number }} от {{ supply.createdAt|date('d.m.Y') }}</td>
+                            <td>
+                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::FREE') == supply.goodsConditionCode and supply.destinationGeoRoomId is null and supply.geoRoomId == geoRoom.id %}
+                                    {{ supply.delta }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::FREE') == supply.goodsConditionCode and supply.destinationGeoRoomId == geoRoom.id %}
+                                    {{ supply.delta }}
+                                {% endif %}    
+                            </td>
+                            <td>
+                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::RESERVED') == supply.goodsConditionCode and supply.destinationGeoRoomId is null and supply.geoRoomId == geoRoom.id %}
+                                    {{ supply.delta }}
+                                {% endif %}    
+                            </td>
+                            <td>
+                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::RESERVED') == supply.goodsConditionCode and supply.destinationGeoRoomId == geoRoom.id %}
+                                    {{ supply.delta }}
+                                {% endif %} 
+                            </td>
+                            <td>
+                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::ISSUED') == supply.goodsConditionCode and supply.destinationGeoRoomId is null and supply.geoRoomId == geoRoom.id %}
+                                    {{ supply.delta }}
+                                {% endif %} 
+                            </td>
+                            <td>
+                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::ISSUED') == supply.goodsConditionCode and supply.destinationGeoRoomId == geoRoom.id %}
+                                    {{ supply.delta }}
+                                {% endif %} 
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

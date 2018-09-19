@@ -124,20 +124,27 @@ $(function() {
     // info pane
     container.on('click', '.admin-panel .competitor', function(e) {
         e.preventDefault();
-        var adminPanel = $(this).closest('.admin-panel');
-        var infoPane = adminPanel.find('.info-pane');
-        if (infoPane.is('.hidden')) {
-            infoPane.removeClass('hidden');
+        var panel = $(this).closest('.admin-panel');
+        var pane = panel.find('.info-pane');
+        if (pane.is('.hidden')) {
+            pane.removeClass('hidden');
 
-            var supplierRemains = infoPane.find('.supplier-remains');
-            if (supplierRemains.is('.loading')) {
-                sp.get(Routing.generate('admin_supplier_remains'), { baseProductId: adminPanel.data('id') }).then(function(response) {
-                    supplierRemains.html(response.html).removeClass('loading');
+            var remains = pane.find('.supplier-remains');
+            if (remains.is('.loading')) {
+                sp.get(Routing.generate('admin_supplier_remains'), { baseProductId: panel.data('id') }).then(function(response) {
+                    remains.html(response.html).removeClass('loading');
                 });
             }
 
+            var reserves = pane.find('.reserves');
+            if (reserves.is('.loading')) {
+                sp.get(Routing.generate('admin_reserves'), { baseProductId: panel.data('id') }).then(function(response) {
+                    reserves.html(response.html).removeClass('loading');
+                });
+            } 
+
         } else {
-            infoPane.addClass('hidden');
+            pane.addClass('hidden');
         }
     });
 

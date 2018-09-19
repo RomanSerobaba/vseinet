@@ -446,8 +446,16 @@ H1 A.pricetag {
     padding-left: 20px;
 }
 
-.point_reserve .product {
-    text-align: center;
+.point_reserve .room TD:first-child  {
+    font-weight: bold;
+    padding-left: 40px;
+}
+.point_reserve .supply {
+    text-align: center;   
+}
+.point_reserve .supply TD:first-child  {
+    padding-left: 60px;
+    text-align: left;   
 }
 
 .supplier_reserve {
