@@ -35,7 +35,8 @@
             <span style="color:BlueViolet;font-weight:bold">Код поставщика:</span> <span>{{ remain.code }}</span>
         {% endif %}
         {% if remain.transferedAt is not null %}
-            <span style="color:BlueViolet;font-weight:bold">Перенёс:</span> <span>{{ remain.transferedBy }} {{ remain.transferedAt }}</span>
+            <span style="color:BlueViolet;font-weight:bold">Перенёс:</span> 
+            <span>{{ remain.transferedBy }} {{ remain.transferedAt|date('d.m.Y') }}</span>
         {% endif %}
         {% if remain.supplierCode is not null %}
             <a href="{{ path('admin_supplier_unlink') }}" class="supplier-unlink" data-id="{{ remain.id }}" title="Удалить"></a>
