@@ -1,2 +1,7 @@
 services:
-
+    add_revision.form:
+        class: 'AdminBundle\Bus\Competitor\Form\AddRevisionFormType'
+        public: false
+        arguments: [ '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: 'form.type' }

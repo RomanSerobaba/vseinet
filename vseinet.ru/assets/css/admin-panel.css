@@ -57,6 +57,17 @@ H4 A.competitor {
     color: #008000;
 }
 
+.competitor-revision .row .inline {
+    float: left;
+    margin-right: 5px;
+}
+.competitor-revision .icon-loop:before {
+    font-size: 11px;
+}
+.competitors .compare TR.request {
+    background: #d0deff;
+}
+
 /* clock-in-out
 -------------------------------------------------------------------*/
 #clock-in-out {

@@ -65,7 +65,7 @@ class MainController extends Controller
         if (!$command->product instanceof BaseProduct) {
             throw new NotFoundHttpException();
         }
-        $command->competitors = $em->getRepository(Competitor::class)->findBy(['isActive' => true]);
+        $command->competitors = $em->getRepository(Competitor::class)->getActive();
 
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);

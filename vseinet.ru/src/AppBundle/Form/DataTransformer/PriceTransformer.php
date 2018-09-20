@@ -30,6 +30,6 @@ class PriceTransformer implements DataTransformerInterface
 
     public function reverseTransform($value)
     {
-        return round(100 * floatval(str_replace([' ', ','], ['', '.'], $value)));
+        return intval(round(100 * floatval(str_replace([' ', ','], ['', '.'], $value))));
     }
 }

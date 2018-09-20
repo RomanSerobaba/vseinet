@@ -1,0 +1,45 @@
+<h4><span>Сравнение цен</span></h4>
+<table style="width:100%">
+    <tbody class="compare">
+        {% for revision in revisions %}
+            <tr class="revision {{ revision.state }} {{ revision.status }}">
+                <td style="width:150px">
+                    {{ revision.name }}
+                </td>
+                <td style="word-break:break-all">
+                    {% if not revision.readOnly and revision.link is not null %}
+                        <a href="{{ revision.link }}" target="_blank">{{ revision.link }}</a>
+                    {% endif %}
+                </td>
+                <td style="text-align:right;width:60px">
+                    {% if revision.competitorPrice is not null %} 
+                        {{ revision.competitorPrice|price_format }}
+                    {% endif %}
+                </td>
+                <td style="text-align:center;width:120px">
+                    {% if revision.competitorPrice is not null %} 
+                        {{ revision.priceTime|date('m.d.Y H:i') }}
+                    {% endif %}
+                </td>
+                <td style="text-align:center;width:30px">
+                    {{ revision.serverResponse }}
+                </td>
+                <td style="width:45px">
+                    {% if not revision.readOnly %}
+                        <a href="{{ path('admin_competitor_revision_edit', { id: revision.id }) }}" class="icon-edit revision-edit" title="Редактировать"></a>
+                        <a href="{{ path('admin_competitor_revision_delete', { id: revision.id }) }}" class="icon-delete revision-delete" title="Удалить"></a>
+                        {% if revision.link is not null and revision.requestedAt is null %}
+                            <a href="{{ path('admin_competitor_revision_request', { id: revision.id }) }}" class="icon-loop revision-request" title="Отправить запрос"></a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>   
+        {% endfor %}
+    </tbody>
+</table>
+<div class="all">
+    {% for competitor in competitors %}
+        <a href="{{ competitor.link }}" target="_blank">{{ competitor.name }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+    <a href="{{ path('admin_competitor_revision_new') }}" class="icon-add revision-add" title="Добавить"></a>
+</div>

@@ -143,6 +143,13 @@ $(function() {
                 });
             } 
 
+            var revisions = pane.find('.competitor-revisions');
+            if (revisions.is('.loading')) {
+                sp.get(Routing.generate('admin_competitor_revisions'), { baseProductId: panel.data('id') }).then(function(response) {
+                    revisions.html(response.html).removeClass('loading');
+                });
+            }
+
         } else {
             pane.addClass('hidden');
         }
@@ -175,6 +182,64 @@ $(function() {
             supplierProductId: this.dataset.id 
         }).then(function(response) {
             e.target.closest('.supplier-product').querySelector('.supplier-availability').style.color = 'red';
+            e.target.remove();
+        });
+    });
+
+    // competitor revisions
+    container.on('click', '.admin-panel .revision-add, .admin-panel .revision-edit', function(e) {
+        var a = $(this);
+        if ('undefined' == typeof a.data('spAjaxcontent')) {
+            e.preventDefault();
+            a.ajaxcontent({
+                dialog: {
+                    minWidth: 800
+                },
+                data: function() {
+                    return {
+                        baseProductId: a.closest('.admin-panel').data('id')
+                    };
+                },
+                load: function() {
+                    var dialog = this;
+                    var form = dialog.find('form').submit(function(e) {
+                        e.preventDefault();
+                        sp.post(form.prop('action'), form.serializeArray()).then(function(response) {
+                            form.find('.row .error').remove();
+                            if (response.errors) {
+                                for (var key in response.errors) {
+                                    form.find('.row .' + key)
+                                        .closest('.row')
+                                        .addClass('error')
+                                        .append('<div class="error">' + response.errors[key][0] + '</div>');
+                                }
+                            } else {
+                                dialog.dialog('close');
+                                a.closest('.admin-panel').find('.competitor-revisions').html(response.html);
+                            }
+                        });
+                    });
+                    dialog.dialog('option', 'title', form.prop('title'));
+                }
+            });
+            setTimeout(function() {
+                a.click(); 
+            }, 100);
+        }
+    });
+
+    container.on('click', '.admin-panel .revision-delete', function(e) {
+        e.preventDefault();
+        if (confirm('Удалить товар конкурента?')) {
+            sp.post(this.href).then(function(response) {
+                e.target.closest('.revision').remove();
+            });
+        }
+    });
+    container.on('click', '.admin-panel .revision-request', function(e) {
+        e.preventDefault();
+        sp.post(this.href).then(function(response) {
+            e.target.closest('.revision').classList.add('requested');
             e.target.remove();
         });
     });

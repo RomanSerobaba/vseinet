@@ -1,0 +1,33 @@
+{% if command.id %}
+    {% set title = 'Редактирование товара конкурента' %}
+    {% set action = path('admin_competitor_revision_edit', { id: command.id }) %}
+{% else %}
+    {% set title = 'Добавление нового товара конкурента' %}
+    {% set action = path('admin_competitor_revision_new') %}
+{% endif %}
+
+{{ form_start(form, { action: action, attr: { id: 'competitor-revision-form', title: title }}) }}
+
+<div class="row h">
+    {{ form_label(form.competitorId, 'Конкурент') }}
+    {{ form_widget(form.competitorId, { attr: { class: 'txt competitorId' }}) }}
+</div>
+
+<div class="row h">
+    {{ form_label(form.link, 'Ссылка') }}
+    {{ form_widget(form.link, { attr: { class: 'txt link' }}) }}
+</div>
+
+<div class="row h">
+    {{ form_label(form.competitorPrice, 'Цена') }}
+    {{ form_widget(form.competitorPrice, { attr: { class: 'txt competitorPrice' }}) }}
+</div>
+
+<div class="row h">
+    {{ form_widget(form.id) }}
+    {{ form_widget(form.productId) }}
+    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green r' }}) }} 
+    {{ form_widget(form._token) }}
+</div>
+
+{{ form_end(form) }}

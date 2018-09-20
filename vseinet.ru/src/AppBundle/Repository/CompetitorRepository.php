@@ -10,4 +10,8 @@ namespace AppBundle\Repository;
  */
 class CompetitorRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getActive()
+    {
+        return $this->findBy(['isActive' => true]);
+    }
 }
