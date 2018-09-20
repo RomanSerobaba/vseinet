@@ -48,3 +48,12 @@ $.widget('sp.ajaxcontent', {
         }
     }
 });
+
+sp.openAjaxDialog = function(a, options) {
+    var fake = a.clone().appendTo('body').css({ display: 'none' });
+    options.dialog.close = function() {
+        $(this).remove();
+        fake.remove();
+    };
+    fake.ajaxcontent(options).click();
+}

@@ -92,33 +92,36 @@ $(function() {
     }();
 
     // product move
-    container.ajaxcontent({
-        dialog: {
-            title: 'Переместить',
-            minWidth: 600
-        },
-        target: '.admin-panel .move',
-        load: function() {
-            var dialog = this;
-            var form = dialog.find('form').submit(function(e) {
-                e.preventDefault();
-                sp.post(form.prop('action'), form.serializeArray()).then(function(response) {
-                    if (response.errors) {
-                        var errors = [];
-                        for (var key in response.errors) {
-                            errors.push(response.errors[key][0]);
+    container.on('click', '.admin-panel .move', function(e) {
+        e.preventDefault();
+        sp.openAjaxDialog($(this), {
+             dialog: {
+                title: 'Переместить',
+                minWidth: 600
+            },
+            target: '.admin-panel .move',
+            load: function() {
+                var dialog = this;
+                var form = dialog.find('form').submit(function(e) {
+                    e.preventDefault();
+                    sp.post(form.prop('action'), form.serializeArray()).then(function(response) {
+                        if (response.errors) {
+                            var errors = [];
+                            for (var key in response.errors) {
+                                errors.push(response.errors[key][0]);
+                            }
+                            form.find('.row.product').addClass('error').append('<div class="error">' + errors.join('<br>') + '</div>');
+                        } else {
+                            form.find('.row.product .error').remove();
+                            if (container.is('#product-list')) {
+                                a.closest('.product').remove();
+                            }
+                            dialog.dialog('close');
                         }
-                        form.find('.row.product').addClass('error').append('<div class="error">' + errors.join('<br>') + '</div>');
-                    } else {
-                        form.find('.row.product .error').remove();
-                        if (container.is('#product-list')) {
-                            el.closest('.product').remove();
-                        }
-                        dialog.dialog('close');
-                    }
+                    });
                 });
-            });
-        }
+            }           
+        }); 
     });
 
     // info pane
@@ -188,44 +191,39 @@ $(function() {
 
     // competitor revisions
     container.on('click', '.admin-panel .revision-add, .admin-panel .revision-edit', function(e) {
+        e.preventDefault();
         var a = $(this);
-        if ('undefined' == typeof a.data('spAjaxcontent')) {
-            e.preventDefault();
-            a.ajaxcontent({
-                dialog: {
-                    minWidth: 800
-                },
-                data: function() {
-                    return {
-                        baseProductId: a.closest('.admin-panel').data('id')
-                    };
-                },
-                load: function() {
-                    var dialog = this;
-                    var form = dialog.find('form').submit(function(e) {
-                        e.preventDefault();
-                        sp.post(form.prop('action'), form.serializeArray()).then(function(response) {
-                            form.find('.row .error').remove();
-                            if (response.errors) {
-                                for (var key in response.errors) {
-                                    form.find('.row .' + key)
-                                        .closest('.row')
-                                        .addClass('error')
-                                        .append('<div class="error">' + response.errors[key][0] + '</div>');
-                                }
-                            } else {
-                                dialog.dialog('close');
-                                a.closest('.admin-panel').find('.competitor-revisions').html(response.html);
+        sp.openAjaxDialog(a, {
+            dialog: {
+                minWidth: 800
+            },
+            data: function() {
+                return {
+                    baseProductId: a.closest('.admin-panel').data('id')
+                };
+            },
+            load: function() {
+                var dialog = this;
+                var form = dialog.find('form').submit(function(e) {
+                    e.preventDefault();
+                    sp.post(form.prop('action'), form.serializeArray()).then(function(response) {
+                        form.find('.row .error').remove();
+                        if (response.errors) {
+                            for (var key in response.errors) {
+                                form.find('.row .' + key)
+                                    .closest('.row')
+                                    .addClass('error')
+                                    .append('<div class="error">' + response.errors[key][0] + '</div>');
                             }
-                        });
+                        } else {
+                            dialog.dialog('close');
+                            a.closest('.admin-panel').find('.competitor-revisions').html(response.html);
+                        }
                     });
-                    dialog.dialog('option', 'title', form.prop('title'));
-                }
-            });
-            setTimeout(function() {
-                a.click(); 
-            }, 100);
-        }
+                });
+                dialog.dialog('option', 'title', form.prop('title'));
+            }
+        });
     });
 
     container.on('click', '.admin-panel .revision-delete', function(e) {

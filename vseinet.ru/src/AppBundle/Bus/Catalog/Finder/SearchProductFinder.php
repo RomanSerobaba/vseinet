@@ -21,7 +21,7 @@ class SearchProductFinder extends ProductFinder
         }
         $this->filter = new Filter();
 
-        if (empty($this->data->id)) {
+        if (empty($this->data->q)) {
             return $this->filter;
         }
 
@@ -48,8 +48,11 @@ class SearchProductFinder extends ProductFinder
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
-        
+
         $result = array_shift($results);
+        if (empty($result[0])) {
+            return $this->filter;
+        }
         $this->filter->price = new Filter\Range($result[0]['min_price'], $result[0]['max_price']);
         
         $categoryId2count = [];
@@ -92,7 +95,7 @@ class SearchProductFinder extends ProductFinder
     {
         $filter = $this->getFilter();
         $facets = new Filter\Facets();
-        if (empty($this->data->q)) {
+        if (empty($filter->total)) {
             return $facets;
         }
 

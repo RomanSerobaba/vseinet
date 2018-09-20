@@ -61,6 +61,7 @@ class GetQueryHandler extends MessageHandler
                             bp.minQuantity,
                             bpi.basename,
                             p.price,
+                            0,
                             {$spec}
                         )
                     FROM AppBundle:BaseProduct AS bp

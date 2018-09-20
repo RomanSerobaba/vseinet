@@ -6,6 +6,7 @@ use AppBundle\Container\ContainerAware;
 use AppBundle\Bus\Catalog\Enum\Availability;
 use AppBundle\Bus\Catalog\Query\DTO\Filter;
 use AppBundle\Bus\Catalog\Query\DTO\Autocomplete;
+use AppBundle\Entity\BaseProduct;
 
 class AutocompleteFinder extends ContainerAware
 {
@@ -56,6 +57,11 @@ class AutocompleteFinder extends ContainerAware
                 $result[$id] = clone $categories[$id];
                 $result[$id]->breadcrumbs = array_reverse($breadcrumbs);
             }
+        }
+
+        $product = $em->getRepository(BaseProduct::class)->find($this->data->q);
+        if ($product instanceof BaseProduct) {
+            $result[] = new Autocomplete\Product($product->getId(), $product->getName());
         }
 
         $products = $this->getProducts();

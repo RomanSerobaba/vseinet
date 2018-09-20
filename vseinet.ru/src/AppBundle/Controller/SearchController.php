@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
+use AppBundle\Entity\BaseProduct;
 use AppBundle\Bus\Catalog\Query;
 use AppBundle\Bus\Search\Query\GetCounterQuery;
 use AppBundle\Bus\Catalog\Paging;
@@ -47,6 +48,10 @@ class SearchController extends Controller
         $filter = $finder->getFilter();
         $facets = $finder->getFacets();
         $productIds = $facets->total ? $finder->getProductIds() : [];
+        $product = $this->getDoctrine()->getManager()->getRepository(BaseProduct::class)->find($data->q);
+        if ($product instanceof BaseProduct) {
+            array_unshift($productIds, $product->getId());
+        }
         if (!empty($productIds)) {
             $this->get('query_bus')->handle(new Query\GetProductsQuery(['ids' => $productIds]), $products);
             $paging = new Paging([
