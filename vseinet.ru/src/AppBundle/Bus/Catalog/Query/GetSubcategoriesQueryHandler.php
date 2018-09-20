@@ -19,7 +19,7 @@ class GetSubcategoriesQueryHandler extends MessageHandler
                     c.countProducts
                 )
             FROM AppBundle:Category c 
-            WHERE c.pid = :pid
+            WHERE c.pid = :pid AND c.countProducts > 0 AND c.id != 7562
             ORDER BY c.name 
         ");
         $q->setParameter('pid', $query->pid);
