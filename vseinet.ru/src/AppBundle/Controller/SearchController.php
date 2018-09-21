@@ -48,9 +48,11 @@ class SearchController extends Controller
         $filter = $finder->getFilter();
         $facets = $finder->getFacets();
         $productIds = $facets->total ? $finder->getProductIds() : [];
-        $product = $this->getDoctrine()->getManager()->getRepository(BaseProduct::class)->find($data->q);
-        if ($product instanceof BaseProduct) {
-            array_unshift($productIds, $product->getId());
+        if (is_numeric($data->q)) {
+            $product = $this->getDoctrine()->getManager()->getRepository(BaseProduct::class)->find($data->q);
+            if ($product instanceof BaseProduct) {
+                array_unshift($productIds, $product->getId());
+            }
         }
         if (!empty($productIds)) {
             $this->get('query_bus')->handle(new Query\GetProductsQuery(['ids' => $productIds]), $products);

@@ -59,9 +59,11 @@ class AutocompleteFinder extends ContainerAware
             }
         }
 
-        $product = $em->getRepository(BaseProduct::class)->find($this->data->q);
-        if ($product instanceof BaseProduct) {
-            $result[] = new Autocomplete\Product($product->getId(), $product->getName());
+        if(is_numeric($this->data->q)) {
+            $product = $em->getRepository(BaseProduct::class)->find($this->data->q);
+            if ($product instanceof BaseProduct) {
+                $result[] = new Autocomplete\Product($product->getId(), $product->getName());
+            }
         }
 
         $products = $this->getProducts();
