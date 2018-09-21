@@ -16,7 +16,7 @@ class GetHistoryQueryHandler extends MessageHandler
             return null;
         }
 
-        $api = $this->get('api.client');
+        $api = $this->get('user.api.client');
         try {
             $parameters = [
                 'clientId' => $counteragent->getId(),

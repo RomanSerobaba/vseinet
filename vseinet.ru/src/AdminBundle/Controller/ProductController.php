@@ -28,7 +28,7 @@ class ProductController extends Controller
         $body = [
             'mergeIds' => [$request->request->get('sourceId')],
         ];
-        $this->get('api.client')->patch($url, [], $body);
+        $this->get('user.api.client')->patch($url, [], $body);
 
         return $this->json([]); 
     }

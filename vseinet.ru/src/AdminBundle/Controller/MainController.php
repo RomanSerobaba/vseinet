@@ -36,7 +36,7 @@ class MainController extends Controller
         if (empty($targetUrl)) {
             $targetUrl = $this->generateUrl('admin');
         }
-        $auth = $this->get('api.client')->getAuth();
+        $auth = $this->get('user.api.client')->getAuth();
 
         return $this->render('AdminBundle:Main:authority.html.twig', $auth + ['targetUrl' => $targetUrl]);
     }
@@ -51,7 +51,7 @@ class MainController extends Controller
     {
         $user = $this->getUser();
         $url = sprintf('/api/v1/work/%s/', null === $user->clockInTime ? 'start' : 'stop');
-        $this->get('api.client')->put($url);
+        $this->get('user.api.client')->put($url);
         $user->person = null;
 
         return $this->redirect($request->headers->get('referer'));
