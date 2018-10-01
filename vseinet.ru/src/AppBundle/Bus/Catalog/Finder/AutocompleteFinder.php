@@ -48,14 +48,16 @@ class AutocompleteFinder extends ContainerAware
             $categories = $q->getResult('IndexByHydrator');
 
             foreach ($categoryIds as $id) {
-                $pid = $categories[$id]->pid;
-                $breadcrumbs = [];
-                while ($pid) {
-                    $breadcrumbs[] = $categories[$pid];
-                    $pid = $categories[$pid]->pid; 
+                if (!empty($categories[$id])) { // кастыль
+                    $pid = $categories[$id]->pid;
+                    $breadcrumbs = [];
+                    while ($pid) {
+                        $breadcrumbs[] = $categories[$pid];
+                        $pid = $categories[$pid]->pid; 
+                    }
+                    $result[$id] = clone $categories[$id];
+                    $result[$id]->breadcrumbs = array_reverse($breadcrumbs);
                 }
-                $result[$id] = clone $categories[$id];
-                $result[$id]->breadcrumbs = array_reverse($breadcrumbs);
             }
         }
 

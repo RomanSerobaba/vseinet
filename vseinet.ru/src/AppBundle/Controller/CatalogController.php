@@ -113,13 +113,16 @@ class CatalogController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $data = $this->get('catalog.query_string')->parse($request->query->all());
+        $finder = $this->get('catalog.category_product_finder')->setCategory($category)->setBrand($brand)->setData($data);
+        
+        if (1 !== $data->page) {
+            $category->description = null;
+        }
         if ($category->description) {
             $this->get('query_bus')->handle(new Query\GetCategoryImageQuery(['categoryId' => $category->id]), $category->image);
         }
 
-        $data = $this->get('catalog.query_string')->parse($request->query->all());
-        $finder = $this->get('catalog.category_product_finder')->setCategory($category)->setBrand($brand)->setData($data);
-        
         $filter = $finder->getFilter();
         $facets = $finder->getFacets();
         $productIds = $facets->total ? $finder->getProductIds() : [];

@@ -38,7 +38,7 @@ class MainController extends Controller
         }
         $auth = $this->get('user.api.client')->getAuth();
 
-        return $this->render('AdminBundle:Main:authority.html.twig', $auth + ['targetUrl' => $targetUrl]);
+        return $this->render('@Admin/Main/authority.html.twig', $auth + ['targetUrl' => $targetUrl]);
     }
 
     /**

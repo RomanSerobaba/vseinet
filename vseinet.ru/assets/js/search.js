@@ -26,7 +26,7 @@ $(function() {
                 }
             });
         },
-        minLength: 1,
+        minLength: 2,
         select: function(event, ui) {
             window.location = Routing.generate('catalog_' + ui.item.type, { id: ui.item.id, q: encodeURIComponent(ui.item.name) });
         },

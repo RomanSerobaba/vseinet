@@ -326,7 +326,12 @@ class QueryString
 
     protected function parseStr(string $value): ?string
     {
-        return preg_replace('/\p{C}+/u', '', urldecode($value)) ?: null;
+        $str = preg_replace('/\p{C}+/u', '', urldecode($value)) ?: null;
+        if (empty($str) || 2 > mb_strlen($str)) {
+            return null;
+        }
+
+        return $str;
     }
 
     protected function parseBool(string $value): ?int

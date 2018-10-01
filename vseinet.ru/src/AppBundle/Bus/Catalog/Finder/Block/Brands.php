@@ -40,6 +40,8 @@ class Brands
         $q->setParameter('ids', array_keys($brandId2count));
         $brands = $q->getResult('IndexByHydrator');
         
+        $brandId2count = array_intersect_key($brandId2count, array_keys($brands)); // кастыль
+
         foreach ($brandId2count as $id => $count) {
             $brands[$id]->countProducts = $count;
         }
