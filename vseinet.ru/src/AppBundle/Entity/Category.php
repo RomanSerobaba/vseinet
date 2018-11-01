@@ -109,9 +109,9 @@ class Category
     /**
      * @var int
      *
-     * @ORM\Column(name="rise_tax", type="integer")
+     * @ORM\Column(name="lifting_tax", type="integer")
      */
-    private $riseTax;
+    private $liftingTax;
 
     /**
      * @var Category[]
@@ -449,27 +449,27 @@ class Category
     }
 
     /**
-     * Set riseTax
+     * Set liftingTax
      *
-     * @param integer $riseTax
+     * @param integer $liftingTax
      *
      * @return Category
      */
-    public function setRiseTax($riseTax)
+    public function setLiftingTax($liftingTax)
     {
-        $this->riseTax = $riseTax;
+        $this->liftingTax = $liftingTax;
 
         return $this;
     }
 
     /**
-     * Get riseTax
+     * Get liftingTax
      *
      * @return int
      */
-    public function getRiseTax()
+    public function getLiftingTax()
     {
-        return $this->riseTax;
+        return $this->liftingTax;
     }
 }
 
