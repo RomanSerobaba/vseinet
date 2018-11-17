@@ -100,13 +100,6 @@ class GeoAddress
     private $office;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="geo_subway_station_id", type="integer")
-     */
-    private $geoSubwayStationId;
-
-    /**
      * @var Point
      *
      * @ORM\Column(name="coordinates", type="point")
@@ -400,30 +393,6 @@ class GeoAddress
     public function getOffice()
     {
         return $this->office;
-    }
-
-    /**
-     * Set geoSubwayStationId.
-     *
-     * @param int $geoSubwayStationId
-     *
-     * @return GeoAddress
-     */
-    public function setGeoSubwayStationId($geoSubwayStationId)
-    {
-        $this->geoSubwayStationId = $geoSubwayStationId;
-
-        return $this;
-    }
-
-    /**
-     * Get geoSubwayStationId.
-     *
-     * @return int
-     */
-    public function getGeoSubwayStationId()
-    {
-        return $this->geoSubwayStationId;
     }
 
     /**

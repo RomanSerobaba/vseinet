@@ -160,6 +160,10 @@ class AddAddressCommandHandler extends MessageHandler
                     break;
 
                 case 'street':
+                    if (empty($result['city'])) {
+                        $result['city'] = $this->findCityByRegionAndAreaAndStreet($result['region']['id'], $result['area']['id'], $component['name']);
+                    }
+
                     $result['street'] = $this->find('street', $component['name'], "geo_city_id = ".$result['city']['id']);
                     break;
             }
@@ -177,6 +181,38 @@ class AddAddressCommandHandler extends MessageHandler
             ORDER BY sml DESC 
         ");
         $stmt->execute(['name_s' => $name, 'name_p' => $name]);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (!empty($results)) {
+            $candidates = array_filter($results, function($result) {
+                return 1 === intval($result['sml']);
+            });
+            if (!empty($candidates)) {
+                if (1 === count($candidates)) {
+                    return $candidates[0];
+                }
+
+                usort($candidates, function($result1, $result2) {
+                    return strlen($result1['name']) > strlen($result2['name']) ? -1 : 1;
+                });
+                
+                return $candidates[0];
+            }
+        }
+        
+        return null;    
+    }
+
+    protected function findCityByRegionAndAreaAndStreet($regionId, $areaId, $streetName)
+    {
+        $stmt = $this->getDoctrine()->getManager()->getConnection()->prepare("
+            SELECT gc.id, gc.name, gc.unit, word_similarity(gs.name, :name_s) AS sml 
+            FROM geo_city AS gc
+            INNER JOIN geo_street AS gs ON gs.geo_city_id = gc.id
+            WHERE gc.geo_region_id = :region_id AND gc.geo_area_id = :area_id AND gs.name % :name_p
+            ORDER BY sml DESC 
+        ");
+        $stmt->execute(['name_s' => $streetName, 'name_p' => $streetName, 'region_id' => $regionId, 'area_id' => $areaId]);
         $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($results)) {

@@ -71,6 +71,6 @@ class UserInfo
         $this->cityId = $cityId;
         $this->cityName = $cityName;
         $this->isMarketingSubscribed = $isMarketingSubscribed;
-        $this->genderName = PersonGender::getName($gender);
+        $this->genderName = $gender ? PersonGender::getName($gender) : '';
     }
 }

@@ -22,15 +22,14 @@
             {# brocken url #}
             <a href="/content/stats/full" class="employee-statistics">Статистика</a>   
             {# brocken url #}
-        {% else %}  
-            <a 
-                href="{{ path('authority', { targetUrl: '/admin/employees/employee/' ~ app.user.id ~ '/personalData' }) }}" 
-                class="employee-cabinet" 
-                title="Личный кабинет сотрудника"
-            >
-                ЛК сотрудника
-            </a>
-        {% endif %}
+        {% endif %}  
+        <a 
+            href="{{ path('authority', { targetUrl: '/admin/employees/employee/' ~ app.user.id ~ '/personalData' }) }}" 
+            class="employee-cabinet" 
+            title="Личный кабинет сотрудника"
+        >
+            ЛК сотрудника
+        </a>
     {% endif %}
 </nav>
 

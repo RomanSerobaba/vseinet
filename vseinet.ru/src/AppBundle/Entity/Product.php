@@ -117,9 +117,9 @@ class Product
     /**
      * @var int
      *
-     * @ORM\Column(name="rise_tax", type="integer", nullable=true)
+     * @ORM\Column(name="lifting_tax", type="integer", nullable=true)
      */
-    private $riseTax;
+    private $liftingTax;
 
     /**
      * @var int
@@ -474,27 +474,27 @@ class Product
     }
 
     /**
-     * Set riseTax
+     * Set liftingTax
      *
-     * @param integer $riseTax
+     * @param integer $liftingTax
      *
      * @return Product
      */
-    public function setRiseTax($riseTax)
+    public function setLiftingTax($liftingTax)
     {
-        $this->riseTax = $riseTax;
+        $this->liftingTax = $liftingTax;
 
         return $this;
     }
 
     /**
-     * Get riseTax
+     * Get liftingTax
      *
      * @return int
      */
-    public function getRiseTax()
+    public function getLiftingTax()
     {
-        return $this->riseTax;
+        return $this->liftingTax;
     }
 
     /**
