@@ -1,0 +1,11 @@
+{% if not app.userIsEmployee %}
+<div class="disclaimer">
+    Нажимая кнопку «Подтвердить заказ», я подтверждаю свою дееспособность, согласие на получение информации об оформлении и получении заказа, согласие на обработку персональных данных и условиях сайта в соответствии с указанным <a class="ajax" href="javascript:void(0)" data-popup="Disclaimer">здесь</a> текстом.
+</div>
+{% endif %}
+
+<div class="row">
+    <a href="/cart/" class="bttn light prev">Вернуться в корзину <span class="hide">В корзину</span><i></i></a>
+    {{ form_widget(form.submit, { label: 'Подтвердить заказ', attr: { class: 'bttn green r', onclick: "yaCounter13639594.reachGoal('ordersuccess'); return true;" }}) }} 
+    {{ form_widget(form._token) }}
+</div>

@@ -3,14 +3,14 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
 
-    pgsql_host: 136.243.178.124 # 127.0.0.1
+    pgsql_host: 192.168.122.195 # 136.243.178.124 # 127.0.0.1
     pgsql_port: 5432
     pgsql_dbname: dev # symfony
     pgsql_user: dev # posgres
     pgsql_password: slx9SOnAj3dNiqSgMGQz
 
-    sphinxql_host: 127.0.0.1
-    sphinxql_port: 9306
+    sphinxql_host: 192.168.122.195 # 127.0.0.1
+    sphinxql_port: 9318 # 9306
 
     rabbit_host: 'localhost'
     rabbit_port: 5672

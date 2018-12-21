@@ -3,7 +3,29 @@
         <h2>Заказ на</h2>
         {% for choice in form.typeCode.vars.choices %}
         <div class="row h">
-            <label for="type_{{ choice.value }}" onclick="window.location='/app_dev.php/order/?type={{ choice.value }}'">
+            <label for="type_{{ choice.value }}" onclick="
+            $.ajax({
+                url: '{{ path('order_creation_page') }}?type={{ choice.value }}',
+                method: 'POST',
+                dataType: 'json',
+                complete: function (jqXHR, status) {
+                    var response = jqXHR.responseJSON;
+
+                    if (response === undefined || response.hasOwnProperty('errors') || response.hasOwnProperty('error')) {
+                        if (response.hasOwnProperty('error') && response.error.hasOwnProperty('error_code') && response.error.error_code == 17) {
+                            window.open(response.error.redirect_uri);
+                        } else {
+                            $('form#Login').prepend('<div id=\'sn-login-error\' class=\'row error\'>Произошла ошибка. Попробуйте войти позднее.</div>');
+                            console.warn(jqXHR);
+                            return false;
+                        }
+                    }
+
+                    if (response.hasOwnProperty('result') && response.result === 'ok') {
+                        $('#order-creation-form').html(response.result);
+                    }
+                }
+            });">
                 {{ choice.label }}
                 <input type="radio" id="type_{{ choice.value }}" name="type" value="{{ choice.value }}"{% if (choice.value == form.typeCode.vars.value)  %} checked="checked"{% endif %} />
             </label>

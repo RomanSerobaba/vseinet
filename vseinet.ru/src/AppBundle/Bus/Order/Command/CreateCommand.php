@@ -18,4 +18,10 @@ class CreateCommand extends Message
      * @Assert\Type(type="string")
      */
     public $lfs;
+
+    /**
+     * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
+     * @Assert\Valid
+     */
+    public $userData;
 }

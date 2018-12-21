@@ -1,6 +1,7 @@
-<div class="row h{% if errors.userData.fullname is defined %} error{% endif %}">
-    {{ form_label(form.userData.fullname, 'ФИО*:') }}
-    {{ form_widget(form.userData.fullname, { attr: { class: 'txt' }})  }}
+<div class="row h{% if errors.userData.fullname is defined %} error{% endif %}" style="position: relative">
+    {{ form_label(form.userData.fullname, 'Ф.И.О.*:') }}
+    {{ form_widget(form.userData.fullname, { attr: { class: 'txt', placeholder: 'Фамилия Имя Отчество' }})  }}
+    <span id="lfsHelp" onclick="$('#create_form_fullname').focus()">Фамилия Имя Отчество</span>
     <span class="status"></span>
     {% if errors.userData.fullname is defined %}
         <div class="error">{{ errors.userData.fullname.0 }}</div>

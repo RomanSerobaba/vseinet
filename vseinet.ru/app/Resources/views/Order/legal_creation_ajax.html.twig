@@ -80,5 +80,6 @@
     {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
     {{ form_widget(form._token) }}
 </div> #}
+{% include 'Order/order_submit.html.twig' %}
 
 {{ form_end(form, { render_rest: false }) }}

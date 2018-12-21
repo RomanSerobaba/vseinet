@@ -94,15 +94,15 @@ FORM .row {
 	}
 
 	FORM .row.h {
-		padding-left: 150px;
+		padding-left: 250px;
 	}
 		FORM .row.h LABEL {
 	    	float: left;
 	    	line-height: 15px;
-	    	margin-left: -150px;
+	    	margin-left: -250px;
 	    	padding-top: 6px;
 	    	position: relative;
-	    	width: 150px;
+	    	width: 250px;
 		}
 			FORM .row.h LABEL.inline {
 				margin: 0 20px 6px 0;

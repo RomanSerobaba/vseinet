@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Bus\User\Form\{ UserDataType, IsHumanType };
 use AppBundle\Bus\Order\Command\CreateCommand;
 use AppBundle\Enum\OrderType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class CreateFormType extends AbstractType
 {
@@ -18,10 +19,16 @@ class CreateFormType extends AbstractType
      */
     protected $em;
 
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $security;
 
-    public function __construct(EntityManagerInterface $em)
+
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security)
     {
         $this->em = $em;
+        $this->security = $security;
     } 
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -43,8 +50,8 @@ class CreateFormType extends AbstractType
         // $choicesPhones = array_combine($phones, $phones);
 
         $builder
-            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices()),])
-            ->add('lfs', TextType::class)
+            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices($this->security->getToken()->getUser()->isEmployee())),])
+            ->add('userData', UserDataType::class)
             // ->add('managerPhone', ChoiceType::class, ['choices' => $choicesPhones, 'required' => false, 'placeholder' => 'не помню'])
             // ->add('userData', UserDataType::class)
             ->add('isHuman', IsHumanType::class)

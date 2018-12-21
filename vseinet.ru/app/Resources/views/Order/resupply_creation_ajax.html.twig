@@ -1,0 +1,4 @@
+{{ form_start(form, { action: '', attr: { id: 'order-creation-form' }}) }}
+{% include 'Order/order_type.html.twig' %}
+{% include 'Order/order_submit.html.twig' %}
+{{ form_end(form, { render_rest: false }) }}

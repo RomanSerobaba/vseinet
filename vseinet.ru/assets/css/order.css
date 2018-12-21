@@ -1,5 +1,9 @@
 /* order
 -------------------------------------------------------------------*/
+	#order-creation-form {
+		margin-bottom: 20px;
+	}
+
 	#order-creation-form .note {
 		font-size: 13px;
 		margin: 0 0 25px;
@@ -49,10 +53,9 @@
         #order-creation-form #lfsHelp {
             position: absolute; 
             color: #A9A9A9; 
-            font-weight: 700; 
             font-size: 14px; 
-            left: 162px; 
-            top: 13px;
+            left: 261px; 
+            top: 14px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -60,7 +63,12 @@
         #Product_Application #nameHelp {
             left: 161px; 
             top: 14px;
-        }
+		}
+		#order-creation-form .disclaimer {
+			margin-bottom: 30px; 
+			color: rgb(153, 153, 153); 
+			font-size: 12px;
+		}
 
 /* order status
 -------------------------------------------------------------------*/

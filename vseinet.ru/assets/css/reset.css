@@ -23,7 +23,7 @@ TABLE { border-collapse: collapse; border-spacing: 0; }
 TH { font-weight: 700; vertical-align: bottom; }
 TD { font-weight: 400; vertical-align: top; }
 TD IMG { vertical-align: top; }
-PRE, CODE, KBD, SAMP { font-family: monospace, sans-serif; }
+PRE, CODE, KBD, SAMP { font-family: monospace, Arial; }
 HR { padding: 0; margin: 1em 0; display: block; height: 1px; border: 0; border-top: 1px solid #ccc; }
 .clickable, LABEL, INPUT[type=button], INPUT[type=submit], BUTTON { cursor: pointer; }
 BUTTON, INPUT, SELECT, TEXTAREA { margin: 0; }
@@ -31,7 +31,7 @@ BUTTON { width: auto; overflow: visible; }
 INPUT, SELECT { vertical-align: middle; }
 INPUT[type="radio"] { vertical-align: text-bottom; }
 INPUT[type="checkbox"] { vertical-align: bottom; *vertical-align: baseline; }
-SELECT, INPUT, TEXTAREA { font: 99% sans-serif; }
+SELECT, INPUT, TEXTAREA { font: 99% Arial; }
 LABEL { position: relative; }
 INPUT:focus { outline: none; }
 /* for old ie
