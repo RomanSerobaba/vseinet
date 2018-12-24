@@ -48,15 +48,31 @@ class CreateFormType extends AbstractType
         // ");
         // $phones = $stmt->fetchAll(\PDO::FETCH_COLUMN);
         // $choicesPhones = array_combine($phones, $phones);
-
         $builder
             ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices($this->security->getToken()->getUser()->isEmployee())),])
-            ->add('userData', UserDataType::class)
-            // ->add('managerPhone', ChoiceType::class, ['choices' => $choicesPhones, 'required' => false, 'placeholder' => 'не помню'])
-            // ->add('userData', UserDataType::class)
             ->add('isHuman', IsHumanType::class)
-            ->add('submit', SubmitType::class)
-        ;
+            ->add('submit', SubmitType::class);
+
+        switch ($options['data']->typeCode) {
+            case OrderType::CONSUMABLES:
+            case OrderType::EQUIPMENT:
+            case OrderType::RESUPPLY:
+                break;
+
+            case OrderType::LEGAL:
+                $builder
+                    ->add('userData', UserDataType::class);
+                break;
+
+            case OrderType::NATURAL:
+                $builder
+                    ->add('userData', UserDataType::class);
+                break;
+
+            case OrderType::RETAIL:
+                $builder
+                    ->add('userData', UserDataType::class);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -56,14 +56,15 @@
             <div class="holder">
                 {% include 'footer.html.twig' %}
             </div>
-        </footer> 
+        </footer>
+        {% if app.environment is same as('prod') %}{% include 'counters.html.twig' %}{% endif %}
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
         <script src="{{ asset('js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="{{ asset('bundles/libs.js') }}"></script>
         <script src="{{ asset('bundles/scripts.js')}}"></script>
-        {% block javascripts %}{% endblock %} 
+        {% block javascripts %}{% endblock %}
     </body>
 </html>
 {#% endspaceless %#}

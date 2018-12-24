@@ -4,8 +4,19 @@
 </div>
 {% endif %}
 
+{% include 'User/is_human_form.html.twig' with { form: form } only %}
+
 <div class="row">
     <a href="/cart/" class="bttn light prev">Вернуться в корзину <span class="hide">В корзину</span><i></i></a>
-    {{ form_widget(form.submit, { label: 'Подтвердить заказ', attr: { class: 'bttn green r', onclick: "yaCounter13639594.reachGoal('ordersuccess'); return true;" }}) }} 
+    {{ form_widget(form.submit, { 
+        label: 'Подтвердить заказ', 
+        attr: { 
+            class: 'bttn green r', 
+            onclick: [
+                (app.environment is same as('prod') ?"yaCounter13639594.reachGoal('ordersuccess');" : ""), 
+                " return true;"
+            ]|join 
+        }
+    }) }} 
     {{ form_widget(form._token) }}
 </div>

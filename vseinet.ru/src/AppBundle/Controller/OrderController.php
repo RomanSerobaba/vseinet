@@ -125,15 +125,17 @@ class OrderController extends Controller
      */
     public function creationPageAction(Request $request)
     {
-        $type = $request->query->get('type') ?? OrderType::NATURAL;
-
         $command = new Command\CreateCommand();
-        $command->typeCode = $type;
+        $command->typeCode = (
+                $request->isMethod('POST') 
+                ? $request->request->get('create_form')['typeCode'] 
+                : $request->query->get('typeCode')
+            ) ?? OrderType::NATURAL;
         $form = $this->createForm(Form\CreateFormType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-
+            
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('command_bus')->handle($command);
@@ -156,23 +158,24 @@ class OrderController extends Controller
                     //     $flashBag->add('notice', 'Адрес доставки успешно добавлен');
                     // }
 
-                    return $this->redirectToRoute('order_created');
+                    return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
             }
-
+            
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
                     'errors' => $this->getFormErrors($form),
                 ]);
             }
+            var_dump($request->request->all());var_dump($form->getData());var_dump($this->getFormErrors($form));die();
         }
-
+        
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('Order/' . $type . '_creation_ajax.html.twig', [
+                'html' => $this->renderView('Order/' . $command->typeCode . '_creation_ajax.html.twig', [
                     'form' => $form->createView(),
                 ]),
             ]);
@@ -181,8 +184,19 @@ class OrderController extends Controller
         return $this->render('Order/creation.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
-            'currentType' => $type,
         ]);
         
+    }
+    
+    /**
+     * @VIA\Get(
+     *     name="order_created_page",
+     *     path="/order/success/{id}/",
+     *     requirements={"id" = "\d+"}
+     * )
+     */
+    public function createdPageAction(Request $request)
+    {  
+        return $this->render('Order/created.html.twig');
     }
 }

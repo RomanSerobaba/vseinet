@@ -15,13 +15,13 @@ class CreateCommand extends Message
     public $typeCode;
 
     /**
-     * @Assert\Type(type="string")
-     */
-    public $lfs;
-
-    /**
      * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
      * @Assert\Valid
      */
     public $userData;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $id;
 }

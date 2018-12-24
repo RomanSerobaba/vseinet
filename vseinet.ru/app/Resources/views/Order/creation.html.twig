@@ -6,5 +6,7 @@
 
 {% block content %}
     <h1>Оформление заказа</h1>
-    {% include ['Order/', currentType, '_creation_ajax.html.twig']|join with { form: form } only %}
+    <div id="create_form_wrapper">
+    {% include ['Order/', form.typeCode.vars.value, '_creation_ajax.html.twig']|join with { form: form } only %}
+    </div>
 {% endblock %}

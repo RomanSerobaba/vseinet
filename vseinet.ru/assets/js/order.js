@@ -32,41 +32,79 @@ $(function() {
     status.find('[name*=submit]').click(function() {
         status.form('submit');
     });
+
+    function attachMasks() {
+        Inputmask("+7 (999) 999-99-99").mask($('[name$="[userData][phone]"]'));
+        
+        var lfs = $('[name$="[userData][fullname]"]'),
+            lfsHelp = $('#lfsHelp');
     
-    var lfs = $('[name$="[userData][fullname]"]');
+        lfsHelp.click(function(e){
+            lfs.focus();
+        });
+    
+        if (lfs.length) {
+            var timer = null,
+                help = lfs
+                        .prop('placeholder')
+                        .split(' ');
+    
+            lfs.prop('placeholder','');
+            lfs.keydown(function(e){
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                    var len = 0, 
+                        val = lfs
+                                .val()
+                                .replace(/\s+/ig,' '), 
+                        pf = (val && val.charAt(val.length - 1)!=' ') ? '&nbsp;' : '';
+    
+                    if (val) {
+                        len = $.trim(val).split(' ').length;
+                    }
+    
+                    var pl = help
+                                .slice(len)
+                                .join(' '), 
+                        lfsWidth = lfs.textWidth();
+    
+                    lfsHelp
+                        .html(pf + pl)
+                        .css('left', lfsWidth + 262 + 'px')
+                        .width(lfs.outerWidth() - lfsWidth - 24 + 'px');
+                }, 2);
+            });
+            lfs.trigger('keydown');
+        }
+    }
 
-    if (lfs.length) {
-        var timer = null,
-            lfsHelp = $('#lfsHelp'),
-            help = lfs
-                    .prop('placeholder')
-                    .split(' ');
+    var wrapper = $('#content');
+    
+    wrapper.on('click', '[name="create_form[typeCode]"]', function(e){
+        $.ajax({
+            url: window.location.href + '?typeCode=' + $('[name="create_form[typeCode]"]:checked').val(),
+            method: 'GET',
+            dataType: 'json',
+            complete: function (jqXHR, status) {
+                var response = jqXHR.responseJSON;
 
-        lfs.prop('placeholder','');
-        lfs.keydown(function(e){
-            clearTimeout(timer);
-            timer = setTimeout(function() {
-                var len = 0, 
-                    val = lfs
-                            .val()
-                            .replace(/\s+/ig,' '), 
-                    pf = (val && val.charAt(val.length - 1)!=' ') ? '&nbsp;' : '';
-
-                if (val) {
-                    len = $.trim(val).split(' ').length;
+                if (response === undefined || response.hasOwnProperty('errors') || response.hasOwnProperty('error')) {
+                    // if (response.hasOwnProperty('error') && response.error.hasOwnProperty('error_code') && response.error.error_code == 17) {
+                    //     window.open(response.error.redirect_uri);
+                    // } else {
+                    //     $('form#order-creation-form').prepend('<div id=\'sn-login-error\' class=\'row error\'>Произошла ошибка. Попробуйте войти позднее.</div>');
+                    //     console.warn(jqXHR);
+                        return false;
+                    // }
                 }
 
-                var pl = help
-                            .slice(len)
-                            .join(' '), 
-                    lfsWidth = lfs.textWidth();
-
-                lfsHelp
-                    .html(pf + pl)
-                    .css('left', lfsWidth + 262 + 'px')
-                    .width(lfs.outerWidth() - lfsWidth - 24 + 'px');
-            }, 2);
+                if (response.hasOwnProperty('html')) {
+                    $('#create_form_wrapper').html(response.html);
+                    attachMasks();
+                }
+            }
         });
-        lfs.trigger('keydown');
-    }
+    });
+
+    attachMasks();
 });

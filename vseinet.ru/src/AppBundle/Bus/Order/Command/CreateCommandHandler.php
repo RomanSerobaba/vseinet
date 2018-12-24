@@ -10,5 +10,6 @@ class CreateCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
+        $command->id = 1;
     }
 }
