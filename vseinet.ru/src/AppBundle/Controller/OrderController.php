@@ -170,7 +170,6 @@ class OrderController extends Controller
                     'errors' => $this->getFormErrors($form),
                 ]);
             }
-            var_dump($request->request->all());var_dump($form->getData());var_dump($this->getFormErrors($form));die();
         }
         
         if ($request->isXmlHttpRequest()) {
@@ -195,8 +194,17 @@ class OrderController extends Controller
      *     requirements={"id" = "\d+"}
      * )
      */
-    public function createdPageAction(Request $request)
-    {  
-        return $this->render('Order/created.html.twig');
+    public function createdPageAction(int $id, Request $request)
+    { 
+        $query = new Query\GetOrderQuery(['id' => $id,]);
+        $this->get('query_bus')->handle($query, $order);
+        
+        if (null === $order || !$this->getUserIsEmployee() && $order->financialCounteragentId != $this->getUser()->financialCounteragent->getId()) {            
+            throw new NotFoundHttpException(); 
+        }
+
+        return $this->render('Order/created.html.twig', [
+            'order' => $order,
+        ]);
     }
 }

@@ -8,6 +8,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Person;
+use AppBundle\Entity\EmployeeToGeoRoom;
+use AppBundle\Entity\FinancialCounteragent;
 use AppBundle\Entity\Contact;
 use AppBundle\Enum\ContactTypeCode;
 use AppBundle\Enum\UserRole;
@@ -87,6 +89,7 @@ class UserProvider implements UserProviderInterface
     {
         if (null === $user->person) {
             $user->person = $this->em->getRepository(Person::class)->find($user->getPersonId());
+            $user->financialCounteragent = $this->em->getRepository(FinancialCounteragent::class)->findOneBy(['userId' => $user->getId()]);
 
             if ($user->isEmployee()) {
                 $stmt = $this->em->getConnection()->prepare("
@@ -97,11 +100,11 @@ class UserProvider implements UserProviderInterface
                             WHERE org_employee_user_id = oe.user_id AND fired_at IS NULL
                         ) THEN false ELSE true END AS is_fired,
                         oe.clock_in_time,
-                        r.ip 
+                        r.ip
                     FROM org_employee AS oe 
                     INNER JOIN org_department AS od ON od.id = oe.org_department_id 
                     INNER JOIN geo_room AS gr ON gr.id = od.geo_room_id 
-                    INNER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id 
+                    INNER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
                     WHERE oe.user_id = :user_id 
                 ");
                 $stmt->execute(['user_id' => $user->getId()]);
@@ -109,6 +112,19 @@ class UserProvider implements UserProviderInterface
                 $user->isFired = (boolean) $data['is_fired'];
                 $user->clockInTime = $data['clock_in_time'] ? new \DateTime($data['clock_in_time']) : null;
                 $user->ipAddress = $data['ip'];
+
+                $stmt = $this->em->getConnection()->prepare("
+                    SELECT 
+                        r.*,
+                        er.is_main,
+                        er.is_accountable
+                    FROM org_employee_to_geo_room AS er
+                    INNER JOIN geo_room AS r ON r.id = er.geo_room_id
+                    WHERE er.org_employee_user_id = :user_id
+                    ORDER BY er.is_main DESC
+                ");
+                $stmt->execute(['user_id' => $user->getId()]);
+                $user->geoRooms = $stmt->fetchAll();
             } 
         }
 

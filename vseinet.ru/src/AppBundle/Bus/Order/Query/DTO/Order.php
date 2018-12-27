@@ -14,6 +14,11 @@ class Order
     public $id;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $financialCounteragentId;
+
+    /**
      * @Assert\Type(type="datetime")
      */
     public $createdAt;
@@ -81,12 +86,13 @@ class Order
     public function __construct(array $order)
     {
         $this->id = $order['id'];
+        $this->financialCounteragentId = $order['financialCounteragentId'];
         $this->createdAt = $order['createdAt'];
         $this->amount = 0;
         $this->paymentType = $order['paymentType'] ?? null;
         $this->paymentTypeName = $order['paymentTypeName'] ?? null;
         $this->deliveryType = $order['deliveryType'] ?? null;
-        $this->deliveryTypeName = $order['deliveryTypeName'] ?? null;
+        $this->deliveryTypeName = $order['deliveryType'] ?? null;
         $this->username = $order['financialCounteragentName'] ?? null;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['type'], $contact['value']);

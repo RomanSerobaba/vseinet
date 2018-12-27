@@ -72,6 +72,7 @@ class CreateFormType extends AbstractType
             case OrderType::RETAIL:
                 $builder
                     ->add('userData', UserDataType::class);
+                break;
         }
     }
 

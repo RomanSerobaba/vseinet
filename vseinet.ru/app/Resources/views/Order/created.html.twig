@@ -5,7 +5,18 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Спасибо за покупку!</h1>
-    <div id="create_form_wrapper">
+    <div class="order-status">
+        <h3>Статус заказа</h3>
+        <p>Вы можете проверить статус заказа по его номеру кликнув по иконке вверху страницы.</p>
     </div>
+    <h1>Спасибо за покупку!</h1>
+    <div id="order">
+        <div class="info">
+            <p>Ваш заказ принят на обработку. В течение 24 часов (за вычетом выходных) вам выйдет оповещение о статусе заказа.</p>
+                    <p>Ожидаемое время прихода заказов &ndash; не раньше 15:00 <i>(<span style="color:red">Важно!</span> Ждите оповещения о приходе товара)</i>.</p>
+        </div>
+    </div>
+    {% include 'Order/history_list.html.twig' with { order: order } only %}
+
+    <a href="/catalog/" class="bttn light prev">Вернуться к покупкам</a>
 {% endblock %}

@@ -88,6 +88,16 @@ class User implements UserInterface
     public $person;
 
     /**
+     * @var FinancialCounteragent
+     */
+    public $financialCounteragent;
+
+    /**
+     * @var array
+     */
+    public $geoRooms;
+
+    /**
      * @var boolean
      */
     public $isFired;
