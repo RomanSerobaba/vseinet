@@ -157,6 +157,8 @@ class OrderController extends Controller
                     // } else {
                     //     $flashBag->add('notice', 'Адрес доставки успешно добавлен');
                     // }
+                    $this->forward('AppBundle:Cart:clear');
+
                     if (OrderType::isInerOrder($command->typeCode)) {
                         return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
                     }

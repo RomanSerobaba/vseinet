@@ -58,7 +58,12 @@ class CreateFormType extends AbstractType
             case OrderType::CONSUMABLES:
             case OrderType::EQUIPMENT:
             case OrderType::RESUPPLY:
-                $points = array_column($user->geoRooms, 'geo_point_id');
+                if (count($user->geoRooms) > 0) {
+                    $points = array_column($user->geoRooms, 'geo_point_id');
+                } else {
+                    $points = [$this->getParameter('default.point.id')];
+                }
+
                 $stmt = $this->em->getConnection()->prepare("
                     SELECT p.id, CONCAT_WS(', ', c.name, p.name) AS name
                     FROM geo_point AS p
