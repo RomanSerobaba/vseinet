@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\ApiClient;
 
@@ -13,7 +13,7 @@ abstract class BaseApiClient
     /**
      * @var string
      */
-    protected $apiHost; 
+    protected $apiHost;
 
     /**
      * @var MessageFactory
@@ -26,8 +26,8 @@ abstract class BaseApiClient
     protected $client;
 
     public function __construct(
-        string $apiHost, 
-        MessageFactory $factory, 
+        string $apiHost,
+        MessageFactory $factory,
         PluginClient $client
     )
     {
@@ -46,7 +46,7 @@ abstract class BaseApiClient
         try {
             return $this->doRequest($method, $uri, $headers, $body);
         } catch (UnauthorizedHttpException $e) {
-            return $this->request($method, $uri, $headers, $body); 
+            return $this->request($method, $uri, $headers, $body);
         }
     }
 
@@ -79,7 +79,7 @@ abstract class BaseApiClient
     {
         return $this->request('LINK', $uri, $headers, $body);
     }
-    
+
     public function unlink($uri, array $headers = [], $body = null)
     {
         return $this->request('UNLINK', $uri, $headers, $body);
@@ -97,7 +97,7 @@ abstract class BaseApiClient
         if (Response::HTTP_UNAUTHORIZED === $response->getStatusCode()) {
             throw new UnauthorizedHttpException();
         }
-
+// var_dump(array_column($response->getHeaders(), 'X-Debug-Token-Link', ''), $response->getBody()->getContents());die();
         if (!in_array($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_CREATED, Response::HTTP_NO_CONTENT])) {
             throw new BadRequestHttpException($response->getReasonPhrase(), null, $response->getStatusCode());
         }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Order\Query;
 
@@ -9,12 +9,12 @@ use AppBundle\Entity\FinancialCounteragent;
 class GetOrderQueryHandler extends MessageHandler
 {
     public function handle(GetOrderQuery $query)
-    {   
+    {
         $api = $this->get('user.api.client');
 
         try {
             $parameters = [
-                'id' => $query->id,
+                'did' => $query->id,
             ];
             $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {

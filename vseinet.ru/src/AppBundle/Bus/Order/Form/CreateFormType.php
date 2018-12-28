@@ -48,8 +48,9 @@ class CreateFormType extends AbstractType
         // ");
         // $phones = $stmt->fetchAll(\PDO::FETCH_COLUMN);
         // $choicesPhones = array_combine($phones, $phones);
+        $user = $this->security->getToken()->getUser();
         $builder
-            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices($this->security->getToken()->getUser()->isEmployee())),])
+            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices($user->isEmployee())),])
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class);
 
@@ -57,6 +58,24 @@ class CreateFormType extends AbstractType
             case OrderType::CONSUMABLES:
             case OrderType::EQUIPMENT:
             case OrderType::RESUPPLY:
+                $points = array_column($user->geoRooms, 'geo_point_id');
+                $stmt = $this->em->getConnection()->prepare("
+                    SELECT p.id, CONCAT_WS(', ', c.name, p.name) AS name
+                    FROM geo_point AS p
+                    INNER JOIN representative AS r ON r.geo_point_id = p.id
+                    INNER JOIN geo_city AS c ON c.id = p.geo_city_id
+                    WHERE p.id IN (:point_ids)
+                ");
+                $stmt->execute(['point_ids' => implode(',', $points)]);
+                $points = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                $pointsIds = array_column($points, 'id');
+                $pointsNames = array_column($points, 'name');
+
+                $builder
+                    ->add('geoPointId', ChoiceType::class, [
+                        'choices' => array_combine($pointsNames, $pointsIds),
+                        'data' => reset($pointsIds),
+                        ]);
                 break;
 
             case OrderType::LEGAL:

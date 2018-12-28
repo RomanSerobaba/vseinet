@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Order\Command;
 
@@ -19,6 +19,11 @@ class CreateCommand extends Message
      * @Assert\Valid
      */
     public $userData;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoPointId;
 
     /**
      * @Assert\Type(type="integer")

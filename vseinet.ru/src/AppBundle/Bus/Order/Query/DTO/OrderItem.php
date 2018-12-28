@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Order\Query\DTO;
 
@@ -54,7 +54,7 @@ class OrderItem
      * @Assert\Type(type="integer")
      */
     public $prepaymentAmount;
-    
+
     /**
      * @Assert\Type(type="integer")
      */
@@ -69,8 +69,8 @@ class OrderItem
         $this->tracker = OrderItemStatus::getTracker($item['statusCode']);
         $this->productName = $item['productName'];
         $this->baseProductId = $item['baseProductId'];
-        $this->retailPrice = $item['retailPrice'];
-        $this->deliveryDate = $item['deliveryDate'];
+        $this->retailPrice = $item['retailPrice'] ?? 0;
+        $this->deliveryDate = $item['deliveryDate'] ?? null;
         $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
         $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
     }

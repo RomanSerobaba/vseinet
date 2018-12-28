@@ -44,7 +44,7 @@ class OrderController extends Controller
                         return $this->json([
                             'html' => $this->renderView('Order/status.html.twig', [
                                 'order' => $order,
-                                'more' => $more, 
+                                'more' => $more,
                             ]),
                         ]);
                     }
@@ -58,7 +58,7 @@ class OrderController extends Controller
                 return $this->json([
                     'errors' => $this->getFormErrors($form),
                 ]);
-            }   
+            }
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -85,10 +85,10 @@ class OrderController extends Controller
      *         @VIA\Parameter(model="AppBundle\Bus\Order\Query\GetHistoryQuery")
      *     }
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function historyAction(Request $request)
-    {   
+    {
         $query = new Query\GetHistoryQuery($request->query->all());
         $this->get('query_bus')->handle($query, $history);
 
@@ -127,15 +127,15 @@ class OrderController extends Controller
     {
         $command = new Command\CreateCommand();
         $command->typeCode = (
-                $request->isMethod('POST') 
-                ? $request->request->get('create_form')['typeCode'] 
+                $request->isMethod('POST')
+                ? $request->request->get('create_form')['typeCode']
                 : $request->query->get('typeCode')
             ) ?? OrderType::NATURAL;
         $form = $this->createForm(Form\CreateFormType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            
+
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('command_bus')->handle($command);
@@ -157,6 +157,9 @@ class OrderController extends Controller
                     // } else {
                     //     $flashBag->add('notice', 'Адрес доставки успешно добавлен');
                     // }
+                    if (OrderType::isInerOrder($command->typeCode)) {
+                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
+                    }
 
                     return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
 
@@ -164,14 +167,14 @@ class OrderController extends Controller
                     $this->addFormErrors($form, $e->getMessages());
                 }
             }
-            
+
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
                     'errors' => $this->getFormErrors($form),
                 ]);
             }
         }
-        
+
         if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'html' => $this->renderView('Order/' . $command->typeCode . '_creation_ajax.html.twig', [
@@ -184,9 +187,9 @@ class OrderController extends Controller
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
         ]);
-        
+
     }
-    
+
     /**
      * @VIA\Get(
      *     name="order_created_page",
@@ -195,12 +198,12 @@ class OrderController extends Controller
      * )
      */
     public function createdPageAction(int $id, Request $request)
-    { 
+    {
         $query = new Query\GetOrderQuery(['id' => $id,]);
         $this->get('query_bus')->handle($query, $order);
-        
-        if (null === $order || !$this->getUserIsEmployee() && $order->financialCounteragentId != $this->getUser()->financialCounteragent->getId()) {            
-            throw new NotFoundHttpException(); 
+
+        if (null === $order || !$this->getUserIsEmployee() && $order->financialCounteragentId != $this->getUser()->financialCounteragent->getId()) {
+            throw new NotFoundHttpException();
         }
 
         return $this->render('Order/created.html.twig', [
