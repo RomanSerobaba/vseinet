@@ -1,0 +1,63 @@
+<div class="wrapper products">
+    <a href="/cart/" class="bttn light">Редактировать</a>
+    <h2>Ваша корзина <small>{{ cart.total }} {{ cart.total|declension('товар;товара;товаров') }}</small></h2>
+    {% for product in cart.products %}
+        <div class="product">
+            <div>
+                <p class="quantity">{{ product.quantity }} шт</p>
+                <strong class="price {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}from_pricetag{% endif %}">{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}{{ product.storePricetag|price_format }}{% else %}{{ product.price|price_format }}{% endif %} <span class="RUR">Р</span></strong>
+            </div>
+            <a href="/product/{{ product.id }}/">
+                <img src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="{{ product.name|e('html') }}. Интернет-магазин Vseinet.ru Пенза" />
+                {{ product.name|e('html') }}
+            </a>
+            <p class="code">
+                Код товара: {{ product.id }}{if $product.is_active>2},{/if}
+                {$product.id|delivery_time:1:0}
+            </p>
+            <div class="mobile-quantity-info">
+                <p class="quantity">{{ product.quantity }} шт</p>
+                <strong class="price {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}from_pricetag{% endif %}">{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}{{ product.storePricetag|price_format }}{% else %}{{ product.price|price_format }}{% endif %} <span class="RUR">Р</span></strong>
+            </div>
+            {% if '3014' == product.categoryId %}
+                <p title="Есть вопросы? Звоните по тел. 8 (8412) 290-708">+ установка</p>
+            {% endif %}
+            {% if product.deliveryTax %}
+                <small>Доставка до регионального склада: +{{ product.deliveryTax|price_format }} <span class="RUR">Р</span></small>
+            {% endif %}
+            {% if product.liftingCost %}
+                <small class="rise">Подъем: <span>{{ product.liftingCost|price_format }}</span><span class="RUR">Р</span>{% if not form.hasLift.vars.value and form.floor.vars.value > 1 %} <span class="floor">за этаж</span>{% endif %}</small>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+<div class="summary">
+    <div class="wrapper">
+        <p>Сумма покупки: <strong>{{ cart.amountWithDiscount|price_format }} <span class="RUR">Р</span></strong></p>
+        {% if cart.deliveryTaxAmount %}
+            <p>Доставка до регионального склада: <strong>+{{ cart.deliveryTaxAmount|price_format }} <span class="RUR">Р</span></strong></p>
+        {% endif %}
+        {% if cart.deliveryCharges %}
+            <p>Доставка по городу: <strong>{{ cart.deliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
+        {% endif %}
+        {% if cart.liftingCharges %}
+            <p>Подъем: <strong>{{ cart.liftingCharges|price_format }} <span class="RUR">Р</span></strong></p>
+        {% endif %}
+        {if $summary.delivery2Representative}
+            <p>Доставка до представительства: <strong>{$summary.delivery2Representative|price_format} <span class="RUR">Р</span></strong></p>
+        {/if}
+        {if $summary.deliveryByPost}
+            <p>Доставка почтой: <strong>{$summary.deliveryByPost|price_format} <span class="RUR">Р</span></strong></p>
+        {/if}
+        {% if cart.transportCompanyDeliveryCharges %}
+            <p>Доставка до транспортной компании: <strong>{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
+        {% endif %}
+        {% if cart.discountCode %}
+            <p>Скидка по коду {{ cart.discountCode }}: <strong>-{{ (cart.amount - cart.amountWithDiscount)|price_format }} <span class="RUR">Р</span></strong></p>
+        {% endif %}
+        {% if cart.paymentTypeComissionAmount %}
+            <p>{$summary.payment.name} (+{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == form.paymentTypeCode.vars.value %}{$summary.payment.cashless_percent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT')}{% else %}{$summary.payment.cashless_percent}{% endif %}%): <strong>{$summary.cashless|price_format} <span class="RUR">Р</span></strong></p>
+        {% endif %}
+        <strong class="all">Итого: {{ cart.summary|price_format }}</span> <span class="RUR">Р</span></strong>
+    </div>
+</div>

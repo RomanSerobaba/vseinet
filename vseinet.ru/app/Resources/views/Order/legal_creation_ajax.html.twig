@@ -1,7 +1,8 @@
-{{ form_start(form, { action: '', attr: { id: 'order-creation-form' }}) }}
+{{ form_start(form, { action: '', attr: { id: 'order-creation-form', class: 'w60p validate' }}) }}
 {% include 'Order/order_type.html.twig' %}
+{% include 'Order/payment_type.html.twig' %}
 {% include 'Order/order_contact_info.html.twig' %}
-{# 
+{#
 <div class="row h{% if errors.address is defined %} error{% endif %}">
     {{ form_label(form.address, 'Адрес*:') }}
     {{ form_widget(form.address, { attr: { class: 'txt' }}) }}
@@ -19,11 +20,11 @@
     <div class="row h{% if errors.variant is defined %} error{% endif %}">
         <div class="inline-h">
             {% for index, variant in command.variants %}
-                <input 
-                    type="radio" 
+                <input
+                    type="radio"
                     id="add_address_variant_{{ index }}"
                     name="add_address[variant]"
-                    value="{{ index }}" 
+                    value="{{ index }}"
                 />
                 <label for="add_address_variant_{{ index }}">{{ variant }}</label>
                 {% if not loop.last %}<br />{% endif %}
@@ -78,7 +79,7 @@
 </div>
 
 <div class="row h">
-    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
+    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }}
     {{ form_widget(form._token) }}
 </div> #}
 {% include 'Order/order_submit.html.twig' %}

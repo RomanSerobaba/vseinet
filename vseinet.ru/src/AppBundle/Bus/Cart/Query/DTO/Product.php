@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Cart\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Product 
+class Product
 {
     /**
      * @Assert\Type(type="integer")
@@ -15,6 +15,11 @@ class Product
      * @Assert\Type(type="string")
      */
     public $name;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $categoryId;
 
     /**
      * @Assert\Type(type="integer")
@@ -32,35 +37,55 @@ class Product
     public $price;
 
     /**
+     * @VIC\Enum("AppBundle\Enum\ProductAvailabilityCode")
+     */
+    public $availabilityCode;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $deliveryTax;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $liftingCost;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $quantity;
 
     /**
-     * @Assert\Type(type="float")
+     * @Assert\Type(type="integer")
      */
-    public $discountPercent;
+    public $reserveQuantity;
 
     /**
      * @Assert\Type(type="integer")
      */
-    public $priceDiscount;
+    public $storePricetag;
 
     /**
-     * @Assert\Type(type="array")
+     * @Assert\Type(type="integer")
      */
-    public $points;
+    public $priceWithDiscount;
 
 
-    public function __construct($id, $name, $minQuantity, $baseSrc, $price, $quantity, $discountPercent)
+    public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $quantity, $reserveQuantity, $storePricetag, $liftingCost, $discountAmount)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->categoryId = $categoryId;
         $this->minQuantity = $minQuantity;
         $this->baseSrc = $baseSrc;
         $this->price = $price;
+        $this->availabilityCode = $availabilityCode;
+        $this->deliveryTax = $deliveryTax;
+        $this->liftingCost = $liftingCost;
         $this->quantity = $quantity;
-        $this->discountPercent = $discountPercent;
-        $this->priceDiscount = round($price * (1 - $discountPercent / 100), -2);
+        $this->reserveQuantity = $reserveQuantity;
+        $this->storePricetag = $storePricetag;
+        $this->priceWithDiscount = round($price - $discountAmount);
     }
 }

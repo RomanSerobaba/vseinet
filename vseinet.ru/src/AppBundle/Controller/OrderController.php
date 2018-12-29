@@ -158,6 +158,7 @@ class OrderController extends Controller
                     //     $flashBag->add('notice', 'Адрес доставки успешно добавлен');
                     // }
                     $this->forward('AppBundle:Cart:clear');
+                    $this->get('session')->remove('discountCode');
 
                     if (OrderType::isInerOrder($command->typeCode)) {
                         return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
@@ -185,8 +186,20 @@ class OrderController extends Controller
             ]);
         }
 
+        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
+            'discountCode' => $this->get('session')->get('discountCode', null),
+            'geoPointId' => $command->geoPointId,
+            'paymentTypeCode' => $command->paymentTypeCode,
+            'deliveryTypeCode' => $command->deliveryTypeCode,
+            'needLifting' => $command->needLifting,
+            'hasLift' => $command->hasLift,
+            'floor' => $command->floor,
+            'transportCompanyId' => $command->transportCompanyId,
+        ]), $cart);
+
         return $this->render('Order/creation.html.twig', [
             'form' => $form->createView(),
+            'cart' => $cart,
             'errors' => $this->getFormErrors($form),
         ]);
 
