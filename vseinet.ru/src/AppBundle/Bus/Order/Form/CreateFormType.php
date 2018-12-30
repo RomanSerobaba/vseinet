@@ -34,21 +34,6 @@ class CreateFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // $stmt = $this->em->getConnection()->query("
-        //     SELECT c.value
-        //     FROM contact AS c
-        //     INNER JOIN org_contact AS oc ON oc.contact_id = c.id
-        //     INNER JOIN org_employee AS oe ON oe.user_id = oc.org_employee_user_id
-        //     WHERE EXISTS (
-        //         SELECT 1
-        //         FROM org_employment_history
-        //         WHERE org_employee_user_id = oe.user_id AND fired_at IS NULL
-        //     )
-        //     GROUP BY c.value
-        //     ORDER BY c.value
-        // ");
-        // $phones = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-        // $choicesPhones = array_combine($phones, $phones);
         $user = $this->security->getToken()->getUser();
         $builder
             ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices(is_object($user) && $user->isEmployee())),])
@@ -58,10 +43,24 @@ class CreateFormType extends AbstractType
         $stmt = $this->em->getConnection()->prepare("
             SELECT code, name
             FROM payment_type
-            WHERE is_active = TRUE".(!is_object($user) || !$user->isEmployee() ? " AND is_internal = FALSE" : "")."
+            WHERE is_active = TRUE
         ");
         $stmt->execute();
         $paymentTypes = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (!is_object($user) || !$user->isEmployee()) {
+            $paymentTypes = array_filter($paymentTypes, function($val){
+                return !$val['is_internal'];
+            });
+        }
+
+        $needCallParams = [
+            'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
+        ];
+
+        if (is_object($user) && $user->isEmployee()) {
+            $needCallParams['data'] = false;
+        }
 
         switch ($options['data']->typeCode) {
             case OrderType::CONSUMABLES:
@@ -93,12 +92,28 @@ class CreateFormType extends AbstractType
                 break;
 
             case OrderType::LEGAL:
+                $paymentTypes = array_filter($paymentTypes, function($val){
+                    return in_array($val['code'], [PaymentTypeCode::CASHLESS, PaymentTypeCode::CASH]);
+                });
+
                 $builder
                     ->add('userData', UserDataType::class)
                     ->add('paymentTypeCode', ChoiceType::class, [
                         'choices' => array_combine(array_column($paymentTypes, 'name'), array_column($paymentTypes, 'code')),
                         'data' => PaymentTypeCode::CASHLESS,
-                        ]);
+                        ])
+                    ->add('counteragentName', TextType::class, ['required' => false,])
+                    ->add('counteragentLegalAddress', TextType::class, ['required' => false,])
+                    ->add('counteragentSettlementAccount', TextType::class, ['required' => false,])
+                    ->add('tin', TextType::class, ['required' => false,])
+                    ->add('kpp', TextType::class, ['required' => false,])
+                    ->add('bic', TextType::class, ['required' => false,])
+                    ->add('withVat', ChoiceType::class, [
+                        'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
+                    ])
+                    ->add('needCall', ChoiceType::class, $needCallParams)
+                    ->add('needCallComment', TextType::class, ['required' => false,])
+                    ->add('comment', TextareaType::class, ['required' => false,]);
                 break;
 
             case OrderType::NATURAL:
@@ -107,7 +122,10 @@ class CreateFormType extends AbstractType
                     ->add('paymentTypeCode', ChoiceType::class, [
                         'choices' => array_combine(array_column($paymentTypes, 'name'), array_column($paymentTypes, 'code')),
                         'data' => PaymentTypeCode::CASH,
-                        ]);
+                        ])
+                    ->add('needCall', ChoiceType::class, $needCallParams)
+                    ->add('needCallComment', TextType::class, ['required' => false,])
+                    ->add('comment', TextareaType::class, ['required' => false,]);
                 break;
 
             case OrderType::RETAIL:

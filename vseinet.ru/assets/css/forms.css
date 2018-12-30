@@ -77,7 +77,7 @@ FORM .notice {
 	}
 		FORM .error-summary .error {
 			color: #f26c4f;
-			font-size: 16px;	
+			font-size: 16px;
 		}
 
 FORM .row {
@@ -108,10 +108,14 @@ FORM .row {
 				margin: 0 20px 6px 0;
 				width: auto;
 			}
-		FORM .row.h .txt {
+        FORM .row.h .txt,
+        FORM .row.h .value {
 			float: left;
 			margin: 0 0 7px;
 			width: 87%;
+		}
+        FORM .row.h .value label {
+			margin-left: 0;
 		}
 		FORM .row.h .status {
 			float: left;

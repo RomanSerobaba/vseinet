@@ -27,6 +27,12 @@ class Cart
 
     /**
      * @Assert\Type(type="integer")
+     * @VIA\Description("Стоимость доставки товаров до точки получения")
+     */
+    public $deliveryToRepresentativeTaxAmount = 0;
+
+    /**
+     * @Assert\Type(type="integer")
      * @VIA\Description("Стоимость курьерской доставки до подъезда")
      */
     public $deliveryCharges = 0;
@@ -78,7 +84,7 @@ class Cart
     public $products;
 
 
-    public function __construct(array $products, int $deliveryCharges, int $liftingCharges, int $transportCompanyDeliveryCharges, float $paymentTypeComissionPercent, ?string $discountCode)
+    public function __construct(array $products, int $deliveryCharges, int $liftingCharges, int $transportCompanyDeliveryCharges, int $deliveryToRepresentativeTaxAmount, float $paymentTypeComissionPercent, ?string $discountCode)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
@@ -92,6 +98,7 @@ class Cart
         $this->deliveryCharges = $deliveryCharges;
         $this->liftingCharges = $liftingCharges;
         $this->transportCompanyDeliveryCharges = $transportCompanyDeliveryCharges;
+        $this->deliveryToRepresentativeTaxAmount = $deliveryToRepresentativeTaxAmount;
         $this->discountCode = $discountCode;
         $this->summary = $this->amountWithDiscount + $this->deliveryTaxAmount + $this->deliveryCharges + $this->liftingCharges;
         $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100);

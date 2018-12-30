@@ -12,8 +12,8 @@
                 {{ product.name|e('html') }}
             </a>
             <p class="code">
-                Код товара: {{ product.id }}{if $product.is_active>2},{/if}
-                {$product.id|delivery_time:1:0}
+                Код товара: {{ product.id }}{#if $product.is_active>2},{/if}
+                {$product.id|delivery_time:1:0#}
             </p>
             <div class="mobile-quantity-info">
                 <p class="quantity">{{ product.quantity }} шт</p>
@@ -33,7 +33,7 @@
 </div>
 <div class="summary">
     <div class="wrapper">
-        <p>Сумма покупки: <strong>{{ cart.amountWithDiscount|price_format }} <span class="RUR">Р</span></strong></p>
+        <p>Сумма покупки: <strong>{{ cart.amount|price_format }} <span class="RUR">Р</span></strong></p>
         {% if cart.deliveryTaxAmount %}
             <p>Доставка до регионального склада: <strong>+{{ cart.deliveryTaxAmount|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
@@ -43,20 +43,17 @@
         {% if cart.liftingCharges %}
             <p>Подъем: <strong>{{ cart.liftingCharges|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
-        {if $summary.delivery2Representative}
-            <p>Доставка до представительства: <strong>{$summary.delivery2Representative|price_format} <span class="RUR">Р</span></strong></p>
-        {/if}
-        {if $summary.deliveryByPost}
-            <p>Доставка почтой: <strong>{$summary.deliveryByPost|price_format} <span class="RUR">Р</span></strong></p>
-        {/if}
+        {% if cart.deliveryToRepresentativeTaxAmount %}
+            <p>Доставка до представительства: <strong>{{ cart.deliveryToRepresentativeTaxAmount|price_format }} <span class="RUR">Р</span></strong></p>
+        {% endif %}
         {% if cart.transportCompanyDeliveryCharges %}
-            <p>Доставка до транспортной компании: <strong>{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
+            <p>{% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == form.deliveryTypeCode.vars.value %}Доставка почтой{% else %}Доставка до транспортной компании{% endif %}: <strong>{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.discountCode %}
             <p>Скидка по коду {{ cart.discountCode }}: <strong>-{{ (cart.amount - cart.amountWithDiscount)|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.paymentTypeComissionAmount %}
-            <p>{$summary.payment.name} (+{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == form.paymentTypeCode.vars.value %}{$summary.payment.cashless_percent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT')}{% else %}{$summary.payment.cashless_percent}{% endif %}%): <strong>{$summary.cashless|price_format} <span class="RUR">Р</span></strong></p>
+            <p>{$summary.payment.name} (+{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == form.paymentTypeCode.vars.value %}{$summary.payment.cashless_percent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT')}{% else %}{$summary.payment.cashless_percent}{% endif %}%): <strong>{{ cart.paymentTypeComissionAmount|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         <strong class="all">Итого: {{ cart.summary|price_format }}</span> <span class="RUR">Р</span></strong>
     </div>

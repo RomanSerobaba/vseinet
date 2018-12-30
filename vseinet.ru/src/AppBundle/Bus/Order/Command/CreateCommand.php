@@ -57,6 +57,60 @@ class CreateCommand extends Message
     public $transportCompanyId;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $needCall;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $needCallComment;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $comment;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $withVat;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $counteragentName;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $counteragentLegalAddress;
+
+    /**
+     * @Assert\Type(type="string")
+     * @Assert\Length(min=20, max=20)
+     */
+    public $counteragentSettlementAccount;
+
+    /**
+     * @Assert\Type(type="string")
+     * @Assert\Length(min=12, max=12)
+     */
+    public $tin;
+
+    /**
+     * @Assert\Type(type="string")
+     * @Assert\Length(min=9, max=9)
+     */
+    public $kpp;
+
+    /**
+     * @Assert\Type(type="string")
+     * @Assert\Length(min=9, max=9)
+     */
+    public $bic;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $id;

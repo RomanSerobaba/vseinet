@@ -1,0 +1,13 @@
+<fieldset class="block">
+    <div class="wrapper">
+        <h2>Способ доставки</h2>
+        {% for choice in form.paymentTypeCode.vars.choices %}
+        <div class="row h">
+            <label for="create_form_deliveryTypeCode_{{ choice.value }}">
+                {{ choice.label }}
+                <input type="radio" id="create_form_paymentTypeCode_{{ choice.value }}" name="create_form[paymentTypeCode]" value="{{ choice.value }}" required="required"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %} />
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+</fieldset>

@@ -149,14 +149,6 @@ class OrderController extends Controller
                     //         ]),
                     //     ]);
                     // }
-
-                    // $flashBag = $this->get('session')->getFlashBag();
-
-                    // if ($command->id) {
-                    //     $flashBag->add('notice', 'Адрес доставки успешно изменен');
-                    // } else {
-                    //     $flashBag->add('notice', 'Адрес доставки успешно добавлен');
-                    // }
                     $this->forward('AppBundle:Cart:clear');
                     $this->get('session')->remove('discountCode');
 

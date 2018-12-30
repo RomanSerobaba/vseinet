@@ -146,6 +146,6 @@ class GetQueryHandler extends MessageHandler
             $paymentTypeComissionPercent = $paymentType->getCashlessPercent();
         }
 
-        return new DTO\Cart($products, $deliveryCharges ?? 0, $liftingCharges ?? 0, $paymentTypeComissionPercent ?? 0, $transportCompanyDeliveryCharges ?? 0, $discount instanceof DiscountCode ? $discount->getCode() : null);
+        return new DTO\Cart($products, $deliveryCharges ?? 0, $liftingCharges ?? 0, $paymentTypeComissionPercent ?? 0, $transportCompanyDeliveryCharges ?? 0, $deliveryToRepresentativeTaxAmount ?? 0, $discount instanceof DiscountCode ? $discount->getCode() : null);
     }
 }

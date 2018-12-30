@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Form;
 
@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\{ EmailType, TextType };
 use AppBundle\Form\Type\PhoneType;
 use AppBundle\Bus\User\Query\DTO\UserData;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserDataType extends AbstractType
 {
@@ -15,8 +16,10 @@ class UserDataType extends AbstractType
     {
         $builder
             ->add('fullname', TextType::class)
-            ->add('phone', PhoneType::class)
-            ->add('additionalPhone', PhoneType::class, ['required' => false])
+            ->add('phone', PhoneType::class, [
+                'required' => false])
+            ->add('additionalPhone', PhoneType::class, [
+                'required' => false])
             ->add('email', EmailType::class, ['required' => false])
         ;
     }
@@ -25,6 +28,14 @@ class UserDataType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserData::class,
+            'constraints' => [
+                new Assert\Callback(function($data, $context){
+                    if (empty($data->phone) && empty($data->additionalPhone)) {
+                        $context->buildViolation('Необходимо заполнить хотя бы один контактный номер (основной или дополнительный)')
+                            ->atPath('phone')
+                            ->addViolation();
+                        }
+                })],
         ]);
     }
 }
