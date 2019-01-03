@@ -5,7 +5,7 @@ namespace AppBundle\Bus\User\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ EmailType, TextType };
+use Symfony\Component\Form\Extension\Core\Type\{ EmailType, TextType, HiddenType };
 use AppBundle\Form\Type\PhoneType;
 use AppBundle\Bus\User\Query\DTO\UserData;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,6 +21,8 @@ class UserDataType extends AbstractType
             ->add('additionalPhone', PhoneType::class, [
                 'required' => false])
             ->add('email', EmailType::class, ['required' => false])
+            ->add('userId', HiddenType::class, ['required' => false])
+            ->add('comuserId', HiddenType::class, ['required' => false])
         ;
     }
 

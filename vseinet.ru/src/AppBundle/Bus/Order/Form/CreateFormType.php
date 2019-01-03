@@ -41,7 +41,7 @@ class CreateFormType extends AbstractType
             ->add('submit', SubmitType::class);
 
         $stmt = $this->em->getConnection()->prepare("
-            SELECT code, name
+            SELECT code, name, is_internal
             FROM payment_type
             WHERE is_active = TRUE
         ");

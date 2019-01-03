@@ -1,16 +1,18 @@
 <div class="row h{% if errors.userData.fullname is defined %} error{% endif %}" style="position: relative">
     {{ form_label(form.userData.fullname, 'Ф.И.О.*:') }}
-    {{ form_widget(form.userData.fullname, { attr: { class: 'txt', placeholder: 'Фамилия Имя Отчество' }})  }}
+    {{ form_widget(form.userData.fullname, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : ''), placeholder: 'Фамилия Имя Отчество' }})  }}
     <span id="lfsHelp" onclick="$('#create_form_fullname').focus()">Фамилия Имя Отчество</span>
     <span class="status"></span>
     {% if errors.userData.fullname is defined %}
         <div class="error">{{ errors.userData.fullname.0 }}</div>
     {% endif %}
+    {{ form_widget(form.userData.userId) }}
+    {{ form_widget(form.userData.comuserId) }}
 </div>
 
 <div class="row h{% if error.userData.phone is defined %} error{% endif %}">
     {{ form_label(form.userData.phone, 'Телефон*:') }}
-    {{ form_widget(form.userData.phone, { attr: { class: 'txt' }}) }}
+    {{ form_widget(form.userData.phone, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
     <span class="status"></span>
     {% if errors.userData.phone is defined %}
         <div class="error">{{ errors.userName.phone.0 }}</div>
