@@ -125,57 +125,55 @@ class OrderController extends Controller
      */
     public function creationPageAction(Request $request)
     {
-        $command = new Command\CreateCommand();
-        $command->typeCode = (
-                $request->isMethod('POST')
-                ? $request->request->get('create_form')['typeCode']
-                : $request->query->get('typeCode')
-            ) ?? OrderType::NATURAL;
-        $form = $this->createForm(Form\CreateFormType::class, $command);
+        if ($request->isMethod('POST') && $request->query->get('refreshOnly')) {
+            $formData = $request->request->get('create_form');
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->get('command_bus')->handle($command);
-
-                    // if ($request->isXmlHttpRequest()) {
-                    //     $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
-
-                    //     return $this->json([
-                    //         'html' => $this->renderView('User/address.html.twig', [
-                    //             'address' => $address,
-                    //         ]),
-                    //     ]);
-                    // }
-                    $this->forward('AppBundle:Cart:clear');
-                    $this->get('session')->remove('discountCode');
-
-                    if (OrderType::isInerOrder($command->typeCode)) {
-                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
-                    }
-
-                    return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
-
-                } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
-                }
+            if (isset($formData['userData'])) {
+                $formData['userData'] = new \AppBundle\Bus\User\Query\DTO\UserData($formData['userData']);
             }
 
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'errors' => $this->getFormErrors($form),
-                ]);
+            if (isset($formData['organizationDetails'])) {
+                $formData['organizationDetails'] = new Query\DTO\OrganizationDetails($formData['organizationDetails']);
+            }
+
+            $command = new Command\CreateCommand($formData);
+        } else {
+            $command = new Command\CreateCommand();
+
+            if (!$this->getUserIsEmployee()) {
+                $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
             }
         }
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('Order/' . $command->typeCode . '_creation_ajax.html.twig', [
-                    'form' => $form->createView(),
-                ]),
-            ]);
+        $form = $this->createForm(Form\CreateFormType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            if (!$request->query->get('refreshOnly')) {
+                $form->handleRequest($request);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    try {
+                        $this->get('command_bus')->handle($command);
+                        $this->forward('AppBundle:Cart:clear');
+                        $this->get('session')->remove('discountCode');
+
+                        if (OrderType::isInerOrder($command->typeCode)) {
+                            return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
+                        }
+
+                        return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
+
+                    } catch (ValidationException $e) {
+                        $this->addFormErrors($form, $e->getMessages());
+                    }
+                }
+
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'errors' => $this->getFormErrors($form),
+                    ]);
+                }
+            }
         }
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
@@ -188,6 +186,15 @@ class OrderController extends Controller
             'floor' => $command->floor,
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'html' => $this->renderView('Order/' . $command->typeCode . '_creation_ajax.html.twig', [
+                    'form' => $form->createView(),
+                    'cart' => $cart,
+                ]),
+            ]);
+        }
 
         return $this->render('Order/creation.html.twig', [
             'form' => $form->createView(),

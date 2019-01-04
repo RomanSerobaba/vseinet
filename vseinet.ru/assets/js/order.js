@@ -181,11 +181,12 @@ $(function() {
 
     var wrapper = $('#content');
 
-    wrapper.on('click', '[name="create_form[typeCode]"]', function(e){
+    wrapper.on('click', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"]', function(e){
         $.ajax({
-            url: window.location.href + '?typeCode=' + $('[name="create_form[typeCode]"]:checked').val(),
-            method: 'GET',
+            url: window.location.href + '?refreshOnly=1',
+            method: 'POST',
             dataType: 'json',
+            data: $('[name="create_form"]').serializeArray(),
             complete: function (jqXHR, status) {
                 var response = jqXHR.responseJSON;
 

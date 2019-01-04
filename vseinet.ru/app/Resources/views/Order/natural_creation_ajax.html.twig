@@ -1,8 +1,8 @@
 {{ form_start(form, { action: '', attr: { id: 'order-creation-form', class: 'w60p validate' }}) }}
 {% include 'Order/order_type.html.twig' %}
 {% include 'Order/order_contact_info.html.twig' %}
-{% include 'Order/payment_type.html.twig' %}
 {% include 'Order/delivery_type.html.twig' %}
+{% include 'Order/payment_type.html.twig' %}
 {% include 'Order/additional_info.html.twig' %}
 {#
 <div class="row h{% if errors.address is defined %} error{% endif %}">

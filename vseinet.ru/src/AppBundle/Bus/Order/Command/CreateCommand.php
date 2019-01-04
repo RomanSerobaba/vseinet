@@ -6,6 +6,7 @@ use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Validator\Constraints\Enum;
+use AppBundle\Enum\OrderType;
 
 class CreateCommand extends Message
 {
@@ -13,7 +14,7 @@ class CreateCommand extends Message
      * @Assert\NotBlank(message="Укажите тип заказа")
      * @VIC\Enum("AppBundle\Enum\OrderType")
      */
-    public $typeCode;
+    public $typeCode = OrderType::NATURAL;
 
     /**
      * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
@@ -22,7 +23,13 @@ class CreateCommand extends Message
     public $userData;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="AppBundle\Bus\Order\Query\DTO\OrganizationDetails")
+     * @Assert\Valid
+     */
+    public $organizationDetails;
+
+    /**
+     * @Assert\Type(type="integer", message="Идентификатор розничной точки должен быть числом")
      */
     public $geoPointId;
 
@@ -30,6 +37,11 @@ class CreateCommand extends Message
      * @Enum("AppBundle\Enum\PaymentTypeCode")
      */
     public $paymentTypeCode;
+
+    /**
+     * @Assert\Type(type="integer", message="Сумма первоначального взноса должная быть целым числом")
+     */
+    public $creditInitialContribution = 0;
 
     /**
      * @Enum("AppBundle\Enum\DeliveryTypeCode")
@@ -47,12 +59,12 @@ class CreateCommand extends Message
     public $hasLift;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Номер этажа должен быть числом")
      */
     public $floor;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор транспортной компании должен быть числом")
      */
     public $transportCompanyId;
 
@@ -70,45 +82,6 @@ class CreateCommand extends Message
      * @Assert\Type(type="string")
      */
     public $comment;
-
-    /**
-     * @Assert\Type(type="boolean")
-     */
-    public $withVat;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $counteragentName;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $counteragentLegalAddress;
-
-    /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=20, max=20)
-     */
-    public $counteragentSettlementAccount;
-
-    /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=12, max=12)
-     */
-    public $tin;
-
-    /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=9, max=9)
-     */
-    public $kpp;
-
-    /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=9, max=9)
-     */
-    public $bic;
 
     /**
      * @Assert\Type(type="integer")

@@ -316,14 +316,11 @@ class UserController extends Controller
      *     path="/users/search/",
      *     condition="request.isXmlHttpRequest()"
      * )
+     * @Security("is_granted('ROLE_EMPLOYEE')")
      */
     public function searchAction(Request $request)
     {
-        if ($this->getUserIsEmployee()) {
-            $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()), $users);
-        } else {
-            $users = [];
-        }
+        $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()), $users);
 
         return $this->json([
             'users' => $users,

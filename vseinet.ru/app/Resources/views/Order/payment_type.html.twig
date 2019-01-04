@@ -1,6 +1,6 @@
 <fieldset class="block">
     <div class="wrapper">
-        <h2>Способ оплаты</h2>
+        <h2>Способ оплаты <small style="color:red">Обратите внимание! По заказу возможно потребуется предоплата.</small></h2>
         {% for choice in form.paymentTypeCode.vars.choices %}
         <div class="row h">
             <label for="create_form_paymentTypeCode_{{ choice.value }}">
@@ -8,6 +8,12 @@
                 <input type="radio" id="create_form_paymentTypeCode_{{ choice.value }}" name="create_form[paymentTypeCode]" value="{{ choice.value }}" required="required"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %} />
             </label>
         </div>
+        {% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value %}
+        <div class="row h">
+            {{ form_label(form.creditInitialContribution, 'Первоначальный взнос:') }}
+            {{ form_widget(form.creditInitialContribution, { attr: { class: 'txt' }}) }}
+        </div>
+        {% endif %}
         {% endfor %}
     </div>
 </fieldset>
