@@ -13,12 +13,13 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Competitor;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class MainController extends Controller
 {
     /**
      * @VIA\Get(
-     *     name="index", 
+     *     name="index",
      *     path="/"
      * )
      */
@@ -35,7 +36,7 @@ class MainController extends Controller
      *         @VIA\Parameter(model="AppBundle\Bus\Main\Command\ErrorReportCommand")
      *     },
      *     condition="request.isXmlHttpRequest()"
-     * )    
+     * )
      */
     public function errorReportAction(Request $request)
     {
@@ -58,7 +59,7 @@ class MainController extends Controller
     public function cheaperRequestAction(int $id, Request $request)
     {
         $command = new Command\CheaperRequestCommand();
-        
+
         $em = $this->getDoctrine()->getManager();
 
         $command->product = $em->getRepository(BaseProduct::class)->find($id);
@@ -132,7 +133,7 @@ class MainController extends Controller
      *     methods={"GET", "POST"}
      * )
      */
-    public function complaintAction(Request $request) 
+    public function complaintAction(Request $request)
     {
         $command = new Command\ComplaintCommand();
 
@@ -166,7 +167,7 @@ class MainController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="suggestion", 
+     *     name="suggestion",
      *     path="/suggestion/",
      *     methods={"GET", "POST"}
      * )
@@ -194,7 +195,7 @@ class MainController extends Controller
                     $this->addFormErrors($form, $e->getMessage());
                 }
             }
-        }    
+        }
 
         return $this->render('Main/client_suggestion_form.html.twig', [
             'form' => $form->createView(),
@@ -204,7 +205,7 @@ class MainController extends Controller
 
 
     /**
-     * @internal 
+     * @internal
      */
     public function getMenuAction()
     {
@@ -222,7 +223,7 @@ class MainController extends Controller
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getBannerMainAction()
     {
@@ -232,7 +233,7 @@ class MainController extends Controller
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getBlockSpecialsAction(int $categoryId = 0)
     {
@@ -244,7 +245,7 @@ class MainController extends Controller
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getBlockPopularsAction()
     {
@@ -252,11 +253,11 @@ class MainController extends Controller
 
         return $this->render('Main/block_populars.html.twig', [
             'products' => $products,
-        ]);  
+        ]);
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getBlockLastviewAction()
     {
@@ -264,6 +265,18 @@ class MainController extends Controller
 
         return $this->render('Main/block_lastview.html.twig', [
             'products' => $products,
-        ]);          
+        ]);
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="system_info",
+     *     path="/sysinfo/"
+     * )
+     * @Security("is_granted('ROLE_ADMIN')")
+     */
+    public function sysinfoAction(Request $request)
+    {
+        echo phpinfo();
     }
 }
