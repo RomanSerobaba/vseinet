@@ -1,92 +1,37 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Message;
 
-abstract class Message  
+abstract class Message implements \IteratorAggregate
 {
     /**
-     * Constructor.
+     * Initial object with values from iterable.
      *
-     * @param array $values 
-     * @param array $extra
+     * @param iterable $values
+     * @param iterable $extra
      */
-    public function __construct(array $values = [], array $extra = [])
+    public function __construct(iterable $values = [], iterable $extra = [])
     {
-        $this->init($values, $extra);
+        $iterator = new \AppendIterator();
+        $iterator->append(new \ArrayIterator($values));
+        $iterator->append(new \ArrayIterator($extra));
+        foreach ($iterator as $property => $value) {
+            if (property_exists($this, $property)) {
+                $propertySetter = 'set'.ucfirst($property);
+                if (method_exists($this, $propertySetter)) {
+                    $this->$propertySetter($value);
+                } else {
+                    $this->$property = $value;
+                }
+            }
+        }
     }
 
     /**
-     * Initial object with values from array.
-     *
-     * @param array $values 
-     * @param array $extra
+     * @inheritdoc
      */
-    public function init(array $values = [], array $extra = []) 
+    public function getIterator()
     {
-        $data = $this->empty2null($extra + $values);
-
-        foreach ($data as $property => $value) {
-            if (property_exists($this, $property)) {
-                $this->$property = $value;
-            }
-        }     
-    }
-
-    protected function from($object, array $keyMap = [])
-    {
-        $values = (array) $object;
-        foreach ($keyMap as $original => $key) {
-            $values[$key] = $object->$original;
-        }
-        $this->init($values);
-    }
-
-    protected function empty2null($value) 
-    {
-        if (is_array($value)) {
-            foreach ($value as &$v) {
-                $v = $this->empty2null($v);
-            }
-
-            return $value;
-        }
-
-        return is_string($value) && strlen($value) === 0 ? null : $value;
-    }
-
-    public function toArray()
-    {
-        $array = [];
-        foreach ((array) $this as $key => $value) {
-            if (null !== $value) {
-                $array[$key] = $value;
-            }
-        }
-
-        return $array;
-    }
-
-    public function toArrayWith(array $keys)
-    {
-        $array = $this->toArray();
-        foreach ($array as $key => $value) {
-            if (!in_array($key, $keys)) {
-                unset($array[$key]);
-            }
-        }
-
-        return $array;
-    }
-
-    public function toArrayWithout(array $keys)
-    {
-        $array = $this->toArray();
-        foreach ($array as $key => $value) {
-            if (in_array($key, $keys)) {
-                unset($array[$key]);
-            }
-        }
-
-        return $array;
+        return new \ArrayIterator($this);
     }
 }

@@ -30,7 +30,7 @@ class OrderType
         }
     }
 
-    public static function isInerOrder($typeCode)
+    public static function isInnerOrder($typeCode)
     {
         return in_array($typeCode, [self::RESUPPLY, self::EQUIPMENT, self::CONSUMABLES]);
     }

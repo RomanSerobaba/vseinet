@@ -29,6 +29,11 @@ class CreateCommand extends Message
     public $organizationDetails;
 
     /**
+     * @Assert\Type(type="integer", message="Идентификатор города должен быть числом")
+     */
+    public $geoCityId;
+
+    /**
      * @Assert\Type(type="integer", message="Идентификатор розничной точки должен быть числом")
      */
     public $geoPointId;
@@ -87,4 +92,36 @@ class CreateCommand extends Message
      * @Assert\Type(type="integer")
      */
     public $id;
+
+    public function setCreditInitialContribution($creditInitialContribution) {
+        $this->creditInitialContribution = null !== $creditInitialContribution ? (int) $creditInitialContribution : $creditInitialContribution;
+    }
+
+    public function setFloor($floor) {
+        $this->floor = null !== $floor ? (int) $floor : $floor;
+    }
+
+    public function setPaymentTypeCode($paymentTypeCode) {
+        if ($paymentTypeCode instanceof \AppBundle\Bus\Order\Query\DTO\PaymentType) {
+            $this->paymentTypeCode = $paymentTypeCode->code;
+        } else {
+            $this->paymentTypeCode = $paymentTypeCode;
+        }
+    }
+
+    public function setGeoPointId($geoPointId) {
+        if ($geoPointId instanceof \AppBundle\Bus\Order\Query\DTO\GeoPoint) {
+            $this->geoPointId = $geoPointId->id;
+        } else {
+            $this->geoPointId = null !== $geoPointId ? (int) $geoPointId : $geoPointId;
+        }
+    }
+
+    public function setTransportCompanyId($transportCompanyId) {
+        if ($transportCompanyId instanceof \AppBundle\Bus\Order\Query\DTO\TransportCompany) {
+            $this->transportCompanyId = $transportCompanyId->id;
+        } else {
+            $this->transportCompanyId = null !== $transportCompanyId ? (int) $transportCompanyId : $transportCompanyId;
+        }
+    }
 }

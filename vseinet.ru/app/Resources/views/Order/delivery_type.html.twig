@@ -1,6 +1,19 @@
 <fieldset class="block">
     <div class="wrapper">
         <h2>Способ доставки</h2>
+        <div class="row h">
+            <label>Город получения:</label>
+                <div class="w60p">
+                    {{ form.geoCityId.vars.attr.cityName }}
+                    {{ form_widget(form.geoCityId) }}
+                </div>
+                {if $form->getData('is_stroika') && ! $tradings && 'post' != $form->getData('delivery') && 'courier' != $form->getData('delivery') && 'courier_checkpoint' != $form->getData('delivery')}
+                <a data-url="/order/city/" class="ajax" href="javascript:void(0)" style="font-size:1.2em;font-weight: bold;margin-left: -15px;cursor:help;" title='Внимание! Самовывоз стройматериалов возможен только из города Пенза.'>изменить</a>
+                {else}
+                <a data-url="/order/city/" class="ajax" data-popup="City" data-rid="{{ form.geoCityId.vars.attr.regionId }}" data-cid="{{ form.geoCityId.vars.value }}" href="javascript:void(0)" style="font-size:1.2em;font-weight: bold;margin-left: -15px;">изменить</a>
+                {/if}
+            <div class="notice">В случае отсутствия пункта самовывоза в вашем городе, Вы можете указать ближайший город, где такой пункт есть, чтобы самостоятельно забрать свой заказ оттуда.</div>
+        </div>
         {% for choice in form.deliveryTypeCode.vars.choices %}
         <div class="row">
             <label for="create_form_deliveryTypeCode_{{ choice.value }}">
@@ -10,7 +23,7 @@
         </div>
         {% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == choice.value %}
             {% for subchoice in form.geoPointId.vars.choices %}
-            <div class="row">
+            <div class="row subrow">
                 <label for="create_form_geoPointId_{{ subchoice.value }}">
                     {{ subchoice.label }}
                     <input type="radio" id="create_form_geoPointId_{{ subchoice.value }}" name="create_form[geoPointId]" value="{{ subchoice.value }}" required="required"{% if (subchoice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
@@ -21,7 +34,7 @@
         {% endif %}
         {% if constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') == choice.value %}
             {% for subchoice in form.transportCompanyId.vars.choices %}
-            <div class="row">
+            <div class="row subrow">
                 <label for="create_form_transportCompanyId_{{ subchoice.value }}">
                     {{ subchoice.label }}, <a href='{{ subchoice.data.url }}' onclick='window.open(this.href); return false;'>рассчитать стоимость услуг</a>
                     <input type="radio" id="create_form_transportCompanyId_{{ subchoice.value }}" name="create_form[transportCompanyId]" value="{{ subchoice.value }}" required="required"{% if (subchoice.value == form.transportCompanyId.vars.value)  %} checked="checked"{% endif %} />

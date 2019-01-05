@@ -157,7 +157,7 @@ class OrderController extends Controller
                         $this->forward('AppBundle:Cart:clear');
                         $this->get('session')->remove('discountCode');
 
-                        if (OrderType::isInerOrder($command->typeCode)) {
+                        if (OrderType::isInnerOrder($command->typeCode)) {
                             return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
                         }
 

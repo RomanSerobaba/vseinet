@@ -6,11 +6,15 @@
 
 {% block content %}
     <h1>Оформление заказа</h1>
-    <div id="create_form_wrapper">
-        {% include ['Order/', form.typeCode.vars.value, '_creation_ajax.html.twig']|join with { form: form } only %}
-    </div>
-    <div id="products" class="block cart w40p r">
-        {% include 'Order/cart_ajax.html.twig' with { form: form, cart: cart } only %}
-    </div>
-    {% include 'Order/disclaimer.html.twig' %}
+    {% if cart.products|length > 0 %}
+        <div id="create_form_wrapper">
+            {% include ['Order/', form.typeCode.vars.value, '_creation_ajax.html.twig']|join with { form: form } only %}
+        </div>
+        <div id="products" class="block cart w40p r">
+            {% include 'Order/cart_ajax.html.twig' with { form: form, cart: cart } only %}
+        </div>
+        {% include 'Order/disclaimer.html.twig' %}
+    {% else %}
+        Ваша корзина пуста.
+    {% endif %}
 {% endblock %}

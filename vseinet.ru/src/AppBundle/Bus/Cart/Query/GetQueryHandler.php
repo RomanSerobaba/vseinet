@@ -32,7 +32,7 @@ class GetQueryHandler extends MessageHandler
                         SUM(grrc.delta)
                     FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
                     JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
-                    WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.conditionCode = :goodsConditionCode_FREE AND grrc.goodsPalleteId IS NULL AND grrc.orderItemId IS NULL
+                    WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
                 ),
                 (
                     SELECT
@@ -68,17 +68,18 @@ class GetQueryHandler extends MessageHandler
                         bp.categoryId,
                         bp.minQuantity,
                         bpi.basename,
-                        p.price,
-                        p.productAvailabilityCode,
-                        p.deliveryTax,
+                        COALESCE(p2.price, p.price),
+                        COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
+                        COALESCE(p2.deliveryTax, p.deliveryTax),
                         c.quantity
                         {$spec}
                     )
                 FROM AppBundle:Cart c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
                 LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id
-                WHERE c.userId = :userId AND p.geoCityId = :geoCityId
+                LEFT OUTER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
+                INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                WHERE c.userId = :userId
             ");
             $q->setParameters([
                 'userId' => $user->getId(),
@@ -98,16 +99,17 @@ class GetQueryHandler extends MessageHandler
                             bp.categoryId,
                             bp.minQuantity,
                             bpi.basename,
-                            p.price,
-                            p.productAvailabilityCode,
-                            p.deliveryTax,
+                            COALESCE(p2.price, p.price),
+                            COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
+                            COALESCE(p2.deliveryTax, p.deliveryTax),
                             0
                             {$spec}
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id
-                    WHERE bp.id IN (:ids) AND p.geoCityId = :geoCityId
+                    LEFT OUTER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                    WHERE bp.id IN (:ids)
                 ");
                 $q->setParameters([
                     'ids' => array_keys($products),

@@ -5,7 +5,7 @@ namespace AppBundle\Bus\Order\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, SubmitType, TextareaType };
+use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, SubmitType, TextareaType, HiddenType };
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Bus\User\Form\{ UserDataType, IsHumanType };
 use AppBundle\Bus\Order\Form\OrganizationDetailsType;
@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Service\GeoCityIdentity;
+use AppBundle\Entity\GeoCity;
 
 class CreateFormType extends AbstractType
 {
@@ -53,28 +54,7 @@ class CreateFormType extends AbstractType
             case OrderType::CONSUMABLES:
             case OrderType::EQUIPMENT:
             case OrderType::RESUPPLY:
-                if (count($user->geoRooms) > 0) {
-                    $points = array_column($user->geoRooms, 'geo_point_id');
-                } else {
-                    $points = [$this->getParameter('default.point.id')];
-                }
-
-                $stmt = $this->em->getConnection()->prepare("
-                    SELECT p.id, CONCAT_WS(', ', c.name, p.name) AS name
-                    FROM geo_point AS p
-                    INNER JOIN representative AS r ON r.geo_point_id = p.id
-                    INNER JOIN geo_city AS c ON c.id = p.geo_city_id
-                    WHERE p.id IN (:point_ids)
-                ");
-                $stmt->execute(['point_ids' => implode(',', $points)]);
-                $points = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-                $points = array_combine(array_column($points, 'name'), array_column($points, 'id'));
-
-                $builder
-                    ->add('geoPointId', ChoiceType::class, [
-                        'choices' => $points,
-                        'data' => $options['data']->geoPointId ?? reset($points),
-                        ]);
+                $this->addPointDataFields($builder, $options);
                 break;
 
             case OrderType::LEGAL:
@@ -107,6 +87,47 @@ class CreateFormType extends AbstractType
         ]);
     }
 
+    private function addPointDataFields(FormBuilderInterface $builder, array $options) {
+        $user = $this->security->getToken()->getUser();
+
+        if (count($user->geoRooms) > 0) {
+            $points = array_column($user->geoRooms, 'geo_point_id');
+        } else {
+            $points = [$this->getParameter('default.point.id')];
+        }
+
+        $q = $this->em->createQuery("
+            SELECT
+                NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
+                    p.id,
+                    p.name,
+                    a.address,
+                    r.hasRetail,
+                    r.hasDelivery,
+                    r.hasRising
+                )
+            FROM AppBundle:GeoPoint AS p
+            JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
+            LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
+            WHERE p.id IN (:ids) AND r.isActive = TRUE
+        ");
+        $q->setParameter('ids', $points);
+        $points = $q->getResult('IndexByHydrator');
+        $point = reset($points);
+
+        if (!empty($options['data']->geoPointId) && isset($points[$options['data']->geoPointId])) {
+            $point = $points[$options['data']->geoPointId];
+        }
+
+        $builder
+            ->add('geoPointId', ChoiceType::class, [
+                'choices' => $points,
+                'choice_label' => 'name',
+                'choice_value' => 'id',
+                'data' => $point,
+            ]);
+    }
+
     private function addUserDataFields(FormBuilderInterface $builder) {
         $builder
             ->add('userData', UserDataType::class);
@@ -114,53 +135,76 @@ class CreateFormType extends AbstractType
 
     private function addPaymentTypesFields(FormBuilderInterface $builder, array $options) {
         $user = $this->security->getToken()->getUser();
-        $paymentTypeParams = [];
-        $stmt = $this->em->getConnection()->prepare("
-            SELECT code, name, is_internal, is_remote
-            FROM payment_type
-            WHERE is_active = TRUE
+        $q = $this->em->createQuery("
+            SELECT
+                NEW AppBundle\Bus\Order\Query\DTO\PaymentType (
+                    p.code,
+                    p.name,
+                    p.isInternal,
+                    p.isRemote,
+                    p.description
+                )
+            FROM AppBundle:PaymentType AS p
+            WHERE p.isActive = TRUE
+            ORDER BY p.code
         ");
-        $stmt->execute();
-        $paymentTypes = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $paymentTypes = $q->getResult('IndexByHydrator');
 
         if (!is_object($user) || !$user->isEmployee()) {
             $paymentTypes = array_filter($paymentTypes, function($val){
-                return !$val['is_internal'];
+                return !$val->isInternal;
             });
         }
 
         if (DeliveryTypeCode::TRANSPORT_COMPANY == $options['data']->deliveryTypeCode) {
             $paymentTypes = array_filter($paymentTypes, function($val){
-                return $val['is_remote'];
+                return $val->isRemote;
             });
         }
 
         if (OrderType::LEGAL == $options['data']->typeCode) {
             $paymentTypes = array_filter($paymentTypes, function($val){
-                return in_array($val['code'], [PaymentTypeCode::CASHLESS, PaymentTypeCode::CASH]);
+                return in_array($val->code, [PaymentTypeCode::CASHLESS, PaymentTypeCode::CASH]);
             });
             $paymentTypeParams['data'] = PaymentTypeCode::CASHLESS;
         } else {
             $paymentTypeParams['data'] = PaymentTypeCode::CASH;
         }
 
-        $paymentTypes = array_combine(array_column($paymentTypes, 'name'), array_column($paymentTypes, 'code'));
-
-        if (false !== array_search(PaymentTypeCode::CREDIT, $paymentTypes)) {
+        // if (false !== array_search(PaymentTypeCode::CREDIT, $paymentTypes)) {
             $builder
                 ->add('creditInitialContribution', TextType::class, ['required' => false,]);
+        // }
+
+        $paymentType = reset($paymentTypes);
+
+        if (!empty($options['data']->paymentTypeCode) && isset($paymentTypes[$options['data']->paymentTypeCode])) {
+            $paymentType = $paymentTypes[$options['data']->paymentTypeCode];
         }
 
         $paymentTypeParams['data'] = $options['data']->paymentTypeCode ?? $paymentTypeParams['data'];
-        $paymentTypeParams['choices'] = $paymentTypes;
 
         $builder
-            ->add('paymentTypeCode', ChoiceType::class, $paymentTypeParams);
+            ->add('paymentTypeCode', ChoiceType::class, [
+                'choices' => $paymentTypes,
+                'choice_label' => 'name',
+                'choice_value' => 'code',
+                'data' => $paymentType,
+            ]);
     }
 
     private function addDeliveryTypesFields(FormBuilderInterface $builder, array $options) {
         $user = $this->security->getToken()->getUser();
-        $geoCityId = $this->geoCityIdentity->getGeoCity()->getId();
+        $geoCityId = !empty($options['data']->geoCityId) ? $options['data']->geoCityId : $this->geoCityIdentity->getGeoCity()->getId();
+        $city = $this->em->getRepository(GeoCity::class)->find($geoCityId);
+        $builder
+            ->add('geoCityId', HiddenType::class, [
+                    'data' => $geoCityId,
+                    'attr' => [
+                        'cityName' => $city->getName(),
+                        'regionId' => $city->getGeoRegionId(),
+                    ],
+                ]);
         $allDeliveryTypes = DeliveryTypeCode::getChoices();
         $deliveryTypes = [];
         $deliveryType = DeliveryTypeCode::POST;
