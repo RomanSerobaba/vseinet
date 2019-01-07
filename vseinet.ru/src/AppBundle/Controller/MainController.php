@@ -273,6 +273,7 @@ class MainController extends Controller
      *     name="system_info",
      *     path="/sysinfo/"
      * )
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function sysinfoAction(Request $request)
     {

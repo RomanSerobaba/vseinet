@@ -16,7 +16,7 @@ class GetQuery extends Message
     public $discountCode;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор розничной точки должен быть числом")
      */
     public $geoPointId;
 
@@ -41,12 +41,12 @@ class GetQuery extends Message
     public $hasLift = false;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Этаж должен быть числом")
      */
     public $floor = 1;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор транспортной компании должен быть числом")
      */
     public $transportCompanyId;
 

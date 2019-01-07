@@ -106,7 +106,8 @@ class CreateFormType extends AbstractType
                     a.address,
                     r.hasRetail,
                     r.hasDelivery,
-                    r.hasRising
+                    r.hasRising,
+                    p.geoCityId
                 )
             FROM AppBundle:GeoPoint AS p
             JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
@@ -219,7 +220,8 @@ class CreateFormType extends AbstractType
                     a.address,
                     r.hasRetail,
                     r.hasDelivery,
-                    r.hasRising
+                    r.hasRising,
+                    p.geoCityId
                 )
             FROM AppBundle:GeoPoint AS p
             JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id

@@ -177,7 +177,7 @@ class OrderController extends Controller
             'deliveryTypeCode' => $command->deliveryTypeCode,
             'needLifting' => $command->needLifting,
             'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
-            'floor' => !empty($command->geoAddress) ? $command->geoAddress->floor : null,
+            'floor' => !empty($command->geoAddress) && !empty($command->geoAddress->floor) ? (int) $command->geoAddress->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 

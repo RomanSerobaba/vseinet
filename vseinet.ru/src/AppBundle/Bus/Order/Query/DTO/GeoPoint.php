@@ -38,7 +38,12 @@ class GeoPoint
      */
     public $hasRising;
 
-    public function __construct($id, $name, $address, $hasRetail, $hasDelivery, $hasRising)
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
+
+    public function __construct($id, $name, $address, $hasRetail, $hasDelivery, $hasRising, $geoCityId)
     {
         $this->id = $id;
         $this->name = $name;
@@ -46,5 +51,6 @@ class GeoPoint
         $this->hasRetail = $hasRetail;
         $this->hasDelivery = $hasDelivery;
         $this->hasRising = $hasRising;
+        $this->geoCityId = $geoCityId;
     }
 }

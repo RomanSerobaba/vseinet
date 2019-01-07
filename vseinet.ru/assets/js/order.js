@@ -182,81 +182,90 @@ $(function() {
     function attachCityAutocomplete()
     {
         var cacheGeoCities = {};
-        var txt = $('[name="create_form[geoCityName]"].autocomplete').autocomplete({
-            create: function() {
-                $(this).data('ui-autocomplete').widget().menu({
-                    focus: function(event, ui) {
-                        ui.item.addClass('ui-state-focus');
-                    },
-                    blur: function() {
-                        $(this).find('.ui-state-focus').removeClass('ui-state-focus');
-                    }
-                });
-            },
-            minLength: 2,
-            select: function(event, ui) {
-                $('[name="create_form[geoCityId]"]').val(ui.item.id);
-            },
-            source: function(request, response) {
-                var term = $.ui.autocomplete.escapeRegex(request.term);
-                if (term in cacheGeoCities) {
-                    response(cacheGeoCities[term]);
-                    return false;
-                }
-                sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
-                    var regexp = new RegExp('(' + term + ')', 'ig');
-                    cacheGeoCities[term] = $.map(data.geoCities, function(item) {
-                        item.value = item.name;
-                        item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
-                        return item;
+        var txt = $('[name="create_form[geoCityName]"].autocomplete');
+
+        if (txt.length > 0) {
+            txt.autocomplete({
+                create: function() {
+                    $(this).data('ui-autocomplete').widget().menu({
+                        focus: function(event, ui) {
+                            ui.item.addClass('ui-state-focus');
+                        },
+                        blur: function() {
+                            $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+                        }
                     });
-                    response(cacheGeoCities[term]);
-                });
-            }
-        })
-        txt.data('ui-autocomplete')._renderItem = function(ul, item) {
-            return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
-        };
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    $('[name="create_form[geoCityId]"]').val(ui.item.id);
+                },
+                source: function(request, response) {
+                    var term = $.ui.autocomplete.escapeRegex(request.term);
+                    if (term in cacheGeoCities) {
+                        response(cacheGeoCities[term]);
+                        return false;
+                    }
+                    sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
+                        var regexp = new RegExp('(' + term + ')', 'ig');
+                        cacheGeoCities[term] = $.map(data.geoCities, function(item) {
+                            item.value = item.name;
+                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
+                            return item;
+                        });
+                        response(cacheGeoCities[term]);
+                    });
+                }
+            })
+            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+            };
+        }
     }
 
     function attachStreetAutocomplete()
     {
         var cacheGeoStreets = {};
-        var txt = $('[name="create_form[geoAddress][geoStreetName]"].autocomplete').autocomplete({
-            create: function() {
-                $(this).data('ui-autocomplete').widget().menu({
-                    focus: function(event, ui) {
-                        ui.item.addClass('ui-state-focus');
-                    },
-                    blur: function() {
-                        $(this).find('.ui-state-focus').removeClass('ui-state-focus');
-                    }
-                });
-            },
-            minLength: 2,
-            select: function(event, ui) {
-                $('[name="create_form[geoAddress][geoStreetId]"]').val(ui.item.id);
-            },
-            source: function(request, response) {
-                var term = $.ui.autocomplete.escapeRegex(request.term);
-                if (term in cacheGeoStreets) {
-                    response(cacheGeoStreets[term]);
-                    return false;
-                }
-                sp.post(Routing.generate('search_geo_street'), { geoCityId: $('[name="create_form[geoCityId]"]').val(), q: request.term }).done(function(data) {
-                    var regexp = new RegExp('(' + term + ')', 'ig');
-                    cacheGeoStreets[term] = $.map(data.geoStreets, function(item) {
-                        item.value = item.name;
-                        item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>');
-                        return item;
+
+        var txt = $('[name="create_form[geoAddress][geoStreetName]"].autocomplete');
+
+        if (txt.length > 0) {
+            var txt = $('[name="create_form[geoAddress][geoStreetName]"].autocomplete').autocomplete({
+                create: function() {
+                    $(this).data('ui-autocomplete').widget().menu({
+                        focus: function(event, ui) {
+                            ui.item.addClass('ui-state-focus');
+                        },
+                        blur: function() {
+                            $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+                        }
                     });
-                    response(cacheGeoStreets[term]);
-                });
-            }
-        })
-        txt.data('ui-autocomplete')._renderItem = function(ul, item) {
-            return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
-        };
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    $('[name="create_form[geoAddress][geoStreetId]"]').val(ui.item.id);
+                },
+                source: function(request, response) {
+                    var term = $.ui.autocomplete.escapeRegex(request.term);
+                    if (term in cacheGeoStreets) {
+                        response(cacheGeoStreets[term]);
+                        return false;
+                    }
+                    sp.post(Routing.generate('search_geo_street'), { geoCityId: $('[name="create_form[geoCityId]"]').val(), q: request.term }).done(function(data) {
+                        var regexp = new RegExp('(' + term + ')', 'ig');
+                        cacheGeoStreets[term] = $.map(data.geoStreets, function(item) {
+                            item.value = item.name;
+                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>');
+                            return item;
+                        });
+                        response(cacheGeoStreets[term]);
+                    });
+                }
+            })
+            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+            };
+        }
     }
 
     var wrapper = $('#content');

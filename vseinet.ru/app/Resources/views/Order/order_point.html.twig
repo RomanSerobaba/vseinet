@@ -2,7 +2,7 @@
     <div class="wrapper">
         <h2>Точка</h2>
         {% for choice in form.geoPointId.vars.choices %}
-        <div class="row h">
+        <div class="row v">
             <label for="create_form_geoPointId_{{ choice.value }}">
                 {{ choice.label }}
                 <input type="radio" id="create_form_geoPointId_{{ choice.value }}" name="create_form[geoPointId]" value="{{ choice.value }}" required="required"{% if (choice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />

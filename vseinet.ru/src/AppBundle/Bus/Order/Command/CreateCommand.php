@@ -128,6 +128,10 @@ class CreateCommand extends Message
         }
     }
 
+    public function setGeoCityId($geoCityId) {
+        $this->geoCityId = null !== $geoCityId ? (int) $geoCityId : $geoCityId;
+    }
+
     public function setGeoPointId($geoPointId) {
         if ($geoPointId instanceof \AppBundle\Bus\Order\Query\DTO\GeoPoint) {
             $this->geoPointId = $geoPointId->id;
