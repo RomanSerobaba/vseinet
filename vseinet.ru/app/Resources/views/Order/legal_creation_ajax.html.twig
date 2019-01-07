@@ -4,7 +4,9 @@
 {% include 'Order/order_contact_info.html.twig' %}
 {% include 'Order/delivery_type.html.twig' %}
 {% include 'Order/payment_type.html.twig' %}
-{% include 'Order/additional_info.html.twig' %}
+{% if not(app.userIsEmployee) %}
+    {% include 'Order/additional_info.html.twig' %}
+{% endif %}
 {#
 <div class="row h{% if errors.address is defined %} error{% endif %}">
     {{ form_label(form.address, 'Адрес*:') }}
@@ -79,11 +81,6 @@
         {{ form_widget(form.isMain) }}
         {{ form_label(form.isMain, 'Основной') }}
     </div>
-</div>
-
-<div class="row h">
-    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }}
-    {{ form_widget(form._token) }}
 </div> #}
 {% include 'Order/order_submit.html.twig' %}
 

@@ -37,7 +37,7 @@ $(function() {
         help = {};
 
     function lfsKeydown() {
-        var lfs = $('[name$="[userData][fullname]"]'),
+        var lfs = $('[name="create_form[userData][fullname]"]'),
             lfsHelp = $('#lfsHelp');
 
         clearTimeout(timer);
@@ -59,15 +59,15 @@ $(function() {
 
             lfsHelp
                 .html(pf + pl)
-                .css('left', lfsWidth + 262 + 'px')
+                .css('left', lfsWidth + 162 + 'px')
                 .width(lfs.outerWidth() - lfsWidth - 24 + 'px');
         }, 2);
     }
 
     function attachMasks() {
-        Inputmask("+7 (999) 999-99-99").mask($('[name$="[userData][phone]"]'));
+        Inputmask("+7 (999) 999-99-99").mask($('[name="create_form[userData][phone]"]'));
 
-        var lfs = $('[name$="[userData][fullname]"]'),
+        var lfs = $('[name="create_form[userData][fullname]"]'),
             lfsHelp = $('#lfsHelp');
 
         lfsHelp.click(function(e){
@@ -95,7 +95,7 @@ $(function() {
             isRenderComusers,
             cacheUsers = {};
 
-        $('[name$="[userData][fullname]"].autocomplete,[name$="[userData][phone]"].autocomplete').autocomplete({
+        $('[name="create_form[userData][fullname]"].autocomplete,[name="create_form[userData][phone]"].autocomplete').autocomplete({
             create: function() {
                 $(this).data('ui-autocomplete').widget().menu({
                     focus: function(event, ui) {
@@ -108,15 +108,15 @@ $(function() {
             },
             minLength: 2,
             select: function(event, ui) {
-                $('[name$="[userData][fullname]"]').val(ui.item.fullname);
-                $('[name$="[userData][phone]"]').val(ui.item.phone);
-                $('[name$="[userData][additionalPhone]"]').val(ui.item.additionalPhone);
-                $('[name$="[userData][email]"]').val(ui.item.email);
+                $('[name="create_form[userData][fullname]"]').val(ui.item.fullname);
+                $('[name="create_form[userData][phone]"]').val(ui.item.phone);
+                $('[name="create_form[userData][additionalPhone]"]').val(ui.item.additionalPhone);
+                $('[name="create_form[userData][email]"]').val(ui.item.email);
 
                 if ('user' === ui.item.type) {
-                    $('[name$="[userData][userId]"]').val(ui.item.id);
+                    $('[name="create_form[userData][userId]"]').val(ui.item.id);
                 } else {
-                    $('[name$="[userData][comuserId]"]').val(ui.item.id);
+                    $('[name="create_form[userData][comuserId]"]').val(ui.item.id);
                 }
 
                 lfsKeydown();
@@ -170,18 +170,98 @@ $(function() {
             return li.appendTo(ul);
         }
 
-        if ($('[name$="[userData][fullname]"].autocomplete').length > 0) {
-            $('[name$="[userData][fullname]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
+        if ($('[name="create_form[userData][fullname]"].autocomplete').length > 0) {
+            $('[name="create_form[userData][fullname]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
         }
 
-        if ($('[name$="[userData][phone]"].autocomplete').length > 0) {
-            $('[name$="[userData][phone]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
+        if ($('[name="create_form[userData][phone]"].autocomplete').length > 0) {
+            $('[name="create_form[userData][phone]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
         }
+    }
+
+    function attachCityAutocomplete()
+    {
+        var cacheGeoCities = {};
+        var txt = $('[name="create_form[geoCityName]"].autocomplete').autocomplete({
+            create: function() {
+                $(this).data('ui-autocomplete').widget().menu({
+                    focus: function(event, ui) {
+                        ui.item.addClass('ui-state-focus');
+                    },
+                    blur: function() {
+                        $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $('[name="create_form[geoCityId]"]').val(ui.item.id);
+            },
+            source: function(request, response) {
+                var term = $.ui.autocomplete.escapeRegex(request.term);
+                if (term in cacheGeoCities) {
+                    response(cacheGeoCities[term]);
+                    return false;
+                }
+                sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
+                    var regexp = new RegExp('(' + term + ')', 'ig');
+                    cacheGeoCities[term] = $.map(data.geoCities, function(item) {
+                        item.value = item.name;
+                        item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
+                        return item;
+                    });
+                    response(cacheGeoCities[term]);
+                });
+            }
+        })
+        txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+            return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+        };
+    }
+
+    function attachStreetAutocomplete()
+    {
+        var cacheGeoStreets = {};
+        var txt = $('[name="create_form[geoAddress][geoStreetName]"].autocomplete').autocomplete({
+            create: function() {
+                $(this).data('ui-autocomplete').widget().menu({
+                    focus: function(event, ui) {
+                        ui.item.addClass('ui-state-focus');
+                    },
+                    blur: function() {
+                        $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $('[name="create_form[geoAddress][geoStreetId]"]').val(ui.item.id);
+            },
+            source: function(request, response) {
+                var term = $.ui.autocomplete.escapeRegex(request.term);
+                if (term in cacheGeoStreets) {
+                    response(cacheGeoStreets[term]);
+                    return false;
+                }
+                sp.post(Routing.generate('search_geo_street'), { geoCityId: $('[name="create_form[geoCityId]"]').val(), q: request.term }).done(function(data) {
+                    var regexp = new RegExp('(' + term + ')', 'ig');
+                    cacheGeoStreets[term] = $.map(data.geoStreets, function(item) {
+                        item.value = item.name;
+                        item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>');
+                        return item;
+                    });
+                    response(cacheGeoStreets[term]);
+                });
+            }
+        })
+        txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+            return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+        };
     }
 
     var wrapper = $('#content');
 
-    wrapper.on('click', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"]', function(e){
+    wrapper.on('change', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"],[name="create_form[geoCityId]"]', function(e){
         $.ajax({
             url: window.location.href + '?refreshOnly=1',
             method: 'POST',
@@ -204,6 +284,8 @@ $(function() {
                     $('#create_form_wrapper').html(response.html);
                     attachMasks();
                     attachUserAutocomplete();
+                    attachCityAutocomplete();
+                    attachStreetAutocomplete();
                 }
             }
         });
@@ -211,4 +293,6 @@ $(function() {
 
     attachMasks();
     attachUserAutocomplete();
+    attachCityAutocomplete();
+    attachStreetAutocomplete();
 });

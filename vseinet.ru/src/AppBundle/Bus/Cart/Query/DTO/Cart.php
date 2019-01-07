@@ -20,6 +20,12 @@ class Cart
     public $amount = 0;
 
     /**
+     * @Assert\Type(type="bool")
+     * @VIA\Description("Признак того, есть ли среди товаров строительные материалы")
+     */
+    public $hasStroika = false;
+
+    /**
      * @Assert\Type(type="integer")
      * @VIA\Description("Общая стоимость доставки товаров до регионального склада")
      */
@@ -92,6 +98,10 @@ class Cart
             $this->amountWithDiscount += $product->quantity * $product->priceWithDiscount;
             $this->deliveryTaxAmount += $product->quantity * $product->deliveryTax;
             $this->products[$product->id] = $product;
+
+            if ($product->hasStroika) {
+                $this->hasStroika = true;
+            }
         }
 
         $this->amountWithDiscount = round($this->amountWithDiscount, -2);

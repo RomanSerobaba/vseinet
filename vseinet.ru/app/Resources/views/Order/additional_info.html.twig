@@ -5,13 +5,13 @@
         <div class="row v">
             <label for="create_form_needCall_0">
                 Не требуется, со сроками доставки ознакомлен
-                <input type="radio" id="create_form_needCall_0" name="create_form[needCall]" value="0" required="required"{% if (form.needCall.vars.value is same as(false))  %} checked="checked"{% endif %} />
+                <input type="radio" id="create_form_needCall_0" name="create_form[needCall]" value="0" required="required"{% if (form.needCall.vars.value is same as("0"))  %} checked="checked"{% endif %} />
             </label>
         </div>
         <div class="row v">
             <label for="create_form_needCall_1">
                 Требуется (у меня остались вопросы)
-                <input type="radio" id="create_form_needCall_1" name="create_form[needCall]" value="1" required="required"{% if (form.needCall.vars.value is same as(true))  %} checked="checked"{% endif %} />
+                <input type="radio" id="create_form_needCall_1" name="create_form[needCall]" value="1" required="required"{% if (form.needCall.vars.value is same as("1"))  %} checked="checked"{% endif %} />
             </label>
         </div>
         <div>

@@ -5,10 +5,12 @@ namespace AppBundle\Bus\Order\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, SubmitType, TextareaType, HiddenType };
+use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, SubmitType, TextareaType, HiddenType, CheckboxType };
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Bus\User\Form\{ UserDataType, IsHumanType };
 use AppBundle\Bus\Order\Form\OrganizationDetailsType;
+use AppBundle\Bus\Geo\Form\GeoAddressType;
+use AppBundle\Bus\User\Form\PassportDataType;
 use AppBundle\Bus\Order\Command\CreateCommand;
 use AppBundle\Enum\OrderType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -58,22 +60,22 @@ class CreateFormType extends AbstractType
                 break;
 
             case OrderType::LEGAL:
-                $this->addUserDataFields($builder);
+                $this->addUserDataFields($builder, $options);
                 $this->addDeliveryTypesFields($builder, $options);
                 $this->addPaymentTypesFields($builder, $options);
-                $this->addAdditionalDataFields($builder);
-                $this->addOrganizationDetailsFields($builder);
+                $this->addAdditionalDataFields($builder, $options);
+                $this->addOrganizationDetailsFields($builder, $options);
                 break;
 
             case OrderType::NATURAL:
-                $this->addUserDataFields($builder);
+                $this->addUserDataFields($builder, $options);
                 $this->addDeliveryTypesFields($builder, $options);
                 $this->addPaymentTypesFields($builder, $options);
-                $this->addAdditionalDataFields($builder);
+                $this->addAdditionalDataFields($builder, $options);
                 break;
 
             case OrderType::RETAIL:
-                $this->addUserDataFields($builder);
+                $this->addUserDataFields($builder, $options);
                 $this->addDeliveryTypesFields($builder, $options);
                 $this->addPaymentTypesFields($builder, $options);
                 break;
@@ -128,7 +130,7 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addUserDataFields(FormBuilderInterface $builder) {
+    private function addUserDataFields(FormBuilderInterface $builder, array $options) {
         $builder
             ->add('userData', UserDataType::class);
     }
@@ -200,10 +202,9 @@ class CreateFormType extends AbstractType
         $builder
             ->add('geoCityId', HiddenType::class, [
                     'data' => $geoCityId,
-                    'attr' => [
-                        'cityName' => $city->getName(),
-                        'regionId' => $city->getGeoRegionId(),
-                    ],
+                ])
+            ->add('geoCityName', TextType::class, [
+                    'data' => $city->getName(),
                 ]);
         $allDeliveryTypes = DeliveryTypeCode::getChoices();
         $deliveryTypes = [];
@@ -258,6 +259,9 @@ class CreateFormType extends AbstractType
 
             if ($hasDelivery) {
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
+                $builder
+                    ->add('geoAddress', GeoAddressType::class)
+                    ->add('needLifting', CheckBoxType::class, ['required' => false,]);
             }
         } else {
             $q = $this->em->createQuery("
@@ -291,10 +295,13 @@ class CreateFormType extends AbstractType
                         'choice_label' => 'name',
                         'choice_value' => 'id',
                         'data' => $transportCompany,
-                    ]);
+                    ])
+                    ->add('passportData', PassportDataType::class);
             }
 
             $deliveryTypes[array_search(DeliveryTypeCode::POST, $allDeliveryTypes)] = DeliveryTypeCode::POST;
+                $builder
+                    ->add('geoAddress', GeoAddressType::class);
         }
 
         if (!empty($options['data']->deliveryTypeCode) && false !== array_search($options['data']->deliveryTypeCode, $deliveryTypes)) {
@@ -308,23 +315,28 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addAdditionalDataFields(FormBuilderInterface $builder) {
+    private function addAdditionalDataFields(FormBuilderInterface $builder, array $options) {
         $user = $this->security->getToken()->getUser();
-        $needCallParams = [
-            'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
-        ];
+        $needCall = null;
+
+        if (!empty($options['data']->needCall) && null !== $options['data']->needCall) {
+            $needCall = $options['data']->needCall;
+        }
 
         if (is_object($user) && $user->isEmployee()) {
-            $needCallParams['data'] = false;
+            $needCall = false;
         }
 
         $builder
-            ->add('needCall', ChoiceType::class, $needCallParams)
+            ->add('needCall', ChoiceType::class, [
+                'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
+                'data' => $needCall,
+            ])
             ->add('needCallComment', TextType::class, ['required' => false,])
             ->add('comment', TextareaType::class, ['required' => false,]);
     }
 
-    private function addOrganizationDetailsFields(FormBuilderInterface $builder) {
+    private function addOrganizationDetailsFields(FormBuilderInterface $builder, array $options) {
         $builder
             ->add('organizationDetails', OrganizationDetailsType::class);
     }

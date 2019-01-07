@@ -1,0 +1,44 @@
+<div class="row h">
+    {{ form_label(form.geoAddress.geoStreetName, 'Адрес*:') }}
+    <div class="col w100">
+        {{ form_widget(form.geoAddress.postalCode, { attr: { class: 'txt' }}) }}
+        <div class="notice">Индекс</div>
+        <span class="status"></span>
+        {% if errors.geoAddress.postalCode is defined %}
+            <div class="error">{{ errors.geoAddress.postalCode.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="col w150">
+        {{ form_widget(form.geoAddress.geoStreetName, { attr: { class: 'txt autocomplete' }}) }}
+        {{ form_widget(form.geoAddress.geoStreetId) }}
+        <div class="notice">Улица</div>
+        <span class="status"></span>
+        {% if errors.geoAddress.geoStreetName is defined %}
+            <div class="error">{{ errors.geoAddress.geoStreetName.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="col w60">
+        {{ form_widget(form.geoAddress.house, { attr: { class: 'txt' }}) }}
+        <div class="notice">Дом</div>
+        <span class="status"></span>
+        {% if errors.geoAddress.house is defined %}
+            <div class="error">{{ errors.geoAddress.house.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="col w60">
+        {{ form_widget(form.geoAddress.building, { attr: { class: 'txt' }}) }}
+        <div class="notice">Строение</div>
+        <span class="status"></span>
+        {% if errors.geoAddress.building is defined %}
+            <div class="error">{{ errors.geoAddress.building.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="col w60">
+        {{ form_widget(form.geoAddress.apartment, { attr: { class: 'txt' }}) }}
+        <div class="notice">Квартира</div>
+        <span class="status"></span>
+        {% if errors.geoAddress.apartment is defined %}
+            <div class="error">{{ errors.geoAddress.apartment.0 }}</div>
+        {% endif %}
+    </div>
+</div>

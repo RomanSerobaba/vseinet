@@ -57,6 +57,11 @@ class Product
     public $quantity;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $hasStroika;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $reserveQuantity;
@@ -72,7 +77,7 @@ class Product
     public $priceWithDiscount;
 
 
-    public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $quantity, $reserveQuantity, $storePricetag, $liftingCost, $discountAmount)
+    public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $quantity, $hasStroika, $reserveQuantity, $storePricetag, $liftingCost, $discountAmount)
     {
         $this->id = $id;
         $this->name = $name;
@@ -84,6 +89,7 @@ class Product
         $this->deliveryTax = $deliveryTax;
         $this->liftingCost = $liftingCost;
         $this->quantity = $quantity;
+        $this->hasStroika = (bool) $hasStroika;
         $this->reserveQuantity = $reserveQuantity;
         $this->storePricetag = $storePricetag;
         $this->priceWithDiscount = round($price - $discountAmount);

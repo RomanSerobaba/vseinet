@@ -9,43 +9,45 @@ class Address
     /**
      * @Assert\Type(type="integer")
      */
-    public $id;
+    public $geoStreetId;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $name;
+    public $geoStreetName;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="string")
      */
-    public $isCentral;
+    public $house;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="string")
      */
-    public $hasRetail = false;
+    public $building;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="string")
      */
-    public $hasDelivery = false;
+    public $apartment;
 
     /**
      * @Assert\Type(type="integer")
      */
-    public $countNewPoints = 0;
+    public $floor;
 
     /**
      * @Assert\Type(type="boolean")
      */
-    public $isCurrent = false;
+    public $hasLift = false;
 
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $office;
 
-    public function __construct($id, $name, $isCentral)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->isCentral = $isCentral;
-    }
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $postalCode;
 }

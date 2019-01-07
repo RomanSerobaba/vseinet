@@ -23,10 +23,27 @@ class CreateCommand extends Message
     public $userData;
 
     /**
+     * @Assert\Type(type="AppBundle\Bus\Geo\Query\DTO\Address")
+     * @Assert\Valid
+     */
+    public $geoAddress;
+
+    /**
+     * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\Passport")
+     * @Assert\Valid
+     */
+    public $passportData;
+
+    /**
      * @Assert\Type(type="AppBundle\Bus\Order\Query\DTO\OrganizationDetails")
      * @Assert\Valid
      */
     public $organizationDetails;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $geoCityName;
 
     /**
      * @Assert\Type(type="integer", message="Идентификатор города должен быть числом")
@@ -59,16 +76,6 @@ class CreateCommand extends Message
     public $needLifting;
 
     /**
-     * @Assert\Type(type="boolean")
-     */
-    public $hasLift;
-
-    /**
-     * @Assert\Type(type="integer", message="Номер этажа должен быть числом")
-     */
-    public $floor;
-
-    /**
      * @Assert\Type(type="integer", message="Идентификатор транспортной компании должен быть числом")
      */
     public $transportCompanyId;
@@ -92,6 +99,18 @@ class CreateCommand extends Message
      * @Assert\Type(type="integer")
      */
     public $id;
+
+    public function setNeedLifting($needLifting) {
+        $this->needLifting = null !== $needLifting ? (bool) $needLifting : $needLifting;
+    }
+
+    public function setHasLift($hasLift) {
+        $this->hasLift = null !== $hasLift ? (bool) $hasLift : $hasLift;
+    }
+
+    public function setNeedCall($needCall) {
+        $this->needCall = null !== $needCall ? (bool) $needCall : $needCall;
+    }
 
     public function setCreditInitialContribution($creditInitialContribution) {
         $this->creditInitialContribution = null !== $creditInitialContribution ? (int) $creditInitialContribution : $creditInitialContribution;

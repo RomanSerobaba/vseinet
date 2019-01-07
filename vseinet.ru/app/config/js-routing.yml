@@ -9,6 +9,7 @@ fos_js_routing:
         - 'select_geo_region'
         - 'select_geo_city'
         - 'search_geo_city'
+        - 'search_geo_street'
         - 'error_report'
         - 'order_status'
         - 'cart_set_quantity'

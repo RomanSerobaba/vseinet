@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Query\DTO;
 
@@ -15,7 +15,7 @@ class UserData
      * @Assert\Type(type="integer")
      */
     public $comuserId;
-    
+
     /**
      * @Assert\NotBlank(message="Укажите Ваше ФИО")
      * @Assert\Type(type="string")

@@ -3,19 +3,17 @@
         <h2>Способ доставки</h2>
         <div class="row h">
             <label>Город получения:</label>
-                <div class="w60p">
-                    {{ form.geoCityId.vars.attr.cityName }}
+                <div>
+                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete' }}) }}
                     {{ form_widget(form.geoCityId) }}
                 </div>
-                {if $form->getData('is_stroika') && ! $tradings && 'post' != $form->getData('delivery') && 'courier' != $form->getData('delivery') && 'courier_checkpoint' != $form->getData('delivery')}
-                <a data-url="/order/city/" class="ajax" href="javascript:void(0)" style="font-size:1.2em;font-weight: bold;margin-left: -15px;cursor:help;" title='Внимание! Самовывоз стройматериалов возможен только из города Пенза.'>изменить</a>
-                {else}
-                <a data-url="/order/city/" class="ajax" data-popup="City" data-rid="{{ form.geoCityId.vars.attr.regionId }}" data-cid="{{ form.geoCityId.vars.value }}" href="javascript:void(0)" style="font-size:1.2em;font-weight: bold;margin-left: -15px;">изменить</a>
-                {/if}
+            {% if cart.hasStroika %}
+                <div class="notice">Внимание! Самовывоз стройматериалов возможен только из города Пенза.</div>
+            {% endif %}
             <div class="notice">В случае отсутствия пункта самовывоза в вашем городе, Вы можете указать ближайший город, где такой пункт есть, чтобы самостоятельно забрать свой заказ оттуда.</div>
         </div>
         {% for choice in form.deliveryTypeCode.vars.choices %}
-        <div class="row">
+        <div class="row v">
             <label for="create_form_deliveryTypeCode_{{ choice.value }}">
                 {{ choice.label }}
                 <input type="radio" id="create_form_deliveryTypeCode_{{ choice.value }}" name="create_form[deliveryTypeCode]" value="{{ choice.value }}" required="required"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} />
@@ -32,6 +30,73 @@
             </div>
             {% endfor %}
         {% endif %}
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') == choice.value %}
+            <div class="row h">
+                {{ form_label(form.geoAddress.geoStreetName, 'Адрес*:') }}
+                <div class="col w150">
+                    {{ form_widget(form.geoAddress.geoStreetName, { attr: { class: 'txt autocomplete' }}) }}
+                    {{ form_widget(form.geoAddress.geoStreetId) }}
+                    <div class="notice">Улица</div>
+                    <span class="status"></span>
+                    {% if errors.geoAddress.geoStreetName is defined %}
+                        <div class="error">{{ errors.geoAddress.geoStreetName.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col w60">
+                    {{ form_widget(form.geoAddress.house, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Дом</div>
+                    <span class="status"></span>
+                    {% if errors.geoAddress.house is defined %}
+                        <div class="error">{{ errors.geoAddress.house.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col w60">
+                    {{ form_widget(form.geoAddress.building, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Строение</div>
+                    <span class="status"></span>
+                    {% if errors.geoAddress.building is defined %}
+                        <div class="error">{{ errors.geoAddress.building.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col w60">
+                    {{ form_widget(form.geoAddress.apartment, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Квартира</div>
+                    <span class="status"></span>
+                    {% if errors.geoAddress.apartment is defined %}
+                        <div class="error">{{ errors.geoAddress.apartment.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row h">
+                <label class="inline">
+                    Нужен подъем на этаж
+                    {{ form_widget(form.needLifting) }}
+                </label>
+            </div>
+            <div class="row h">
+                <div class="col w60">
+                    {{ form_widget(form.geoAddress.floor, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Этаж</div>
+                    <span class="status"></span>
+                    {% if errors.geoAddress.floor is defined %}
+                        <div class="error">{{ errors.geoAddress.floor.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col w140">
+                    <label class="inline">
+                        Лифт
+                        {{ form_widget(form.geoAddress.hasLift) }}
+                    </label>
+                    <span class="status"></span>
+                    {% if errors.geoAddress.hasLift is defined %}
+                        <div class="error">{{ errors.geoAddress.hasLift.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == choice.value %}
+            {% include 'Geo/geo_address_form.html.twig' %}
+        {% endif %}
         {% if constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') == choice.value %}
             {% for subchoice in form.transportCompanyId.vars.choices %}
             <div class="row subrow">
@@ -42,6 +107,7 @@
                 <div class="notice2">200 <span class="RUR">Р</span>, 2 - 14 дней <b style="font-size: 18px">*</b></div>
             </div>
             {% endfor %}
+            {% include 'User/passport_form.html.twig' %}
         {% endif %}
         {% endfor %}
     </div>

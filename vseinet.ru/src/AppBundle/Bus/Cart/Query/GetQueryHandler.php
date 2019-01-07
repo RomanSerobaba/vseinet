@@ -22,6 +22,7 @@ class GetQueryHandler extends MessageHandler
         $representative = $em->getRepository(Representative::class)->findOneBy(['geoPointId' => $query->geoPointId]);
         $transportCompany = $em->getRepository(TransportCompany::class)->findOneBy(['id' => $query->transportCompanyId]);
         $paymentType = $em->getRepository(PaymentType::class)->findOneBy(['code' => $query->paymentTypeCode]);
+        $stroikaCategoriesIds = [6654,6684,6699,7001,7492,7494,7496,7497,7501,7502,7507,7509,7569,7570,7571,7577,7578,7581,7582,7583,7584,7587,7588,7589,7590,7591,7593,7595,7596,7597,7598,7599,7600,7603,7606,7613,7615,7617,7618,7619,7623,7657,7658,7660,7697,13491,17999,5082851,5082367,34246,34478,34971,43238,43273,5078029,5078758,5078393,5078153,5078440,5088210,5078746,5078320,5078410,5078564,5078576,5078621,5078624,5079817,5081115,5081521,5081583,5081733,5083009,5084019,5084250,5085206,5085208,5085213,5085781];
         $spec = "";
         $params = [];
 
@@ -71,7 +72,8 @@ class GetQueryHandler extends MessageHandler
                         COALESCE(p2.price, p.price),
                         COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
                         COALESCE(p2.deliveryTax, p.deliveryTax),
-                        c.quantity
+                        c.quantity,
+                        cp.id
                         {$spec}
                     )
                 FROM AppBundle:Cart c
@@ -79,11 +81,13 @@ class GetQueryHandler extends MessageHandler
                 LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
                 LEFT OUTER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
                 INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                LEFT JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId AND cp.pid IN (:stroikaCategoriesIds)
                 WHERE c.userId = :userId
             ");
             $q->setParameters([
                 'userId' => $user->getId(),
                 'geoCityId' => $geoCity->getId(),
+                'stroikaCategoriesIds' => $stroikaCategoriesIds,
             ] + $params);
             $products = $q->getResult('IndexByHydrator');
         }
@@ -102,18 +106,21 @@ class GetQueryHandler extends MessageHandler
                             COALESCE(p2.price, p.price),
                             COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
                             COALESCE(p2.deliveryTax, p.deliveryTax),
-                            0
+                            0,
+                            cp.id
                             {$spec}
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
                     LEFT OUTER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
                     INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                    LEFT JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId AND cp.pid IN (:stroikaCategoriesIds)
                     WHERE bp.id IN (:ids)
                 ");
                 $q->setParameters([
                     'ids' => array_keys($products),
                     'geoCityId' => $geoCity->getId(),
+                    'stroikaCategoriesIds' => $stroikaCategoriesIds,
                 ] + $params);
                 foreach ($q->getResult() as $product) {
                     $product->quantity = intval($products[$product->id]['quantity']);

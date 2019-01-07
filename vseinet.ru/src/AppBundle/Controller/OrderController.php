@@ -11,6 +11,7 @@ use AppBundle\Enum\OrderType;
 use AppBundle\Bus\Order\{ Command, Query, Form };
 use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Bus\Catalog\Paging;
+use AppBundle\Enum\DeliveryTypeCode;
 
 class OrderController extends Controller
 {
@@ -129,11 +130,35 @@ class OrderController extends Controller
             $formData = $request->request->get('create_form');
 
             if (isset($formData['userData'])) {
-                $formData['userData'] = new \AppBundle\Bus\User\Query\DTO\UserData($formData['userData']);
+                $userData = new \AppBundle\Bus\User\Query\DTO\UserData($formData['userData']);
+                array_walk($formData['userData'], function($value, $key) use ($userData) {
+                    $userData->$key = $value;
+                });
+                $formData['userData'] = $userData;
+            }
+
+            if (isset($formData['geoAddress'])) {
+                $geoAddress = new \AppBundle\Bus\Geo\Query\DTO\Address($formData['geoAddress']);
+                array_walk($formData['geoAddress'], function($value, $key) use ($geoAddress) {
+                    $geoAddress->$key = $value;
+                });
+                $formData['geoAddress'] = $geoAddress;
+            }
+
+            if (isset($formData['passportData'])) {
+                $passportData = new \AppBundle\Bus\User\Query\DTO\Passport($formData['passportData']);
+                array_walk($formData['passportData'], function($value, $key) use ($passportData) {
+                    $passportData->$key = $value;
+                });
+                $formData['passportData'] = $passportData;
             }
 
             if (isset($formData['organizationDetails'])) {
-                $formData['organizationDetails'] = new Query\DTO\OrganizationDetails($formData['organizationDetails']);
+                $organizationDetails = new Query\DTO\OrganizationDetails($formData['organizationDetails']);
+                array_walk($formData['organizationDetails'], function($value, $key) use ($organizationDetails) {
+                    $organizationDetails->$key = $value;
+                });
+                $formData['organizationDetails'] = $organizationDetails;
             }
 
             $command = new Command\CreateCommand($formData);
@@ -143,6 +168,23 @@ class OrderController extends Controller
             if (!$this->getUserIsEmployee()) {
                 $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
             }
+        }
+
+        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
+            'discountCode' => $this->get('session')->get('discountCode', null),
+            'geoPointId' => $command->geoPointId,
+            'paymentTypeCode' => $command->paymentTypeCode,
+            'deliveryTypeCode' => $command->deliveryTypeCode,
+            'needLifting' => $command->needLifting,
+            'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
+            'floor' => !empty($command->geoAddress) ? $command->geoAddress->floor : null,
+            'transportCompanyId' => $command->transportCompanyId,
+        ]), $cart);
+
+        if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
+            $command->geoPointId = $this->getParameter('default.point.id');
+            $command->geoCityId = $this->getParameter('default.city.id');
+            $command->deliveryTypeCode = DeliveryTypeCode::EX_WORKS;
         }
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
@@ -175,17 +217,6 @@ class OrderController extends Controller
                 }
             }
         }
-
-        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
-            'discountCode' => $this->get('session')->get('discountCode', null),
-            'geoPointId' => $command->geoPointId,
-            'paymentTypeCode' => $command->paymentTypeCode,
-            'deliveryTypeCode' => $command->deliveryTypeCode,
-            'needLifting' => $command->needLifting,
-            'hasLift' => $command->hasLift,
-            'floor' => $command->floor,
-            'transportCompanyId' => $command->transportCompanyId,
-        ]), $cart);
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
