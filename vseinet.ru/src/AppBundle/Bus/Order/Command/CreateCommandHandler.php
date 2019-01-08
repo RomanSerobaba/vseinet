@@ -4,8 +4,10 @@ namespace AppBundle\Bus\Order\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\OrderType;
+use AppBundle\Enum\OrderTypeCode;
 use AppBundle\Entity\GeoPoint;
 use AppBundle\Entity\DiscountCode;
+use AppBundle\Entity\FinancialCounteragent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CreateCommandHandler extends MessageHandler
@@ -20,7 +22,7 @@ class CreateCommandHandler extends MessageHandler
             $items[] = ['baseProductId' => $product->id, 'quantity' => $product->quantity];
         }
 
-        $user = $this->security->getToken()->getUser();
+        $user = $this->getUser();
 
         if (count($user->geoRooms) > 0) {
             $points = array_column($user->geoRooms, 'geo_point_id');
@@ -28,7 +30,7 @@ class CreateCommandHandler extends MessageHandler
             $points = [$this->getParameter('default.point.id')];
         }
 
-        $q = $this->em->createQuery("
+        $q = $em->createQuery("
             SELECT
                 NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
                     p.id,
@@ -48,6 +50,7 @@ class CreateCommandHandler extends MessageHandler
         $point = $q->getSingleResult();
 
         $discountCode = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $cart->discountCode]);
+        $discountCodeId = $discountCode instanceof DiscountCode ? $discountCode->getId() : null;
 
         $api = $this->get('user.api.client');
 
@@ -67,8 +70,8 @@ class CreateCommandHandler extends MessageHandler
 
                 $params =[
                     'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
-                    'geoCityId' => $geoPoint->getGeoCityId(),
-                    'geoPointId' => $command->geoPointId,
+                    'cityId' => $geoPoint->getGeoCityId(),
+                    'representativeId' => $command->geoPointId,
                     'orderTypeCode' => $command->typeCode,
                     'items' => $items,
                 ];
@@ -76,16 +79,42 @@ class CreateCommandHandler extends MessageHandler
 
             case OrderType::LEGAL:
                 $params =[
-                    'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
-                    'geoCityId' => $command->geoCityId,
-                    'geoPointId' => $command->geoPointId ?? $this->getParameter('default.point.id'),
+                    'ourSellerCounteragentId' => $command->organizationDetails->withVat ? $this->getParameter('default.counteragentWithVat.id') : $this->getParameter('default.counteragentWithoutVat.id'),
+                    'cityId' => $command->geoCityId,
+                    'representativeId' => $command->geoPointId ?? $this->getParameter('default.point.id'),
                     'orderTypeCode' => $command->typeCode,
-                    'financialCounteragentId' => $financialCounteragentId,
+                    'userId' => $command->userData->userId,
+                    'comuserId' => $command->userData->comuserId,
                     'paymentTypeCode' => $command->paymentTypeCode,
-                    'discountCodeId' => $discountCode->id,
+                    'discountCodeId' => $discountCodeId,
                     'deliveryTypeCode' => $command->deliveryTypeCode,
-                    'isCallNeeded' => $command->isCallNeeded,
+                    'isCallNeeded' => $command->isCallNeeded ?? false,
                     'callNeedComment' => $command->callNeedComment,
+                    'phone' => $command->userData->phone,
+                    'additionalPhone' => $command->userData->additionalPhone,
+                    'email' => $command->userData->email,
+                    'transportCompanyId' => $command->transportCompanyId,
+                    'creditDownPayment' => $command->creditDownPayment,
+                    'isNotificationNeeded' => $command->isNotificationNeeded,
+                    'transportCompanyId' => $command->transportCompanyId,
+                    'organizationDetails' => [
+                        'name' => $command->organizationDetails->name,
+                        'legalAddress' => $command->organizationDetails->legalAddress,
+                        'settlementAccount' => $command->organizationDetails->settlementAccount,
+                        'tin' => $command->organizationDetails->tin,
+                        'kpp' => $command->organizationDetails->kpp,
+                        'bankId' => $command->organizationDetails->bankId,
+                    ],
+                    'address' => [
+                        'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'house' => $command->geoAddress->house,
+                        'building' => $command->geoAddress->building,
+                        'apartment' => $command->geoAddress->apartment,
+                        'floor' => $command->geoAddress->floor,
+                        'hasLift' => $command->geoAddress->hasLift,
+                        'office' => $command->geoAddress->office,
+                        'postalCode' => $command->geoAddress->postalCode,
+                    ],
                     'items' => $items,
                 ];
                 break;
@@ -93,15 +122,27 @@ class CreateCommandHandler extends MessageHandler
             case OrderType::NATURAL:
                 $params =[
                     'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
-                    'geoCityId' => $command->geoCityId,
-                    'geoPointId' => $command->geoPointId ?? $this->getParameter('default.point.id'),
-                    'orderTypeCode' => $command->typeCode,
-                    'financialCounteragentId' => $financialCounteragentId,
+                    'cityId' => $command->geoCityId,
+                    'representativeId' => $command->geoPointId ?? $this->getParameter('default.point.id'),
+                    'orderTypeCode' => OrderTypeCode::SITE,
+                    'userId' => $command->userData->userId,
+                    'comuserId' => $command->userData->comuserId,
                     'paymentTypeCode' => $command->paymentTypeCode,
-                    'discountCodeId' => $discountCode->id,
+                    'discountCodeId' => $discountCodeId,
                     'deliveryTypeCode' => $command->deliveryTypeCode,
-                    'isCallNeeded' => $command->isCallNeeded,
+                    'isCallNeeded' => $command->isCallNeeded ?? false,
                     'callNeedComment' => $command->callNeedComment,
+                    'transportCompanyId' => $command->transportCompanyId,
+                    'address' => [
+                        'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'house' => $command->geoAddress->house,
+                        'building' => $command->geoAddress->building,
+                        'apartment' => $command->geoAddress->apartment,
+                        'floor' => $command->geoAddress->floor,
+                        'hasLift' => $command->geoAddress->hasLift,
+                        'office' => $command->geoAddress->office,
+                        'postalCode' => $command->geoAddress->postalCode,
+                    ],
                     'items' => $items,
                 ];
                 break;
@@ -109,17 +150,28 @@ class CreateCommandHandler extends MessageHandler
             case OrderType::RETAIL:
                 $params =[
                     'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
-                    'geoCityId' => $point->geoCityId,
-                    'geoPointId' => $point->id,
-                    'orderTypeCode' => $command->typeCode,
+                    'cityId' => $point->geoCityId,
+                    'representativeId' => $point->id,
+                    'orderTypeCode' => OrderTypeCode::SHOP,
                     'financialCounteragentId' => $financialCounteragentId,
                     'paymentTypeCode' => $command->paymentTypeCode,
                     'discountCodeId' => $discountCode->id,
                     'deliveryTypeCode' => $command->deliveryTypeCode,
-                    'isCallNeeded' => $command->isCallNeeded,
+                    'isCallNeeded' => $command->isCallNeeded ?? false,
                     'callNeedComment' => $command->callNeedComment,
+                    'isReserve' => true,
+                    'transportCompanyId' => $command->transportCompanyId,
+                    'address' => [
+                        'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'house' => $command->geoAddress->house,
+                        'building' => $command->geoAddress->building,
+                        'apartment' => $command->geoAddress->apartment,
+                        'floor' => $command->geoAddress->floor,
+                        'hasLift' => $command->geoAddress->hasLift,
+                        'office' => $command->geoAddress->office,
+                        'postalCode' => $command->geoAddress->postalCode,
+                    ],
                     'items' => $items,
-                    'isReserve' => true
                 ];
                 break;
         }

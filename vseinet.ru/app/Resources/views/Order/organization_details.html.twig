@@ -37,6 +37,7 @@
         <div class="row h">
             {{ form_label(form.organizationDetails.bic, 'БИК:') }}
             {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt', maxlength: 9 }}) }}
+            {{ form_widget(form.organizationDetails.bankId) }}
         </div>
     </div>
 </fieldset>

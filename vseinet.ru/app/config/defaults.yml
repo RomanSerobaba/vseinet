@@ -3,6 +3,8 @@ parameters:
     default.point.id: 141
     default.pageLimit: 25
     default.ourConteragent.id: 190
+    default.counteragentWithVat.id: 2
+    default.counteragentWithoutVat.id: 190
     default.cardNumber: '5469 4800 1201 9128'
 
     default.page.title: 'Интернет-магазин Vseinet.ru'

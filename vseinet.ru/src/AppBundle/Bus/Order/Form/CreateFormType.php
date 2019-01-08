@@ -18,6 +18,7 @@ use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Service\GeoCityIdentity;
 use AppBundle\Entity\GeoCity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateFormType extends AbstractType
 {
@@ -86,10 +87,18 @@ class CreateFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CreateCommand::class,
+            'constraints' => [
+                new Assert\Callback(function($data, $context){
+                    if (DeliveryTypeCode::TRANSPORT_COMPANY == $data->deliveryTypeCode && (empty($data->passport->seria) || empty($data->passport->number) || empty($data->passport->issuedAt))) {
+                        $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                            ->atPath('passportData.seria')
+                            ->addViolation();
+                        }
+                })],
         ]);
     }
 
-    private function addPointDataFields(FormBuilderInterface $builder, array $options) {
+    private function addPointDataFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
 
         if (count($user->geoRooms) > 0) {
@@ -131,12 +140,12 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addUserDataFields(FormBuilderInterface $builder, array $options) {
+    private function addUserDataFields(FormBuilderInterface $builder, array &$options) {
         $builder
             ->add('userData', UserDataType::class);
     }
 
-    private function addPaymentTypesFields(FormBuilderInterface $builder, array $options) {
+    private function addPaymentTypesFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
         $q = $this->em->createQuery("
             SELECT
@@ -159,7 +168,7 @@ class CreateFormType extends AbstractType
             });
         }
 
-        if (DeliveryTypeCode::TRANSPORT_COMPANY == $options['data']->deliveryTypeCode) {
+        if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST,])) {
             $paymentTypes = array_filter($paymentTypes, function($val){
                 return $val->isRemote;
             });
@@ -176,7 +185,7 @@ class CreateFormType extends AbstractType
 
         // if (false !== array_search(PaymentTypeCode::CREDIT, $paymentTypes)) {
             $builder
-                ->add('creditInitialContribution', TextType::class, ['required' => false,]);
+                ->add('creditDownPayment', TextType::class, ['required' => false,]);
         // }
 
         $paymentType = reset($paymentTypes);
@@ -196,9 +205,14 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addDeliveryTypesFields(FormBuilderInterface $builder, array $options) {
+    private function addDeliveryTypesFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
-        $geoCityId = !empty($options['data']->geoCityId) ? $options['data']->geoCityId : $this->geoCityIdentity->getGeoCity()->getId();
+
+        if (empty($options['data']->geoCityId)) {
+            $options['data']->geoCityId = $this->geoCityIdentity->getGeoCity()->getId();
+        }
+
+        $geoCityId = $options['data']->geoCityId;
         $city = $this->em->getRepository(GeoCity::class)->find($geoCityId);
         $builder
             ->add('geoCityId', HiddenType::class, [
@@ -308,6 +322,8 @@ class CreateFormType extends AbstractType
 
         if (!empty($options['data']->deliveryTypeCode) && false !== array_search($options['data']->deliveryTypeCode, $deliveryTypes)) {
             $deliveryType = $options['data']->deliveryTypeCode;
+        } else {
+            $options['data']->deliveryTypeCode = $deliveryType;
         }
 
         $builder
@@ -317,28 +333,35 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addAdditionalDataFields(FormBuilderInterface $builder, array $options) {
+    private function addAdditionalDataFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
-        $needCall = null;
+        $isCallNeeded = null;
 
-        if (!empty($options['data']->needCall) && null !== $options['data']->needCall) {
-            $needCall = $options['data']->needCall;
+        if (!empty($options['data']->isCallNeeded) && null !== $options['data']->isCallNeeded) {
+            $isCallNeeded = $options['data']->isCallNeeded;
         }
 
         if (is_object($user) && $user->isEmployee()) {
-            $needCall = false;
+            $isCallNeeded = false;
+        }
+
+        if (!empty($options['data']->isNotificationNeeded) && null !== $options['data']->isNotificationNeeded) {
+            $isNotificationNeeded = $options['data']->isNotificationNeeded;
+        } else {
+            $isNotificationNeeded = TRUE;
         }
 
         $builder
-            ->add('needCall', ChoiceType::class, [
+            ->add('isCallNeeded', ChoiceType::class, [
                 'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
-                'data' => $needCall,
+                'data' => $isCallNeeded,
             ])
-            ->add('needCallComment', TextType::class, ['required' => false,])
-            ->add('comment', TextareaType::class, ['required' => false,]);
+            ->add('callNeedComment', TextType::class, ['required' => false,])
+            ->add('comment', TextareaType::class, ['required' => false,])
+            ->add('isNotificationNeeded', CheckBoxType::class, ['required' => false, 'data' => $isNotificationNeeded,]);
     }
 
-    private function addOrganizationDetailsFields(FormBuilderInterface $builder, array $options) {
+    private function addOrganizationDetailsFields(FormBuilderInterface $builder, array &$options) {
         $builder
             ->add('organizationDetails', OrganizationDetailsType::class);
     }

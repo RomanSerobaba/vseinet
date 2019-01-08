@@ -142,8 +142,9 @@ $(function() {
                 }
 
                 sp.get(Routing.generate('user_search_autocomplete'), {q: q, field: fieldName}).done(function(data) {
+                    var regexp = new RegExp('(' + $.ui.autocomplete.escapeRegex(request.term) + ')', 'ig');
                     cacheUsers[term] = $.map(data.users||[], function(item) {
-                        item.label = item.fullname;
+                        item.label = item.fullname.replace(regexp, '<b>$1</b>');
                         item.value = 'phone' == fieldName ? item.phone : item.fullname;
                         item.label += (item.formattedPhone.length > 0 ? ', <small>тел.</small> ' + item.formattedPhone : '') + (item.email.length > 0 ? ', <small>эл. почта</small> ' + item.email : '') + (item.isEmployee ? ' <small>(сотрудник)</small>' : '');
 

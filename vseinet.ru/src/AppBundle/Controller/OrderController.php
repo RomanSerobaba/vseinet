@@ -168,6 +168,10 @@ class OrderController extends Controller
             if (!$this->getUserIsEmployee()) {
                 $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
             }
+
+            if ($request->isMethod('POST')) {
+                $command->typeCode = $request->request->get('create_form')['typeCode'];
+            }
         }
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
@@ -192,15 +196,22 @@ class OrderController extends Controller
         if ($request->isMethod('POST')) {
             if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
+                $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
 
                 if ($form->isSubmitted() && $form->isValid()) {
                     try {
                         $this->get('command_bus')->handle($command);
-                        $this->forward('AppBundle:Cart:clear');
+                        // $this->forward('AppBundle:Cart:clear');
                         $this->get('session')->remove('discountCode');
 
                         if (OrderType::isInnerOrder($command->typeCode)) {
                             return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
+                        }
+
+                        if ($request->isXmlHttpRequest()) {
+                            return $this->json([
+                                'id' => $command->id,
+                            ]);
                         }
 
                         return $this->redirectToRoute('order_created_page', ['id' => $command->id]);

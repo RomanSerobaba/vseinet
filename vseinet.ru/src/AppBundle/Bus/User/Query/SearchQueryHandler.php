@@ -14,8 +14,8 @@ class SearchQueryHandler extends MessageHandler
             $where = "mobile.value LIKE :phone";
             $parameters = ['phone' => $query->q.'%'];
         } else {
-            $where = "LOWER(CONCAT_WS(' ', p.lastname, p.firstname, p.secondname)) LIKE LOWER(:fullname)";
-            $parameters = ['fullname' => '%'.$query->q.'%'];
+            $where = "(LOWER(p.lastname) LIKE LOWER(:lastname) OR LOWER(CONCAT_WS(' ', p.lastname, p.firstname, p.secondname)) LIKE LOWER(:fullname))";
+            $parameters = ['lastname' => $query->q.'%', 'fullname' => '%'.$query->q.'%',];
         }
 
         $q = $this->getDoctrine()->getManager()->createQuery("

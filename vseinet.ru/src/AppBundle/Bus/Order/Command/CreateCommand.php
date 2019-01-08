@@ -63,7 +63,7 @@ class CreateCommand extends Message
     /**
      * @Assert\Type(type="integer", message="Сумма первоначального взноса должная быть целым числом")
      */
-    public $creditInitialContribution = 0;
+    public $creditDownPayment = 0;
 
     /**
      * @Enum("AppBundle\Enum\DeliveryTypeCode")
@@ -83,12 +83,17 @@ class CreateCommand extends Message
     /**
      * @Assert\Type(type="boolean")
      */
-    public $needCall;
+    public $isNotificationNeeded;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isCallNeeded;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $needCallComment;
+    public $callNeedComment;
 
     /**
      * @Assert\Type(type="string")
@@ -108,12 +113,12 @@ class CreateCommand extends Message
         $this->hasLift = null !== $hasLift ? (bool) $hasLift : $hasLift;
     }
 
-    public function setNeedCall($needCall) {
-        $this->needCall = null !== $needCall ? (bool) $needCall : $needCall;
+    public function setIsCallNeeded($isCallNeeded) {
+        $this->isCallNeeded = null !== $isCallNeeded ? (bool) $isCallNeeded : $isCallNeeded;
     }
 
-    public function setCreditInitialContribution($creditInitialContribution) {
-        $this->creditInitialContribution = null !== $creditInitialContribution ? (int) $creditInitialContribution : $creditInitialContribution;
+    public function setCreditDownPayment($creditDownPayment) {
+        $this->creditDownPayment = null !== $creditDownPayment ? (int) $creditDownPayment : $creditDownPayment;
     }
 
     public function setFloor($floor) {

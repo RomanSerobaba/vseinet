@@ -20,6 +20,7 @@ class OrganizationDetailsType extends AbstractType
             ->add('tin', TextType::class, ['required' => false,])
             ->add('kpp', TextType::class, ['required' => false,])
             ->add('bic', TextType::class, ['required' => false,])
+            ->add('bankId', HiddenType::class, ['required' => false,])
             ->add('withVat', ChoiceType::class, [
                 'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
             ]);
@@ -29,6 +30,14 @@ class OrganizationDetailsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => OrganizationDetails::class,
+            'constraints' => [
+                new Assert\Callback(function($data, $context){
+                    if (!empty($data->settlementAccount) && empty($data->bankId)) {
+                        $context->buildViolation('Необходимо указать БИК для расчетного счета')
+                            ->atPath('bic')
+                            ->addViolation();
+                        }
+                })],
         ]);
     }
 }
