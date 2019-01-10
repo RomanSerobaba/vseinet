@@ -9,6 +9,7 @@ $.widget('sp.form', {
         },
         error: $.noop,
         beforeSubmit: $.noop,
+        afterResponse: $.noop,
         validate: $.noop,
         action: ''
     },
@@ -29,7 +30,7 @@ $.widget('sp.form', {
 
         this.element.on('click', '.error .status', function () {
             $(this).closest('div').removeClass('error').find('.error').remove();
-        }); 
+        });
 
         Inputmask("+7 (999) 999-99-99").mask(this.element.find('input.phone'));
 
@@ -42,14 +43,14 @@ $.widget('sp.form', {
                         if (this.element.is(':visible')) {
                             this._validate();
                         }
-                    }    
+                    }
                 }
             });
         }, this), 250);
     },
     _add: function (input, change) {
         var inputs = this.element.data('inputs') || {};
-        inputs[input.name.replace(/[^[^\[]+\[(.*)]/, '$1')] = {id: input.id, change: change || (input.value ? true : false)};
+        inputs[input.name.replace(/(^[^\[]+\[|\]$)/giu, '').replace(/\]\[/, '_')] = {id: input.id, change: change || (input.value ? true : false)};
         this.element.data('inputs', inputs);
     },
     _validate: function (submit) {
@@ -101,6 +102,7 @@ $.widget('sp.form', {
             if (errors.length) {
                 that.options.error.call(that.element, errors, submit);
             }
+            that.options.afterResponse.call(that.element, data);
         });
     },
     submit: function () {

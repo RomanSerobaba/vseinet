@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta description content="{% block pageDescription %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+        {# <meta name="Cache-Control" content="no-store, no-cache, must-revalidate, post-check=0, pre-check=0" /> #}
         {% block meta %}{% endblock %}
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
@@ -17,7 +18,7 @@
         <div id="page">
             <aside id="top" class="smpl-container">
                 <div class="holder">
-                    {% include 'top.html.twig' %}                   
+                    {% include 'top.html.twig' %}
                 </div>
             </aside>
             <header id="header" class="smpl-container">

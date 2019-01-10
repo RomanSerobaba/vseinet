@@ -33,3 +33,10 @@ services:
         arguments: [ '@doctrine.orm.entity_manager', '@security.token_storage', '@geo_city.identity' ]
         tags:
             - { name: 'form.type' }
+
+    geo_address.form:
+        class: 'AppBundle\Bus\Geo\Form\GeoAddressType'
+        public: false
+        arguments: [ '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: 'form.type' }

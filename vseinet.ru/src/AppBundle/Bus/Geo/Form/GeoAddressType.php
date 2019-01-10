@@ -9,13 +9,24 @@ use Symfony\Component\Form\Extension\Core\Type\{ TextType, CheckboxType, HiddenT
 use AppBundle\Bus\Geo\Query\DTO\Address;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoStreet;
+use Doctrine\ORM\EntityManagerInterface;
 
 class GeoAddressType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if (!empty($options['data']->geoStreetId)) {
-            $geoStreet = $this->em->getRepository(GeoStreet::class)->find($geoStreetId);
+            $geoStreet = $this->em->getRepository(GeoStreet::class)->find($options['data']->geoStreetId);
             $geoStreetName = $geoStreet->getName();
         } else {
             $geoStreetName = NULL;

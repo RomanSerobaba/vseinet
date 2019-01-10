@@ -140,7 +140,7 @@ class GetQueryHandler extends MessageHandler
                 $liftingCharges = 0;
 
                 foreach ($products as $product) {
-                    $liftingCharges += $product->quantity * $query->floor * $query->liftingCost;
+                    $liftingCharges += $product->quantity * $query->floor * $product->liftingCost;
                 }
             }
         }

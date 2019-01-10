@@ -36,7 +36,11 @@
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.bic, 'БИК:') }}
-            {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt', maxlength: 9 }}) }}
+            {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt autocomplete', maxlength: 9 }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.bankName, 'Название банка:') }}
+            {{ form_widget(form.organizationDetails.bankName, { attr: { class: 'txt', maxlength: 9, readonly: true }}) }}
             {{ form_widget(form.organizationDetails.bankId) }}
         </div>
     </div>

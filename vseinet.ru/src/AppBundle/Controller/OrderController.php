@@ -130,7 +130,7 @@ class OrderController extends Controller
             $formData = $request->request->get('create_form');
 
             if (isset($formData['userData'])) {
-                $userData = new \AppBundle\Bus\User\Query\DTO\UserData($formData['userData']);
+                $userData = new \AppBundle\Bus\User\Query\DTO\UserData();
                 array_walk($formData['userData'], function($value, $key) use ($userData) {
                     $userData->$key = $value;
                 });
@@ -138,7 +138,17 @@ class OrderController extends Controller
             }
 
             if (isset($formData['geoAddress'])) {
-                $geoAddress = new \AppBundle\Bus\Geo\Query\DTO\Address($formData['geoAddress']);
+                $geoAddress = new \AppBundle\Bus\Geo\Query\DTO\Address(
+                    $formData['geoAddress']['geoStreetId'],
+                    $formData['geoAddress']['geoStreetName'],
+                    $formData['geoAddress']['house'],
+                    $formData['geoAddress']['building'],
+                    $formData['geoAddress']['apartment'],
+                    $formData['geoAddress']['floor'] ?? NULL,
+                    $formData['geoAddress']['hasLift'] ?? NULL,
+                    $formData['geoAddress']['office'] ?? NULL,
+                    $formData['geoAddress']['postalCode'] ?? NULL
+                );
                 array_walk($formData['geoAddress'], function($value, $key) use ($geoAddress) {
                     $geoAddress->$key = $value;
                 });
@@ -146,7 +156,7 @@ class OrderController extends Controller
             }
 
             if (isset($formData['passportData'])) {
-                $passportData = new \AppBundle\Bus\User\Query\DTO\Passport($formData['passportData']);
+                $passportData = new \AppBundle\Bus\User\Query\DTO\Passport();
                 array_walk($formData['passportData'], function($value, $key) use ($passportData) {
                     $passportData->$key = $value;
                 });
@@ -154,7 +164,7 @@ class OrderController extends Controller
             }
 
             if (isset($formData['organizationDetails'])) {
-                $organizationDetails = new Query\DTO\OrganizationDetails($formData['organizationDetails']);
+                $organizationDetails = new Query\DTO\OrganizationDetails();
                 array_walk($formData['organizationDetails'], function($value, $key) use ($organizationDetails) {
                     $organizationDetails->$key = $value;
                 });
@@ -224,6 +234,10 @@ class OrderController extends Controller
                 if ($request->isXmlHttpRequest()) {
                     return $this->json([
                         'errors' => $this->getFormErrors($form),
+                        'html' => $this->renderView('Order/cart_ajax.html.twig', [
+                            'form' => $form->createView(),
+                            'cart' => $cart,
+                        ]),
                     ]);
                 }
             }
@@ -264,6 +278,22 @@ class OrderController extends Controller
 
         return $this->render('Order/created.html.twig', [
             'order' => $order,
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="search_bank",
+     *     path="/bank/search/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function searchBankAction(Request $request)
+    {
+        $this->get('query_bus')->handle(new Query\SearchBankQuery($request->request->all()), $banks);
+
+        return $this->json([
+            'banks' => $banks,
         ]);
     }
 }

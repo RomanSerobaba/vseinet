@@ -19,6 +19,7 @@ use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Service\GeoCityIdentity;
 use AppBundle\Entity\GeoCity;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\GeoAddressToPerson;
 
 class CreateFormType extends AbstractType
 {
@@ -89,11 +90,95 @@ class CreateFormType extends AbstractType
             'data_class' => CreateCommand::class,
             'constraints' => [
                 new Assert\Callback(function($data, $context){
-                    if (DeliveryTypeCode::TRANSPORT_COMPANY == $data->deliveryTypeCode && (empty($data->passport->seria) || empty($data->passport->number) || empty($data->passport->issuedAt))) {
-                        $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
-                            ->atPath('passportData.seria')
-                            ->addViolation();
+                    if (DeliveryTypeCode::TRANSPORT_COMPANY == $data->deliveryTypeCode) {
+                        if (empty($data->passportData->seria)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                                ->atPath('passportData.seria')
+                                ->addViolation();
                         }
+
+                        if (empty($data->passportData->number)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                                ->atPath('passportData.number')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->passportData->issuedAt)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                                ->atPath('passportData.issuedAt')
+                                ->addViolation();
+                        }
+                    } elseif (DeliveryTypeCode::POST == $data->deliveryTypeCode) {
+                        if (empty($data->geoAddress->postalCode)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.postalCode')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->geoAddress->geoStreetId)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.geoStreetId')
+                                ->addViolation();
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.geoStreetName')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->geoAddress->house)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.house')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->geoAddress->building)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.building')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->geoAddress->apartment)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.apartment')
+                                ->addViolation();
+                        }
+                    } elseif (DeliveryTypeCode::COURIER == $data->deliveryTypeCode) {
+                        if (empty($data->geoAddress->geoStreetId)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.geoStreetId')
+                                ->addViolation();
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.geoStreetName')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->geoAddress->house) && empty($data->geoAddress->building)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.house')
+                                ->addViolation();
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.building')
+                                ->addViolation();
+                        }
+
+                        if (empty($data->geoAddress->apartment)) {
+                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                                ->atPath('geoAddress.apartment')
+                                ->addViolation();
+                        }
+
+                        if (($data->needLifting ?? FALSE) && empty($data->geoAddress->floor)) {
+                            $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
+                                ->atPath('needLifting')
+                                ->addViolation();
+                            $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
+                                ->atPath('geoAddress.floor')
+                                ->addViolation();
+                            $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
+                                ->atPath('geoAddress.hasLift')
+                                ->addViolation();
+                        }
+
+                    }
                 })],
         ]);
     }
@@ -207,43 +292,59 @@ class CreateFormType extends AbstractType
 
     private function addDeliveryTypesFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
-
-        if (empty($options['data']->geoCityId)) {
-            $options['data']->geoCityId = $this->geoCityIdentity->getGeoCity()->getId();
-        }
-
-        $geoCityId = $options['data']->geoCityId;
-        $city = $this->em->getRepository(GeoCity::class)->find($geoCityId);
-        $builder
-            ->add('geoCityId', HiddenType::class, [
-                    'data' => $geoCityId,
-                ])
-            ->add('geoCityName', TextType::class, [
-                    'data' => $city->getName(),
-                ]);
         $allDeliveryTypes = DeliveryTypeCode::getChoices();
         $deliveryTypes = [];
         $deliveryType = DeliveryTypeCode::POST;
         $hasDelivery = false;
 
-        $q = $this->em->createQuery("
-            SELECT
-                NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
-                    p.id,
-                    p.name,
-                    a.address,
-                    r.hasRetail,
-                    r.hasDelivery,
-                    r.hasRising,
-                    p.geoCityId
-                )
-            FROM AppBundle:GeoPoint AS p
-            JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
-            LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
-            WHERE p.geoCityId = :cityId AND r.isActive = TRUE AND (r.hasRetail = TRUE OR r.hasDelivery = TRUE)
-        ");
-        $q->setParameter('cityId', $geoCityId);
-        $points = $q->getResult('IndexByHydrator');
+        if (OrderType::RETAIL != $options['data']->typeCode) {
+            if (empty($options['data']->geoCityId)) {
+                $geoCityId = $this->geoCityIdentity->getGeoCity()->getId();
+            } else {
+                $geoCityId = $options['data']->geoCityId;
+            }
+
+            $q = $this->em->createQuery("
+                SELECT
+                    NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
+                        p.id,
+                        p.name,
+                        a.address,
+                        r.hasRetail,
+                        r.hasDelivery,
+                        r.hasRising,
+                        p.geoCityId
+                    )
+                FROM AppBundle:GeoPoint AS p
+                JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
+                LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
+                WHERE p.geoCityId = :cityId AND r.isActive = TRUE AND (r.hasRetail = TRUE OR r.hasDelivery = TRUE)
+            ");
+            $q->setParameter('cityId', $geoCityId);
+            $points = $q->getResult('IndexByHydrator');
+        } else {
+            $q = $this->em->createQuery("
+                SELECT
+                    NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
+                        p.id,
+                        p.name,
+                        a.address,
+                        r.hasRetail,
+                        r.hasDelivery,
+                        r.hasRising,
+                        p.geoCityId
+                    )
+                FROM AppBundle:GeoPoint AS p
+                JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
+                LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
+                WHERE p.id = :id
+            ");
+            $q->setParameter('id', $user->defaultGeoPointId);
+            $points = $q->getResult('IndexByHydrator');
+            $point = reset($points);
+            $options['data']->geoCityId = $point->geoCityId;
+            $geoCityId = $options['data']->geoCityId;
+        }
 
         if (count($points) > 0) {
             array_walk($points, function($value) use (&$hasDelivery) {
@@ -275,8 +376,38 @@ class CreateFormType extends AbstractType
 
             if ($hasDelivery) {
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
+                $addressDTO = NULL;
+
+                if (!$user->isEmployee()) {
+                    $q = $this->em->createQuery("
+                        SELECT
+                            NEW AppBundle\Bus\Geo\Query\DTO\Address (
+                                ga.geoStreetId,
+                                gs.name,
+                                ga.house,
+                                ga.building,
+                                ga.apartment,
+                                ga.floor,
+                                ga.hasLift,
+                                ga.office,
+                                ga.postalCode,
+                                gs.geoCityId
+                            )
+                        FROM AppBundle:GeoAddressToPerson AS gap
+                        JOIN AppBundle:GeoAddress AS ga WITH ga.id = gap.geoAddressId
+                        LEFT JOIN AppBundle:GeoStreet AS gs WITH gs.id = ga.geoStreetId
+                        WHERE gap.personId = :personId AND gap.isMain = TRUE
+                    ");
+                    $q->setParameter('personId', $user->getPersonId());
+                    $addressDTO = $q->getSingleResult();
+
+                    if ($geoCityId != $addressDTO->geoCityId) {
+                        $addressDTO = NULL;
+                    }
+                }
+
                 $builder
-                    ->add('geoAddress', GeoAddressType::class)
+                    ->add('geoAddress', GeoAddressType::class, ['data' => $addressDTO])
                     ->add('needLifting', CheckBoxType::class, ['required' => false,]);
             }
         } else {
@@ -326,7 +457,15 @@ class CreateFormType extends AbstractType
             $options['data']->deliveryTypeCode = $deliveryType;
         }
 
+        $options['data']->geoCityId = $geoCityId;
+        $city = $this->em->getRepository(GeoCity::class)->find($geoCityId);
         $builder
+            ->add('geoCityId', HiddenType::class, [
+                    'data' => $geoCityId,
+                ])
+            ->add('geoCityName', TextType::class, [
+                    'data' => $city->getName(),
+                ])
             ->add('deliveryTypeCode', ChoiceType::class, [
                 'choices' => $deliveryTypes,
                 'data' => $deliveryType,

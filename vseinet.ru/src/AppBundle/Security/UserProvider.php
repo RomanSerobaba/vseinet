@@ -49,7 +49,7 @@ class UserProvider implements UserProviderInterface
             if (!$contact instanceof Contact) {
                 throw new UsernameNotFoundException(sprintf('Пользователь с мобильным телефоном %s не найден', $phone));
             }
-        } else {            
+        } else {
             $contact = $this->em->getRepository(Contact::class)->findOneBy([
                 'contactTypeCode' => ContactTypeCode::EMAIL,
                 'value' => $username,
@@ -61,17 +61,17 @@ class UserProvider implements UserProviderInterface
 
         $user = $this->em->getRepository(User::class)->findOneBy(['personId' => $contact->getPersonId()]);
         if (!$user instanceof User) {
-            throw new UsernameNotFoundException('Пользователь не найден'); 
-        } 
+            throw new UsernameNotFoundException('Пользователь не найден');
+        }
         $user->setUsername($contact->getValue());
 
         $stmt = $this->em->getConnection()->prepare("
-            SELECT 
+            SELECT
                 'ROLE_' || ar.code
-            FROM user_to_acl_subrole AS u2asr 
-            INNER JOIN acl_subrole AS asr ON asr.id = u2asr.acl_subrole_id 
-            INNER JOIN acl_role AS ar ON ar.id = asr.acl_role_id 
-            WHERE u2asr.user_id = :user_id   
+            FROM user_to_acl_subrole AS u2asr
+            INNER JOIN acl_subrole AS asr ON asr.id = u2asr.acl_subrole_id
+            INNER JOIN acl_role AS ar ON ar.id = asr.acl_role_id
+            WHERE u2asr.user_id = :user_id
         ");
         $stmt->execute(['user_id' => $user->getId()]);
         $user->roles = $stmt->fetchAll(\PDO::FETCH_COLUMN);
@@ -93,19 +93,19 @@ class UserProvider implements UserProviderInterface
 
             if ($user->isEmployee()) {
                 $stmt = $this->em->getConnection()->prepare("
-                    SELECT 
+                    SELECT
                         CASE WHEN EXISTS (
-                            SELECT 1 
-                            FROM org_employment_history 
+                            SELECT 1
+                            FROM org_employment_history
                             WHERE org_employee_user_id = oe.user_id AND fired_at IS NULL
                         ) THEN false ELSE true END AS is_fired,
                         oe.clock_in_time,
                         r.ip
-                    FROM org_employee AS oe 
-                    INNER JOIN org_department AS od ON od.id = oe.org_department_id 
-                    INNER JOIN geo_room AS gr ON gr.id = od.geo_room_id 
+                    FROM org_employee AS oe
+                    INNER JOIN org_department AS od ON od.id = oe.org_department_id
+                    INNER JOIN geo_room AS gr ON gr.id = od.geo_room_id
                     INNER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
-                    WHERE oe.user_id = :user_id 
+                    WHERE oe.user_id = :user_id
                 ");
                 $stmt->execute(['user_id' => $user->getId()]);
                 $data = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -114,7 +114,7 @@ class UserProvider implements UserProviderInterface
                 $user->ipAddress = $data['ip'];
 
                 $stmt = $this->em->getConnection()->prepare("
-                    SELECT 
+                    SELECT
                         r.*,
                         er.is_main,
                         er.is_accountable
@@ -125,7 +125,16 @@ class UserProvider implements UserProviderInterface
                 ");
                 $stmt->execute(['user_id' => $user->getId()]);
                 $user->geoRooms = $stmt->fetchAll();
-            } 
+
+                if (count($user->geoRooms) > 0) {
+                    $defaultGeoRoom = reset($user->geoRooms);
+                    $user->defaultGeoPointId = $defaultGeoRoom['geo_point_id'];
+                    $user->defaultGeoRoomId = $defaultGeoRoom['id'];
+                } else {
+                    $user->defaultGeoPointId = $this->getParameter('default.point.id');
+                    $user->defaultGeoRoomId = $this->getParameter('default.room.id');
+                }
+            }
         }
 
         return $user;

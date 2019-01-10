@@ -33,6 +33,14 @@ $(function() {
         status.form('submit');
     });
 
+    var orderForm = $('#order-creation-form');
+console.log(orderForm.form);
+    orderForm.form({
+        afterResponse: function(elem, data){ console.log(elem, data);
+            $('#products').html(data.html);
+        }
+    });
+
     var timer = null,
         help = {};
 
@@ -199,7 +207,9 @@ $(function() {
                 },
                 minLength: 2,
                 select: function(event, ui) {
-                    $('[name="create_form[geoCityId]"]').val(ui.item.id);
+                    $('[name="create_form[geoCityId]"]')
+                        .val(ui.item.id)
+                        .trigger('change');
                 },
                 source: function(request, response) {
                     var term = $.ui.autocomplete.escapeRegex(request.term);
@@ -269,6 +279,54 @@ $(function() {
         }
     }
 
+    function attachBankAutocomplete()
+    {
+        var cacheBanks = {};
+
+        var txt = $('[name="create_form[organizationDetails][bic]"].autocomplete');
+
+        if (txt.length > 0) {
+            var txt = $('[name="create_form[organizationDetails][bic]"].autocomplete').autocomplete({
+                create: function() {
+                    $(this).data('ui-autocomplete').widget().menu({
+                        focus: function(event, ui) {
+                            ui.item.addClass('ui-state-focus');
+                        },
+                        blur: function() {
+                            $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    event.preventDefault();
+                    $('[name="create_form[organizationDetails][bankId]"]').val(ui.item.id);
+                    $('[name="create_form[organizationDetails][bankName]"]').val(ui.item.name);
+                    $('[name="create_form[organizationDetails][bic]"]').val(ui.item.bic);
+                },
+                source: function(request, response) {
+                    var term = $.ui.autocomplete.escapeRegex(request.term);
+                    if (term in cacheBanks) {
+                        response(cacheBanks[term]);
+                        return false;
+                    }
+                    sp.post(Routing.generate('search_bank'), { q: request.term }).done(function(data) {
+                        var regexp = new RegExp('(' + term + ')', 'ig');
+                        cacheBanks[term] = $.map(data.banks, function(item) {
+                            item.value = item.name;
+                            item.label = item.name.replace(regexp, '<b>$1</b>');
+                            return item;
+                        });
+                        response(cacheBanks[term]);
+                    });
+                }
+            })
+            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+            };
+        }
+    }
+
     var wrapper = $('#content');
 
     wrapper.on('change', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"],[name="create_form[geoCityId]"]', function(e){
@@ -295,7 +353,7 @@ $(function() {
                     attachMasks();
                     attachUserAutocomplete();
                     attachCityAutocomplete();
-                    attachStreetAutocomplete();
+                    attachBankAutocomplete();
                 }
             }
         });
@@ -305,4 +363,5 @@ $(function() {
     attachUserAutocomplete();
     attachCityAutocomplete();
     attachStreetAutocomplete();
+    attachBankAutocomplete();
 });

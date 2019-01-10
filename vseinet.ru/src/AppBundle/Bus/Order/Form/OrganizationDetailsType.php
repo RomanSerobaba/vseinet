@@ -5,7 +5,7 @@ namespace AppBundle\Bus\Order\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType };
+use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, HiddenType };
 use AppBundle\Bus\Order\Query\DTO\OrganizationDetails;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,6 +21,7 @@ class OrganizationDetailsType extends AbstractType
             ->add('kpp', TextType::class, ['required' => false,])
             ->add('bic', TextType::class, ['required' => false,])
             ->add('bankId', HiddenType::class, ['required' => false,])
+            ->add('bankName', TextType::class, ['required' => false,])
             ->add('withVat', ChoiceType::class, [
                 'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
             ]);

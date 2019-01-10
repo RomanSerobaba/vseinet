@@ -46,4 +46,14 @@ class OrganizationDetails
      * @Assert\Length(min=9, max=9)
      */
     public $bic;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $bankId;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $bankName;
 }

@@ -16,7 +16,7 @@ class User implements UserInterface
 {
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -30,21 +30,21 @@ class User implements UserInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="password", type="string")
      */
     private $password;
 
     /**
      * @var \DateTime
-     * 
+     *
      * @ORM\Column(name="last_logined_at", type="datetime")
      */
     private $lastLoginedAt;
 
     /**
      * @var \DateTime
-     * 
+     *
      * @ORM\Column(name="registered_at", type="datetime")
      */
     private $registeredAt;
@@ -112,6 +112,16 @@ class User implements UserInterface
      */
     public $ipAddress;
 
+    /**
+     * @var int
+     */
+    public $defaultGeoPointId;
+
+    /**
+     * @var int
+     */
+    public $defaultGeoRoomId;
+
 
     /**
      * Get id
@@ -139,7 +149,7 @@ class User implements UserInterface
 
     /**
      * Get id as username for security service
-     * 
+     *
      * @return string
      */
     public function getUsername()
@@ -191,7 +201,7 @@ class User implements UserInterface
     public function getLastLoginedAt()
     {
         return $this->lastLoginedAt;
-    }  
+    }
 
     /**
      * Set registered time
@@ -232,7 +242,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get personId 
+     * Get personId
      *
      * @return int
      */
@@ -256,7 +266,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get geoCityId 
+     * Get geoCityId
      *
      * @return int
      */
@@ -280,7 +290,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get isMarketingSubscribed 
+     * Get isMarketingSubscribed
      *
      * @return int
      */
@@ -304,7 +314,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get isTransactionalSubscribed 
+     * Get isTransactionalSubscribed
      *
      * @return int
      */
@@ -323,9 +333,9 @@ class User implements UserInterface
 
     /**
      * Check role
-     * 
+     *
      * @param string $role
-     * 
+     *
      * @return bool
      */
     public function isRole($role)
@@ -334,9 +344,9 @@ class User implements UserInterface
     }
 
     /**
-     * Check is client 
-     * 
-     * @return bool 
+     * Check is client
+     *
+     * @return bool
      */
     public function isClient()
     {
@@ -345,7 +355,7 @@ class User implements UserInterface
 
     /**
      * Check is employee
-     * 
+     *
      * @return bool
      */
     public function isEmployee()
@@ -355,7 +365,7 @@ class User implements UserInterface
 
     /**
      * Check is contenter
-     * 
+     *
      * @return bool
      */
     public function isContenter()
