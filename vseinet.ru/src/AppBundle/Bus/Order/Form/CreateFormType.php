@@ -388,7 +388,7 @@ class CreateFormType extends AbstractType
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
                 $addressDTO = NULL;
 
-                if (!is_object($user) || !$user->isEmployee()) {
+                if (is_object($user) && !$user->isEmployee()) {
                     $q = $this->em->createQuery("
                         SELECT
                             NEW AppBundle\Bus\Geo\Query\DTO\Address (
