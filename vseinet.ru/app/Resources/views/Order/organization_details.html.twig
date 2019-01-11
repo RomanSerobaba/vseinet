@@ -4,13 +4,13 @@
         <div class="row h">
             <label>Приобрести товар:</label>
             <div class="value">
-            <label for="create_form_organizationDetails_withVat_0">
+            <label for="{{ form.organizationDetails.withVat.vars.id }}_0">
                 без НДС
-                <input type="radio" id="create_form_organizationDetails_withVat_0" name="create_form[organizationDetails][withVat]" value="0" required="required"{% if (not form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.organizationDetails.withVat.vars.id }}_0" name="{{ form.organizationDetails.withVat.vars.full_name }}" value="0" required="required"{% if (not form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
             </label>
-            <label for="create_form_organizationDetails_withVat_1">
+            <label for="{{ form.organizationDetails.withVat.vars.id }}_1">
                 с НДС
-                <input type="radio" id="create_form_organizationDetails_withVat_1" name="create_form[organizationDetails][withVat]" value="1" required="required"{% if (form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.organizationDetails.withVat.vars.id }}_1" name="{{ form.organizationDetails.withVat.vars.full_name }}" value="1" required="required"{% if (form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
             </label>
             </div>
         </div>

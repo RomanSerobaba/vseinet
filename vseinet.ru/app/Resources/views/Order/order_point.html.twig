@@ -3,9 +3,9 @@
         <h2>Точка</h2>
         {% for choice in form.geoPointId.vars.choices %}
         <div class="row v">
-            <label for="create_form_geoPointId_{{ choice.value }}">
+            <label for="{{ form.geoPointId.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="create_form_geoPointId_{{ choice.value }}" name="create_form[geoPointId]" value="{{ choice.value }}" required="required"{% if (choice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.geoPointId.vars.id }}_{{ choice.value }}" name="{{ form.geoPointId.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
             </label>
         </div>
         {% endfor %}

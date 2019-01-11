@@ -3,9 +3,9 @@
         <h2>Способ оплаты <small style="color:red">Обратите внимание! По заказу возможно потребуется предоплата.</small></h2>
         {% for choice in form.paymentTypeCode.vars.choices %}
         <div class="row v">
-            <label for="create_form_paymentTypeCode_{{ choice.value }}">
+            <label for="{{ form.paymentTypeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="create_form_paymentTypeCode_{{ choice.value }}" name="create_form[paymentTypeCode]" value="{{ choice.value }}" required="required"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.paymentTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.paymentTypeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %} />
             </label>
         </div>
         {% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value %}

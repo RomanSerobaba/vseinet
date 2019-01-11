@@ -5,11 +5,12 @@ namespace AppBundle\Bus\Cart\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\DiscountCode;
 use AppBundle\Entity\Representative;
+use AppBundle\Entity\GeoPoint;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Entity\TransportCompany;
-use AppBundle\Entity\PaymentType;
+use AppBundle\Entity\PaymentType;use Doctrine\ORM\AbstractQuery;
 
 class GetQueryHandler extends MessageHandler
 {
@@ -17,7 +18,34 @@ class GetQueryHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $geoCity = $this->getGeoCity();
+        $spec = "";
+        $params = [];
+        $geoPointId = NULL;
+
+        if (!empty($query->geoPointId)) {
+            $geoPoint = $em->getRepository(GeoPoint::class)->find($geoPointId);
+
+            if ($geoPoint instanceof GeoPoint) {
+                $geoPointId = $geoPoint->getId();
+            } else {
+                $geoCityId = $this->getGeoCity()->getId();
+            }
+        } else {
+            $geoCityId = $this->getGeoCity()->getId();
+            $q = $em->createQuery("
+                SELECT r.geoPointId
+                FROM AppBundle:Representative AS r
+                JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+                WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.hasRetail = TRUE
+                ORDER BY r.isCentral
+            ")
+                ->setParameters([
+                    'geoCityId' => $geoCityId,
+                ])
+                ->setMaxResults(1);
+            $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+        }
+
         $discount = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $query->discountCode]);
         $stroikaCategoriesIds = [6654,6684,6699,7001,7492,7494,7496,7497,7501,7502,7507,7509,7569,7570,7571,7577,7578,7581,7582,7583,7584,7587,7588,7589,7590,7591,7593,7595,7596,7597,7598,7599,7600,7603,7606,7613,7615,7617,7618,7619,7623,7657,7658,7660,7697,13491,17999,5082851,5082367,34246,34478,34971,43238,43273,5078029,5078758,5078393,5078153,5078440,5088210,5078746,5078320,5078410,5078564,5078576,5078621,5078624,5079817,5081115,5081521,5081583,5081733,5083009,5084019,5084250,5085206,5085208,5085213,5085781];
 
@@ -40,7 +68,20 @@ class GetQueryHandler extends MessageHandler
                         c.quantity,
                         cp.id,
                         p.liftingTax,
-                        p.discountAmount
+                        p.discountAmount,
+                        (
+                            SELECT
+                                SUM(grrc.delta)
+                            FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
+                            JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
+                            WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
+                        ),
+                        (
+                            SELECT
+                                pp.price
+                            FROM AppBundle:ProductPricetag AS pp
+                            WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
+                        )
                     )
                 FROM AppBundle:Cart c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
@@ -52,8 +93,10 @@ class GetQueryHandler extends MessageHandler
             ");
             $q->setParameters([
                 'userId' => $user->getId(),
-                'geoCityId' => $geoCity->getId(),
+                'geoCityId' => $geoCityId,
+                'geoPointId' => $geoPointId,
                 'stroikaCategoriesIds' => $stroikaCategoriesIds,
+                'goodsConditionCode_FREE' => GoodsConditionCode::FREE,
             ]);
             $products = $q->getResult('IndexByHydrator');
         }
@@ -75,7 +118,20 @@ class GetQueryHandler extends MessageHandler
                             0,
                             cp.id,
                             p.liftingTax,
-                            p.discountAmount
+                            p.discountAmount,
+                            (
+                                SELECT
+                                    SUM(grrc.delta)
+                                FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
+                                JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
+                                WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
+                            ),
+                            (
+                                SELECT
+                                    pp.price
+                                FROM AppBundle:ProductPricetag AS pp
+                                WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
+                            )
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
@@ -86,8 +142,10 @@ class GetQueryHandler extends MessageHandler
                 ");
                 $q->setParameters([
                     'ids' => array_keys($products),
-                    'geoCityId' => $geoCity->getId(),
+                    'geoCityId' => $geoCityId,
+                    'geoPointId' => $geoPointId,
                     'stroikaCategoriesIds' => $stroikaCategoriesIds,
+                    'goodsConditionCode_FREE' => GoodsConditionCode::FREE,
                 ]);
                 foreach ($q->getResult() as $product) {
                     $product->quantity = intval($products[$product->id]['quantity']);

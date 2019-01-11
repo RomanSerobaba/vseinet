@@ -1,7 +1,9 @@
 {% if app.user is null %}
     <div class="row h{% if errors.isHuman is defined %} error{% endif %}">
-        {{ form_label(form.isHuman, 'Я человек!*') }}
-        {{ form_widget(form.isHuman, { attr: { style: 'margin-top:6px' }}) }}
+        <label for="{{ form.isHuman.vars.id }}">
+            Я человек! <b>*</b>
+            {{ form_widget(form.isHuman, { attr: { style: 'margin-top:4px' }}) }}
+        </label>
         {% if errors.isHuman is defined %}
             <div class="error">{{ errors.isHuman.0 }}</div>
         {% endif %}

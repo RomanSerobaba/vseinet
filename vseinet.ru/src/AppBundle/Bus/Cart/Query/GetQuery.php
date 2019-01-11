@@ -14,4 +14,9 @@ class GetQuery extends Message
      * @Assert\Type(type="string")
      */
     public $discountCode;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoPointId;
 }
