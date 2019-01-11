@@ -1,0 +1,46 @@
+<div class="row subrow h"{% if errors.geoAddress.postalCode is defined or errors.geoAddress.geoStreetId is defined or errors.geoAddress.house is defined or errors.geoAddress.apartment is defined %} error{% endif %}>
+    <label for="{{ form.geoAddress.postalCode.vars.id }}">
+        Адрес: <b>*</b>
+    </label>
+    <span class="col w100">
+        {{ form_widget(form.geoAddress.postalCode, { attr: { class: 'txt' }}) }}
+        <div class="notice">Индекс</div>
+        <span class="status"></span>
+    </span>
+    <span class="col w150">
+        {{ form_widget(form.geoAddress.geoStreetName, { attr: { class: 'txt autocomplete' }}) }}
+        {{ form_widget(form.geoAddress.geoStreetId) }}
+        <div class="notice">Улица</div>
+        <span class="status"></span>
+    </span>
+    <span class="col w60">
+        {{ form_widget(form.geoAddress.house, { attr: { class: 'txt' }}) }}
+        <div class="notice">Дом</div>
+        <span class="status"></span>
+    </span>
+    <span class="col w60">
+        {{ form_widget(form.geoAddress.building, { attr: { class: 'txt' }}) }}
+        <div class="notice">Строение</div>
+        <span class="status"></span>
+    </span>
+    <span class="col w60">
+        {{ form_widget(form.geoAddress.apartment, { attr: { class: 'txt' }}) }}
+        <div class="notice">Квартира</div>
+        <span class="status"></span>
+    </span>
+    {% if errors.geoAddress.postalCode is defined %}
+        <div class="error">{{ errors.geoAddress.postalCode.0 }}</div>
+    {% endif %}
+    {% if errors.geoAddress.geoStreetId is defined %}
+        <div class="error">{{ errors.geoAddress.geoStreetId.0 }}</div>
+    {% endif %}
+    {% if errors.geoAddress.house is defined %}
+        <div class="error">{{ errors.geoAddress.house.0 }}</div>
+    {% endif %}
+    {% if errors.geoAddress.house is defined %}
+        <div class="error">{{ errors.geoAddress.building.0 }}</div>
+    {% endif %}
+    {% if errors.geoAddress.apartment is defined %}
+        <div class="error">{{ errors.geoAddress.apartment.0 }}</div>
+    {% endif %}
+</div>

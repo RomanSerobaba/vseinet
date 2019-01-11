@@ -14,7 +14,7 @@ class CartController extends Controller
 {
     /**
      * @VIA\Route(
-     *     name="cart", 
+     *     name="cart",
      *     path="/cart/",
      *     methods={"GET", "POST"}
      * )
@@ -44,17 +44,17 @@ class CartController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="cart_add", 
-     *     path="/cart/add/{id}/", 
+     *     name="cart_add",
+     *     path="/cart/add/{id}/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
     public function addAction(int $id, Request $request)
     {
-        $this->get('command_bus')->handle(new Command\AddCommand($request->query->all(), ['id' => $id])); 
+        $this->get('command_bus')->handle(new Command\AddCommand($request->query->all(), ['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
             $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
@@ -63,17 +63,17 @@ class CartController extends Controller
                 'cart' => $cart,
             ]);
         }
-          
+
         return $this->redirect($request->headers->get('referer'));
     }
 
     /**
      * @VIA\Get(
-     *     name="cart_set_quantity", 
-     *     path="/cart/{id}/quantity/", 
+     *     name="cart_set_quantity",
+     *     path="/cart/{id}/quantity/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -87,18 +87,18 @@ class CartController extends Controller
             return $this->json([
                 'cart' => $cart,
             ]);
-        } 
+        }
 
         return $this->redirect($request->headers->get('referer'));
     }
 
     /**
      * @VIA\Get(
-     *     name="cart_dec", 
-     *     path="/cart/dec/{id}/", 
+     *     name="cart_dec",
+     *     path="/cart/dec/{id}/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -107,7 +107,7 @@ class CartController extends Controller
         $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
-        }    
+        }
         $request->query->set('quantity', $cart->products[$id]->quantity - $cart->products[$id]->minQuantity);
 
         return $this->setQuantityAction($id, $request);
@@ -115,11 +115,11 @@ class CartController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="cart_inc", 
-     *     path="/cart/inc/{id}/", 
+     *     name="cart_inc",
+     *     path="/cart/inc/{id}/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -128,7 +128,7 @@ class CartController extends Controller
         $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
-        }    
+        }
         $request->query->set('quantity', $cart->products[$id]->quantity + $cart->products[$id]->minQuantity);
 
         return $this->setQuantityAction($id, $request);
@@ -136,11 +136,11 @@ class CartController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="cart_del", 
-     *     path="/cart/del/{id}/", 
+     *     name="cart_del",
+     *     path="/cart/del/{id}/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -154,14 +154,14 @@ class CartController extends Controller
             return $this->json([
                 'cart' => $cart,
             ]);
-        }  
+        }
 
         return $this->redirect($request->headers->get('referer'));
     }
 
     /**
      * @VIA\Get(
-     *     name="cart_clear", 
+     *     name="cart_clear",
      *     path="/cart/clear/"
      * )
      */
@@ -177,11 +177,11 @@ class CartController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="cart_to_favorite", 
-     *     path="/cart/{id}/favorite/", 
+     *     name="cart_to_favorite",
+     *     path="/cart/{id}/favorite/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -191,11 +191,11 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new AddFavoriteCommand(['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);    
-            $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);    
+            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);
+            $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);
 
             return $this->json([
-                'cart' => $cart, 
+                'cart' => $cart,
                 'favorites' => $favorites,
             ]);
         }
@@ -204,7 +204,7 @@ class CartController extends Controller
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getInfoAction()
     {

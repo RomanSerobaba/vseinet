@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Cart\Command;
 
@@ -22,7 +22,7 @@ class AddCommandHandler extends MessageHandler
         if (null !== $user) {
             $item = $em->getRepository(Cart::class)->findOneBy([
                 'userId' => $user->getId(),
-                'baseProductId' => $baseProduct->getId(), 
+                'baseProductId' => $baseProduct->getId(),
             ]);
             if (!$item instanceof Cart) {
                 $item = new Cart();

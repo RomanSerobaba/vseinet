@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Query\DTO;
 
@@ -15,9 +15,8 @@ class UserData
      * @Assert\Type(type="integer")
      */
     public $comuserId;
-    
+
     /**
-     * @Assert\NotBlank(message="Укажите Ваше ФИО")
      * @Assert\Type(type="string")
      */
     public $fullname;
@@ -30,7 +29,6 @@ class UserData
     public $phoneList;
 
     /**
-     * @Assert\NotBlank(message="Укажите Ваш телефон")
      * @Assert\Type(type="string")
      */
     public $phone;

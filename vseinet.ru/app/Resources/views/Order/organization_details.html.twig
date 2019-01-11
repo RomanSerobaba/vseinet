@@ -1,0 +1,47 @@
+<fieldset class="block">
+    <div class="wrapper">
+        <h2>Реквизиты организации</h2>
+        <div class="row h">
+            <label>Приобрести товар:</label>
+            <div class="value">
+            <label for="create_form_organizationDetails_withVat_0">
+                без НДС
+                <input type="radio" id="create_form_organizationDetails_withVat_0" name="create_form[organizationDetails][withVat]" value="0" required="required"{% if (not form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
+            </label>
+            <label for="create_form_organizationDetails_withVat_1">
+                с НДС
+                <input type="radio" id="create_form_organizationDetails_withVat_1" name="create_form[organizationDetails][withVat]" value="1" required="required"{% if (form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
+            </label>
+            </div>
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.tin, 'ИНН:') }}
+            {{ form_widget(form.organizationDetails.tin, { attr: { class: 'txt', maxlength: 12 }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.kpp, 'КПП:') }}
+            {{ form_widget(form.organizationDetails.kpp, { attr: { class: 'txt', maxlength: 9 }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.name, 'Наименование организации:') }}
+            {{ form_widget(form.organizationDetails.name, { attr: { class: 'txt' }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.legalAddress, 'Юридический адрес:') }}
+            {{ form_widget(form.organizationDetails.legalAddress, { attr: { class: 'txt' }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.settlementAccount, 'Расчетный счет:') }}
+            {{ form_widget(form.organizationDetails.settlementAccount, { attr: { class: 'txt', maxlength: 20 }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.bic, 'БИК:') }}
+            {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt autocomplete', maxlength: 9 }}) }}
+        </div>
+        <div class="row h">
+            {{ form_label(form.organizationDetails.bankName, 'Название банка:') }}
+            {{ form_widget(form.organizationDetails.bankName, { attr: { class: 'txt', maxlength: 9, readonly: true }}) }}
+            {{ form_widget(form.organizationDetails.bankId) }}
+        </div>
+    </div>
+</fieldset>

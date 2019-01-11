@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Controller;
 
@@ -20,9 +20,9 @@ class CatalogController extends Controller
 {
     /**
      * @VIA\Route(
-     *     name="catalog_category", 
-     *     path="/catalog/{id}/", 
-     *     requirements={"id" = "\d*"}, 
+     *     name="catalog_category",
+     *     path="/catalog/{id}/",
+     *     requirements={"id" = "\d*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
@@ -71,7 +71,7 @@ class CatalogController extends Controller
                 }
 
                 $url = $this->generateUrl(
-                    $route, 
+                    $route,
                     array_merge(
                         $this->get('catalog.query_string')->build($data),
                         ['id' => $id, 'brandName' => $brandName]
@@ -88,7 +88,7 @@ class CatalogController extends Controller
                 }
 
                 return $this->redirect($url);
-            }   
+            }
 
             throw new NotFoundHttpException();
         }
@@ -115,7 +115,7 @@ class CatalogController extends Controller
 
         $data = $this->get('catalog.query_string')->parse($request->query->all());
         $finder = $this->get('catalog.category_product_finder')->setCategory($category)->setBrand($brand)->setData($data);
-        
+
         if (1 !== $data->page) {
             $category->description = null;
         }
@@ -162,7 +162,7 @@ class CatalogController extends Controller
             ]);
             $showmoreHtml = $this->renderView('Catalog/showmore.html.twig', [
                 'paging' => $paging,
-            ]); 
+            ]);
             $sortingHtml = $this->renderView('Catalog/sorting.html.twig', [
                 'sorting' => $sorting,
             ]);
@@ -189,8 +189,8 @@ class CatalogController extends Controller
             'paging' => $paging,
             'sorting' => $sorting,
             'availabilityOptions' => Availability::getOptions($this->getUserIsEmployee()),
-            'nofilledOptions' => Nofilled::getOptions(),   
-            'resetUrl' => $this->generateUrl($request->attributes->get('_route'), ['id' => $id, 'brandName' => $brandName]), 
+            'nofilledOptions' => Nofilled::getOptions(),
+            'resetUrl' => $this->generateUrl($request->attributes->get('_route'), ['id' => $id, 'brandName' => $brandName]),
         ]);
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Enum;
 
@@ -10,7 +10,7 @@ class OrderType
     const RESUPPLY = 'resupply';
     const CONSUMABLES = 'consumables';
     const EQUIPMENT = 'equipment';
-    
+
     public static function getChoices($forEmployee = false)
     {
         if ($forEmployee) {
@@ -28,5 +28,10 @@ class OrderType
                 self::LEGAL => 'Заказ на юр. лицо',
             ];
         }
+    }
+
+    public static function isInnerOrder($typeCode)
+    {
+        return in_array($typeCode, [self::RESUPPLY, self::EQUIPMENT, self::CONSUMABLES]);
     }
 }

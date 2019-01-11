@@ -8,24 +8,24 @@
     <div class="cart-table-body">
         {% if cart.total %}
             {% for product in cart.products %}
-                <div class="row" data-id="{{ product.id }}" data-price="{{ product.priceDiscount }}">
+                <div class="row" data-id="{{ product.id }}" data-price="{{ product.priceWithDiscount }}">
                     <div class="coll-md-6">
                         <div class="image">
-                        <img 
-                            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}" 
-                            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                        <img
+                            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
+                            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
                         />
                         </div>
                         <div class="text">
                             <h6><a href="{{ path('catalog_product', { id: product.id }) }}">{{ product.name }}</a><h6>
                             <p class="code">Код товара: {{ product.id }}</p>
-                            {% if product.points %}
+                            {% if product.points is defined and product.points|length > 0 %}
                                 <p class="available">В наличии: {{ product.points }}</p>
                             {% elseif 1 < product.minQuantity %}
                                 <p style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</p>
                             {% endif %}
                         </div>
-                    </div>                    
+                    </div>
                     <div class="quantity coll-md-3">
                         <a href="{{ path('cart_dec', { id: product.id }) }}" class="action dec" title="Уменьшить" tabindex="-1">&minus;</a>
                         <input type="text" value="{{ product.quantity }}" class="txt" />
@@ -33,31 +33,31 @@
                     </div>
                     <div class="price coll-md-2">
                         <span class="price-discount"></span>
-                        <span class="price-amount">{{ product.priceDiscount|price_format }}</span>
-                        <span class="RUR">Р</span>                        
-                    </div>                    
+                        <span class="price-amount">{{ product.priceWithDiscount|price_format }}</span>
+                        <span class="RUR">Р</span>
+                    </div>
                     <div class="btns coll-md-1">
                         <a href="{{ path('cart_del', { id: product.id }) }}" class="action delete" title="Удалить" tabindex="-1">Удалить</a>
                         <a href="{{ path('cart_to_favorite', { id: product.id }) }}" class="action favorite" title="Пемереместить в избранное" tabindex="-1">В избранное</a>
                     </div>
                 </div>
             {% endfor %}
-        {% endif %}        
+        {% endif %}
     </div>
 </div>
 <div class="summary">
     <a href="{{ path('catalog_category') }}" class="bttn light prev">Продолжить покупки <span class="hide">К покупкам</span><i></i></a>
     <div class="order{% if 0 == cart.total %} invisible{% endif %}">
-        <a href="{{ path('order_creation_page') }}" class="bttn blue next"{#} onclick="yaCounter13639594.reachGoal('order'); return true;"#}>
+        <a href="{{ path('order_creation_page') }}" class="bttn blue next"{# onclick="yaCounter13639594.reachGoal('order'); return true;"#}>
             Оформить заказ <span class="hide">Оформить</span>
         </a>
         <p>На следующем шаге вы выберете вариант доставки и оплаты.</p>
     </div>
     <div class="cupon">
-        <del{% if cart.amount == cart.amountDiscount %} style="display:none"{% endif %}>
+        <del{% if cart.amount == cart.amountWithDiscount %} style="display:none"{% endif %}>
             <span class="total">{{ cart.amount|price_format }}</span> <span class="RUR">Р</span>
         </del>
-        <strong>Сумма покупки: <span class="total-discount">{{ cart.amountDiscount|price_format }}</span> <span class="RUR">Р</span></strong>
+        <strong>Сумма покупки: <span class="total-discount">{{ cart.amountWithDiscount|price_format }}</span> <span class="RUR">Р</span></strong>
         <label for="cart_discount_code">Код для получения скидки:</label>
         <p>
             <input type="text" class="txt" name="discountCode" id="cart_discount_code" value="{{ cart.discountCode }}" />

@@ -48,6 +48,22 @@ class GeoController extends Controller
 
     /**
      * @VIA\Post(
+     *     name="search_geo_street",
+     *     path="/geo/streets/search/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function searchStreetAction(Request $request)
+    {
+        $this->get('query_bus')->handle(new Query\SearchStreetQuery($request->request->all()), $geoStreets);
+
+        return $this->json([
+            'geoStreets' => $geoStreets,
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
      *     name="select_geo_region",
      *     path="/geo/regions/",
      *     parameters={
@@ -86,7 +102,7 @@ class GeoController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="contacts_page", 
+     *     name="contacts_page",
      *     path="/contacts/"
      * )
      */

@@ -1,0 +1,116 @@
+<fieldset class="block">
+    <div class="wrapper">
+        <h2>Способ доставки</h2>
+        <div class="row h">
+            <label>Город получения:</label>
+                <div>
+                {% if (constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value) %}
+                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete', readonly: true }}) }}
+                {% else %}
+                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete' }}) }}
+                {% endif %}
+                {{ form_widget(form.geoCityId) }}
+                </div>
+            {% if cart.hasStroika %}
+                <div class="notice">Внимание! Самовывоз стройматериалов возможен только из города Пенза.</div>
+            {% endif %}
+            <div class="notice">В случае отсутствия пункта самовывоза в вашем городе, Вы можете указать ближайший город, где такой пункт есть, чтобы самостоятельно забрать свой заказ оттуда.</div>
+        </div>
+        {% for choice in form.deliveryTypeCode.vars.choices %}
+        <div class="row v">
+            <label for="create_form_deliveryTypeCode_{{ choice.value }}">
+                {{ choice.label }}
+                <input type="radio" id="create_form_deliveryTypeCode_{{ choice.value }}" name="create_form[deliveryTypeCode]" value="{{ choice.value }}" required="required"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} />
+            </label>
+        </div>
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == choice.value %}
+            {% for subchoice in form.geoPointId.vars.choices %}
+            <div class="row subrow">
+                <label for="create_form_geoPointId_{{ subchoice.value }}">
+                    {{ subchoice.label }}
+                    <input type="radio" id="create_form_geoPointId_{{ subchoice.value }}" name="create_form[geoPointId]" value="{{ subchoice.value }}" required="required"{% if (subchoice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
+                </label>
+                <div class="notice2"><a href="/contacts/{{ subchoice.value }}/">{{ subchoice.data.address }}</a></div>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') == choice.value %}
+            <div class="row subrow h{% if errors.geoAddress.geoStreetId is defined or errors.geoAddress.house is defined or errors.geoAddress.apartment is defined %} error{% endif %}">
+                <label for="{{ form.geoAddress.geoStreetName.vars.id }}">
+                    Адрес: <b>*</b>
+                </label>
+                <span class="col w150">
+                    {{ form_widget(form.geoAddress.geoStreetName, { attr: { class: 'txt autocomplete' }}) }}
+                    {{ form_widget(form.geoAddress.geoStreetId) }}
+                    <div class="notice">Улица</div>
+                </span>
+                <span class="col w60">
+                    {{ form_widget(form.geoAddress.house, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Дом</div>
+                </span>
+                <span class="col w60">
+                    {{ form_widget(form.geoAddress.building, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Строение</div>
+                </span>
+                <span class="col w60">
+                    {{ form_widget(form.geoAddress.apartment, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Квартира</div>
+                </span>
+                <span class="status"></span>
+                {% if errors.geoAddress.geoStreetId is defined %}
+                    <div class="error">{{ errors.geoAddress.geoStreetId.0 }}</div>
+                {% endif %}
+                {% if errors.geoAddress.house is defined %}
+                    <div class="error">{{ errors.geoAddress.house.0 }}</div>
+                {% endif %}
+                {% if errors.geoAddress.house is defined %}
+                    <div class="error">{{ errors.geoAddress.building.0 }}</div>
+                {% endif %}
+                {% if errors.geoAddress.apartment is defined %}
+                    <div class="error">{{ errors.geoAddress.apartment.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="row h">
+                <span class="col w140">
+                    <label class="inline">
+                        Нужен подъем на этаж
+                        {{ form_widget(form.needLifting) }}
+                    </label>
+                </span>
+                <span class="col w60">
+                    {{ form_widget(form.geoAddress.floor, { attr: { class: 'txt' }}) }}
+                    <div class="notice">Этаж</div>
+                </span>
+                <span class="col w140">
+                    <label class="inline">
+                        Есть лифт
+                        {{ form_widget(form.geoAddress.hasLift) }}
+                    </label>
+                </span>
+                <span class="status"></span>
+                {% if errors.geoAddress.floor is defined %}
+                    <div class="error">{{ errors.geoAddress.floor.0 }}</div>
+                {% endif %}
+                {% if errors.geoAddress.hasLift is defined %}
+                    <div class="error">{{ errors.geoAddress.hasLift.0 }}</div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == choice.value %}
+            {% include 'Geo/geo_address_form.html.twig' %}
+        {% endif %}
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') == choice.value %}
+            {% for subchoice in form.transportCompanyId.vars.choices %}
+            <div class="row subrow">
+                <label for="create_form_transportCompanyId_{{ subchoice.value }}">
+                    {{ subchoice.label }}, <a href='{{ subchoice.data.url }}' onclick='window.open(this.href); return false;'>рассчитать стоимость услуг</a>
+                    <input type="radio" id="create_form_transportCompanyId_{{ subchoice.value }}" name="create_form[transportCompanyId]" value="{{ subchoice.value }}" required="required"{% if (subchoice.value == form.transportCompanyId.vars.value)  %} checked="checked"{% endif %} />
+                </label>
+                <div class="notice2">200 <span class="RUR">Р</span>, 2 - 14 дней <b style="font-size: 18px">*</b></div>
+            </div>
+            {% endfor %}
+            {% include 'User/passport_form.html.twig' %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</fieldset>

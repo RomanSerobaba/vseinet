@@ -7,9 +7,9 @@
 {% block content %}
     <div class="breadcrumbs"> <a href="{{ path('catalog_category') }}">Каталог</a></div>
     <h1>
-        Ваша корзина 
+        Ваша корзина
         <small>
-            <span id="cart-total">{{ cart.total }}</span> {{ cart.total|declension('товар;товара;товаров') }} 
+            <span id="cart-total">{{ cart.total }}</span> {{ cart.total|declension('товар;товара;товаров') }}
             {% if cart.total %}
                 <a href="{{ path('cart_clear') }}" class="action bttn blue" tabindex="-1" style="margin-left:20px">
                     Очистить
@@ -35,21 +35,21 @@
                 }
             });
         cart.done = function(response) {
-            var total = response.cart.total, amount = 0, amountDiscount = 0;
+            var total = response.cart.total, amount = 0, amountWithDiscount = 0;
             if (total) {
                 $.each(cart.find('.cart-table-body .row'), function() {
                     var tr = $(this),
                         id = tr.data('id'),
                         product = response.cart.products[id];
                     if (product) {
-                        if (product.priceDiscount && product.priceDiscount != product.price) {
-                            tr.find('.price-amount').text(product.priceDiscount.formatPrice());
+                        if (product.priceWithDiscount && product.priceWithDiscount != product.price) {
+                            tr.find('.price-amount').text(product.priceWithDiscount.formatPrice());
                             tr.find('.price-discount').html(product.price.formatPrice() + ' <span class="RUR">Р</span>');
-                            tr.data('price', product.priceDiscount);
+                            tr.data('price', product.priceWithDiscount);
                         }
                         tr.find('.quantity .txt').val(product.quantity);
                         amount += product.price * product.quantity;
-                        amountDiscount += product.priceDiscount * product.quantity;
+                        amountWithDiscount += product.priceWithDiscount * product.quantity;
                     } else {
                         tr.remove();
                     }
@@ -59,8 +59,8 @@
                 cart.find('.order').addClass('invisible');
             }
             cart.find('.total').text(amount.formatPrice())
-                .parent()[amount == amountDiscount ? 'hide' : 'show']();
-            cart.find('.total-discount').text(amountDiscount.formatPrice());
+                .parent()[amount == amountWithDiscount ? 'hide' : 'show']();
+            cart.find('.total-discount').text(amountWithDiscount.formatPrice());
             $('h1 small').text(total.declension('товар;товара;товаров'));
             sp.cartupdate(response);
         };

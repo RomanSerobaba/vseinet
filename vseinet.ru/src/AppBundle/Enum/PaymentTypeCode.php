@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Enum;
 
@@ -12,6 +12,8 @@ class PaymentTypeCode
     const TERMINAL = 'terminal';
     const SBERBANK = 'sberbank';
     const INSTALLMENT = 'installment';
+
+    const INSTALLMENT_PERCENT = 8;
 
     public static function getChoices(): array
     {
@@ -27,7 +29,7 @@ class PaymentTypeCode
         ];
     }
 
-    public static function getName(string $code): string 
+    public static function getName(string $code): string
     {
         $choices = self::getChoices();
 

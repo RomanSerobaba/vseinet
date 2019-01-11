@@ -22,14 +22,21 @@ services:
 
     complaint.form:
         class: 'AppBundle\Bus\Main\Form\ComplaintFormType'
-        public: false 
+        public: false
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:
             - { name: 'form.type' }
 
     order_creation.form:
         class: 'AppBundle\Bus\Order\Form\CreateFormType'
-        public: false 
+        public: false
+        arguments: [ '@doctrine.orm.entity_manager', '@security.token_storage', '@geo_city.identity' ]
+        tags:
+            - { name: 'form.type' }
+
+    geo_address.form:
+        class: 'AppBundle\Bus\Geo\Form\GeoAddressType'
+        public: false
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:
             - { name: 'form.type' }

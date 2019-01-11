@@ -1,13 +1,16 @@
 fos_js_routing:
-    routes_to_expose: 
+    routes_to_expose:
         - 'login$'
         - 'catalog_category$'
         - 'catalog_product$'
-        - 'catalog_search_autocomplete$'
+        - 'catalog_search_autocomplete'
+        - 'user_search_autocomplete'
         - 'geo_cities'
         - 'select_geo_region'
         - 'select_geo_city'
         - 'search_geo_city'
+        - 'search_geo_street'
+        - 'search_bank'
         - 'error_report'
         - 'order_status'
         - 'cart_set_quantity'

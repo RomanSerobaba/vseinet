@@ -64,7 +64,7 @@ $(function() {
                         var regexp = new RegExp('(' + term + ')', 'ig');
                         cacheGeoCities[term] = $.map(data.geoCities, function(item) {
                             item.value = item.name;
-                            item.label = item.name.replace(regexp, '<b>$1</b>') + ' <small>(' + item.regionName + ')</small>';
+                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
                             return item;
                         });
                         response(cacheGeoCities[term]);

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Order\Query\DTO;
 
@@ -12,6 +12,11 @@ class Order
      * @Assert\Type(type="integer")
      */
     public $id;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $financialCounteragentId;
 
     /**
      * @Assert\Type(type="datetime")
@@ -81,18 +86,19 @@ class Order
     public function __construct(array $order)
     {
         $this->id = $order['id'];
+        $this->financialCounteragentId = $order['financialCounteragentId'] ?? null;
         $this->createdAt = $order['createdAt'];
         $this->amount = 0;
         $this->paymentType = $order['paymentType'] ?? null;
         $this->paymentTypeName = $order['paymentTypeName'] ?? null;
         $this->deliveryType = $order['deliveryType'] ?? null;
-        $this->deliveryTypeName = $order['deliveryTypeName'] ?? null;
+        $this->deliveryTypeName = $order['deliveryType'] ?? null;
         $this->username = $order['financialCounteragentName'] ?? null;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['type'], $contact['value']);
-        } 
+        }
         $this->cityName = $order['cityName'] ?? null;
-        $this->address = $order['deliveryAddress'] ?? null; 
+        $this->address = $order['deliveryAddress'] ?? null;
         $statuses = [];
         foreach ($order['items'] as $item) {
             $this->items[] = new OrderItem($item);
@@ -102,7 +108,7 @@ class Order
                     break;
 
                 default:
-                    $this->amount += $item['quantity'] * $item['retailPrice'];
+                    $this->amount += $item['quantity'] * ($item['retailPrice'] ?? 0);
             }
             if (!isset($statuses[$item['statusCode']])) {
                 $statuses[$item['statusCode']] = 0;

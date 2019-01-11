@@ -15,10 +15,10 @@ class UserController extends Controller
 {
     /**
      * @VIA\Get(
-     *     name="user_account", 
+     *     name="user_account",
      *     path="/user/account/"
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function accountAction(Request $request)
     {
@@ -47,18 +47,18 @@ class UserController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="user_edit", 
-     *     path="/user/edit/", 
+     *     name="user_edit",
+     *     path="/user/edit/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function editAction(Request $request)
     {
         $command = new Command\UpdateCommand();
         if ($request->isMethod('GET')) {
             $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
-            $command->init((array) $info);  
+            $command->init((array) $info);
             if ($info->cityId) {
                 $command->city = $this->getDoctrine()->getRepository(GeoCity::class)->find($info->cityId);
             }
@@ -75,10 +75,10 @@ class UserController extends Controller
 
                     if ($request->isXmlHttpRequest()) {
                         $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
-                        
+
                         return $this->json([
                             'html' => $this->renderView('User/account_info.html.twig', [
-                                'info' => $info, 
+                                'info' => $info,
                             ]),
                             'notice' => $notice,
                         ]);
@@ -111,29 +111,29 @@ class UserController extends Controller
         return $this->render('User/edit_form.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
-        ]);    
+        ]);
     }
 
     /**
      * @VIA\Route(
-     *     name="user_contact_add", 
-     *     path="/user/contact/add/", 
+     *     name="user_contact_add",
+     *     path="/user/contact/add/",
      *     methods={"GET", "POST"}
      * )
      * @VIA\Route(
-     *     name="user_contact_edit", 
-     *     path="/user/contact/{id}/", 
-     *     requirements={"id" = "\d+"}, 
+     *     name="user_contact_edit",
+     *     path="/user/contact/{id}/",
+     *     requirements={"id" = "\d+"},
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function addContactAction(int $id = 0, Request $request)
     {
         $command = new Command\AddContactCommand(['id' => $id]);
         if ($id && $request->isMethod('GET')) {
             $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
-            $command->init((array) $contact);   
+            $command->init((array) $contact);
         }
         $form = $this->createForm(Form\AddContactType::class, $command);
 
@@ -178,27 +178,27 @@ class UserController extends Controller
                     'form' => $form->createView(),
                 ]),
             ]);
-        }  
+        }
 
         return $this->render('User/contact_form.html.twig', [
             'command' => $command,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
-        ]); 
+        ]);
     }
 
     /**
      * @VIA\Get(
-     *     name="user_contact_delete", 
-     *     path="/user/contact/{id}/delete/", 
+     *     name="user_contact_delete",
+     *     path="/user/contact/{id}/delete/",
      *     requirements={"id" = "\d+"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function deleteContactAction(int $id, Request $request)
     {
         $this->get('command_bus')->handle(new Command\DeleteContactCommand(['id' => $id]));
-        
+
         $notice = 'Контакт успешно удален';
 
         if ($request->isXmlHttpRequest()) {
@@ -212,17 +212,17 @@ class UserController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="user_address_add", 
-     *     path="/user/address/add/", 
+     *     name="user_address_add",
+     *     path="/user/address/add/",
      *     methods={"GET", "POST"}
      * )
      * @VIA\Route(
-     *     name="user_address_edit", 
-     *     path="/user/address/{id}/", 
-     *     requirements={"id" = "\d+"}, 
+     *     name="user_address_edit",
+     *     path="/user/address/{id}/",
+     *     requirements={"id" = "\d+"},
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function addAddressAction(int $id = 0, Request $request)
     {
@@ -282,21 +282,21 @@ class UserController extends Controller
             'command' => $command,
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
-        ]);   
+        ]);
     }
 
     /**
      * @VIA\Get(
-     *     name="user_address_delete", 
-     *     path="/user/address/{id}/delete/", 
+     *     name="user_address_delete",
+     *     path="/user/address/{id}/delete/",
      *     requirements={"id" = "\d+"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function deleteAddressAction(int $id, Request $request)
     {
         $this->get('command_bus')->handle(new Command\DeleteAddressCommand(['id' => $id]));
-        
+
         $notice = 'Адрес доставки успешно удален';
 
         if ($request->isXmlHttpRequest()) {
@@ -308,5 +308,22 @@ class UserController extends Controller
         $this->get('session')->getFlashBag()->add('notice', $notice);
 
         return $this->redirectToRoute('user_account');
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="user_search_autocomplete",
+     *     path="/users/search/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     * @Security("is_granted('ROLE_EMPLOYEE')")
+     */
+    public function searchAction(Request $request)
+    {
+        $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()), $users);
+
+        return $this->json([
+            'users' => $users,
+        ]);
     }
 }

@@ -1,22 +1,7 @@
 <fieldset class="block">
     <div class="wrapper">
         <h2>Контактная информация</h2>
-            <div class="row h{% if form.lfs.vars.errors %} error{% endif %}" style="position: relative">
-                {{ form_label(form.lfs, 'Ф.И.О.*:') }}
-                {{ form_widget(form.lfs, { attr: { class: 'txt', placeholder: 'Фамилия Имя Отчество' }}) }}
-                <span id="lfsHelp" onclick="$('#create_form_lfs').focus()">Фамилия Имя Отчество</span>
-                <span class="status"></span>
-                {% if form.lfs.vars.errors is not defined %}
-                    <div class="error">{{ form.lfs.vars.errors.0 }}</div>
-                {% endif %}
-                {# 
-                <div class="notice fio"{if $form->getData('registration') || $form->getData('need_passport')} style="display: none;"{/if}>Достаточно указать имя.</div>
-                {if $form->getData('customer') == 'client'}
-                    <div>
-                    {$form->hidden('user_id')}
-                    </div>
-                {/if} #}
-            </div>
+            {% include 'User/user_data_form.html.twig' with { form: form } only %}            
                 {# 
                 <div class="row h position">
                     {$form->label('position', 'Должность:', false)}

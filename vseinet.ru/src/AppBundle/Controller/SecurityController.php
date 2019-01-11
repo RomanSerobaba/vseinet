@@ -13,7 +13,7 @@ class SecurityController extends Controller
 {
     /**
      * @VIA\Route(
-     *     name="login", 
+     *     name="login",
      *     path="/login/",
      *     methods={"GET", "POST"}
      * )
@@ -43,10 +43,10 @@ class SecurityController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="logout", 
+     *     name="logout",
      *     path="/logout"
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')") 
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function logoutAction()
     {
@@ -55,12 +55,12 @@ class SecurityController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="registr", 
-     *     path="/registr/", 
+     *     name="registr",
+     *     path="/registr/",
      *     methods={"GET", "POST"}
      * )
      */
-    public function registrAction(Request $request) 
+    public function registrAction(Request $request)
     {
         $command = new Command\RegistrCommand();
         $form = $this->createForm(Form\RegistrType::class, $command);
@@ -74,10 +74,10 @@ class SecurityController extends Controller
                     $this->addFlash('notice', 'Регистрация прошла успешно');
 
                     return $this->redirectToRoute('index');
-        
+
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } 
+                }
             }
         }
 
@@ -89,8 +89,8 @@ class SecurityController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="forgot", 
-     *     path="/forgot/", 
+     *     name="forgot",
+     *     path="/forgot/",
      *     methods={"GET", "POST"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_ANONIMOUS')")
@@ -105,12 +105,12 @@ class SecurityController extends Controller
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('command_bus')->handle($command);
-                    
+
                     return $this->redirectToRoute('check_token');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } 
+                }
             }
         }
 
@@ -122,8 +122,8 @@ class SecurityController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="check_token", 
-     *     path="/check/token/", 
+     *     name="check_token",
+     *     path="/check/token/",
      *     methods={"GET", "POST"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_ANONIMOUS')")
@@ -132,10 +132,10 @@ class SecurityController extends Controller
     {
         if ($request->isMethod('GET') && $request->query->has('hash')) {
             $this->get('command_bus')->handle(new Command\CheckTokenCommand($request->query->all()));
-                
+
             return $this->redirectToRoute('restore_password');
         }
-        
+
         $command = new Command\CheckTokenCommand();
         $form = $this->createForm(Form\CheckTokenType::class, $command);
 
@@ -146,12 +146,12 @@ class SecurityController extends Controller
                     $this->get('command_bus')->handle($command);
 
                     return $this->redirectToRoute('restore_password');
-                    
+
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } 
+                }
             }
-        }    
+        }
 
         return $this->render('Security/check_token.html.twig', [
             'form' => $form->createView(),
@@ -161,8 +161,8 @@ class SecurityController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="restore_password", 
-     *     path="/restore/password/", 
+     *     name="restore_password",
+     *     path="/restore/password/",
      *     methods={"GET", "POST"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -177,12 +177,12 @@ class SecurityController extends Controller
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('command_bus')->handle($command);
-                    
+
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
-                } 
+                }
             }
         }
 
@@ -194,8 +194,8 @@ class SecurityController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="change_password", 
-     *     path="/change/password/", 
+     *     name="change_password",
+     *     path="/change/password/",
      *     methods={"GET", "POST"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -220,7 +220,7 @@ class SecurityController extends Controller
                     }
 
                     $this->addFlash('notice', $notice);
-                    
+
                     return $this->redirectToRoute('user_account');
 
                 } catch (ValidationException $e) {
@@ -233,7 +233,7 @@ class SecurityController extends Controller
                     'errors' => $this->getFormErrors($form),
                 ]);
             }
-        } 
+        }
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([

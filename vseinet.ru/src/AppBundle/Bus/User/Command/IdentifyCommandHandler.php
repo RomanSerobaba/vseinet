@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Command;
 
@@ -15,13 +15,41 @@ class IdentifyCommandHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        if (null !== $user) {
-            $this->updateUserContacts($command->userData, $user);    
+        if (null !== $user && !$user->isEmployee() && empty($command->userData->userId) && empty($command->userData->comuserId)) {
+            $this->updateUserContacts($command->userData, $user);
+        } elseif (!empty($command->userData->userId)) {
+            $user = $em->getRepository(User::class)->find($command->userData->userId);
+
+            if (!$user instanceof User) {
+                throw new NotFoundHttpException(sprintf('Пользователь с идентификатором %d не найден', $command->userData->userId));
+            }
+
+            $this->updateUserContacts($command->userData, $user);
+        } elseif (!empty($command->userData->comuserId)) {
+            $comuser = $em->getRepository(Comuser::class)->find($command->userData->comuserId);
+
+            if (!$comuser instanceof Comuser) {
+                throw new NotFoundHttpException(sprintf('Гостевой пользователь с идентификатором %d не найден', $command->userData->userId));
+            }
+
+            $comuser->setFullname($command->userData->fullname ?? $comuser->getFullname());
+            $comuser->setPhone($command->userData->phone ?? $comuser->getPhone());
+            $comuser->setAdditionalPhone($command->userData->additionalPhone ?? $comuser->getAdditionalPhone());
+            $comuser->setEmail($command->userData->email ?? $comuser->getEmail());
+            $em->persist($comuser);
         } else {
             $contact = $em->getRepository(Contact::class)->findOneBy([
                 'value' => $command->userData->phone,
                 'isMain' => true,
             ]);
+
+            if (!$contact instanceof Contact) {
+                $contact = $em->getRepository(Contact::class)->findOneBy([
+                    'value' => $command->userData->email,
+                    'isMain' => true,
+                ]);
+            }
+
             if ($contact instanceof Contact) {
                 $user = $em->getRepository(User::class)->findOneBy([
                     'personId' => $contact->getPersonId(),
@@ -46,7 +74,7 @@ class IdentifyCommandHandler extends MessageHandler
             }
             $command->userData->comuserId = $comuser->getId();
         }
-        
+
         $em->flush();
     }
 
@@ -105,6 +133,6 @@ class IdentifyCommandHandler extends MessageHandler
             $userData->contactIds[] = $contact->getId();
         }
 
-        $userData->userId = $user->getId();    
+        $userData->userId = $user->getId();
     }
 }

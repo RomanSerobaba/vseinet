@@ -1,5 +1,9 @@
 /* order
 -------------------------------------------------------------------*/
+	#order-creation-form {
+		margin-bottom: 20px;
+	}
+
 	#order-creation-form .note {
 		font-size: 13px;
 		margin: 0 0 25px;
@@ -47,20 +51,24 @@
 		}
         #Product_Application #nameHelp,
         #order-creation-form #lfsHelp {
-            position: absolute; 
-            color: #A9A9A9; 
-            font-weight: 700; 
-            font-size: 14px; 
-            left: 162px; 
-            top: 13px;
+            position: absolute;
+            color: #A9A9A9;
+            font-size: 14px;
+            left: 261px;
+            top: 14px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
         }
         #Product_Application #nameHelp {
-            left: 161px; 
+            left: 161px;
             top: 14px;
-        }
+		}
+		#order-creation-form .disclaimer {
+			margin-bottom: 30px;
+			color: rgb(153, 153, 153);
+			font-size: 12px;
+		}
 
 /* order status
 -------------------------------------------------------------------*/
@@ -108,15 +116,24 @@
 	background: #f5f5f5;
 	border-radius: 6px 6px 0 0;
 }
+#order-creation-form .disclaimer{
+    margin-bottom: 30px;
+    color: rgb(153, 153, 153);
+    font-size: 12px;
+}
 
 #order-creation-form fieldset.block .row{
 	margin-left: 0;
 	margin-right: 0;
+}
+
+#order-creation-form fieldset.block .row.subrow{
+	margin-left: 25px;
 }
 #order-creation-form fieldset .row{
 	padding-bottom: 12px;
 }
 #favorite .cart-table .row{
 	clear: both;
-	
+
 }

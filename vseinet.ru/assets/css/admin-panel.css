@@ -78,11 +78,11 @@ H4 A.competitor {
 }
 
 #clock-in-out.work {
-    background: no-repeat url(/img/employee_panel/work-ico.png);
+    background: no-repeat url(../images/work-ico.png);
 }
 
 #clock-in-out.rest {
-    background: no-repeat url(/img/employee_panel/rest-ico.png);
+    background: no-repeat url(../images/rest-ico.png);
 }
 
 /* product admin panel

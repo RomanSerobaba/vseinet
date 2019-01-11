@@ -2,10 +2,10 @@
     <div class="wrapper">
         <h2>Заказ на</h2>
         {% for choice in form.typeCode.vars.choices %}
-        <div class="row h">
-            <label for="type_{{ choice.value }}" onclick="window.location='/app_dev.php/order/?type={{ choice.value }}'">
+        <div class="row v">
+            <label for="create_form_typeCode_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="type_{{ choice.value }}" name="type" value="{{ choice.value }}"{% if (choice.value == form.typeCode.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="create_form_typeCode_{{ choice.value }}" name="create_form[typeCode]" value="{{ choice.value }}" required="required"{% if (choice.value == form.typeCode.vars.value)  %} checked="checked"{% endif %} />
             </label>
         </div>
         {% endfor %}

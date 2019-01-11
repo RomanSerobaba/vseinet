@@ -4,24 +4,25 @@ $(function() {
             topSpacing: 45,
             bottomSpacing: 245
         });
+
         if (cart.length) {
             var hw, hc, hs, hp, timer = null,
                 summary = cart.find('.summary .wrapper'),
                 product = cart.find('.product:first'),
                 wrapper = $('#products-sticky-wrapper');
-            sp.window.bind('resize.cart', function() {
+            $(window).on('resize.cart', function() {
                 clearTimeout(timer);
                 timer = setTimeout(function() {
                     var w = wrapper.width();
-                    hw = sp.window.height();
+                    hw = $(window).height();
                     hc = cart.outerWidth(w).height();
                     summary.outerWidth(w).parent().height(hs = summary.outerHeight());
                     hp = product.outerHeight();
-                    sp.window.triggerHandler('scroll.cart');
+                    $(window).triggerHandler('scroll.cart');
                 },100);
             }).triggerHandler('resize.cart');
-            sp.window.bind('scroll.cart', function() {
-                var dw = hw + sp.window.scrollTop(),
+            $(window).on('scroll.cart', function() {
+                var dw = hw + $(window).scrollTop(),
                     dc = hc + cart.offset().top,
                     dp = hp + product.offset().top;
                 summary[(dw < dc && dw - dp > hs) ? 'addClass' : 'removeClass']('fixed');

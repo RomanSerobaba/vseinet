@@ -1,0 +1,5 @@
+{{ form_start(form, { action: '', attr: { id: 'order-creation-form', class: 'w60p validate' }}) }}
+{% include 'Order/order_type.html.twig' %}
+{% include 'Order/order_point.html.twig' %}
+{% include 'Order/order_submit.html.twig' %}
+{{ form_end(form, { render_rest: false }) }}

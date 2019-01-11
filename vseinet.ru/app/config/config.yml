@@ -4,6 +4,7 @@ imports:
     - { resource: 'services.yml' }
     - { resource: 'bus.yml' }
     - { resource: 'bus-services.yml', ignore_errors: true }
+    - { resource: 'defaults.yml' }
     - { resource: 'rabbitmq.yml' }
     - { resource: 'doctrine.yml' }
     - { resource: 'monolog.yml' }
@@ -41,7 +42,7 @@ framework:
         cookie_secure: '%cookie_secure%'
     fragments: ~
     http_method_override: true
-    assets: 
+    assets:
         json_manifest_path: '%kernel.project_dir%/web/bundles/manifest.json'
     php_errors:
         log: true
