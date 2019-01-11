@@ -53,7 +53,7 @@
             <p>Скидка по коду {{ cart.discountCode }}: <strong>-{{ (cart.amount - cart.amountWithDiscount)|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.paymentTypeComissionAmount %}
-            <p>{$summary.payment.name} (+{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == form.paymentTypeCode.vars.value %}{$summary.payment.cashless_percent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT')}{% else %}{$summary.payment.cashless_percent}{% endif %}%): <strong>{{ cart.paymentTypeComissionAmount|price_format }} <span class="RUR">Р</span></strong></p>
+            <p>{{ cart.paymentTypeName }} +{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == form.paymentTypeCode.vars.value %}{{ cart.paymentTypeComissionPercent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT') }}{% else %}{{ cart.paymentTypeComissionPercent }}{% endif %}%: <strong>{{ cart.paymentTypeComissionAmount|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         <strong class="all">Итого: {{ cart.summary|price_format }}</span> <span class="RUR">Р</span></strong>
     </div>

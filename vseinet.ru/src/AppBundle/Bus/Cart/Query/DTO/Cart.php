@@ -90,7 +90,7 @@ class Cart
     public $products;
 
 
-    public function __construct(array $products, int $deliveryCharges, int $liftingCharges, int $transportCompanyDeliveryCharges, int $deliveryToRepresentativeTaxAmount, float $paymentTypeComissionPercent, ?string $discountCode)
+    public function __construct(array $products, string $discountCode = NULL, int $deliveryCharges = NULL, int $liftingCharges = NULL, int $transportCompanyDeliveryCharges = NULL, int $deliveryToRepresentativeTaxAmount = NULL, float $paymentTypeComissionPercent = NULL)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;

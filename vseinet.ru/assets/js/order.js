@@ -34,9 +34,9 @@ $(function() {
     });
 
     var orderForm = $('#order-creation-form');
-console.log(orderForm.form);
+
     orderForm.form({
-        afterResponse: function(elem, data){ console.log(elem, data);
+        afterResponse: function(data){
             $('#products').html(data.html);
         }
     });

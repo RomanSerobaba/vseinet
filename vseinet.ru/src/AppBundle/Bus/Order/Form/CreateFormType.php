@@ -90,6 +90,15 @@ class CreateFormType extends AbstractType
             'data_class' => CreateCommand::class,
             'constraints' => [
                 new Assert\Callback(function($data, $context){
+                    if (in_array($data->typeCode, [OrderType::LEGAL, OrderType::NATURAL]) || OrderType::RETAIL == $data->deliveryTypeCode && (DeliveryTypeCode::COURIER == $data->deliveryTypeCode || in_array($data->paymentTypeCode, [PaymentTypeCode::CREDIT, PaymentTypeCode::INSTALLMENT]))) {
+                        if (empty($data->userData->fullname)) {
+                            $context->buildViolation('Необходимо указать ваше имя')
+                                ->atPath('userData.fullname')
+                                ->addViolation();
+                        }
+
+                    }
+
                     if (DeliveryTypeCode::TRANSPORT_COMPANY == $data->deliveryTypeCode) {
                         if (empty($data->passportData->seria)) {
                             $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
@@ -280,6 +289,7 @@ class CreateFormType extends AbstractType
         }
 
         $paymentTypeParams['data'] = $options['data']->paymentTypeCode ?? $paymentTypeParams['data'];
+        $options['data']->paymentTypeCode = $paymentType->code;
 
         $builder
             ->add('paymentTypeCode', ChoiceType::class, [

@@ -12,6 +12,7 @@ use AppBundle\Bus\Order\{ Command, Query, Form };
 use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
+use AppBundle\Enum\PaymentTypeCode;
 
 class OrderController extends Controller
 {
@@ -126,7 +127,7 @@ class OrderController extends Controller
      */
     public function creationPageAction(Request $request)
     {
-        if ($request->isMethod('POST') && $request->query->get('refreshOnly')) {
+        if ($request->isMethod('POST')) {
             $formData = $request->request->get('create_form');
 
             if (isset($formData['userData'])) {
@@ -178,21 +179,10 @@ class OrderController extends Controller
             if (!$this->getUserIsEmployee()) {
                 $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
             }
-
-            if ($request->isMethod('POST')) {
-                $command->typeCode = $request->request->get('create_form')['typeCode'];
-            }
         }
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
-            'geoPointId' => $command->geoPointId,
-            'paymentTypeCode' => $command->paymentTypeCode,
-            'deliveryTypeCode' => $command->deliveryTypeCode,
-            'needLifting' => $command->needLifting,
-            'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
-            'floor' => !empty($command->geoAddress) && !empty($command->geoAddress->floor) ? (int) $command->geoAddress->floor : null,
-            'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
@@ -203,12 +193,24 @@ class OrderController extends Controller
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
 
+        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetOrderSummaryQuery([
+            // 'cart' => $cart,
+            'discountCode' => $this->get('session')->get('discountCode', null),
+            'geoPointId' => $command->geoPointId,
+            'paymentTypeCode' => $command->paymentTypeCode,
+            'deliveryTypeCode' => $command->deliveryTypeCode,
+            'needLifting' => $command->needLifting,
+            'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
+            'floor' => !empty($command->geoAddress) && !empty($command->geoAddress->floor) ? (int) $command->geoAddress->floor : null,
+            'transportCompanyId' => $command->transportCompanyId,
+        ]), $cart);
+
         if ($request->isMethod('POST')) {
             if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
                 $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
 
-                if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
                     try {
                         $this->get('command_bus')->handle($command);
                         // $this->forward('AppBundle:Cart:clear');
