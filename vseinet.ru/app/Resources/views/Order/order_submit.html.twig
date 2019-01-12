@@ -1,6 +1,3 @@
-{% include 'User/is_human_form.html.twig' with { form: form } only %}
-
-
 {% if not app.userIsEmployee %}
 <div class="disclaimer">
     <b>*</b> Нажимая кнопку «Подтвердить заказ», я подтверждаю свою дееспособность, согласие на получение информации об оформлении и получении заказа, согласие на обработку персональных данных и условиях сайта в соответствии с указанным <a class="ajax" href="javascript:void(0)" data-popup="Disclaimer">здесь</a> текстом.

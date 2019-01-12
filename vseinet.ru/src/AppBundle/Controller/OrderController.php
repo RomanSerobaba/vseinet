@@ -192,10 +192,8 @@ class OrderController extends Controller
         }
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
-
-        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetOrderSummaryQuery([
-            // 'cart' => $cart,
-            'discountCode' => $this->get('session')->get('discountCode', null),
+        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetSummaryQuery([
+            'cart' => $cart,
             'geoPointId' => $command->geoPointId,
             'paymentTypeCode' => $command->paymentTypeCode,
             'deliveryTypeCode' => $command->deliveryTypeCode,
@@ -208,10 +206,10 @@ class OrderController extends Controller
         if ($request->isMethod('POST')) {
             if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
-                $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
 
                 if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
                     try {
+                        $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
                         $this->get('command_bus')->handle($command);
                         // $this->forward('AppBundle:Cart:clear');
                         $this->get('session')->remove('discountCode');

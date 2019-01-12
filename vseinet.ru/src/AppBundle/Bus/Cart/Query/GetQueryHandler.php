@@ -20,18 +20,23 @@ class GetQueryHandler extends MessageHandler
         $user = $this->getUser();
         $spec = "";
         $params = [];
-        $geoPointId = NULL;
 
         if (!empty($query->geoPointId)) {
             $geoPoint = $em->getRepository(GeoPoint::class)->find($geoPointId);
 
-            if ($geoPoint instanceof GeoPoint) {
+            if ($geoPoint instanceof GeoPoint && (empty($query->geoCityId) || $query->geoCityId == $geoPoint->getGeoCityId())) {
                 $geoPointId = $geoPoint->getId();
+                $geoCityId = $geoPoint->getGeoCityId();
+            }
+        }
+
+        if (empty($geoPointId)) {
+            if (!empty($query->geoCityId)) {
+                $geoCityId = $query->geoCityId;
             } else {
                 $geoCityId = $this->getGeoCity()->getId();
             }
-        } else {
-            $geoCityId = $this->getGeoCity()->getId();
+
             $q = $em->createQuery("
                 SELECT r.geoPointId
                 FROM AppBundle:Representative AS r
@@ -154,6 +159,6 @@ class GetQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\Cart($products, $discount instanceof DiscountCode ? $discount->getCode() : null);
+        return new DTO\Cart(array_values($products), $discount instanceof DiscountCode ? $discount->getCode() : null, $geoPointId);
     }
 }

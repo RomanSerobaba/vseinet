@@ -5,13 +5,12 @@ namespace AppBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class MobilePhoneValidator extends ConstraintValidator
+class PersonNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (!empty($value)) {
-            $phone = preg_replace(['~^(\+7|8)~isu', '~[\s\(\)\-,\+]~isu'], '', $value);
-            if (!preg_match('~^\d{10}$~isu', $phone, $matches)) {
+        if (null !== $value) {
+            if (preg_match('~[^а-яА-Я-\s]~isu', $value, $matches)) {
                 $this->context->buildViolation($constraint->message)->addViolation();
             }
         }

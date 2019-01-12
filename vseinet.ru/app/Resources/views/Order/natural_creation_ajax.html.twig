@@ -6,34 +6,6 @@
 {% if not(app.userIsEmployee) %}
     {% include 'Order/additional_info.html.twig' %}
 {% endif %}
-{#
-{% if command.variants is iterable %}
-    <div class="row h{% if errors.variant is defined %} error{% endif %}">
-        <div class="inline-h">
-            {% for index, variant in command.variants %}
-                <input
-                    type="radio"
-                    id="add_address_variant_{{ index }}"
-                    name="add_address[variant]"
-                    value="{{ index }}"
-                />
-                <label for="add_address_variant_{{ index }}">{{ variant }}</label>
-                {% if not loop.last %}<br />{% endif %}
-            {% endfor %}
-        </div>
-        <span class="status"></span>
-        {% if errors.variant is defined %}
-            <div class="error">{{ errors.variant.0 }}</div>
-        {% endif %}
-    </div>
-{% endif %}
-
-<div class="row h">
-    <div class="inline-h">
-        {{ form_widget(form.isMain) }}
-        {{ form_label(form.isMain, 'Основной') }}
-    </div>
-</div> #}
 {% include 'Order/order_submit.html.twig' %}
 
 {{ form_end(form, { render_rest: false }) }}

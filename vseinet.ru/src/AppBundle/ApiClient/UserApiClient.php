@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\ApiClient;
 
@@ -24,10 +24,10 @@ class UserApiClient extends BaseApiClient
 
 
     public function __construct(
-        string $apiHost, 
-        SessionInterface $session, 
-        NativeSessionStorage $storage, 
-        MessageFactory $factory, 
+        string $apiHost,
+        SessionInterface $session,
+        NativeSessionStorage $storage,
+        MessageFactory $factory,
         PluginClient $client
     )
     {
@@ -67,7 +67,7 @@ class UserApiClient extends BaseApiClient
             if (Response::HTTP_OK !== $response->getStatusCode()) {
                 throw new BadRequestHttpException($response->getReasonPhrase(), null, $response->getStatusCode());
             }
-            
+
             $auth = json_decode($response->getBody()->getContents(), true);
             $auth['expiresAt'] = new \DateTime(sprintf('+%d seconds', $auth['expiresIn'] - 10));
             $auth['csrfToken'] = $csrfToken;

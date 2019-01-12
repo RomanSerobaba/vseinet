@@ -7,33 +7,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
+use AppBundle\Enum\OrderType;
 
-class GetOrderSummaryQuery extends Message
+class GetSummaryQuery extends Message
 {
-    // /**
-    //  * @Assert\Type(type="AppBundle\Bus\Cart\Query\DTO\Cart")
-    //  */
-    // public $cart;
+    /**
+     * @Assert\Type(type="AppBundle\Bus\Cart\Query\DTO\Cart")
+     */
+    public $cart;
 
     /**
-     * @Assert\Type(type="string")
+     * @Enum("AppBundle\Enum\OrderType")
      */
-    public $discountCode;
-
-    /**
-     * @Assert\Type(type="integer", message="Идентификатор розничной точки должен быть числом")
-     */
-    public $geoPointId;
+    public $orderTypeCode;
 
     /**
      * @Enum("AppBundle\Enum\PaymentTypeCode")
      */
-    public $paymentTypeCode = PaymentTypeCode::CASH;
+    public $paymentTypeCode;
 
     /**
      * @Enum("AppBundle\Enum\DeliveryTypeCode")
      */
-    public $deliveryTypeCode = DeliveryTypeCode::EX_WORKS;
+    public $deliveryTypeCode;
 
     /**
      * @Assert\Type(type="boolean")
@@ -54,5 +50,10 @@ class GetOrderSummaryQuery extends Message
      * @Assert\Type(type="integer", message="Идентификатор транспортной компании должен быть числом")
      */
     public $transportCompanyId;
+
+    /**
+     * @Assert\Type(type="integer", message="Идентификатор розничной точки должен быть числом")
+     */
+    public $geoPointId;
 
 }

@@ -34,10 +34,12 @@ $(function() {
     });
 
     var orderForm = $('#order-creation-form');
-
+var counter = 0;
     orderForm.form({
-        afterResponse: function(data){
-            $('#products').html(data.html);
+        afterResponse: function(data){console.log(++counter);
+            if ('undefined' !== typeof data.html && data.html.length > 0) {
+                $('#products').html(data.html);
+            }
         }
     });
 

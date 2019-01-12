@@ -18,5 +18,10 @@ class GetQuery extends Message
     /**
      * @Assert\Type(type="integer")
      */
+    public $geoCityId;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $geoPointId;
 }

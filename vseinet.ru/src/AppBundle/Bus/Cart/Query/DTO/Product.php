@@ -3,6 +3,7 @@
 namespace AppBundle\Bus\Cart\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as VIC;
 
 class Product
 {
@@ -90,7 +91,7 @@ class Product
         $this->liftingCost = $liftingCost;
         $this->quantity = $quantity;
         $this->hasStroika = (bool) $hasStroika;
-        $this->priceWithDiscount = round($price - $discountAmount);
+        $this->priceWithDiscount = (int) round($price - $discountAmount, -2);
         $this->reserveQuantity = $reserveQuantity;
         $this->storePricetag = $storePricetag;
     }
