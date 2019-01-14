@@ -181,6 +181,12 @@ class CreateFormType extends AbstractType
             });
         }
 
+        if (OrderType::RETAIL == $options['data']->typeCode) {
+            $paymentTypes = array_filter($paymentTypes, function($val) use ($options) {
+                return PaymentTypeCode::TERMINAL != $val->code || in_array($options['data']->geoCityId, [950, 174]);
+            });
+        }
+
         if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST,])) {
             $paymentTypes = array_filter($paymentTypes, function($val){
                 return $val->isRemote;

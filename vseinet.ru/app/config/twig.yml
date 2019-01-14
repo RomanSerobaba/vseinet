@@ -50,6 +50,7 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         app: '@app.twig.globals'
+        credit_threshold: '%const.credit.threshold%'
 
     number_format:
         decimals: 0

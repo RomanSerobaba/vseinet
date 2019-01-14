@@ -118,6 +118,14 @@ class CreateCommand extends Message
      */
     public $id;
 
+    public function setIsMarketingSubscribed($isMarketingSubscribed) {
+        $this->isMarketingSubscribed = null !== $isMarketingSubscribed ? (bool) $isMarketingSubscribed : $isMarketingSubscribed;
+    }
+
+    public function setIsTranscationalSubscribed($isTranscationalSubscribed) {
+        $this->isTranscationalSubscribed = null !== $isTranscationalSubscribed ? (bool) $isTranscationalSubscribed : $isTranscationalSubscribed;
+    }
+
     public function setNeedLifting($needLifting) {
         $this->needLifting = null !== $needLifting ? (bool) $needLifting : $needLifting;
     }
@@ -201,7 +209,7 @@ class CreateCommand extends Message
                     ->addViolation();
             }
         } elseif (DeliveryTypeCode::POST == $this->deliveryTypeCode) {
-            if (empty($this->geoAddress->postalCode) || empty($this->geoAddress->geoStreetId) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
+            if (empty($this->geoAddress->postalCode) || empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
                 $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
                     ->atPath('geoAddress.postalCode')
                     ->addViolation();
@@ -221,8 +229,29 @@ class CreateCommand extends Message
                     ->atPath('geoAddress.apartment')
                     ->addViolation();
             }
+
+            if (empty($this->geoAddress->geoStreetId)) {
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.postalCode')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetId')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetName')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.house')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.building')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.apartment')
+                    ->addViolation();
+            }
         } elseif (DeliveryTypeCode::COURIER == $this->deliveryTypeCode) {
-            if (empty($this->geoAddress->geoStreetId) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
+            if (empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
                 $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
                     ->atPath('geoAddress.geoStreetId')
                     ->addViolation();
@@ -236,6 +265,24 @@ class CreateCommand extends Message
                     ->atPath('geoAddress.building')
                     ->addViolation();
                 $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.apartment')
+                    ->addViolation();
+            }
+
+            if (empty($this->geoAddress->geoStreetId)) {
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetId')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetName')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.house')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.building')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
                     ->atPath('geoAddress.apartment')
                     ->addViolation();
             }

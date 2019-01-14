@@ -5,10 +5,13 @@
         <div class="row v">
             <label for="{{ form.paymentTypeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="{{ form.paymentTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.paymentTypeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.paymentTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.paymentTypeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %}{% if (constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == choice.value or constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value) and cart.summary < credit_threshold %} disabled="disabled"{% endif %} />
             </label>
+            {% if choice.data.description %}
+            <div class="notice">{{ choice.data.description }}</div>
+            {% endif %}
         </div>
-        {% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value %}
+        {% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value and cart.summary > credit_threshold %}
         <div class="row h subrow">
             {{ form_label(form.creditDownPayment, 'Первоначальный взнос:') }}
             {{ form_widget(form.creditDownPayment, { attr: { class: 'txt' }}) }}

@@ -109,6 +109,7 @@ class CreateCommandHandler extends MessageHandler
                     ],
                     'address' => [
                         'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'geoStreetName' => $command->geoAddress->geoStreetName,
                         'house' => $command->geoAddress->house,
                         'building' => $command->geoAddress->building,
                         'apartment' => $command->geoAddress->apartment,
@@ -137,6 +138,7 @@ class CreateCommandHandler extends MessageHandler
                     'transportCompanyId' => $command->transportCompanyId,
                     'address' => [
                         'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'geoStreetName' => $command->geoAddress->geoStreetName,
                         'house' => $command->geoAddress->house,
                         'building' => $command->geoAddress->building,
                         'apartment' => $command->geoAddress->apartment,

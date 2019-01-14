@@ -5,6 +5,7 @@ imports:
     - { resource: 'bus.yml' }
     - { resource: 'bus-services.yml', ignore_errors: true }
     - { resource: 'defaults.yml' }
+    - { resource: 'constants.yml' }
     - { resource: 'rabbitmq.yml' }
     - { resource: 'doctrine.yml' }
     - { resource: 'monolog.yml' }
