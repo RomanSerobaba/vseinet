@@ -33,13 +33,18 @@ $(function() {
         status.form('submit');
     });
 
-    var orderForm = $('#order-creation-form');
-console.log(orderForm.form);
-    orderForm.form({
-        afterResponse: function(elem, data){ console.log(elem, data);
-            $('#products').html(data.html);
-        }
-    });
+    function refreshCartView()
+    {
+        var orderForm = $('#order-creation-form');
+
+        orderForm.form({
+            afterResponse: function(data) {
+                if ('undefined' !== typeof data.html && data.html.length > 0) {
+                    $('#products').html(data.html);
+                }
+            }
+        });
+    }
 
     var timer = null,
         help = {};
@@ -350,6 +355,7 @@ console.log(orderForm.form);
 
                 if (response.hasOwnProperty('html')) {
                     $('#create_form_wrapper').html(response.html);
+                    refreshCartView();
                     attachMasks();
                     attachUserAutocomplete();
                     attachCityAutocomplete();
@@ -359,6 +365,7 @@ console.log(orderForm.form);
         });
     });
 
+    refreshCartView();
     attachMasks();
     attachUserAutocomplete();
     attachCityAutocomplete();

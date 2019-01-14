@@ -16,38 +16,12 @@ class GetQuery extends Message
     public $discountCode;
 
     /**
-     * @Assert\Type(type="integer", message="Идентификатор розничной точки должен быть числом")
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
+
+    /**
+     * @Assert\Type(type="integer")
      */
     public $geoPointId;
-
-    /**
-     * @Enum("AppBundle\Enum\PaymentTypeCode")
-     */
-    public $paymentTypeCode = PaymentTypeCode::CASH;
-
-    /**
-     * @Enum("AppBundle\Enum\DeliveryTypeCode")
-     */
-    public $deliveryTypeCode = DeliveryTypeCode::EX_WORKS;
-
-    /**
-     * @Assert\Type(type="boolean")
-     */
-    public $needLifting = false;
-
-    /**
-     * @Assert\Type(type="boolean")
-     */
-    public $hasLift = false;
-
-    /**
-     * @Assert\Type(type="integer", message="Этаж должен быть числом")
-     */
-    public $floor = 1;
-
-    /**
-     * @Assert\Type(type="integer", message="Идентификатор транспортной компании должен быть числом")
-     */
-    public $transportCompanyId;
-
 }

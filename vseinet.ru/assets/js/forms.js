@@ -3,7 +3,7 @@ $.widget('sp.form', {
         submit: function (xhr) {
             var element = this;
             xhr.done(function (data) {
-                if (!data.errors)
+                if (!data.errors || 0 === data.errors.length)
                     element.form('submit');
             });
         },

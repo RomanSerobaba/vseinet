@@ -5,11 +5,12 @@ namespace AppBundle\Bus\Cart\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\DiscountCode;
 use AppBundle\Entity\Representative;
+use AppBundle\Entity\GeoPoint;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Entity\TransportCompany;
-use AppBundle\Entity\PaymentType;
+use AppBundle\Entity\PaymentType;use Doctrine\ORM\AbstractQuery;
 
 class GetQueryHandler extends MessageHandler
 {
@@ -17,47 +18,44 @@ class GetQueryHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $geoCity = $this->getGeoCity();
-        $discount = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $query->discountCode]);
-        $representative = $em->getRepository(Representative::class)->findOneBy(['geoPointId' => $query->geoPointId]);
-        $transportCompany = $em->getRepository(TransportCompany::class)->findOneBy(['id' => $query->transportCompanyId]);
-        $paymentType = $em->getRepository(PaymentType::class)->findOneBy(['code' => $query->paymentTypeCode]);
-        $stroikaCategoriesIds = [6654,6684,6699,7001,7492,7494,7496,7497,7501,7502,7507,7509,7569,7570,7571,7577,7578,7581,7582,7583,7584,7587,7588,7589,7590,7591,7593,7595,7596,7597,7598,7599,7600,7603,7606,7613,7615,7617,7618,7619,7623,7657,7658,7660,7697,13491,17999,5082851,5082367,34246,34478,34971,43238,43273,5078029,5078758,5078393,5078153,5078440,5088210,5078746,5078320,5078410,5078564,5078576,5078621,5078624,5079817,5081115,5081521,5081583,5081733,5083009,5084019,5084250,5085206,5085208,5085213,5085781];
         $spec = "";
         $params = [];
 
-        if ($representative instanceof Representative) {
-            $spec .= ",
-                (
-                    SELECT
-                        SUM(grrc.delta)
-                    FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
-                    JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
-                    WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
-                ),
-                (
-                    SELECT
-                        pp.price
-                    FROM AppBundle:ProductPricetag AS pp
-                    WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
-                )";
-            $params['geoPointId'] = $representative->getGeoPointId();
-            $params['goodsConditionCode_FREE'] = GoodsConditionCode::FREE;
-        } else {
-            $spec .= ", 0, 0";
+        if (!empty($query->geoPointId)) {
+            $geoPoint = $em->getRepository(GeoPoint::class)->find($geoPointId);
+
+            if ($geoPoint instanceof GeoPoint && (empty($query->geoCityId) || $query->geoCityId == $geoPoint->getGeoCityId())) {
+                $geoPointId = $geoPoint->getId();
+                $geoCityId = $geoPoint->getGeoCityId();
+            }
         }
 
-        if (DeliveryTypeCode::COURIER === $query->deliveryTypeCode && $query->needLifting) {
-            $spec .= ", p.liftingTax";
-        } else {
-            $spec .= ", 0";
+        if (empty($geoPointId)) {
+            if (!empty($query->geoCityId)) {
+                $geoCityId = $query->geoCityId;
+            } else {
+                $geoCityId = $this->getGeoCity()->getId();
+            }
+
+            $q = $em->createQuery("
+                SELECT r.geoPointId
+                FROM AppBundle:Representative AS r
+                JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+                WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.hasRetail = TRUE
+                ORDER BY r.isCentral
+            ")
+                ->setParameters([
+                    'geoCityId' => $geoCityId,
+                ])
+                ->setMaxResults(1);
+            $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
         }
+
+        $discount = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $query->discountCode]);
+        $stroikaCategoriesIds = [6654,6684,6699,7001,7492,7494,7496,7497,7501,7502,7507,7509,7569,7570,7571,7577,7578,7581,7582,7583,7584,7587,7588,7589,7590,7591,7593,7595,7596,7597,7598,7599,7600,7603,7606,7613,7615,7617,7618,7619,7623,7657,7658,7660,7697,13491,17999,5082851,5082367,34246,34478,34971,43238,43273,5078029,5078758,5078393,5078153,5078440,5088210,5078746,5078320,5078410,5078564,5078576,5078621,5078624,5079817,5081115,5081521,5081583,5081733,5083009,5084019,5084250,5085206,5085208,5085213,5085781];
 
         if ($discount instanceof DiscountCode) {
-            $spec .= ", p.discountAmount";
             $this->get('session')->set('discountCode', $query->discountCode);
-        } else {
-            $spec .= ", 0";
         }
 
         if (null !== $user) {
@@ -73,8 +71,22 @@ class GetQueryHandler extends MessageHandler
                         COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
                         COALESCE(p2.deliveryTax, p.deliveryTax),
                         c.quantity,
-                        cp.id
-                        {$spec}
+                        cp.id,
+                        p.liftingTax,
+                        p.discountAmount,
+                        (
+                            SELECT
+                                SUM(grrc.delta)
+                            FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
+                            JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
+                            WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
+                        ),
+                        (
+                            SELECT
+                                pp.price
+                            FROM AppBundle:ProductPricetag AS pp
+                            WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
+                        )
                     )
                 FROM AppBundle:Cart c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
@@ -86,9 +98,11 @@ class GetQueryHandler extends MessageHandler
             ");
             $q->setParameters([
                 'userId' => $user->getId(),
-                'geoCityId' => $geoCity->getId(),
+                'geoCityId' => $geoCityId,
+                'geoPointId' => $geoPointId,
                 'stroikaCategoriesIds' => $stroikaCategoriesIds,
-            ] + $params);
+                'goodsConditionCode_FREE' => GoodsConditionCode::FREE,
+            ]);
             $products = $q->getResult('IndexByHydrator');
         }
         else {
@@ -107,8 +121,22 @@ class GetQueryHandler extends MessageHandler
                             COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
                             COALESCE(p2.deliveryTax, p.deliveryTax),
                             0,
-                            cp.id
-                            {$spec}
+                            cp.id,
+                            p.liftingTax,
+                            p.discountAmount,
+                            (
+                                SELECT
+                                    SUM(grrc.delta)
+                                FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
+                                JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
+                                WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
+                            ),
+                            (
+                                SELECT
+                                    pp.price
+                                FROM AppBundle:ProductPricetag AS pp
+                                WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
+                            )
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
@@ -119,9 +147,11 @@ class GetQueryHandler extends MessageHandler
                 ");
                 $q->setParameters([
                     'ids' => array_keys($products),
-                    'geoCityId' => $geoCity->getId(),
+                    'geoCityId' => $geoCityId,
+                    'geoPointId' => $geoPointId,
                     'stroikaCategoriesIds' => $stroikaCategoriesIds,
-                ] + $params);
+                    'goodsConditionCode_FREE' => GoodsConditionCode::FREE,
+                ]);
                 foreach ($q->getResult() as $product) {
                     $product->quantity = intval($products[$product->id]['quantity']);
                     $products[$product->id] = $product;
@@ -129,32 +159,6 @@ class GetQueryHandler extends MessageHandler
             }
         }
 
-        if (DeliveryTypeCode::COURIER === $query->deliveryTypeCode) {
-            $deliveryCharges = $representative->getDeliveryTax();
-
-            if ($query->needLifting) {
-                if ($query->hasLift) {
-                    $query->floor = 1;
-                }
-
-                $liftingCharges = 0;
-
-                foreach ($products as $product) {
-                    $liftingCharges += $product->quantity * $query->floor * $product->liftingCost;
-                }
-            }
-        }
-
-        if (DeliveryTypeCode::TRANSPORT_COMPANY === $query->deliveryTypeCode) {
-            if ($transportCompany instanceof TransportCompany) {
-                $transportCompanyDeliveryCharges = $transportCompany->getTax();
-            }
-        }
-
-        if ($paymentType instanceof PaymentType) {
-            $paymentTypeComissionPercent = $paymentType->getCashlessPercent();
-        }
-
-        return new DTO\Cart($products, $deliveryCharges ?? 0, $liftingCharges ?? 0, $paymentTypeComissionPercent ?? 0, $transportCompanyDeliveryCharges ?? 0, $deliveryToRepresentativeTaxAmount ?? 0, $discount instanceof DiscountCode ? $discount->getCode() : null);
+        return new DTO\Cart(array_values($products), $discount instanceof DiscountCode ? $discount->getCode() : null, $geoPointId);
     }
 }

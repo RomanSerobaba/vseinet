@@ -7,6 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Validator\Constraints\Enum;
 use AppBundle\Enum\OrderType;
+use AppBundle\Enum\DeliveryTypeCode;
+use AppBundle\Enum\PaymentTypeCode;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CreateCommand extends Message
 {
@@ -88,6 +91,16 @@ class CreateCommand extends Message
     /**
      * @Assert\Type(type="boolean")
      */
+    public $isMarketingSubscribed;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isTranscationalSubscribed;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
     public $isCallNeeded;
 
     /**
@@ -104,6 +117,14 @@ class CreateCommand extends Message
      * @Assert\Type(type="integer")
      */
     public $id;
+
+    public function setIsMarketingSubscribed($isMarketingSubscribed) {
+        $this->isMarketingSubscribed = null !== $isMarketingSubscribed ? (bool) $isMarketingSubscribed : $isMarketingSubscribed;
+    }
+
+    public function setIsTranscationalSubscribed($isTranscationalSubscribed) {
+        $this->isTranscationalSubscribed = null !== $isTranscationalSubscribed ? (bool) $isTranscationalSubscribed : $isTranscationalSubscribed;
+    }
 
     public function setNeedLifting($needLifting) {
         $this->needLifting = null !== $needLifting ? (bool) $needLifting : $needLifting;
@@ -150,6 +171,134 @@ class CreateCommand extends Message
             $this->transportCompanyId = $transportCompanyId->id;
         } else {
             $this->transportCompanyId = null !== $transportCompanyId ? (int) $transportCompanyId : $transportCompanyId;
+        }
+    }
+
+    /**
+     * @Assert\Callback
+     */
+
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if (OrderType::LEGAL == $this->typeCode) {
+            if (empty($this->userData->position)) {
+                $context->buildViolation('Необходимо указать вашу должность')
+                    ->atPath('userData.position')
+                    ->addViolation();
+            }
+        }
+
+        if (in_array($this->typeCode, [OrderType::LEGAL, OrderType::NATURAL]) || OrderType::RETAIL == $this->deliveryTypeCode && (DeliveryTypeCode::COURIER == $this->deliveryTypeCode || in_array($this->paymentTypeCode, [PaymentTypeCode::CREDIT, PaymentTypeCode::INSTALLMENT]))) {
+            if (empty($this->userData->fullname)) {
+                $context->buildViolation('Необходимо указать ваше имя')
+                    ->atPath('userData.fullname')
+                    ->addViolation();
+            }
+        }
+
+        if (DeliveryTypeCode::TRANSPORT_COMPANY == $this->deliveryTypeCode) {
+            if (empty($this->passportData->seria) || empty($this->passportData->number) || empty($this->passportData->issuedAt)) {
+                $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                    ->atPath('passportData.seria')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                    ->atPath('passportData.number')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
+                    ->atPath('passportData.issuedAt')
+                    ->addViolation();
+            }
+        } elseif (DeliveryTypeCode::POST == $this->deliveryTypeCode) {
+            if (empty($this->geoAddress->postalCode) || empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.postalCode')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.geoStreetId')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.geoStreetName')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.house')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.building')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.apartment')
+                    ->addViolation();
+            }
+
+            if (empty($this->geoAddress->geoStreetId)) {
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.postalCode')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetId')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetName')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.house')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.building')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.apartment')
+                    ->addViolation();
+            }
+        } elseif (DeliveryTypeCode::COURIER == $this->deliveryTypeCode) {
+            if (empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.geoStreetId')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.geoStreetName')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.house')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.building')
+                    ->addViolation();
+                $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
+                    ->atPath('geoAddress.apartment')
+                    ->addViolation();
+            }
+
+            if (empty($this->geoAddress->geoStreetId)) {
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetId')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.geoStreetName')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.house')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.building')
+                    ->addViolation();
+                $context->buildViolation('Выберите улицу из выпадающего списка, появляющегося при вводе')
+                    ->atPath('geoAddress.apartment')
+                    ->addViolation();
+            }
+
+            if (($this->needLifting ?? FALSE) && empty($this->geoAddress->floor)) {
+                $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
+                    ->atPath('needLifting')
+                    ->addViolation();
+                $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
+                    ->atPath('geoAddress.floor')
+                    ->addViolation();
+                $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
+                    ->atPath('geoAddress.hasLift')
+                    ->addViolation();
+            }
+
         }
     }
 }

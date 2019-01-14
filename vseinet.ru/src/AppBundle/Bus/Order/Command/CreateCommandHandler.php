@@ -24,7 +24,7 @@ class CreateCommandHandler extends MessageHandler
 
         $user = $this->getUser();
 
-        if (count($user->geoRooms) > 0) {
+        if (NULL !== $user && count($user->geoRooms) > 0) {
             $points = array_column($user->geoRooms, 'geo_point_id');
         } else {
             $points = [$this->getParameter('default.point.id')];
@@ -52,7 +52,7 @@ class CreateCommandHandler extends MessageHandler
         $discountCode = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $cart->discountCode]);
         $discountCodeId = $discountCode instanceof DiscountCode ? $discountCode->getId() : null;
 
-        $api = $this->get('user.api.client');
+        $api = NULL !== $user ? $this->get('user.api.client') : $this->get('site.api.client');
 
         switch ($command->typeCode) {
             case OrderType::CONSUMABLES:
@@ -97,6 +97,8 @@ class CreateCommandHandler extends MessageHandler
                     'creditDownPayment' => $command->creditDownPayment,
                     'isNotificationNeeded' => $command->isNotificationNeeded,
                     'transportCompanyId' => $command->transportCompanyId,
+                    'isMarketingSubscribed' => $command->isMarketingSubscribed,
+                    'isTranscationalSubscribed' => $command->isTranscationalSubscribed,
                     'organizationDetails' => [
                         'name' => $command->organizationDetails->name,
                         'legalAddress' => $command->organizationDetails->legalAddress,
@@ -107,6 +109,7 @@ class CreateCommandHandler extends MessageHandler
                     ],
                     'address' => [
                         'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'geoStreetName' => $command->geoAddress->geoStreetName,
                         'house' => $command->geoAddress->house,
                         'building' => $command->geoAddress->building,
                         'apartment' => $command->geoAddress->apartment,
@@ -135,6 +138,7 @@ class CreateCommandHandler extends MessageHandler
                     'transportCompanyId' => $command->transportCompanyId,
                     'address' => [
                         'geoStreetId' => $command->geoAddress->geoStreetId,
+                        'geoStreetName' => $command->geoAddress->geoStreetName,
                         'house' => $command->geoAddress->house,
                         'building' => $command->geoAddress->building,
                         'apartment' => $command->geoAddress->apartment,

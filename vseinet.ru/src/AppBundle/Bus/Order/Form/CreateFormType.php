@@ -5,9 +5,15 @@ namespace AppBundle\Bus\Order\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ TextType, ChoiceType, SubmitType, TextareaType, HiddenType, CheckboxType };
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\Bus\User\Form\{ UserDataType, IsHumanType };
+use AppBundle\Bus\User\Form\UserDataType;
+use AppBundle\Bus\User\Form\IsHumanType;
 use AppBundle\Bus\Order\Form\OrganizationDetailsType;
 use AppBundle\Bus\Geo\Form\GeoAddressType;
 use AppBundle\Bus\User\Form\PassportDataType;
@@ -88,98 +94,6 @@ class CreateFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CreateCommand::class,
-            'constraints' => [
-                new Assert\Callback(function($data, $context){
-                    if (DeliveryTypeCode::TRANSPORT_COMPANY == $data->deliveryTypeCode) {
-                        if (empty($data->passportData->seria)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
-                                ->atPath('passportData.seria')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->passportData->number)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
-                                ->atPath('passportData.number')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->passportData->issuedAt)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
-                                ->atPath('passportData.issuedAt')
-                                ->addViolation();
-                        }
-                    } elseif (DeliveryTypeCode::POST == $data->deliveryTypeCode) {
-                        if (empty($data->geoAddress->postalCode)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.postalCode')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->geoAddress->geoStreetId)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.geoStreetId')
-                                ->addViolation();
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.geoStreetName')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->geoAddress->house)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.house')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->geoAddress->building)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.building')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->geoAddress->apartment)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.apartment')
-                                ->addViolation();
-                        }
-                    } elseif (DeliveryTypeCode::COURIER == $data->deliveryTypeCode) {
-                        if (empty($data->geoAddress->geoStreetId)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.geoStreetId')
-                                ->addViolation();
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.geoStreetName')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->geoAddress->house) && empty($data->geoAddress->building)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.house')
-                                ->addViolation();
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.building')
-                                ->addViolation();
-                        }
-
-                        if (empty($data->geoAddress->apartment)) {
-                            $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
-                                ->atPath('geoAddress.apartment')
-                                ->addViolation();
-                        }
-
-                        if (($data->needLifting ?? FALSE) && empty($data->geoAddress->floor)) {
-                            $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
-                                ->atPath('needLifting')
-                                ->addViolation();
-                            $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
-                                ->atPath('geoAddress.floor')
-                                ->addViolation();
-                            $context->buildViolation('Вы указали, что вам нужен подъём, но не указали, на какой этаж')
-                                ->atPath('geoAddress.hasLift')
-                                ->addViolation();
-                        }
-
-                    }
-                })],
         ]);
     }
 
@@ -216,6 +130,7 @@ class CreateFormType extends AbstractType
             $point = $points[$options['data']->geoPointId];
         }
 
+        $options['data']->geoPointId = $point->id;
         $builder
             ->add('geoPointId', ChoiceType::class, [
                 'choices' => $points,
@@ -226,7 +141,20 @@ class CreateFormType extends AbstractType
     }
 
     private function addUserDataFields(FormBuilderInterface $builder, array &$options) {
+        $user = $this->security->getToken()->getUser();
+
+        if (NULL === $options['data']->isMarketingSubscribed && (!is_object($user) || $user->getIsMarketingSubscribed())) {
+            $isMarketingSubscribed = TRUE;
+        } else {
+            $isMarketingSubscribed = $options['data']->isMarketingSubscribed;
+        }
+
+        $options['data']->isMarketingSubscribed = $isMarketingSubscribed;
         $builder
+            ->add('isMarketingSubscribed', CheckboxType::class, [
+                    'data' => $isMarketingSubscribed,
+                ])
+            ->add('isTranscationalSubscribed', CheckboxType::class)
             ->add('userData', UserDataType::class);
     }
 
@@ -250,6 +178,12 @@ class CreateFormType extends AbstractType
         if (!is_object($user) || !$user->isEmployee()) {
             $paymentTypes = array_filter($paymentTypes, function($val){
                 return !$val->isInternal;
+            });
+        }
+
+        if (OrderType::RETAIL == $options['data']->typeCode) {
+            $paymentTypes = array_filter($paymentTypes, function($val) use ($options) {
+                return PaymentTypeCode::TERMINAL != $val->code || in_array($options['data']->geoCityId, [950, 174]);
             });
         }
 
@@ -281,6 +215,7 @@ class CreateFormType extends AbstractType
 
         $paymentTypeParams['data'] = $options['data']->paymentTypeCode ?? $paymentTypeParams['data'];
 
+        $options['data']->paymentTypeCode = $paymentType->code;
         $builder
             ->add('paymentTypeCode', ChoiceType::class, [
                 'choices' => $paymentTypes,
@@ -342,8 +277,7 @@ class CreateFormType extends AbstractType
             $q->setParameter('id', $user->defaultGeoPointId);
             $points = $q->getResult('IndexByHydrator');
             $point = reset($points);
-            $options['data']->geoCityId = $point->geoCityId;
-            $geoCityId = $options['data']->geoCityId;
+            $geoCityId = $point->geoCityId;
         }
 
         if (count($points) > 0) {
@@ -365,6 +299,7 @@ class CreateFormType extends AbstractType
                     $point = $points[$options['data']->geoPointId];
                 }
 
+                $options['data']->geoPointId = $point->id;
                 $builder
                     ->add('geoPointId', ChoiceType::class, [
                         'choices' => $points,
@@ -378,7 +313,7 @@ class CreateFormType extends AbstractType
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
                 $addressDTO = NULL;
 
-                if (!$user->isEmployee()) {
+                if (is_object($user) && !$user->isEmployee()) {
                     $q = $this->em->createQuery("
                         SELECT
                             NEW AppBundle\Bus\Geo\Query\DTO\Address (
@@ -406,6 +341,7 @@ class CreateFormType extends AbstractType
                     }
                 }
 
+                $options['data']->geoAddress = $addressDTO;
                 $builder
                     ->add('geoAddress', GeoAddressType::class, ['data' => $addressDTO])
                     ->add('needLifting', CheckBoxType::class, ['required' => false,]);
@@ -436,6 +372,8 @@ class CreateFormType extends AbstractType
                 if (!empty($options['data']->transportCompanyId) && isset($transportCompanies[$options['data']->transportCompanyId])) {
                     $transportCompany = $transportCompanies[$options['data']->transportCompanyId];
                 }
+
+                $options['data']->transportCompanyId = $transportCompany->id;
                 $builder
                     ->add('transportCompanyId', ChoiceType::class, [
                         'choices' => $transportCompanies,
@@ -453,12 +391,13 @@ class CreateFormType extends AbstractType
 
         if (!empty($options['data']->deliveryTypeCode) && false !== array_search($options['data']->deliveryTypeCode, $deliveryTypes)) {
             $deliveryType = $options['data']->deliveryTypeCode;
-        } else {
-            $options['data']->deliveryTypeCode = $deliveryType;
         }
 
-        $options['data']->geoCityId = $geoCityId;
         $city = $this->em->getRepository(GeoCity::class)->find($geoCityId);
+
+        $options['data']->deliveryTypeCode = $deliveryType;
+        $options['data']->geoCityId = $geoCityId;
+        $options['data']->geoCityName = $city->getName();
         $builder
             ->add('geoCityId', HiddenType::class, [
                     'data' => $geoCityId,
@@ -490,6 +429,8 @@ class CreateFormType extends AbstractType
             $isNotificationNeeded = TRUE;
         }
 
+        $options['data']->isCallNeeded = $isCallNeeded;
+        $options['data']->isNotificationNeeded = $isNotificationNeeded;
         $builder
             ->add('isCallNeeded', ChoiceType::class, [
                 'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],

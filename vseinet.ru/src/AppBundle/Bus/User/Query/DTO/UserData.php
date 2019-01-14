@@ -3,6 +3,8 @@
 namespace AppBundle\Bus\User\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\MobilePhone;
+use AppBundle\Validator\Constraints\PersonName;
 
 class UserData
 {
@@ -19,6 +21,12 @@ class UserData
     /**
      * @Assert\Type(type="string")
      */
+    public $position;
+
+    /**
+     * @Assert\Type(type="string")
+     * @PersonName
+     */
     public $fullname;
 
     /**
@@ -30,6 +38,7 @@ class UserData
 
     /**
      * @Assert\Type(type="string")
+     * @MobilePhone
      */
     public $phone;
 
@@ -47,6 +56,7 @@ class UserData
 
     /**
      * @Assert\Type(type="string")
+     * @Assert\Email
      */
     public $email;
 
@@ -56,4 +66,5 @@ class UserData
      * })
      */
     public $contactIds;
+
 }
