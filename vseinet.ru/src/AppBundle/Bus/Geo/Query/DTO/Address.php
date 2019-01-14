@@ -58,15 +58,15 @@ class Address
 
     public function __construct($geoStreetId = NULL, $geoStreetName = NULL, $house = NULL, $building = NULL, $apartment = NULL, $floor = NULL, $hasLift = NULL, $office = NULL, $postalCode = NULL, $geoCityId = NULL)
     {
-        $this->geoStreetId = $geoStreetId;
+        $this->geoStreetId = (int) $geoStreetId;
         $this->geoStreetName = $geoStreetName;
         $this->house = $house;
         $this->building = $building;
         $this->apartment = $apartment;
-        $this->floor = $floor;
-        $this->hasLift = $hasLift;
+        $this->floor = (int) $floor;
+        $this->hasLift = (bool) $hasLift;
         $this->office = $office;
         $this->postalCode = $postalCode;
-        $this->geoCityId = $geoCityId;
+        $this->geoCityId = (int) $geoCityId;
     }
 }

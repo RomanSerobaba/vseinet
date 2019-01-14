@@ -1,2 +1,3 @@
 parameters:
-    const.credit.threshold: 300000
+    const.payment.credit.threshold: 300000
+    const.delivery.post.cost: 40000

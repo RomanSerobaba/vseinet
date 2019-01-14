@@ -311,7 +311,7 @@ class CreateFormType extends AbstractType
 
             if ($hasDelivery) {
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
-                $addressDTO = NULL;
+                $addressDTO = $options['data']->geoAddress;
 
                 if (is_object($user) && !$user->isEmployee()) {
                     $q = $this->em->createQuery("
@@ -339,9 +339,10 @@ class CreateFormType extends AbstractType
                     if ($geoCityId != $addressDTO->geoCityId) {
                         $addressDTO = NULL;
                     }
+
+                    $options['data']->geoAddress = $addressDTO;
                 }
 
-                $options['data']->geoAddress = $addressDTO;
                 $builder
                     ->add('geoAddress', GeoAddressType::class, ['data' => $addressDTO])
                     ->add('needLifting', CheckBoxType::class, ['required' => false,]);

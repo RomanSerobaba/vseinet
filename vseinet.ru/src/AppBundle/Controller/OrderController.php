@@ -150,9 +150,6 @@ class OrderController extends Controller
                     $formData['geoAddress']['office'] ?? NULL,
                     $formData['geoAddress']['postalCode'] ?? NULL
                 );
-                array_walk($formData['geoAddress'], function($value, $key) use ($geoAddress) {
-                    $geoAddress->$key = $value;
-                });
                 $formData['geoAddress'] = $geoAddress;
             }
 
@@ -206,10 +203,10 @@ class OrderController extends Controller
         if ($request->isMethod('POST')) {
             if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
-
+                // var_dump($form->isSubmitted(), $form->isValid(), $request->isXmlHttpRequest(), $this->getFormErrors($form));die();
                 if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
                     try {
-                        $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
+                        // $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
                         $this->get('command_bus')->handle($command);
                         // $this->forward('AppBundle:Cart:clear');
                         $this->get('session')->remove('discountCode');
