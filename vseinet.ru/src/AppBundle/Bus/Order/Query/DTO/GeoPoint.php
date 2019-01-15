@@ -39,7 +39,7 @@ class GeoPoint
     public $hasRising;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор города должен быть числом")
      */
     public $geoCityId;
 

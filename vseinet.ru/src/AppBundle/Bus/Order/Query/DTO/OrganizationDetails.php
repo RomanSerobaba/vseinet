@@ -48,7 +48,7 @@ class OrganizationDetails
     public $bic;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор банка должен быть числом")
      */
     public $bankId;
 

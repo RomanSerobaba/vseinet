@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Address
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор улицы должен быть числом")
      */
     public $geoStreetId;
 
@@ -32,7 +32,7 @@ class Address
     public $apartment;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Этаж должен быть числом")
      */
     public $floor;
 
@@ -42,7 +42,7 @@ class Address
     public $hasLift = false;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Номер офиса должен быть числом")
      */
     public $office;
 
