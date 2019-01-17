@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Controller;
 
@@ -8,10 +8,10 @@ use Symfony\Component\Form\FormError;
 
 class Controller extends BaseController
 {
-    protected function addFormErrors(FormInterface $form, array $messages) 
+    protected function addFormErrors(FormInterface $form, array $messages)
     {
         foreach ($messages as $key => $message) {
-            $form->get($key)->addError(new FormError($message));   
+            $form->get($key)->addError(new FormError($message));
         }
     }
 
@@ -25,12 +25,17 @@ class Controller extends BaseController
 
     private function getFormErrorsRecursive(FormInterface $form, $prefix, &$errors)
     {
-        foreach ($form->all() as $child) {
-            if ($child->isSubmitted() && !$child->isValid()) {
-                foreach ($child->getErrors() as $error) {
-                    $errors[$prefix.$child->getName()][] = $error->getMessage();
-                }
-                $this->getFormErrorsRecursive($child, $prefix.$child->getName().'_', $errors);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            foreach ($form->getErrors() as $error) {
+                $errors[$prefix.$form->getName()][] = $error->getMessage();
+            }
+        }
+
+        $children = $form->all();
+
+        if (count($children) > 0) {
+            foreach ($children as $child) {
+                $this->getFormErrorsRecursive($child, $prefix.$form->getName().'_', $errors);
             }
         }
     }

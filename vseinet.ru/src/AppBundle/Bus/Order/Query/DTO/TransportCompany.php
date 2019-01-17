@@ -9,7 +9,7 @@ use AppBundle\Enum\OrderItemStatus;
 class TransportCompany
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор транспортной компании должен быть числом")
      */
     public $id;
 
@@ -19,7 +19,7 @@ class TransportCompany
     public $name;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Стоимость доставки до транспортной компании должна быть числом")
      */
     public $deliveryTax;
 

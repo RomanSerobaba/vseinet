@@ -359,6 +359,7 @@ $(function() {
                     attachMasks();
                     attachUserAutocomplete();
                     attachCityAutocomplete();
+                    attachStreetAutocomplete();
                     attachBankAutocomplete();
                 }
             }

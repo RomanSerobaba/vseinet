@@ -3,8 +3,9 @@ $.widget('sp.form', {
         submit: function (xhr) {
             var element = this;
             xhr.done(function (data) {
-                if (!data.errors || 0 === data.errors.length)
+                if (!data.errors || 0 === data.errors.length) {
                     element.form('submit');
+                }
             });
         },
         error: $.noop,
@@ -50,7 +51,7 @@ $.widget('sp.form', {
     },
     _add: function (input, change) {
         var inputs = this.element.data('inputs') || {};
-        inputs[input.name.replace(/(^[^\[]+\[|\]$)/giu, '').replace(/\]\[/, '_')] = {id: input.id, change: change || (input.value ? true : false)};
+        inputs[input.id] = {id: input.id, change: change || (input.value ? true : false)};
         this.element.data('inputs', inputs);
     },
     _validate: function (submit) {
@@ -77,11 +78,11 @@ $.widget('sp.form', {
         var that = this;
         xhr.done(function (data) {
             var errors = [];
-            for (var name in inputs) {
-                if (submit || inputs[name].change) {
-                    var error = false, input = form.find('#' + inputs[name].id), row = input.closest('div');
+            for (var id in inputs) {
+                if (submit || inputs[id].change) {
+                    var error = false, input = form.find('#' + inputs[id].id), row = input.closest('div');
                     if (data.errors)
-                        error = data.errors[name];
+                        error = data.errors[id];
                     if (error) {
                         row.addClass('error').removeClass('ok');
                         var message = row.find('.error');
@@ -89,7 +90,7 @@ $.widget('sp.form', {
                             row.append(message = $('<div class="error"/>'));
                         message.html(error[0]);
                         errors.push({
-                            field: name,
+                            field: id,
                             message: error[0]
                         });
                     } else {

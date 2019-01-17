@@ -9,12 +9,12 @@ use AppBundle\Validator\Constraints\PersonName;
 class UserData
 {
     /**
-     * @assert\Type(type="integer")
+     * @assert\Type(type="integer", message="Идентификатор пользователя должен быть числом")
      */
     public $userId;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Идентификатор незарегистрированного пользователя должен быть числом")
      */
     public $comuserId;
 

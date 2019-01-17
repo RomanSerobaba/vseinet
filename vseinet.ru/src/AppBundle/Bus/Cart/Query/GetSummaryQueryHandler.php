@@ -41,13 +41,9 @@ class GetSummaryQueryHandler extends MessageHandler
 
             if ($query->needLifting) {
                 if ($query->hasLift) {
-                    $query->floor = 1;
-                }
-
-                $liftingCharges = 0;
-
-                foreach ($products as $product) {
-                    $liftingCharges += $product->quantity * $query->floor * $product->liftingCost;
+                    $floor = 1;
+                } else {
+                    $floor = $query->floor;
                 }
             }
         }
@@ -63,6 +59,6 @@ class GetSummaryQueryHandler extends MessageHandler
             $paymentTypeName = $paymentType->getName();
         }
 
-        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $liftingCharges ?? 0, $transportCompanyDeliveryCharges ?? 0, $deliveryToRepresentativeTaxAmount ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName);
+        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $deliveryToRepresentativeTaxAmount ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName);
     }
 }
