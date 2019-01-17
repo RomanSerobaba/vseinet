@@ -128,48 +128,7 @@ class OrderController extends Controller
     public function creationPageAction(Request $request)
     {
         if ($request->isMethod('POST')) {
-            $formData = $request->request->get('create_form');
-
-            if (isset($formData['userData'])) {
-                $userData = new \AppBundle\Bus\User\Query\DTO\UserData();
-                array_walk($formData['userData'], function($value, $key) use ($userData) {
-                    $userData->$key = $value;
-                });
-                $formData['userData'] = $userData;
-            }
-
-            if (isset($formData['geoAddress'])) {
-                $geoAddress = new \AppBundle\Bus\Geo\Query\DTO\Address(
-                    $formData['geoAddress']['geoStreetId'],
-                    $formData['geoAddress']['geoStreetName'],
-                    $formData['geoAddress']['house'],
-                    $formData['geoAddress']['building'],
-                    $formData['geoAddress']['apartment'],
-                    $formData['geoAddress']['floor'] ?? NULL,
-                    $formData['geoAddress']['hasLift'] ?? NULL,
-                    $formData['geoAddress']['office'] ?? NULL,
-                    $formData['geoAddress']['postalCode'] ?? NULL
-                );
-                $formData['geoAddress'] = $geoAddress;
-            }
-
-            if (isset($formData['passportData'])) {
-                $passportData = new \AppBundle\Bus\User\Query\DTO\Passport();
-                array_walk($formData['passportData'], function($value, $key) use ($passportData) {
-                    $passportData->$key = $value;
-                });
-                $formData['passportData'] = $passportData;
-            }
-
-            if (isset($formData['organizationDetails'])) {
-                $organizationDetails = new Query\DTO\OrganizationDetails();
-                array_walk($formData['organizationDetails'], function($value, $key) use ($organizationDetails) {
-                    $organizationDetails->$key = $value;
-                });
-                $formData['organizationDetails'] = $organizationDetails;
-            }
-
-            $command = new Command\CreateCommand($formData);
+            $command = new Command\CreateCommand($request->request->get('create_form'));
         } else {
             $command = new Command\CreateCommand();
 
@@ -203,7 +162,7 @@ class OrderController extends Controller
         if ($request->isMethod('POST')) {
             if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
-                // var_dump($form->isSubmitted(), $form->isValid(), $request->isXmlHttpRequest(), $this->getFormErrors($form));die();
+
                 if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
                     try {
                         // $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));

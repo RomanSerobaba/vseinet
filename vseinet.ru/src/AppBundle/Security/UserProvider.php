@@ -13,6 +13,7 @@ use AppBundle\Entity\FinancialCounteragent;
 use AppBundle\Entity\Contact;
 use AppBundle\Enum\ContactTypeCode;
 use AppBundle\Enum\UserRole;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UserProvider implements UserProviderInterface
 {
@@ -21,15 +22,20 @@ class UserProvider implements UserProviderInterface
      */
     protected $em;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * Constructor.
      *
      * @param EntityManager $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, ContainerInterface $container)
     {
         $this->em = $em;
+        $this->container = $container;
     }
 
     /**
@@ -146,5 +152,15 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class): bool
     {
         return User::class === $class;
+    }
+
+    /**
+     * Returns container parameter.
+     *
+     * @return mixin
+     */
+    public function getParameter($parameter, $default = null)
+    {
+        return $this->container->hasParameter($parameter) ? $this->container->getParameter($parameter) : $default;
     }
 }

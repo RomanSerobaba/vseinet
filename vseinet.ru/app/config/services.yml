@@ -2,18 +2,18 @@ services:
     user.provider:
         class: 'AppBundle\Security\UserProvider'
         public: false
-        arguments: [ '@doctrine.orm.entity_manager' ]
+        arguments: [ '@doctrine.orm.entity_manager', '@service_container' ]
 
-    security.authentication.rememberme.services.simplehash: 
+    security.authentication.rememberme.services.simplehash:
         class: 'AppBundle\Security\RememberMeServices'
         parent: 'security.authentication.rememberme.services.abstract'
-        public: false 
+        public: false
         abstract: true
 
     session.storage.native:
         class: 'AppBundle\Session\NativeSessionStorage'
         arguments: [ '%session.storage.options%', '@session.handler', '@session.storage.metadata_bag' ]
-        public: true    
+        public: true
 
     app.security.authentication_handler:
         class: 'AppBundle\Security\AuthenticationHandler'
@@ -44,15 +44,15 @@ services:
 
     delivery.date:
         class: 'AppBundle\Service\DeliveryDate'
-        public: true 
+        public: true
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
     phone.formatter:
         class: 'AppBundle\Service\PhoneFormatter'
-        public: true 
+        public: true
 
     address.formatter:
         class: 'AppBundle\Service\AddressFormatter'
-        public: true 
+        public: true
         arguments: [ '@doctrine.orm.entity_manager' ]

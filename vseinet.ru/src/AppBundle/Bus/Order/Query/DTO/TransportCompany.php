@@ -30,9 +30,19 @@ class TransportCompany
 
     public function __construct($id, $name, $deliveryTax, $url)
     {
-        $this->id = $id;
+        $this->setId($id);
         $this->name = $name;
-        $this->deliveryTax = $deliveryTax;
+        $this->setDeliveryTax($deliveryTax);
         $this->url = $url;
+    }
+
+    public function setId($id)
+    {
+        $this->id = (int) $id;
+    }
+
+    public function setDeliveryTax($deliveryTax)
+    {
+        $this->deliveryTax = (int) $deliveryTax;
     }
 }
