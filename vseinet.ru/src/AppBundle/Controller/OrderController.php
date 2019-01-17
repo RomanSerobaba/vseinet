@@ -155,17 +155,16 @@ class OrderController extends Controller
             'deliveryTypeCode' => $command->deliveryTypeCode,
             'needLifting' => $command->needLifting,
             'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
-            'floor' => !empty($command->geoAddress) && !empty($command->geoAddress->floor) ? (int) $command->geoAddress->floor : null,
+            'floor' => !empty($command->geoAddress) ? $command->geoAddress->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 
         if ($request->isMethod('POST')) {
-            if (!$request->query->get('refreshOnly')) {
+            // if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
                     try {
-                        // $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
                         $this->get('command_bus')->handle($command);
                         // $this->forward('AppBundle:Cart:clear');
                         $this->get('session')->remove('discountCode');
@@ -179,6 +178,8 @@ class OrderController extends Controller
                                 'id' => $command->id,
                             ]);
                         }
+
+                        $this->get('session')->set('order_successfully_created', TRUE);
 
                         return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
 
@@ -196,7 +197,7 @@ class OrderController extends Controller
                         ]),
                     ]);
                 }
-            }
+            // }
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -228,9 +229,11 @@ class OrderController extends Controller
         $query = new Query\GetOrderQuery(['id' => $id,]);
         $this->get('query_bus')->handle($query, $order);
 
-        if (null === $order || !$this->getUserIsEmployee() && $order->financialCounteragentId != $this->getUser()->financialCounteragent->getId()) {
+        if (null === $order || !$this->getUserIsEmployee() && !$this->get('session')->get('order_successfully_created') && (NULL === $this->getUser() ||$order->financialCounteragentId != $this->getUser()->financialCounteragent->getId())) {
             throw new NotFoundHttpException();
         }
+
+        $this->get('session')->remove('order_successfully_created');
 
         return $this->render('Order/created.html.twig', [
             'order' => $order,

@@ -209,7 +209,7 @@ class CreateFormType extends AbstractType
 
         $paymentType = reset($paymentTypes);
 
-        if (!empty($options['data']->paymentTypeCode)) {
+        if (!empty($options['data']->paymentTypeCode) && false !== array_search($options['data']->paymentTypeCode, $paymentTypes)) {
             $paymentType = $paymentTypes[$options['data']->paymentTypeCode];
         }
 

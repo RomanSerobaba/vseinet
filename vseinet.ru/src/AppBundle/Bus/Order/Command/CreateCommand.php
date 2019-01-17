@@ -69,7 +69,7 @@ class CreateCommand extends Message
     public $creditDownPayment = 0;
 
     /**
-     * @Enum("AppBundle\Enum\DeliveryTypeCode")
+     * @Enum("AppBundle\Enum\DeliveryTypeCode", message="Некорректное значение типа доставки")
      */
     public $deliveryTypeCode;
 

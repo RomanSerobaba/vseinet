@@ -6,7 +6,6 @@ use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\DiscountCode;
 use AppBundle\Entity\Representative;
 use AppBundle\Entity\GeoPoint;
-use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Entity\TransportCompany;
