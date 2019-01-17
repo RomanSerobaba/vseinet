@@ -74,7 +74,7 @@ class CreateCommand extends Message
     public $deliveryTypeCode;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="boolean", message="Признак того, нужен ли подъём клиенту")
      */
     public $needLifting;
 
