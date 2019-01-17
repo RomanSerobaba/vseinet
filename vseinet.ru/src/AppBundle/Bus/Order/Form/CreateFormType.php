@@ -153,8 +153,9 @@ class CreateFormType extends AbstractType
         $builder
             ->add('isMarketingSubscribed', CheckboxType::class, [
                     'data' => $isMarketingSubscribed,
+                    'required' => false,
                 ])
-            ->add('isTranscationalSubscribed', CheckboxType::class)
+            ->add('isTranscationalSubscribed', CheckboxType::class, ['required' => false,])
             ->add('userData', UserDataType::class);
     }
 
