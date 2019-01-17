@@ -118,35 +118,101 @@ class CreateCommand extends Message
      */
     public $id;
 
-    public function setIsMarketingSubscribed($isMarketingSubscribed) {
+    private function setDTO(&$DTO, $data)
+    {
+        foreach ($data as $property => $value) {
+            if (property_exists($DTO, $property)) {
+                $propertySetter = 'set'.ucfirst($property);
+                if (method_exists($DTO, $propertySetter)) {
+                    $DTO->$propertySetter($value);
+                } else {
+                    $DTO->$property = $value;
+                }
+            }
+        }
+    }
+
+    public function setGeoAddress($geoAddress)
+    {
+        if (!empty($geoAddress)) {
+            $geoAddressDTO = new \AppBundle\Bus\Geo\Query\DTO\Address();
+            $this->setDTO($geoAddressDTO, $geoAddress);
+            $this->geoAddress = $geoAddressDTO;
+        } else {
+            $this->geoAddress = null;
+        }
+    }
+
+    public function setUserData($userData)
+    {
+        if (!empty($userData)) {
+            $userDataDTO = new \AppBundle\Bus\User\Query\DTO\UserData();
+            $this->setDTO($userDataDTO, $userData);
+            $this->userData = $userDataDTO;
+        } else {
+            $this->userData = null;
+        }
+    }
+
+    public function setPassportData($passportData)
+    {
+        if (!empty($passportData)) {
+            $passportDataDTO = new \AppBundle\Bus\User\Query\DTO\Passport();
+            $this->setDTO($passportDataDTO, $passportData);
+            $this->passportData = $passportDataDTO;
+        } else {
+            $this->passportData = null;
+        }
+    }
+
+    public function setOrganizationDetails($organizationDetails)
+    {
+        if (!empty($organizationDetails)) {
+            $organizationDetailsDTO = new \AppBundle\Bus\Order\Query\DTO\OrganizationDetails();
+            $this->setDTO($organizationDetailsDTO, $organizationDetails);
+            $this->organizationDetails = $organizationDetailsDTO;
+        } else {
+            $this->organizationDetails = null;
+        }
+    }
+
+    public function setIsMarketingSubscribed($isMarketingSubscribed)
+    {
         $this->isMarketingSubscribed = null !== $isMarketingSubscribed ? (bool) $isMarketingSubscribed : $isMarketingSubscribed;
     }
 
-    public function setIsTranscationalSubscribed($isTranscationalSubscribed) {
+    public function setIsTranscationalSubscribed($isTranscationalSubscribed)
+    {
         $this->isTranscationalSubscribed = null !== $isTranscationalSubscribed ? (bool) $isTranscationalSubscribed : $isTranscationalSubscribed;
     }
 
-    public function setNeedLifting($needLifting) {
+    public function setNeedLifting($needLifting)
+    {
         $this->needLifting = null !== $needLifting ? (bool) $needLifting : $needLifting;
     }
 
-    public function setHasLift($hasLift) {
+    public function setHasLift($hasLift)
+    {
         $this->hasLift = null !== $hasLift ? (bool) $hasLift : $hasLift;
     }
 
-    public function setIsCallNeeded($isCallNeeded) {
+    public function setIsCallNeeded($isCallNeeded)
+    {
         $this->isCallNeeded = null !== $isCallNeeded ? (bool) $isCallNeeded : $isCallNeeded;
     }
 
-    public function setCreditDownPayment($creditDownPayment) {
+    public function setCreditDownPayment($creditDownPayment)
+    {
         $this->creditDownPayment = null !== $creditDownPayment ? (int) $creditDownPayment : $creditDownPayment;
     }
 
-    public function setFloor($floor) {
+    public function setFloor($floor)
+    {
         $this->floor = null !== $floor ? (int) $floor : $floor;
     }
 
-    public function setPaymentTypeCode($paymentTypeCode) {
+    public function setPaymentTypeCode($paymentTypeCode)
+    {
         if ($paymentTypeCode instanceof \AppBundle\Bus\Order\Query\DTO\PaymentType) {
             $this->paymentTypeCode = $paymentTypeCode->code;
         } else {
@@ -154,11 +220,13 @@ class CreateCommand extends Message
         }
     }
 
-    public function setGeoCityId($geoCityId) {
+    public function setGeoCityId($geoCityId)
+    {
         $this->geoCityId = null !== $geoCityId ? (int) $geoCityId : $geoCityId;
     }
 
-    public function setGeoPointId($geoPointId) {
+    public function setGeoPointId($geoPointId)
+    {
         if ($geoPointId instanceof \AppBundle\Bus\Order\Query\DTO\GeoPoint) {
             $this->geoPointId = $geoPointId->id;
         } else {
@@ -166,7 +234,8 @@ class CreateCommand extends Message
         }
     }
 
-    public function setTransportCompanyId($transportCompanyId) {
+    public function setTransportCompanyId($transportCompanyId)
+    {
         if ($transportCompanyId instanceof \AppBundle\Bus\Order\Query\DTO\TransportCompany) {
             $this->transportCompanyId = $transportCompanyId->id;
         } else {

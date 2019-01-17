@@ -58,15 +58,35 @@ class Address
 
     public function __construct($geoStreetId = NULL, $geoStreetName = NULL, $house = NULL, $building = NULL, $apartment = NULL, $floor = NULL, $hasLift = NULL, $office = NULL, $postalCode = NULL, $geoCityId = NULL)
     {
-        $this->geoStreetId = (int) $geoStreetId;
+        $this->setGeoStreetId($geoStreetId);
         $this->geoStreetName = $geoStreetName;
         $this->house = $house;
         $this->building = $building;
         $this->apartment = $apartment;
-        $this->floor = (int) $floor;
-        $this->hasLift = (bool) $hasLift;
+        $this->setFloor($floor);
+        $this->setHasLift($hasLift);
         $this->office = $office;
         $this->postalCode = $postalCode;
+        $this->setGeoCityId($geoCityId);
+    }
+
+    public function setGeoStreetId($geoStreetId)
+    {
+        $this->geoStreetId = (int) $geoStreetId;
+    }
+
+    public function setFloor($floor)
+    {
+        $this->floor = (int) $floor;
+    }
+
+    public function setHasLift($hasLift)
+    {
+        $this->hasLift = (bool) $hasLift;
+    }
+
+    public function setGeoCityId($geoCityId)
+    {
         $this->geoCityId = (int) $geoCityId;
     }
 }

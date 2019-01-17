@@ -27,7 +27,12 @@ class GeoAddressType extends AbstractType
     {
         if (!empty($options['data']->geoStreetId)) {
             $geoStreet = $this->em->getRepository(GeoStreet::class)->find($options['data']->geoStreetId);
-            $geoStreetName = $geoStreet->getName();
+
+            if ($geoStreet instanceof GeoStreet) {
+                $geoStreetName = $geoStreet->getName();
+            } else {
+                $geoStreetName = $options['data']->geoStreetId = NULL;
+            }
         } else {
             $geoStreetName = NULL;
         }
@@ -48,6 +53,7 @@ class GeoAddressType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Address::class,
+            // 'compound' => true,
         ]);
     }
 }
