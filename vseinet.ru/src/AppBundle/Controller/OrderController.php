@@ -160,7 +160,7 @@ class OrderController extends Controller
         ]), $cart);
 
         if ($request->isMethod('POST')) {
-            // if (!$request->query->get('refreshOnly')) {
+            if (!$request->query->get('refreshOnly')) {
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
@@ -197,7 +197,7 @@ class OrderController extends Controller
                         ]),
                     ]);
                 }
-            // }
+            }
         }
 
         if ($request->isXmlHttpRequest()) {
