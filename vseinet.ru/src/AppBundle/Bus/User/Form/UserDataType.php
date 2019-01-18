@@ -21,7 +21,7 @@ class UserDataType extends AbstractType
                 'required' => false])
             ->add('additionalPhone', PhoneType::class, [
                 'required' => false])
-            ->add('email', EmailType::class, ['required' => false])
+            ->add('email', TextType::class, ['required' => false])
             ->add('userId', HiddenType::class, ['required' => false])
             ->add('comuserId', HiddenType::class, ['required' => false])
         ;

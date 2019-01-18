@@ -14,10 +14,10 @@
                 <input type="radio" id="{{ form.isCallNeeded.vars.id }}_1" name="{{ form.isCallNeeded.vars.full_name }}" value="1" required="required"{% if (form.isCallNeeded.vars.value is same as("1"))  %} checked="checked"{% endif %} />
             </label>
         </div>
-        <div>
+        <div class="row v subrow"{% if not(form.isCallNeeded.vars.value is same as("1")) %} style="display: none"{% endif %}>
             {{ form_widget(form.callNeedComment, { attr: { class: 'txt', placeholder: 'Краткая суть вопроса' }}) }}
+            <div class="notice" style="margin-bottom:20px">В случае изменения срока доставки, статуса товара или если требуется предоплата, с вами свяжется менеджер</div>
         </div>
-        <div class="notice" style="margin-bottom:20px">В случае изменения срока доставки, статуса товара или если требуется предоплата, с вами свяжется менеджер</div>
         <div class="row v">
             {{ form_widget(form.comment, { attr: { class: 'txt', rows: 8, placeholder: 'Личные сведения, полученные в распоряжение Интернет-магазина при регистрации или каким-либо иным образом, не будут без разрешения пользователей передаваться третьим организациям и лицам за исключением ситуаций, когда этого требует закон или судебное решение.' }}) }}
         </div>

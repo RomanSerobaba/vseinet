@@ -4,7 +4,7 @@
         <div class="row h">
             <label>Город получения:</label>
                 <div>
-                {% if (constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value) %}
+                {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value %}
                     {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete', readonly: true }}) }}
                 {% else %}
                     {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete' }}) }}
@@ -17,13 +17,15 @@
             <div class="notice">В случае отсутствия пункта самовывоза в вашем городе, Вы можете указать ближайший город, где такой пункт есть, чтобы самостоятельно забрать свой заказ оттуда.</div>
         </div>
         {% for choice in form.deliveryTypeCode.vars.choices %}
+
         <div class="row v">
             <label for="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
                 <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} />
             </label>
         </div>
-        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == choice.value %}
+
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == choice.value and constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == form.deliveryTypeCode.vars.value %}
             {% for subchoice in form.geoPointId.vars.choices %}
             <div class="row subrow">
                 <label for="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}">
@@ -34,7 +36,8 @@
             </div>
             {% endfor %}
         {% endif %}
-        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') == choice.value %}
+
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') == choice.value and constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') == form.deliveryTypeCode.vars.value %}
             <div class="row subrow h{% if errors.geoAddress.geoStreetId is defined or errors.geoAddress.house is defined or errors.geoAddress.apartment is defined %} error{% endif %}">
                 <label for="{{ form.geoAddress.geoStreetName.vars.id }}">
                     Адрес: <b>*</b>
@@ -70,7 +73,7 @@
                     <div class="error">{{ errors.geoAddress.apartment.0 }}</div>
                 {% endif %}
             </div>
-            <div class="row h">
+            <div class="row subrow h">
                 <span class="col w140">
                     <label class="inline">
                         Нужен подъем на этаж
@@ -96,11 +99,13 @@
                 {% endif %}
             </div>
         {% endif %}
-        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == choice.value %}
+
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == choice.value and constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == form.deliveryTypeCode.vars.value %}
             <div class="notice">от {{ post_delivery_cost|price_format }} <span class="RUR">Р</span>, о возможности доставки заказанных товаров почтой вам сообщит менеджер</div>
             {% include 'Geo/geo_address_form.html.twig' %}
         {% endif %}
-        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') == choice.value %}
+
+        {% if constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') == choice.value and constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') == form.deliveryTypeCode.vars.value %}
             {% for subchoice in form.transportCompanyId.vars.choices %}
             <div class="row subrow">
                 <label for="{{ form.transportCompanyId.vars.id }}_{{ subchoice.value }}">
@@ -110,9 +115,12 @@
                 <div class="notice2">200 <span class="RUR">Р</span>, 2 - 14 дней <b style="font-size: 18px">*</b></div>
             </div>
             {% endfor %}
-            <div class="notice">* Указана стоимость доставки заказа до филиала транспортной компании (ТК), она не включает в себя стоимость доставки самой ТК, которая оплачивается непосредственно при получении товара и зависит от габаритов и веса товаров в заказе. <br/>Расчитать стоимость услуг ТК, вы можете перейдя на калькулятор услуг по ссылке, указанной рядом с названием соответствующей ТК.</div>
-            {% include 'User/passport_form.html.twig' %}
+            <div class="notice">* Указана стоимость доставки заказа до филиала транспортной компании (ТК), она не включает в себя стоимость доставки самой ТК, которая оплачивается непосредственно при получении товара и зависит от габаритов и веса товаров в заказе. <br/>Расчитать стоимость услуг ТК, вы можете перейдя на калькулятор услуг по ссылке, указанной рядом с названием соответствующей ТК.</div><br/>
+            {% if constant('AppBundle\\Enum\\OrderType::LEGAL') != form.typeCode.vars.value %}
+                {% include 'User/passport_form.html.twig' %}
+            {% endif %}
         {% endif %}
+
         {% endfor %}
     </div>
 </fieldset>

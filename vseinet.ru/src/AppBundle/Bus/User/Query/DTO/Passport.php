@@ -19,7 +19,7 @@ class Passport
     public $number;
 
     /**
-     * @Assert\Type(type="date")
+     * @Assert\Type(type="datetime", message="Дата выдачи паспорта должна быть в формате ДД.ММ.ГГГГ")
      */
     public $issuedAt;
 }

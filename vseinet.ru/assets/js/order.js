@@ -49,6 +49,15 @@ $(function() {
     var timer = null,
         help = {};
 
+    function attachDatePicker()
+    {
+        $('[name="create_form[passportData][issuedAt]"]').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            changeDay: true,
+        });
+    }
+
     function lfsKeydown() {
         var lfs = $('[name="create_form[userData][fullname]"]'),
             lfsHelp = $('#lfsHelp');
@@ -79,6 +88,7 @@ $(function() {
 
     function attachMasks() {
         Inputmask("+7 (999) 999-99-99").mask($('[name="create_form[userData][phone]"]'));
+        Inputmask("email").mask($('[name="create_form[userData][email]"]'));
 
         var lfs = $('[name="create_form[userData][fullname]"]'),
             lfsHelp = $('#lfsHelp');
@@ -89,8 +99,8 @@ $(function() {
 
         if (lfs.length) {
             help = lfs
-                        .prop('placeholder')
-                        .split(' ');
+                    .prop('placeholder')
+                    .split(' ');
             timer = null;
 
             lfs.prop('placeholder','');
@@ -360,10 +370,29 @@ $(function() {
                     attachUserAutocomplete();
                     attachCityAutocomplete();
                     attachStreetAutocomplete();
-                    attachBankAutocomplete();
+                    attachDatePicker();
                 }
             }
         });
+    }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
+        $.ajax({
+            url: Routing.generate('get_bank'),
+            method: 'GET',
+            dataType: 'json',
+            data: { 'bic': $(this).val() },
+            complete: function (jqXHR, status) {
+                var response = jqXHR.responseJSON;
+
+                if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
+                        return false;
+                }
+
+                $('[name="create_form[organizationDetails][bankName]"]').val(response.data.name);
+                $('[name="create_form[organizationDetails][bankId]"]').val(response.data.id);
+            }
+        });
+    }).on('change', '[name="create_form[isCallNeeded]"]', function(e){
+        $('[name="create_form[callNeedComment]"]').parent('.row')[1 == $(this).val() ? 'show' : 'hide']();
     });
 
     refreshCartView();
@@ -371,5 +400,5 @@ $(function() {
     attachUserAutocomplete();
     attachCityAutocomplete();
     attachStreetAutocomplete();
-    attachBankAutocomplete();
+    attachDatePicker();
 });

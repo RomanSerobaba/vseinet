@@ -96,13 +96,14 @@ class CartSummary
     public $products;
 
 
-    public function __construct(array $products, string $discountCode = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, int $deliveryToRepresentativeTaxAmount = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeName = NULL)
+    public function __construct(array $products, string $discountCode = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeName = NULL)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
             $this->amount += $product->quantity * $product->price;
             $this->amountWithDiscount += $product->quantity * ($discountCode ? $product->priceWithDiscount : $product->price);
             $this->deliveryTaxAmount += $product->quantity * $product->deliveryTax;
+            $this->deliveryToRepresentativeTaxAmount += $product->quantity * $product->regionDeliveryTax;
             $this->liftingCharges += $product->quantity * $liftingFloor * $product->liftingCost;
             $this->products[$product->id] = $product;
 
@@ -114,11 +115,10 @@ class CartSummary
         $this->paymentTypeName = $paymentTypeName;
         $this->deliveryCharges = $deliveryCharges;
         $this->transportCompanyDeliveryCharges = $transportCompanyDeliveryCharges;
-        $this->deliveryToRepresentativeTaxAmount = $deliveryToRepresentativeTaxAmount;
         $this->discountCode = $discountCode;
         $this->paymentTypeComissionPercent = $paymentTypeComissionPercent;
-        $this->summary = $this->amountWithDiscount + $this->deliveryTaxAmount + $this->deliveryCharges + $this->liftingCharges;
-        $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100, -2);
+        $this->summary = $this->amountWithDiscount + $this->deliveryTaxAmount + $this->liftingCharges + $this->deliveryCharges + $this->transportCompanyDeliveryCharges + $this->deliveryToRepresentativeTaxAmount;
+        $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100);
         $this->summary += $this->paymentTypeComissionAmount;
     }
 }

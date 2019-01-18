@@ -255,6 +255,12 @@ class CreateCommand extends Message
                     ->atPath('userData.position')
                     ->addViolation();
             }
+
+            if (empty($this->organizationDetails->tin)) {
+                $context->buildViolation('Необходимо указать ИНН вашей организации')
+                    ->atPath('organizationDetails.tin')
+                    ->addViolation();
+            }
         }
 
         if (in_array($this->typeCode, [OrderType::LEGAL, OrderType::NATURAL]) || OrderType::RETAIL == $this->deliveryTypeCode && (DeliveryTypeCode::COURIER == $this->deliveryTypeCode || in_array($this->paymentTypeCode, [PaymentTypeCode::CREDIT, PaymentTypeCode::INSTALLMENT]))) {
@@ -266,7 +272,7 @@ class CreateCommand extends Message
         }
 
         if (DeliveryTypeCode::TRANSPORT_COMPANY == $this->deliveryTypeCode) {
-            if (empty($this->passportData->seria) || empty($this->passportData->number) || empty($this->passportData->issuedAt)) {
+            if (OrderType::LEGAL != $this->typeCode && (empty($this->passportData->seria) || empty($this->passportData->number) || empty($this->passportData->issuedAt))) {
                 $context->buildViolation('Для выбранного способа доставки необходимо заполнить паспортные данные')
                     ->atPath('passportData.seria')
                     ->addViolation();

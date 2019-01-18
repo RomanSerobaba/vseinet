@@ -159,44 +159,42 @@ class OrderController extends Controller
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 
-        if ($request->isMethod('POST')) {
-            if (!$request->query->get('refreshOnly')) {
-                $form->handleRequest($request);
+        if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
+            $form->handleRequest($request);
 
-                if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
-                    try {
-                        $this->get('command_bus')->handle($command);
-                        // $this->forward('AppBundle:Cart:clear');
-                        $this->get('session')->remove('discountCode');
+            if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
+                try {
+                    $this->get('command_bus')->handle($command);
+                    // $this->forward('AppBundle:Cart:clear');
+                    $this->get('session')->remove('discountCode');
 
-                        if (OrderType::isInnerOrder($command->typeCode)) {
-                            return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
-                        }
-
-                        if ($request->isXmlHttpRequest()) {
-                            return $this->json([
-                                'id' => $command->id,
-                            ]);
-                        }
-
-                        $this->get('session')->set('order_successfully_created', TRUE);
-
-                        return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
-
-                    } catch (ValidationException $e) {
-                        $this->addFormErrors($form, $e->getMessages());
+                    if (OrderType::isInnerOrder($command->typeCode)) {
+                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
                     }
-                }
 
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'errors' => $this->getFormErrors($form),
-                        'html' => $this->renderView('Order/cart_ajax.html.twig', [
-                            'form' => $form->createView(),
-                            'cart' => $cart,
-                        ]),
-                    ]);
+                    if ($request->isXmlHttpRequest()) {
+                        return $this->json([
+                            'id' => $command->id,
+                        ]);
+                    }
+
+                    $this->get('session')->set('order_successfully_created', TRUE);
+
+                    return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessages());
                 }
+            }
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'errors' => $this->getFormErrors($form),
+                    'html' => $this->renderView('Order/cart_ajax.html.twig', [
+                        'form' => $form->createView(),
+                        'cart' => $cart,
+                    ]),
+                ]);
             }
         }
 
@@ -241,18 +239,18 @@ class OrderController extends Controller
     }
 
     /**
-     * @VIA\Post(
-     *     name="search_bank",
-     *     path="/bank/search/",
+     * @VIA\Get(
+     *     name="get_bank",
+     *     path="/bank/",
      *     condition="request.isXmlHttpRequest()"
      * )
      */
-    public function searchBankAction(Request $request)
+    public function getBankAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\SearchBankQuery($request->request->all()), $banks);
+        $this->get('query_bus')->handle(new Query\GetBankQuery($request->query->all()), $bank);
 
         return $this->json([
-            'banks' => $banks,
+            'data' => $bank,
         ]);
     }
 }

@@ -251,9 +251,9 @@ class CreateFormType extends AbstractType
                 WHERE gap.personId = :personId AND gap.isMain = TRUE
             ");
             $q->setParameter('personId', $user->getPersonId());
-            $addressDTO = $q->getSingleResult();
+            $addressDTO = $q->getOneOrNullResult();
 
-            if ($geoCityId != $addressDTO->geoCityId) {
+            if (!empty($addressDTO) && $geoCityId != $addressDTO->geoCityId) {
                 $addressDTO = NULL;
             }
 
