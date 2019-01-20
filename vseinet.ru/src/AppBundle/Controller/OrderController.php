@@ -128,13 +128,16 @@ class OrderController extends Controller
     public function creationPageAction(Request $request)
     {
         if ($request->isMethod('POST')) {
-            $command = new Command\CreateCommand($request->request->get('create_form'));
+            $data = $request->request->get('create_form');
+            $this->get('session')->set('form.orderCreation', $data);
         } else {
-            $command = new Command\CreateCommand();
+            $data = $this->get('session')->get('form.orderCreation', []);
+        }
 
-            if (!$this->getUserIsEmployee()) {
-                $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
-            }
+        $command = new Command\CreateCommand($data);
+
+        if (empty($data) && !$this->getUserIsEmployee()) {
+            $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
         }
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
@@ -167,6 +170,7 @@ class OrderController extends Controller
                     $this->get('command_bus')->handle($command);
                     // $this->forward('AppBundle:Cart:clear');
                     $this->get('session')->remove('discountCode');
+                    $this->get('session')->remove('form.orderCreation');
 
                     if (OrderType::isInnerOrder($command->typeCode)) {
                         return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);

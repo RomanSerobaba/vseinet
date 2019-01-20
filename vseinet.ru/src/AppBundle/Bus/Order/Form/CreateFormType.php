@@ -334,7 +334,7 @@ class CreateFormType extends AbstractType
                 $deliveryType = DeliveryTypeCode::EX_WORKS;
                 $point = reset($points);
 
-                if (!empty($options['data']->geoPointId)) {
+                if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
                     $point = $points[$options['data']->geoPointId];
                 }
 

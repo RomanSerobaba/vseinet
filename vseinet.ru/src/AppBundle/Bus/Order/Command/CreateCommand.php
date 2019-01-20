@@ -269,6 +269,11 @@ class CreateCommand extends Message
                     ->atPath('userData.fullname')
                     ->addViolation();
             }
+            if (empty($this->userData->phone) && empty($this->userData->additionalPhone)) {
+                $context->buildViolation('Необходимо заполнить хотя бы один контактный номер (основной или дополнительный)')
+                    ->atPath('userData.phone')
+                    ->addViolation();
+            }
         }
 
         if (DeliveryTypeCode::TRANSPORT_COMPANY == $this->deliveryTypeCode) {

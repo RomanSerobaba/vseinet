@@ -9,12 +9,14 @@
                 {% else %}
                     {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete' }}) }}
                 {% endif %}
-                {{ form_widget(form.geoCityId) }}
                 </div>
             {% if cart.hasStroika %}
                 <div class="notice">Внимание! Самовывоз стройматериалов возможен только из города Пенза.</div>
             {% endif %}
             <div class="notice">В случае отсутствия пункта самовывоза в вашем городе, Вы можете указать ближайший город, где такой пункт есть, чтобы самостоятельно забрать свой заказ оттуда.</div>
+        </div>
+        <div>
+            {{ form_widget(form.geoCityId) }}
         </div>
         {% for choice in form.deliveryTypeCode.vars.choices %}
 

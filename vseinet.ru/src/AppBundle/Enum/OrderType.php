@@ -17,10 +17,10 @@ class OrderType
             return [
                 self::NATURAL => 'Заказ на физ. лицо',
                 self::LEGAL => 'Заказ на юр. лицо',
-                self::RETAIL => 'Розничная продажа',
+                self::RETAIL => 'Продажа с магазина',
                 self::RESUPPLY => 'Пополнение складских запасов',
                 self::CONSUMABLES => 'Покупка расходных материалов',
-                self::EQUIPMENT => 'Покупка оборудования',
+                // self::EQUIPMENT => 'Покупка оборудования',
             ];
         } else {
             return [

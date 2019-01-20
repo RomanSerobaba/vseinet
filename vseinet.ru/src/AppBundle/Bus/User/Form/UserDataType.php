@@ -19,7 +19,7 @@ class UserDataType extends AbstractType
             ->add('fullname', TextType::class)
             ->add('phone', PhoneType::class, [
                 'required' => false])
-            ->add('additionalPhone', PhoneType::class, [
+            ->add('additionalPhone', TextType::class, [
                 'required' => false])
             ->add('email', TextType::class, ['required' => false])
             ->add('userId', HiddenType::class, ['required' => false])
@@ -31,14 +31,6 @@ class UserDataType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserData::class,
-            'constraints' => [
-                new Assert\Callback(function($data, $context){
-                    if (empty($data->phone) && empty($data->additionalPhone)) {
-                        $context->buildViolation('Необходимо заполнить хотя бы один контактный номер (основной или дополнительный)')
-                            ->atPath('phone')
-                            ->addViolation();
-                        }
-                })],
         ]);
     }
 }
