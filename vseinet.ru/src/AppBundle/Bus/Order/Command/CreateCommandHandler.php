@@ -47,7 +47,7 @@ class CreateCommandHandler extends MessageHandler
             WHERE p.id IN (:ids) AND r.isActive = TRUE
         ");
         $q->setParameter('ids', $points);
-        $point = $q->getSingleResult();
+        $point = $q->getOneOrNullResult();
 
         $discountCode = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $cart->discountCode]);
         $discountCodeId = $discountCode instanceof DiscountCode ? $discountCode->getId() : null;
@@ -150,6 +150,10 @@ class CreateCommandHandler extends MessageHandler
                 break;
 
             case OrderType::RETAIL:
+                if (empty($point)) {
+                    throw new BadRequestHttpException('Невозможно провести продажу с магазина, так как точка, к котрой вы привязаны не является розничной или была деактивирована.');
+                }
+
                 $params =[
                     'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
                     'cityId' => $point->geoCityId,
