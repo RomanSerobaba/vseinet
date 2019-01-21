@@ -26,6 +26,7 @@ use AppBundle\Service\GeoCityIdentity;
 use AppBundle\Entity\GeoCity;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoAddressToPerson;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CreateFormType extends AbstractType
 {
@@ -44,12 +45,18 @@ class CreateFormType extends AbstractType
      */
     protected $geoCityIdentity;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security, GeoCityIdentity $geoCityIdentity)
+
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security, GeoCityIdentity $geoCityIdentity, ContainerInterface $container)
     {
         $this->em = $em;
         $this->security = $security;
         $this->geoCityIdentity = $geoCityIdentity;
+        $this->container = $container;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -118,7 +125,7 @@ class CreateFormType extends AbstractType
         if (count($user->geoRooms) > 0) {
             $points = array_column($user->geoRooms, 'geo_point_id');
         } else {
-            $points = [$this->getParameter('default.point.id')];
+            $points = [$this->container->getParameter('default.point.id')];
         }
 
         $q = $this->em->createQuery("
