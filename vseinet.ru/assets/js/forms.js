@@ -79,8 +79,9 @@ $.widget('sp.form', {
         xhr.done(function (data) {
             var errors = [];
             for (var id in inputs) {
+                var input = form.find('#' + inputs[id].id), row = input.closest('div');
                 if (submit || inputs[id].change) {
-                    var error = false, input = form.find('#' + inputs[id].id), row = input.closest('div');
+                    var error = false;
                     if (data.errors)
                         error = data.errors[id];
                     if (error) {
@@ -95,9 +96,14 @@ $.widget('sp.form', {
                         });
                     } else {
                         row.removeClass('error').find('.error').remove();
-                        if (input.val())
+                        if (input.val()) {
                             row.addClass('ok');
+                        } else {
+                            row.removeClass('ok');
+                        }
                     }
+                } else {
+                    row.removeClass('ok');
                 }
             }
             if (errors.length) {

@@ -27,7 +27,7 @@ class GetSummaryQuery extends Message
     public $paymentTypeCode;
 
     /**
-     * @Enum("AppBundle\Enum\DeliveryTypeCode")
+     * @Enum("AppBundle\Enum\DeliveryTypeCode", message="Некорректное значение типа доставки")
      */
     public $deliveryTypeCode;
 

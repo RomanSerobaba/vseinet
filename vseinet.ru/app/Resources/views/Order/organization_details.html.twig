@@ -17,30 +17,60 @@
         <div class="row h">
             {{ form_label(form.organizationDetails.tin, 'ИНН:') }}
             {{ form_widget(form.organizationDetails.tin, { attr: { class: 'txt', maxlength: 12 }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.tin is defined %}
+                <div class="error">{{ errors.organizationDetails.tin.0 }}</div>
+            {% endif %}
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.kpp, 'КПП:') }}
             {{ form_widget(form.organizationDetails.kpp, { attr: { class: 'txt', maxlength: 9 }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.kpp is defined %}
+                <div class="error">{{ errors.organizationDetails.kpp.0 }}</div>
+            {% endif %}
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.name, 'Наименование организации:') }}
             {{ form_widget(form.organizationDetails.name, { attr: { class: 'txt' }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.name is defined %}
+                <div class="error">{{ errors.organizationDetails.name.0 }}</div>
+            {% endif %}
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.legalAddress, 'Юридический адрес:') }}
             {{ form_widget(form.organizationDetails.legalAddress, { attr: { class: 'txt' }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.legalAddress is defined %}
+                <div class="error">{{ errors.organizationDetails.legalAddress.0 }}</div>
+            {% endif %}
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.settlementAccount, 'Расчетный счет:') }}
             {{ form_widget(form.organizationDetails.settlementAccount, { attr: { class: 'txt', maxlength: 20 }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.settlementAccount is defined %}
+                <div class="error">{{ errors.organizationDetails.settlementAccount.0 }}</div>
+            {% endif %}
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.bic, 'БИК:') }}
             {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt autocomplete', maxlength: 9 }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.bic is defined %}
+                <div class="error">{{ errors.organizationDetails.bic.0 }}</div>
+            {% endif %}
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.bankName, 'Название банка:') }}
             {{ form_widget(form.organizationDetails.bankName, { attr: { class: 'txt', maxlength: 9, readonly: true }}) }}
+            <span class="status"></span>
+            {% if errors.organizationDetails.bankName is defined %}
+                <div class="error">{{ errors.organizationDetails.bankName.0 }}</div>
+            {% endif %}
+        </div>
+        <div>
             {{ form_widget(form.organizationDetails.bankId) }}
         </div>
     </div>

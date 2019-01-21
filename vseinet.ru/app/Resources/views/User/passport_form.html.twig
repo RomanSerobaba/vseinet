@@ -7,14 +7,14 @@
         <div class="notice">Серия</div>
         <span class="status"></span>
     </span>
-    <span class="col w80">
+    <span class="col w100">
         {{ form_widget(form.passportData.number, { attr: { class: 'txt', maxlength: 6 }}) }}
         <div class="notice">Номер</div>
         <span class="status"></span>
     </span>
-    <span class="col w100 passport_date">
-        {{ form_widget(form.passportData.issuedAt, { attr: { class: 'txt' }}) }}
-        <div class="notice">Дата выдачи</div>
+    <span class="col w160 passport_date">
+        {{ form_widget(form.passportData.issuedAt, { attr: { class: 'txt datepicker' }}) }}
+        <div class="notice">Дата выдачи (ДД.ММ.ГГГГ)</div>
         <span class="status"></span>
     </span>
     {% if errors.passportData.seria is defined %}

@@ -34,7 +34,7 @@ class Order
     public $paymentTypeName;
 
     /**
-     * @Enum("AppBundle\Enum\DeliveryTypeCode")
+     * @Enum("AppBundle\Enum\DeliveryTypeCode", message="Некорректное значение типа доставки")
      */
     public $deliveryType;
 

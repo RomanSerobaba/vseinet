@@ -128,54 +128,16 @@ class OrderController extends Controller
     public function creationPageAction(Request $request)
     {
         if ($request->isMethod('POST')) {
-            $formData = $request->request->get('create_form');
-
-            if (isset($formData['userData'])) {
-                $userData = new \AppBundle\Bus\User\Query\DTO\UserData();
-                array_walk($formData['userData'], function($value, $key) use ($userData) {
-                    $userData->$key = $value;
-                });
-                $formData['userData'] = $userData;
-            }
-
-            if (isset($formData['geoAddress'])) {
-                $geoAddress = new \AppBundle\Bus\Geo\Query\DTO\Address(
-                    $formData['geoAddress']['geoStreetId'],
-                    $formData['geoAddress']['geoStreetName'],
-                    $formData['geoAddress']['house'],
-                    $formData['geoAddress']['building'],
-                    $formData['geoAddress']['apartment'],
-                    $formData['geoAddress']['floor'] ?? NULL,
-                    $formData['geoAddress']['hasLift'] ?? NULL,
-                    $formData['geoAddress']['office'] ?? NULL,
-                    $formData['geoAddress']['postalCode'] ?? NULL
-                );
-                $formData['geoAddress'] = $geoAddress;
-            }
-
-            if (isset($formData['passportData'])) {
-                $passportData = new \AppBundle\Bus\User\Query\DTO\Passport();
-                array_walk($formData['passportData'], function($value, $key) use ($passportData) {
-                    $passportData->$key = $value;
-                });
-                $formData['passportData'] = $passportData;
-            }
-
-            if (isset($formData['organizationDetails'])) {
-                $organizationDetails = new Query\DTO\OrganizationDetails();
-                array_walk($formData['organizationDetails'], function($value, $key) use ($organizationDetails) {
-                    $organizationDetails->$key = $value;
-                });
-                $formData['organizationDetails'] = $organizationDetails;
-            }
-
-            $command = new Command\CreateCommand($formData);
+            $data = $request->request->get('create_form');
+            $this->get('session')->set('form.orderCreation', $data);
         } else {
-            $command = new Command\CreateCommand();
+            $data = $this->get('session')->get('form.orderCreation', []);
+        }
 
-            if (!$this->getUserIsEmployee()) {
-                $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
-            }
+        $command = new Command\CreateCommand($data);
+
+        if (empty($data) && !$this->getUserIsEmployee()) {
+            $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
         }
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
@@ -196,47 +158,47 @@ class OrderController extends Controller
             'deliveryTypeCode' => $command->deliveryTypeCode,
             'needLifting' => $command->needLifting,
             'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
-            'floor' => !empty($command->geoAddress) && !empty($command->geoAddress->floor) ? (int) $command->geoAddress->floor : null,
+            'floor' => !empty($command->geoAddress) ? $command->geoAddress->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 
-        if ($request->isMethod('POST')) {
-            if (!$request->query->get('refreshOnly')) {
-                $form->handleRequest($request);
-                // var_dump($form->isSubmitted(), $form->isValid(), $request->isXmlHttpRequest(), $this->getFormErrors($form));die();
-                if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
-                    try {
-                        // $this->get('command_bus')->handle(new \AppBundle\Bus\User\Command\IdentifyCommand(['userData' => $command->userData]));
-                        $this->get('command_bus')->handle($command);
-                        // $this->forward('AppBundle:Cart:clear');
-                        $this->get('session')->remove('discountCode');
+        if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
+            $form->handleRequest($request);
 
-                        if (OrderType::isInnerOrder($command->typeCode)) {
-                            return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
-                        }
+            if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
+                try {
+                    $this->get('command_bus')->handle($command);
+                    // $this->forward('AppBundle:Cart:clear');
+                    $this->get('session')->remove('discountCode');
+                    $this->get('session')->remove('form.orderCreation');
 
-                        if ($request->isXmlHttpRequest()) {
-                            return $this->json([
-                                'id' => $command->id,
-                            ]);
-                        }
-
-                        return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
-
-                    } catch (ValidationException $e) {
-                        $this->addFormErrors($form, $e->getMessages());
+                    if (OrderType::isInnerOrder($command->typeCode)) {
+                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
                     }
-                }
 
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'errors' => $this->getFormErrors($form),
-                        'html' => $this->renderView('Order/cart_ajax.html.twig', [
-                            'form' => $form->createView(),
-                            'cart' => $cart,
-                        ]),
-                    ]);
+                    if ($request->isXmlHttpRequest()) {
+                        return $this->json([
+                            'id' => $command->id,
+                        ]);
+                    }
+
+                    $this->get('session')->set('order_successfully_created', TRUE);
+
+                    return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
+
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getMessages());
                 }
+            }
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'errors' => $this->getFormErrors($form),
+                    'html' => $this->renderView('Order/cart_ajax.html.twig', [
+                        'form' => $form->createView(),
+                        'cart' => $cart,
+                    ]),
+                ]);
             }
         }
 
@@ -269,9 +231,11 @@ class OrderController extends Controller
         $query = new Query\GetOrderQuery(['id' => $id,]);
         $this->get('query_bus')->handle($query, $order);
 
-        if (null === $order || !$this->getUserIsEmployee() && $order->financialCounteragentId != $this->getUser()->financialCounteragent->getId()) {
+        if (null === $order || !$this->getUserIsEmployee() && !$this->get('session')->get('order_successfully_created') && (NULL === $this->getUser() ||$order->financialCounteragentId != $this->getUser()->financialCounteragent->getId())) {
             throw new NotFoundHttpException();
         }
+
+        $this->get('session')->remove('order_successfully_created');
 
         return $this->render('Order/created.html.twig', [
             'order' => $order,
@@ -279,18 +243,18 @@ class OrderController extends Controller
     }
 
     /**
-     * @VIA\Post(
-     *     name="search_bank",
-     *     path="/bank/search/",
+     * @VIA\Get(
+     *     name="get_bank",
+     *     path="/bank/",
      *     condition="request.isXmlHttpRequest()"
      * )
      */
-    public function searchBankAction(Request $request)
+    public function getBankAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\SearchBankQuery($request->request->all()), $banks);
+        $this->get('query_bus')->handle(new Query\GetBankQuery($request->query->all()), $bank);
 
         return $this->json([
-            'banks' => $banks,
+            'data' => $bank,
         ]);
     }
 }

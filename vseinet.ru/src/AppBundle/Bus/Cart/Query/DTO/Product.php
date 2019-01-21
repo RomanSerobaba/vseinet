@@ -50,6 +50,11 @@ class Product
     /**
      * @Assert\Type(type="integer")
      */
+    public $regionDeliveryTax = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $liftingCost;
 
     /**

@@ -126,7 +126,7 @@ class CreateFormType extends AbstractType
         $points = $q->getResult('IndexByHydrator');
         $point = reset($points);
 
-        if (!empty($options['data']->geoPointId) && isset($points[$options['data']->geoPointId])) {
+        if (!empty($options['data']->geoPointId)) {
             $point = $points[$options['data']->geoPointId];
         }
 
@@ -153,8 +153,9 @@ class CreateFormType extends AbstractType
         $builder
             ->add('isMarketingSubscribed', CheckboxType::class, [
                     'data' => $isMarketingSubscribed,
+                    'required' => false,
                 ])
-            ->add('isTranscationalSubscribed', CheckboxType::class)
+            ->add('isTranscationalSubscribed', CheckboxType::class, ['required' => false,])
             ->add('userData', UserDataType::class);
     }
 
@@ -209,7 +210,7 @@ class CreateFormType extends AbstractType
 
         $paymentType = reset($paymentTypes);
 
-        if (!empty($options['data']->paymentTypeCode) && isset($paymentTypes[$options['data']->paymentTypeCode])) {
+        if (!empty($options['data']->paymentTypeCode) && false !== array_search($options['data']->paymentTypeCode, $paymentTypes)) {
             $paymentType = $paymentTypes[$options['data']->paymentTypeCode];
         }
 
@@ -223,6 +224,44 @@ class CreateFormType extends AbstractType
                 'choice_value' => 'code',
                 'data' => $paymentType,
             ]);
+    }
+
+    private function addAddressDataFields(FormBuilderInterface $builder, array &$options) {
+        $user = $this->security->getToken()->getUser();
+        $addressDTO = $options['data']->geoAddress;
+
+        if (is_object($user) && !$user->isEmployee()) {
+            $q = $this->em->createQuery("
+                SELECT
+                    NEW AppBundle\Bus\Geo\Query\DTO\Address (
+                        ga.geoStreetId,
+                        gs.name,
+                        ga.house,
+                        ga.building,
+                        ga.apartment,
+                        ga.floor,
+                        ga.hasLift,
+                        ga.office,
+                        ga.postalCode,
+                        gs.geoCityId
+                    )
+                FROM AppBundle:GeoAddressToPerson AS gap
+                JOIN AppBundle:GeoAddress AS ga WITH ga.id = gap.geoAddressId
+                LEFT JOIN AppBundle:GeoStreet AS gs WITH gs.id = ga.geoStreetId
+                WHERE gap.personId = :personId AND gap.isMain = TRUE
+            ");
+            $q->setParameter('personId', $user->getPersonId());
+            $addressDTO = $q->getOneOrNullResult();
+
+            if (!empty($addressDTO) && $geoCityId != $addressDTO->geoCityId) {
+                $addressDTO = NULL;
+            }
+
+            $options['data']->geoAddress = $addressDTO;
+        }
+
+        $builder
+            ->add('geoAddress', GeoAddressType::class, ['data' => $addressDTO]);
     }
 
     private function addDeliveryTypesFields(FormBuilderInterface $builder, array &$options) {
@@ -295,7 +334,7 @@ class CreateFormType extends AbstractType
                 $deliveryType = DeliveryTypeCode::EX_WORKS;
                 $point = reset($points);
 
-                if (!empty($options['data']->geoPointId) && isset($points[$options['data']->geoPointId])) {
+                if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
                     $point = $points[$options['data']->geoPointId];
                 }
 
@@ -311,40 +350,8 @@ class CreateFormType extends AbstractType
 
             if ($hasDelivery) {
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
-                $addressDTO = $options['data']->geoAddress;
-
-                if (is_object($user) && !$user->isEmployee()) {
-                    $q = $this->em->createQuery("
-                        SELECT
-                            NEW AppBundle\Bus\Geo\Query\DTO\Address (
-                                ga.geoStreetId,
-                                gs.name,
-                                ga.house,
-                                ga.building,
-                                ga.apartment,
-                                ga.floor,
-                                ga.hasLift,
-                                ga.office,
-                                ga.postalCode,
-                                gs.geoCityId
-                            )
-                        FROM AppBundle:GeoAddressToPerson AS gap
-                        JOIN AppBundle:GeoAddress AS ga WITH ga.id = gap.geoAddressId
-                        LEFT JOIN AppBundle:GeoStreet AS gs WITH gs.id = ga.geoStreetId
-                        WHERE gap.personId = :personId AND gap.isMain = TRUE
-                    ");
-                    $q->setParameter('personId', $user->getPersonId());
-                    $addressDTO = $q->getSingleResult();
-
-                    if ($geoCityId != $addressDTO->geoCityId) {
-                        $addressDTO = NULL;
-                    }
-
-                    $options['data']->geoAddress = $addressDTO;
-                }
-
+                $this->addAddressDataFields($builder, $options);
                 $builder
-                    ->add('geoAddress', GeoAddressType::class, ['data' => $addressDTO])
                     ->add('needLifting', CheckBoxType::class, ['required' => false,]);
             }
         } else {
@@ -370,7 +377,7 @@ class CreateFormType extends AbstractType
                 $deliveryType = DeliveryTypeCode::TRANSPORT_COMPANY;
                 $transportCompany = reset($transportCompanies);
 
-                if (!empty($options['data']->transportCompanyId) && isset($transportCompanies[$options['data']->transportCompanyId])) {
+                if (!empty($options['data']->transportCompanyId)) {
                     $transportCompany = $transportCompanies[$options['data']->transportCompanyId];
                 }
 
@@ -386,8 +393,7 @@ class CreateFormType extends AbstractType
             }
 
             $deliveryTypes[array_search(DeliveryTypeCode::POST, $allDeliveryTypes)] = DeliveryTypeCode::POST;
-                $builder
-                    ->add('geoAddress', GeoAddressType::class);
+            $this->addAddressDataFields($builder, $options);
         }
 
         if (!empty($options['data']->deliveryTypeCode) && false !== array_search($options['data']->deliveryTypeCode, $deliveryTypes)) {

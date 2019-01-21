@@ -25,25 +25,25 @@ class OrganizationDetails
 
     /**
      * @Assert\Type(type="string")
-     * @Assert\Length(min=20, max=20)
+     * @Assert\Length(min=20, max=20, exactMessage="Номер расчетного счёта должен состоять из 9 цифр")
      */
     public $settlementAccount;
 
     /**
      * @Assert\Type(type="string")
-     * @Assert\Length(min=12, max=12)
+     * @Assert\Length(min=12, max=12, exactMessage="ИНН должен состоять из 12 цифр")
      */
     public $tin;
 
     /**
      * @Assert\Type(type="string")
-     * @Assert\Length(min=9, max=9)
+     * @Assert\Length(min=9, max=9, exactMessage="КПП должен состоять из 9 цифр")
      */
     public $kpp;
 
     /**
      * @Assert\Type(type="string")
-     * @Assert\Length(min=9, max=9)
+     * @Assert\Length(min=9, max=9, exactMessage="БИК должен состоять из 9 цифр")
      */
     public $bic;
 

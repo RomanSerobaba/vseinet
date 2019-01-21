@@ -47,7 +47,7 @@ class GlobalVariables extends BaseGlobalVariables
 
     /**
      * Returns geoCity.
-     * 
+     *
      * @return AppBundle\Entity\GeoCity
      */
     public function getGeoCity()
@@ -57,7 +57,7 @@ class GlobalVariables extends BaseGlobalVariables
 
     /**
      * Returns Repsentative.
-     * 
+     *
      * @return AppBundle\Entity\Representative
      */
     public function getRepresentative()

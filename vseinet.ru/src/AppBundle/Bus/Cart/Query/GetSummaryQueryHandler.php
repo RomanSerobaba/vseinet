@@ -9,6 +9,7 @@ use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\OrderType;
 use AppBundle\Enum\GoodsConditionCode;
+use AppBundle\Enum\RepresentativeTypeCode;
 use AppBundle\Entity\TransportCompany;
 use AppBundle\Entity\PaymentType;
 
@@ -59,6 +60,27 @@ class GetSummaryQueryHandler extends MessageHandler
             $paymentTypeName = $paymentType->getName();
         }
 
-        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $deliveryToRepresentativeTaxAmount ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName);
+        if (in_array($query->deliveryTypeCode, [DeliveryTypeCode::COURIER, DeliveryTypeCode::EX_WORKS])) {
+            if (RepresentativeTypeCode::PARTNER == $representative->getType() || 214 == $representative->getGeoPointId()) {
+                foreach ($products as $key => $product) {
+                        $amount = $product->price * $product->quantity;
+                        $products[$key]->regionDeliveryTax = round((1000000 < $amount ? 100000 : $amount * .1) / $product->quantity, -3);
+                    }
+            } elseif (RepresentativeTypeCode::FRANCHISER == $representative->getType()) {
+                $mostExpensive = reset($products);
+
+                foreach ($products as $key => $product) {
+                    if ($mostExpensive->price < $product->price) {
+                        $mostExpensive = $product;
+                    }
+
+                    $products[$key]->regionDeliveryTax = $products[$key]->deliveryTax;
+                }
+
+                $products[$key]->regionDeliveryTax += $representative->getDeliveryTax();
+            }
+        }
+
+        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName);
     }
 }

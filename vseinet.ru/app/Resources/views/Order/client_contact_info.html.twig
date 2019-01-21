@@ -1,8 +1,8 @@
-<fieldset class="block">
+<fieldset class="block" id="client_contact_info"{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') != form.deliveryTypeCode.vars.value and constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') != form.paymentTypeCode.vars.value and constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') != form.paymentTypeCode.vars.value %} style="display:none"{% endif %}>
     <div class="wrapper">
         <h2>Контактная информация</h2>
 
-        {% if (constant('AppBundle\\Enum\\OrderType::LEGAL') == form.typeCode.vars.value) %}
+        {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == form.typeCode.vars.value %}
         <div class="row h{% if errors.userData.position is defined %} error{% endif %}">
             {{ form_label(form.userData.position, 'Должность:') }}
             {{ form_widget(form.userData.position, { attr: { class: 'txt' }}) }}
@@ -23,9 +23,14 @@
             {% if errors.userData.fullname is defined %}
                 <div class="error">{{ errors.userData.fullname.0 }}</div>
             {% endif %}
-            {{ form_widget(form.userData.userId) }}
-            {{ form_widget(form.userData.comuserId) }}
             <div class="notice">Достаточно указать имя.</div>
+        </div>
+
+        <div>
+            {{ form_widget(form.userData.userId) }}
+        </div>
+        <div>
+            {{ form_widget(form.userData.comuserId) }}
         </div>
 
         <div class="row h{% if error.userData.phone is defined %} error{% endif %}">
@@ -71,7 +76,7 @@
 
         {% if app.userIsEmployee and app.userIsEmployee %}
         <div class="row h" style="padding-top:0">
-            <label>
+            <label class="inline">
                 Отключить системные оповещения о статусах для заказа
                 {{ form_widget(form.isTranscationalSubscribed) }}{# transactional system #}
             </label>
