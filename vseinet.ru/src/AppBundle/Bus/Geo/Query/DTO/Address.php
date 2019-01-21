@@ -77,7 +77,7 @@ class Address
 
     public function setFloor($floor)
     {
-        $this->floor = (int) $floor;
+        $this->floor = null !== $floor ? (int) $floor : $floor;
     }
 
     public function setHasLift($hasLift)
