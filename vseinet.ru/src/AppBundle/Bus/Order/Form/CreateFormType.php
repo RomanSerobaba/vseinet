@@ -236,7 +236,7 @@ class CreateFormType extends AbstractType
 
         $paymentType = reset($paymentTypes);
 
-        if (!empty($options['data']->paymentTypeCode) && false !== array_search($options['data']->paymentTypeCode, $paymentTypes)) {
+        if (!empty($options['data']->paymentTypeCode) && isset($paymentTypes[$options['data']->paymentTypeCode])) {
             $paymentType = $paymentTypes[$options['data']->paymentTypeCode];
         }
 
@@ -360,7 +360,7 @@ class CreateFormType extends AbstractType
                 $deliveryType = DeliveryTypeCode::EX_WORKS;
                 $point = reset($points);
 
-                if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
+                if (!empty($options['data']->geoPointId) && isset($points[$options['data']->geoPointId])) {
                     $point = $points[$options['data']->geoPointId];
                 }
 
