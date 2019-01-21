@@ -55,16 +55,25 @@ class CreateFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = $this->security->getToken()->getUser();
-        $builder
-            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices(is_object($user) && $user->isEmployee())),])
-            ->add('isHuman', IsHumanType::class)
-            ->add('submit', SubmitType::class);
+        $isUserEmployee = is_object($user) && $user->isEmployee();
+
+        $types = array_flip(OrderType::getChoices($isUserEmployee));
+
+        if ($isUserEmployee) {
+            $points = $this->getEmployeePoints();
+
+            if (empty($points)) {
+                $types = array_filter($types, function($val){
+                    return !in_array($val, [OrderType::CONSUMABLES, OrderType::EQUIPMENT, OrderType::RESUPPLY]);
+                });
+            };
+        }
 
         switch ($options['data']->typeCode) {
             case OrderType::CONSUMABLES:
             case OrderType::EQUIPMENT:
             case OrderType::RESUPPLY:
-                $this->addPointDataFields($builder, $options);
+                $this->addPointDataFields($builder, $options, $points);
                 break;
 
             case OrderType::LEGAL:
@@ -88,6 +97,11 @@ class CreateFormType extends AbstractType
                 $this->addPaymentTypesFields($builder, $options);
                 break;
         }
+
+        $builder
+            ->add('typeCode', ChoiceType::class, ['choices' => $types,])
+            ->add('isHuman', IsHumanType::class)
+            ->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -97,7 +111,8 @@ class CreateFormType extends AbstractType
         ]);
     }
 
-    private function addPointDataFields(FormBuilderInterface $builder, array &$options) {
+    private function getEmployeePoints()
+    {
         $user = $this->security->getToken()->getUser();
 
         if (count($user->geoRooms) > 0) {
@@ -123,10 +138,14 @@ class CreateFormType extends AbstractType
             WHERE p.id IN (:ids) AND r.isActive = TRUE
         ");
         $q->setParameter('ids', $points);
-        $points = $q->getResult('IndexByHydrator');
+
+        return $q->getResult('IndexByHydrator');
+    }
+
+    private function addPointDataFields(FormBuilderInterface $builder, array &$options, $points) {
         $point = reset($points);
 
-        if (!empty($options['data']->geoPointId)) {
+        if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
             $point = $points[$options['data']->geoPointId];
         }
 
