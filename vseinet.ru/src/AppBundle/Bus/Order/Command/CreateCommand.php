@@ -10,6 +10,7 @@ use AppBundle\Enum\OrderType;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use AppBundle\Bus\User\Query\DTO\Passport;
 
 class CreateCommand extends Message
 {
@@ -157,7 +158,7 @@ class CreateCommand extends Message
     public function setPassportData($passportData)
     {
         if (!empty($passportData)) {
-            $passportDataDTO = new \AppBundle\Bus\User\Query\DTO\Passport();
+            $passportDataDTO = new Passport();
 
             if (!empty($passportData['issuedAt']) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', $passportData['issuedAt'])) {
                 $passportData['issuedAt'] = new \Datetime(date('Y-m-d', strtotime($passportData['issuedAt'])));
