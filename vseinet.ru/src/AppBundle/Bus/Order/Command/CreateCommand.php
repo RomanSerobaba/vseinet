@@ -157,19 +157,23 @@ class CreateCommand extends Message
 
     public function setPassportData($passportData)
     {
-        if (!empty($passportData)) {
-            $passportDataDTO = new Passport();
+        if (!$passportData instanceof Passport) {
+            if (!empty($passportData)) {
+                $passportDataDTO = new Passport();
 
-            if (!empty($passportData['issuedAt']) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', $passportData['issuedAt'])) {
-                $passportData['issuedAt'] = new \Datetime(date('Y-m-d', strtotime($passportData['issuedAt'])));
-            } elseif (empty($passportData['issuedAt'])) {
-                $passportData['issuedAt'] = NULL;
+                if (!empty($passportData['issuedAt']) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', $passportData['issuedAt'])) {
+                    $passportData['issuedAt'] = new \Datetime(date('Y-m-d', strtotime($passportData['issuedAt'])));
+                } elseif (empty($passportData['issuedAt'])) {
+                    $passportData['issuedAt'] = NULL;
+                }
+
+                $this->setDTO($passportDataDTO, $passportData);
+                $this->passportData = $passportDataDTO;
+            } else {
+                $this->passportData = null;
             }
-
-            $this->setDTO($passportDataDTO, $passportData);
-            $this->passportData = $passportDataDTO;
         } else {
-            $this->passportData = null;
+            $this->passportData = $passportData;
         }
     }
 
