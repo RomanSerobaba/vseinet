@@ -26,6 +26,7 @@ use AppBundle\Service\GeoCityIdentity;
 use AppBundle\Entity\GeoCity;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoAddressToPerson;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CreateFormType extends AbstractType
 {
@@ -44,27 +45,42 @@ class CreateFormType extends AbstractType
      */
     protected $geoCityIdentity;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security, GeoCityIdentity $geoCityIdentity)
+
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $security, GeoCityIdentity $geoCityIdentity, ContainerInterface $container)
     {
         $this->em = $em;
         $this->security = $security;
         $this->geoCityIdentity = $geoCityIdentity;
+        $this->container = $container;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = $this->security->getToken()->getUser();
-        $builder
-            ->add('typeCode', ChoiceType::class, ['choices' => array_flip(OrderType::getChoices(is_object($user) && $user->isEmployee())),])
-            ->add('isHuman', IsHumanType::class)
-            ->add('submit', SubmitType::class);
+        $isUserEmployee = is_object($user) && $user->isEmployee();
+
+        $types = array_flip(OrderType::getChoices($isUserEmployee));
+
+        if ($isUserEmployee) {
+            $points = $this->getEmployeePoints();
+
+            if (empty($points)) {
+                $types = array_filter($types, function($val){
+                    return !in_array($val, [OrderType::CONSUMABLES, OrderType::EQUIPMENT, OrderType::RESUPPLY]);
+                });
+            };
+        }
 
         switch ($options['data']->typeCode) {
             case OrderType::CONSUMABLES:
             case OrderType::EQUIPMENT:
             case OrderType::RESUPPLY:
-                $this->addPointDataFields($builder, $options);
+                $this->addPointDataFields($builder, $options, $points);
                 break;
 
             case OrderType::LEGAL:
@@ -88,6 +104,11 @@ class CreateFormType extends AbstractType
                 $this->addPaymentTypesFields($builder, $options);
                 break;
         }
+
+        $builder
+            ->add('typeCode', ChoiceType::class, ['choices' => $types,])
+            ->add('isHuman', IsHumanType::class)
+            ->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -97,13 +118,14 @@ class CreateFormType extends AbstractType
         ]);
     }
 
-    private function addPointDataFields(FormBuilderInterface $builder, array &$options) {
+    private function getEmployeePoints()
+    {
         $user = $this->security->getToken()->getUser();
 
         if (count($user->geoRooms) > 0) {
             $points = array_column($user->geoRooms, 'geo_point_id');
         } else {
-            $points = [$this->getParameter('default.point.id')];
+            $points = [$this->container->getParameter('default.point.id')];
         }
 
         $q = $this->em->createQuery("
@@ -123,10 +145,14 @@ class CreateFormType extends AbstractType
             WHERE p.id IN (:ids) AND r.isActive = TRUE
         ");
         $q->setParameter('ids', $points);
-        $points = $q->getResult('IndexByHydrator');
+
+        return $q->getResult('IndexByHydrator');
+    }
+
+    private function addPointDataFields(FormBuilderInterface $builder, array &$options, $points) {
         $point = reset($points);
 
-        if (!empty($options['data']->geoPointId)) {
+        if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
             $point = $points[$options['data']->geoPointId];
         }
 
@@ -210,7 +236,7 @@ class CreateFormType extends AbstractType
 
         $paymentType = reset($paymentTypes);
 
-        if (!empty($options['data']->paymentTypeCode) && false !== array_search($options['data']->paymentTypeCode, $paymentTypes)) {
+        if (!empty($options['data']->paymentTypeCode) && isset($paymentTypes[$options['data']->paymentTypeCode])) {
             $paymentType = $paymentTypes[$options['data']->paymentTypeCode];
         }
 
@@ -334,7 +360,7 @@ class CreateFormType extends AbstractType
                 $deliveryType = DeliveryTypeCode::EX_WORKS;
                 $point = reset($points);
 
-                if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
+                if (!empty($options['data']->geoPointId) && isset($points[$options['data']->geoPointId])) {
                     $point = $points[$options['data']->geoPointId];
                 }
 

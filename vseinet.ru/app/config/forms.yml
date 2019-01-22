@@ -30,7 +30,7 @@ services:
     order_creation.form:
         class: 'AppBundle\Bus\Order\Form\CreateFormType'
         public: false
-        arguments: [ '@doctrine.orm.entity_manager', '@security.token_storage', '@geo_city.identity' ]
+        arguments: [ '@doctrine.orm.entity_manager', '@security.token_storage', '@geo_city.identity', '@service_container' ]
         tags:
             - { name: 'form.type' }
 

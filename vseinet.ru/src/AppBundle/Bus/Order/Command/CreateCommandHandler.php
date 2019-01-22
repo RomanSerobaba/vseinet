@@ -24,31 +24,6 @@ class CreateCommandHandler extends MessageHandler
 
         $user = $this->getUser();
 
-        if (NULL !== $user && count($user->geoRooms) > 0) {
-            $points = array_column($user->geoRooms, 'geo_point_id');
-        } else {
-            $points = [$this->getParameter('default.point.id')];
-        }
-
-        $q = $em->createQuery("
-            SELECT
-                NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
-                    p.id,
-                    p.name,
-                    a.address,
-                    r.hasRetail,
-                    r.hasDelivery,
-                    r.hasRising,
-                    p.geoCityId
-                )
-            FROM AppBundle:GeoPoint AS p
-            JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
-            LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
-            WHERE p.id IN (:ids) AND r.isActive = TRUE
-        ");
-        $q->setParameter('ids', $points);
-        $point = $q->getSingleResult();
-
         $discountCode = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $cart->discountCode]);
         $discountCodeId = $discountCode instanceof DiscountCode ? $discountCode->getId() : null;
 
@@ -150,6 +125,35 @@ class CreateCommandHandler extends MessageHandler
                 break;
 
             case OrderType::RETAIL:
+                if (NULL !== $user && count($user->geoRooms) > 0) {
+                    $points = array_column($user->geoRooms, 'geo_point_id');
+                } else {
+                    $points = [$this->getParameter('default.point.id')];
+                }
+
+                $q = $em->createQuery("
+                    SELECT
+                        NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
+                            p.id,
+                            p.name,
+                            a.address,
+                            r.hasRetail,
+                            r.hasDelivery,
+                            r.hasRising,
+                            p.geoCityId
+                        )
+                    FROM AppBundle:GeoPoint AS p
+                    JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
+                    LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
+                    WHERE p.id IN (:ids) AND r.isActive = TRUE
+                ");
+                $q->setParameter('ids', $points);
+                $point = $q->getOneOrNullResult();
+
+                if (empty($point)) {
+                    throw new BadRequestHttpException('Невозможно провести продажу с магазина, так как точка, к котрой вы привязаны не является розничной или была деактивирована.');
+                }
+
                 $params =[
                     'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
                     'cityId' => $point->geoCityId,
