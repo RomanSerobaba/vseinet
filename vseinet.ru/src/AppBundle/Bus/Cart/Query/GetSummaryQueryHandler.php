@@ -81,6 +81,6 @@ class GetSummaryQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName);
+        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName ?? '');
     }
 }
