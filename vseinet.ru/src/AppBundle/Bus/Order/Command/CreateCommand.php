@@ -301,7 +301,7 @@ class CreateCommand extends Message
                     ->addViolation();
             }
         } elseif (DeliveryTypeCode::POST == $this->deliveryTypeCode) {
-            if (empty($this->geoAddress->postalCode) || empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
+            if (empty($this->geoAddress->postalCode) || empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building)) {
                 $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
                     ->atPath('geoAddress.postalCode')
                     ->addViolation();
@@ -343,7 +343,7 @@ class CreateCommand extends Message
                     ->addViolation();
             }
         } elseif (DeliveryTypeCode::COURIER == $this->deliveryTypeCode) {
-            if (empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building) || empty($this->geoAddress->apartment)) {
+            if (empty($this->geoAddress->geoStreetName) || empty($this->geoAddress->house) && empty($this->geoAddress->building)) {
                 $context->buildViolation('Для выбранного способа доставки необходимо указать адрес')
                     ->atPath('geoAddress.geoStreetId')
                     ->addViolation();
