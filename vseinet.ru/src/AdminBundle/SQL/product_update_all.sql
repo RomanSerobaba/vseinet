@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.product_update_all()
+CREATE OR REPLACE FUNCTION product_update_all()
   RETURNS void AS $BODY$
 DECLARE
   cities CURSOR FOR
