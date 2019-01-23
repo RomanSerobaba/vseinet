@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.representative_after_insert_trigger()
+CREATE OR REPLACE FUNCTION representative_after_insert_trigger()
   RETURNS trigger AS $BODY$
 DECLARE
   city_found record;
@@ -13,8 +13,10 @@ END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;
 
-DROP TRIGGER IF EXISTS representative_after_insert_trigger ON representative_after_insert_trigger;
+-- #
+DROP TRIGGER IF EXISTS representative_after_insert_trigger ON representative;
 
+-- #
 CREATE TRIGGER representative_after_insert_trigger
 AFTER INSERT ON representative
 FOR EACH ROW

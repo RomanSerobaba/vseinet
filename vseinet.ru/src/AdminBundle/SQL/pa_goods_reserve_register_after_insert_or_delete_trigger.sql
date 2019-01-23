@@ -21,8 +21,10 @@ END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;
 
+-- #
 DROP TRIGGER IF EXISTS pa_goods_reserve_register_current_after_change_trigger ON goods_reserve_register_current;
 
+-- #
 CREATE TRIGGER pa_goods_reserve_register_current_after_change_trigger
 AFTER INSERT OR UPDATE OR DELETE ON goods_reserve_register_current
 FOR EACH ROW

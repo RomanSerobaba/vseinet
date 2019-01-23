@@ -15,8 +15,10 @@ END
 $BODY$
     LANGUAGE 'plpgsql' VOLATILE;
 
+-- #
 DROP TRIGGER IF EXISTS pa_category_after_update_trigger ON category;
 
+-- #
 CREATE TRIGGER pa_category_after_update_trigger
 AFTER UPDATE OF delivery_tax, lifting_tax ON category
 FOR EACH ROW

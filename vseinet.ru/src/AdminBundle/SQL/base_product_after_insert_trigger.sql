@@ -13,7 +13,7 @@ DECLARE
 BEGIN
   FOR row IN cities LOOP
     EXECUTE '
-      INSERT INTO product_' || row.geo_city_id::text || ' (
+      INSERT INTO product_' || row.geo_city_id || ' (
         geo_city_id,
         base_product_id,
         product_availability_code,
@@ -21,8 +21,10 @@ BEGIN
         price_type,
         price_time,
         created_at,
-        rating) ' || '
-      VALUES ( $1, $2, $3, 0, ''pricelist''::product_availability_code, $4, $4, 0)'
+        rating,
+        profit
+      )
+      VALUES ( $1, $2, $3, 0, ''pricelist''::product_availability_code, $4, $4, 0, 0)'
     USING
       row.geo_city_id,
       NEW.id,
@@ -35,8 +37,10 @@ END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;
 
+-- #
 DROP TRIGGER IF EXISTS base_product_after_insert_trigger ON base_product;
 
+-- #
 CREATE TRIGGER base_product_after_insert_trigger
 AFTER INSERT ON base_product
 FOR EACH ROW

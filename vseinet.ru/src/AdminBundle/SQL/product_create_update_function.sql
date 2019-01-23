@@ -1,55 +1,59 @@
-CREATE OR REPLACE FUNCTION public.product_create_update_function(geo_city_id int, is_all bool DEFAULT false)
+CREATE OR REPLACE FUNCTION product_create_update_function(geo_city_id int, is_all bool DEFAULT false)
   RETURNS void AS $BODY$
 DECLARE
   partition_name text = 'product_' || geo_city_id;
-  partition_update_register_name text;
-  partition_update_function_name text;
+  partition_update_register_name text = 'product_update_register_' || geo_city_id;
+  partition_update_register_join text = '';
+  partition_update_function_name text = 'product_update_' || geo_city_id || '_all()';
   select_ids_sql text = '';
   update_ids_sql text = '';
-  outro
 BEGIN
-  IF is_all THEN
-    partition_update_register_name = 'product_' || geo_city_id;
-    partition_update_function_name = 'product_update_all_' || geo_city_id || '()';
-  ELSE
-    partition_update_register_name = 'product_update_regsiter';
-    partition_update_function_name = 'product_update_' || geo_city_id || '(id int DEFAULT NULL)'
+  IF is_all = false THEN
+    partition_update_register_join = 'INNER JOIN product_update_register AS pur ON pur.product_id = p.id';
+    partition_update_function_name = 'product_update_' || geo_city_id || '(iid int8 DEFAULT NULL)';
     select_ids_sql = '
       CREATE TEMP TABLE product_update_register (
-        id bigint NOT NULL,
-        CONSTRAINT product_update_register_pkey PRIMARY KEY (id)
+        product_id int8 NOT NULL,
+        CONSTRAINT product_update_register_pkey PRIMARY KEY (product_id)
       )
       ON COMMIT DROP;
-      IF id IS NULL THEN
-        INSERT INTO product_update_register (id)
-        SELECT id FROM aggregation.product_update_register_' || geo_city_id || ';
-        SELECT id INTO id FROM product_update_register LIMIT 1;
+
+      IF iid IS NULL THEN
+        INSERT INTO product_update_register (product_id)
+        SELECT id
+        FROM aggregation.' || partition_update_register_name || '
+        WHERE queued_at <= start_time AND is_updated = false
+        GROUP BY id;
+
+        SELECT product_id INTO iid FROM product_update_register LIMIT 1;
         IF NOT found THEN
-          RETURN NULL;
+          RETURN;
         END IF;
       ELSE
-        INSERT INTO product_update_register (id) VALUES($1) USING id;
+        INSERT INTO product_update_register (product_id) VALUES (iid);
       END IF;
     ';
     update_ids_sql = '
-      UPDATE aggregation.product_update_register_' || geo_city_id || '
+      UPDATE aggregation.' || partition_update_register_name || '
       SET is_updated = true
-      WHERE id = (SELECT id FROM product_update_register);
+      WHERE queued_at <= start_time;
     ';
   END IF;
 
   EXECUTE '
     CREATE OR REPLACE FUNCTION aggregation.' || partition_update_function_name || '
       RETURNS void AS $PRODUCT_UPDATE$
+    DECLARE
+      start_time timestamp = NOW();
     BEGIN
       ' || select_ids_sql || '
 
       -- резервы
       CREATE TEMP TABLE product_tmp_reserve (
-        product_id INTEGER NOT NULL,
-        free_reserve BOOL DEFAULT FALSE,
-        inner_transit BOOL DEFAULT FALSE,
-        supplier_transit BOOL DEFAULT FALSE,
+        product_id int8 NOT NULL,
+        free_reserve bool DEFAULT FALSE,
+        inner_transit bool DEFAULT FALSE,
+        supplier_transit bool DEFAULT FALSE,
         CONSTRAINT product_tmp_reserve_pkey PRIMARY KEY (product_id)
       )
       ON COMMIT DROP;
@@ -62,7 +66,7 @@ BEGIN
           INNER JOIN public.geo_room AS gr ON gr.id = grr.geo_room_id
           INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
           INNER JOIN aggregation.' || partition_name || ' AS p ON p.base_product_id = grr.base_product_id
-          INNER JOIN aggregation.' || partition_update_register_name || ' AS pu ON pu.id = p.id
+          ' || partition_update_register_join || '
           WHERE grr.goods_condition_code = ''free'' AND gp.geo_city_id = p.geo_city_id
           GROUP BY p.id
           HAVING SUM(grr.delta) > 0
@@ -71,7 +75,7 @@ BEGIN
           UPDATE product_tmp_reserve
           SET free_reserve = data.free_reserve
           FROM data
-          WHERE aggregation.product_tmp_reserve.product_id = data.product_id
+          WHERE product_tmp_reserve.product_id = data.product_id
           RETURNING data.product_id
         )
       INSERT INTO product_tmp_reserve (product_id, free_reserve)
@@ -88,7 +92,7 @@ BEGIN
           INNER JOIN public.geo_room AS gr ON gr.id = gre.destination_room_id
           INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
           INNER JOIN aggregation.' || partition_name || ' AS p ON p.base_product_id = grr.base_product_id
-          INNER JOIN aggregation.' || partition_update_register_name || ' AS pu ON pu.id = p.id
+          ' || partition_update_register_join || '
           WHERE grr.goods_condition_code = ''free'' AND gp.geo_city_id = p.geo_city_id
           GROUP BY p.id
           HAVING SUM(grr.delta) > 0
@@ -115,7 +119,7 @@ BEGIN
           INNER JOIN public.geo_room AS gr ON gr.id = s.destination_room_id
           INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
           INNER JOIN aggregation.' || partition_name || ' AS p ON p.base_product_id = grr.base_product_id
-          INNER JOIN aggregation.' || partition_update_register_name || ' AS pu ON pu.id = p.id
+          ' || partition_update_register_join || '
           WHERE grr.goods_condition_code = ''free'' AND gp.geo_city_id = p.geo_city_id
           GROUP BY p.id
           HAVING SUM(grr.delta) > 0
@@ -132,22 +136,22 @@ BEGIN
       FROM data
       WHERE product_id NOT IN (SELECT product_id FROM updated);
 
-      CREATE TEMP TABLE product_tmp AS SELECT * FROM public.product WITH NO DATA ON COMMIT DROP;
+      CREATE TEMP TABLE product_tmp (LIKE public.product);
       ALTER TABLE product_tmp ADD CONSTRAINT product_tmp_pkey PRIMARY KEY (id);
 
-      CREATE TEMP TABLE product_tmp_available () WITH (OIDS = true) ON COMMIT DROP INHERITS (product_tmp);
+      CREATE TEMP TABLE product_tmp_available () INHERITS (product_tmp);
       ALTER TABLE product_tmp_available ADD CONSTRAINT product_tmp_available_pkey PRIMARY KEY (id);
       CREATE INDEX product_tmp_available_base_product_id_idx ON product_tmp_available USING btree (
         base_product_id ASC NULLS LAST
       );
 
-      CREATE TEMP TABLE product_tmp_on_demand () WITH (OIDS = true) ON COMMIT DROP INHERITS (product_tmp);
+      CREATE TEMP TABLE product_tmp_on_demand () INHERITS (product_tmp);
       ALTER TABLE product_tmp_on_demand ADD CONSTRAINT product_tmp_on_demand_pkey PRIMARY KEY (id);
       CREATE INDEX product_tmp_on_demand_base_product_id_idx ON product_tmp_on_demand USING btree (
         base_product_id ASC NULLS LAST
       );
 
-      CREATE TEMP TABLE product_tmp_out_of_stock () WITH (OIDS = true) ON COMMIT DROP INHERITS (product_tmp);
+      CREATE TEMP TABLE product_tmp_out_of_stock () INHERITS (product_tmp);
       ALTER TABLE product_tmp_out_of_stock ADD CONSTRAINT product_tmp_out_of_stock_pkey PRIMARY KEY (id);
 
       -- товары в наличии, включают товары на перемещении и в транзите к нам от поставщика
@@ -221,7 +225,7 @@ BEGIN
       SELECT
         p.id,
         p.base_product_id,
-        (CASE WHEN base_product.supplier_availability_code = ''in_transit'' THEN ''awaiting'' ELSE ''on_demand'' END)::product_availability_code,
+        (CASE WHEN bp.supplier_availability_code = ''in_transit'' THEN ''awaiting'' ELSE ''on_demand'' END)::product_availability_code,
         p.price,
         p.price_type,
         p.manual_price,
@@ -449,19 +453,15 @@ BEGIN
         p.product_availability_code = data.product_availability_code,
         p.price = data.price,
         p.price_type = data.price_type,
-        p.price_time = CASE p.price = data.price THEN p.price_time ELSE NOW() END,
+        p.price_time = CASE WHEN p.price = data.price THEN p.price_time ELSE NOW() END,
         p.profit = data.profit
       FROM data;
 
       ' || update_ids_sql || '
 
     END
-    $BODY$
+    $PRODUCT_UPDATE$
       LANGUAGE ''plpgsql'' VOLATILE;
-
-        END
-        $PRODUCT_UPDATE$
-          LANGUAGE ''plpgsql'' VOLATILE;
   ';
 END
 $BODY$
