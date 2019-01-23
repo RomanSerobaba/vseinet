@@ -97,7 +97,7 @@ abstract class BaseApiClient
         if (Response::HTTP_UNAUTHORIZED === $response->getStatusCode()) {
             throw new UnauthorizedHttpException();
         }
-var_dump(array_column($response->getHeaders(), 'X-Debug-Token-Link', ''), $response->getBody()->getContents());die();
+// var_dump(array_column($response->getHeaders(), 'X-Debug-Token-Link', ''), $response->getBody()->getContents());die();
         if (!in_array($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_CREATED, Response::HTTP_NO_CONTENT])) {
             throw new BadRequestHttpException($response->getReasonPhrase(), null, $response->getStatusCode());
         }
