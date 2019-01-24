@@ -344,6 +344,24 @@ class User implements UserInterface
     }
 
     /**
+     * Check roles
+     *
+     * @param array $roles
+     *
+     * @return bool
+     */
+    public function isRoleIn($roles)
+    {
+        foreach ($roles as $role) {
+            if (in_array($role, $this->roles)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check is client
      *
      * @return bool

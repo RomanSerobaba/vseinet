@@ -28,6 +28,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoAddressToPerson;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AppBundle\Bus\User\Query\DTO\UserData;
+use AppBundle\Enum\UserRole;
+use AppBundle\Enum\RepresentativeTypeCode;
 
 class CreateFormType extends AbstractType
 {
@@ -129,11 +131,24 @@ class CreateFormType extends AbstractType
             $points = [$this->container->getParameter('default.point.id')];
         }
 
+        $clause = "";
+        $parameters = [];
+
+        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN])) {
+            $clause .= " AND p.id IN (:ids)";
+            $parameters['ids'] = $points;
+        } else {
+            $clause .= " AND r.hasWarehouse = TRUE AND r.type IN (:representativeTypeCode_OUR, :representativeTypeCode_PARTNER, :representativeTypeCode_TORG)";
+            $parameters['representativeTypeCode_OUR'] = RepresentativeTypeCode::OUR;
+            $parameters['representativeTypeCode_PARTNER'] = RepresentativeTypeCode::PARTNER;
+            $parameters['representativeTypeCode_TORG'] = RepresentativeTypeCode::TORG;
+        }
+
         $q = $this->em->createQuery("
             SELECT
                 NEW AppBundle\Bus\Order\Query\DTO\GeoPoint (
                     p.id,
-                    p.name,
+                    CONCAT(CASE WHEN c.name = p.name THEN '' ELSE CONCAT(c.name, ', ') END, p.name),
                     a.address,
                     r.hasRetail,
                     r.hasDelivery,
@@ -143,9 +158,11 @@ class CreateFormType extends AbstractType
             FROM AppBundle:GeoPoint AS p
             JOIN AppBundle:Representative AS r WITH r.geoPointId = p.id
             LEFT JOIN AppBundle:GeoAddress AS a WITH a.id = p.geoAddressId
-            WHERE p.id IN (:ids) AND r.isActive = TRUE
+            JOIN AppBundle:GeoCity AS c WITH c.id = p.geoCityId
+            WHERE r.isActive = TRUE{$clause}
+            ORDER BY c.name, p.name
         ");
-        $q->setParameter('ids', $points);
+        $q->setParameters($parameters);
 
         return $q->getResult('IndexByHydrator');
     }
