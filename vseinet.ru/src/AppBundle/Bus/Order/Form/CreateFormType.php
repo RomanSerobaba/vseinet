@@ -76,7 +76,7 @@ class CreateFormType extends AbstractType
                 $types = array_filter($types, function($val){
                     return !in_array($val, [OrderType::CONSUMABLES, OrderType::EQUIPMENT, OrderType::RESUPPLY]);
                 });
-            };
+            }
         }
 
         switch ($options['data']->typeCode) {

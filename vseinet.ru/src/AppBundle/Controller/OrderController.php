@@ -142,12 +142,23 @@ class OrderController extends Controller
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
+            'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : NULL,
         ]), $cart);
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
             $command->geoPointId = $this->getParameter('default.point.id');
             $command->geoCityId = $this->getParameter('default.city.id');
             $command->deliveryTypeCode = DeliveryTypeCode::EX_WORKS;
+        }
+
+        if ($this->getUserIsEmployee()) {
+            $canCreateRetailOrder = true;
+
+            foreach ($cart->products as $product) {
+                if ($product->reserveQuantity < $product->quantity) {
+                    $canCreateRetailOrder = false;
+                }
+            }
         }
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
@@ -196,6 +207,7 @@ class OrderController extends Controller
                     'errors' => $this->getFormErrors($form),
                     'html' => $this->renderView('Order/cart_ajax.html.twig', [
                         'form' => $form->createView(),
+                        'canCreateRetailOrder' => $canCreateRetailOrder,
                         'cart' => $cart,
                     ]),
                 ]);
@@ -206,6 +218,7 @@ class OrderController extends Controller
             return $this->json([
                 'html' => $this->renderView('Order/' . $command->typeCode . '_creation_ajax.html.twig', [
                     'form' => $form->createView(),
+                    'canCreateRetailOrder' => $canCreateRetailOrder,
                     'cart' => $cart,
                 ]),
             ]);
@@ -213,6 +226,7 @@ class OrderController extends Controller
 
         return $this->render('Order/creation.html.twig', [
             'form' => $form->createView(),
+            'canCreateRetailOrder' => $canCreateRetailOrder,
             'cart' => $cart,
             'errors' => $this->getFormErrors($form),
         ]);

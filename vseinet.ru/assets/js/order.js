@@ -55,6 +55,9 @@ $(function() {
             changeMonth: true,
             changeYear: true,
             changeDay: true,
+            maxDate: "+0d",
+            minDate: "01.01.1991",
+            yearRange: "1991:+0",
         });
     }
 
@@ -375,22 +378,29 @@ $(function() {
             }
         });
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
-        $.ajax({
-            url: Routing.generate('get_bank'),
-            method: 'GET',
-            dataType: 'json',
-            data: { 'bic': $(this).val() },
-            complete: function (jqXHR, status) {
-                var response = jqXHR.responseJSON;
+        if ('' !== $(this).val()) {
+            $.ajax({
+                url: Routing.generate('get_bank'),
+                method: 'GET',
+                dataType: 'json',
+                data: { 'bic': $(this).val() },
+                complete: function (jqXHR, status) {
+                    var response = jqXHR.responseJSON;
 
-                if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
-                        return false;
+                    if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
+                            $('[name="create_form[organizationDetails][bankName]"]').val('');
+                            $('[name="create_form[organizationDetails][bankId]"]').val('');
+                            return false;
+                    }
+
+                    $('[name="create_form[organizationDetails][bankName]"]').val(response.data.name);
+                    $('[name="create_form[organizationDetails][bankId]"]').val(response.data.id);
                 }
-
-                $('[name="create_form[organizationDetails][bankName]"]').val(response.data.name);
-                $('[name="create_form[organizationDetails][bankId]"]').val(response.data.id);
-            }
-        });
+            });
+        } else {
+            $('[name="create_form[organizationDetails][bankName]"]').val('');
+            $('[name="create_form[organizationDetails][bankId]"]').val('');
+        }
     }).on('change', '[name="create_form[isCallNeeded]"]', function(e){
         $('[name="create_form[callNeedComment]"]').parent('.row')[1 == $(this).val() ? 'show' : 'hide']();
     }).on('change', '[name="create_form[paymentTypeCode]"]', function(e){

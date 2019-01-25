@@ -55,6 +55,8 @@ class Cart
             $this->total += $product->quantity;
             $this->amount += $product->quantity * $product->price;
             $this->amountWithDiscount += $product->quantity * ($discountCode ? $product->priceWithDiscount : $product->price);
+            $product->priceWithDiscount = $discountCode ? $product->priceWithDiscount : $product->price;
+            $this->products[$key] = $product;
 
             if ($product->hasStroika) {
                 $this->hasStroika = true;
