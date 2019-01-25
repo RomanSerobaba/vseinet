@@ -50,14 +50,17 @@ class GetSummaryQueryHandler extends MessageHandler
         }
 
         if (DeliveryTypeCode::TRANSPORT_COMPANY === $query->deliveryTypeCode) {
-            if ($transportCompany instanceof TransportCompany) {
-                $transportCompanyDeliveryCharges = $transportCompany->getTax();
-            }
+            $transportCompanyDeliveryCharges = $this->getParameter('const.delivery.transport_company.cost');
+        }
+
+        if (DeliveryTypeCode::POST === $query->deliveryTypeCode) {
+            $transportCompanyDeliveryCharges = $this->getParameter('const.delivery.post.cost');
         }
 
         if ($paymentType instanceof PaymentType) {
             $paymentTypeComissionPercent = $paymentType->getCashlessPercent();
             $paymentTypeName = $paymentType->getName();
+            $paymentTypeCode = $paymentType->getCode();
         }
 
         if (in_array($query->deliveryTypeCode, [DeliveryTypeCode::COURIER, DeliveryTypeCode::EX_WORKS])) {
@@ -81,6 +84,6 @@ class GetSummaryQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeName ?? '');
+        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeCode ?? '', $paymentTypeName ?? '');
     }
 }

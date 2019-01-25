@@ -44,7 +44,7 @@ class CreateCommandHandler extends MessageHandler
                 }
 
                 $params =[
-                    'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
+                    'ourSellerCounteragentId' => $this->getParameter('default.our_conteragent.id'),
                     'cityId' => $geoPoint->getGeoCityId(),
                     'representativeId' => $command->geoPointId,
                     'orderTypeCode' => $command->typeCode,
@@ -54,7 +54,7 @@ class CreateCommandHandler extends MessageHandler
 
             case OrderType::LEGAL:
                 $params =[
-                    'ourSellerCounteragentId' => $command->organizationDetails->withVat ? $this->getParameter('default.counteragentWithVat.id') : $this->getParameter('default.counteragentWithoutVat.id'),
+                    'ourSellerCounteragentId' => $command->organizationDetails->withVat ? $this->getParameter('default.counteragent_with_vat.id') : $this->getParameter('default.counteragent_without_vat.id'),
                     'cityId' => $command->geoCityId,
                     'representativeId' => $command->geoPointId ?? $this->getParameter('default.point.id'),
                     'orderTypeCode' => $command->typeCode,
@@ -98,7 +98,7 @@ class CreateCommandHandler extends MessageHandler
 
             case OrderType::NATURAL:
                 $params =[
-                    'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
+                    'ourSellerCounteragentId' => $this->getParameter('default.our_conteragent.id'),
                     'cityId' => $command->geoCityId,
                     'representativeId' => $command->geoPointId ?? $this->getParameter('default.point.id'),
                     'orderTypeCode' => OrderTypeCode::SITE,
@@ -155,12 +155,11 @@ class CreateCommandHandler extends MessageHandler
                 }
 
                 $params =[
-                    'ourSellerCounteragentId' => $this->getParameter('default.ourConteragent.id'),
+                    'ourSellerCounteragentId' => $this->getParameter('default.our_conteragent.id'),
                     'cityId' => $point->geoCityId,
                     'representativeId' => $point->id,
                     'orderTypeCode' => OrderTypeCode::SHOP,
                     'person' => $command->userData,
-                    'financialCounteragentId' => $financialCounteragentId,
                     'paymentTypeCode' => $command->paymentTypeCode,
                     'discountCodeId' => $discountCode->id,
                     'deliveryTypeCode' => $command->deliveryTypeCode,

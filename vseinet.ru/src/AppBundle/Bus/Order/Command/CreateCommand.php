@@ -262,12 +262,6 @@ class CreateCommand extends Message
     public function validate(ExecutionContextInterface $context, $payload)
     {
         if (OrderType::LEGAL == $this->typeCode) {
-            if (empty($this->userData->position)) {
-                $context->buildViolation('Необходимо указать вашу должность')
-                    ->atPath('userData.position')
-                    ->addViolation();
-            }
-
             if (empty($this->organizationDetails->tin)) {
                 $context->buildViolation('Необходимо указать ИНН вашей организации')
                     ->atPath('organizationDetails.tin')

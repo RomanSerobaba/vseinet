@@ -8,7 +8,7 @@
     <h1>Оформление заказа</h1>
     {% if cart.products|length > 0 %}
         <div id="{{ form.vars.id }}_wrapper">
-            {% include ['Order/', form.typeCode.vars.value, '_creation_ajax.html.twig']|join with { form: form, cart: cart } only %}
+            {% include ['Order/', form.typeCode.vars.value, '_creation_ajax.html.twig']|join with { form: form, cart: cart, canCreateRetailOrder: canCreateRetailOrder, } only %}
         </div>
         <div id="products" class="block cart w40p r">
             {% include 'Order/cart_ajax.html.twig' with { form: form, cart: cart } only %}
