@@ -47,12 +47,17 @@ BEGIN
 
     -- создание уникального ключа
     EXECUTE '
-      CREATE UNIQUE INDEX ' || partition_name || '_geo_city_id_base_product_id
+      CREATE UNIQUE INDEX ' || partition_name || '_base_product_id
       ON aggregation.' || partition_name || '
-      USING BTREE (geo_city_id, base_product_id)
+      USING BTREE (base_product_id)
     ';
 
     -- создание индексов
+    EXECUTE '
+      CREATE INDEX ' || partition_name || '_geo_city_idx
+      ON aggregation.' || partition_name || '
+      USING BTREE (geo_city_id)
+    ';
     EXECUTE '
       CREATE INDEX ' || partition_name || '_product_availability_code_idx
       ON aggregation.' || partition_name || '
@@ -64,7 +69,7 @@ BEGIN
       ALTER TABLE aggregation.' || partition_name || '
       ADD CONSTRAINT ' || partition_name || '_base_product_id_fkey
       FOREIGN KEY (base_product_id)
-      REFERENCES public.base_product(id)
+      REFERENCES public.base_product (id)
       ON UPDATE NO ACTION
       ON DELETE CASCADE
     ';
@@ -72,7 +77,7 @@ BEGIN
       ALTER TABLE aggregation.' || partition_name || '
       ADD CONSTRAINT ' || partition_name || '_geo_city_id_fkey
       FOREIGN KEY (geo_city_id)
-      REFERENCES public.geo_city(id)
+      REFERENCES public.geo_city (id)
       ON UPDATE NO ACTION
       ON DELETE CASCADE
     ';
@@ -80,7 +85,7 @@ BEGIN
       ALTER TABLE aggregation.' || partition_name || '
       ADD CONSTRAINT ' || partition_name || '_manual_price_operated_by_fkey
       FOREIGN KEY (manual_price_operated_by)
-      REFERENCES public.user(id)
+      REFERENCES public.user (id)
       ON UPDATE CASCADE
       ON DELETE RESTRICT
     ';
@@ -88,7 +93,7 @@ BEGIN
       ALTER TABLE aggregation.' || partition_name || '
       ADD CONSTRAINT ' || partition_name || '_temporary_price_operated_by_fkey
       FOREIGN KEY (temporary_price_operated_by)
-      REFERENCES public.user(id)
+      REFERENCES public.user (id)
       ON UPDATE CASCADE
       ON DELETE RESTRICT
     ';
@@ -96,7 +101,7 @@ BEGIN
       ALTER TABLE aggregation.' || partition_name || '
       ADD CONSTRAINT ' || partition_name || '_ultimate_price_operated_by_fkey
       FOREIGN KEY (ultimate_price_operated_by)
-      REFERENCES public.user(id)
+      REFERENCES public.user (id)
       ON UPDATE CASCADE
       ON DELETE RESTRICT
     ';
@@ -113,7 +118,7 @@ BEGIN
     -- создание регистра обновления цен и наличия
     EXECUTE '
       CREATE TABLE aggregation.' || partition_update_register_name || ' (
-        CONSTRAINT ' || partition_update_register_name || '_pkey PRIMARY KEY (queued_at)
+        CONSTRAINT ' || partition_update_register_name || '_pkey PRIMARY KEY (id, queued_at)
       ) INHERITS (public.product_update_register)
     ';
 

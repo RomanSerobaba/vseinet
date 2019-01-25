@@ -3,8 +3,8 @@ CREATE OR REPLACE FUNCTION product_create_update_function(geo_city_id int, is_al
 DECLARE
   partition_name text = 'product_' || geo_city_id;
   partition_update_register_name text = 'product_update_register_' || geo_city_id;
-  partition_update_register_join text = '';
   partition_update_function_name text = 'product_update_' || geo_city_id || '_all()';
+  partition_update_register_join text = '';
   select_ids_sql text = '';
   update_ids_sql text = '';
 BEGIN
@@ -15,8 +15,7 @@ BEGIN
       CREATE TEMP TABLE product_update_register (
         product_id int8 NOT NULL,
         CONSTRAINT product_update_register_pkey PRIMARY KEY (product_id)
-      )
-      ON COMMIT DROP;
+      );
 
       IF iid IS NULL THEN
         INSERT INTO product_update_register (product_id)
@@ -138,6 +137,9 @@ BEGIN
 
       CREATE TEMP TABLE product_tmp (LIKE public.product);
       ALTER TABLE product_tmp ADD CONSTRAINT product_tmp_pkey PRIMARY KEY (id);
+      CREATE INDEX product_tmp_base_product_id_idx ON product_tmp USING btree (
+        base_product_id ASC NULLS LAST
+      );
 
       CREATE TEMP TABLE product_tmp_available () INHERITS (product_tmp);
       ALTER TABLE product_tmp_available ADD CONSTRAINT product_tmp_available_pkey PRIMARY KEY (id);
@@ -150,9 +152,6 @@ BEGIN
       CREATE INDEX product_tmp_on_demand_base_product_id_idx ON product_tmp_on_demand USING btree (
         base_product_id ASC NULLS LAST
       );
-
-      CREATE TEMP TABLE product_tmp_out_of_stock () INHERITS (product_tmp);
-      ALTER TABLE product_tmp_out_of_stock ADD CONSTRAINT product_tmp_out_of_stock_pkey PRIMARY KEY (id);
 
       -- товары в наличии, включают товары на перемещении и в транзите к нам от поставщика
       INSERT INTO product_tmp_available (
@@ -239,32 +238,32 @@ BEGIN
       WHERE bp.supplier_availability_code IN (''available'', ''on_demand'', ''in_transit'') AND product_tmp.id IS NULL;
 
       -- нет в наличии
-      INSERT INTO product_tmp_out_of_stock (
-        id,
-        base_product_id,
-        product_availability_code,
-        price,
-        price_type,
-        manual_price,
-        ultimate_price,
-        competitor_price,
-        temporary_price,
-        profit
-      )
-      SELECT
-        p.id,
-        p.base_product_id,
-        ''out_of_stock''::product_availability_code,
-        p.price,
-        p.price_type,
-        p.manual_price,
-        p.ultimate_price,
-        p.competitor_price,
-        p.temporary_price,
-        p.profit
-      FROM aggregation.' || partition_name || ' AS p
-      LEFT OUTER JOIN product_tmp ON product_tmp.id = p.id
-      WHERE product_tmp.id IS NULL;
+      -- INSERT INTO product_tmp_out_of_stock (
+      --   id,
+      --   base_product_id,
+      --   product_availability_code,
+      --   price,
+      --   price_type,
+      --   manual_price,
+      --   ultimate_price,
+      --   competitor_price,
+      --   temporary_price,
+      --   profit
+      -- )
+      -- SELECT
+      --   p.id,
+      --   p.base_product_id,
+      --   ''out_of_stock''::product_availability_code,
+      --   p.price,
+      --   p.price_type,
+      --   p.manual_price,
+      --   p.ultimate_price,
+      --   p.competitor_price,
+      --   p.temporary_price,
+      --   p.profit
+      -- FROM aggregation.' || partition_name || ' AS p
+      -- LEFT OUTER JOIN product_tmp ON product_tmp.id = p.id
+      -- WHERE product_tmp.id IS NULL;
 
       -- расчет цен товаров в наличии
       UPDATE product_tmp_available
@@ -430,6 +429,9 @@ BEGIN
       ) AS data
       WHERE product_tmp_on_demand.id = data.product_id;
 
+      UPDATE aggregation.' || partition_name || '
+      SET product_availability_code = ''out_of_stock''::product_availability_code;
+
       WITH
         data AS (
           SELECT
@@ -447,6 +449,7 @@ BEGIN
             p.price_type,
             p.profit
           FROM aggregation.' || partition_name || ' AS p
+          WHERE p.id IN (SELECT id FROM product_tmp)
         )
       UPDATE aggregation.' || partition_name || ' AS p
       SET
