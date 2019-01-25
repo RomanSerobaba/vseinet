@@ -158,6 +158,6 @@ class GetQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\Cart(array_values($products), $discount instanceof DiscountCode ? $discount->getCode() : null, $geoPointId);
+        return new DTO\Cart($products, $discount instanceof DiscountCode ? $discount->getCode() : null, $geoPointId);
     }
 }

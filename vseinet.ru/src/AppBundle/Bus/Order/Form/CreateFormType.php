@@ -27,6 +27,7 @@ use AppBundle\Entity\GeoCity;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoAddressToPerson;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use AppBundle\Bus\User\Query\DTO\UserData;
 
 class CreateFormType extends AbstractType
 {

@@ -114,8 +114,9 @@ WITH
         SELECT p.id, TRUE
         FROM goods_reserve_register_current AS grr
         INNER JOIN supply_item AS si ON si.id = grr.supply_item_id
-        INNER JOIN supply AS s ON s.ID = si.parent_doc_id AND si.parent_doc_type = 'supply'
-        INNER JOIN geo_point AS gp ON gp.id = s.destination_point_id
+        INNER JOIN supply_doc AS s ON s.did = si.parent_did
+        INNER JOIN geo_room AS gr ON gr.id = s.destination_room_id
+        INNER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
         INNER JOIN product AS p ON p.base_product_id = grr.base_product_id
         WHERE grr.goods_condition_code = 'free' AND gp.geo_city_id = p.geo_city_id
         GROUP BY p.id
@@ -138,8 +139,9 @@ WITH
         SELECT p.id, TRUE
         FROM goods_reserve_register_current AS grr
         INNER JOIN supply_item AS si ON si.id = grr.supply_item_id
-        INNER JOIN supply_doc AS s ON s.ID = si.parent_doc_id AND si.parent_doc_type = 'supply'
-        INNER JOIN geo_point AS gp ON gp.id = s.destination_point_id
+        INNER JOIN supply_doc AS s ON s.did = si.parent_did
+        INNER JOIN geo_room AS gr ON gr.id = s.destination_room_id
+        INNER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
         INNER JOIN product AS p ON p.base_product_id = grr.base_product_id
         WHERE grr.goods_condition_code = 'free' AND p.geo_city_id IS NULL
         GROUP BY p.id
