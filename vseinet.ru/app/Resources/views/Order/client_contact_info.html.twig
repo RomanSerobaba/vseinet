@@ -3,64 +3,64 @@
         <h2>Контактная информация</h2>
 
         {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == form.typeCode.vars.value %}
-        <div class="row h{% if errors.userData.position is defined %} error{% endif %}">
-            {{ form_label(form.userData.position, 'Должность:') }}
-            {{ form_widget(form.userData.position, { attr: { class: 'txt' }}) }}
+        <div class="row h{% if errors.client.position is defined %} error{% endif %}">
+            {{ form_label(form.client.position, 'Должность:') }}
+            {{ form_widget(form.client.position, { attr: { class: 'txt' }}) }}
             <span class="status"></span>
-            {% if errors.userData.position is defined %}
-                <div class="error">{{ errors.userData.position.0 }}</div>
+            {% if errors.client.position is defined %}
+                <div class="error">{{ errors.client.position.0 }}</div>
             {% endif %}
         </div>
         {% endif %}
 
-        <div class="row h{% if errors.userData.fullname is defined %} error{% endif %}" style="position: relative">
-            <label for="{{ form.userData.fullname.vars.id }}">
+        <div class="row h{% if errors.client.fullname is defined %} error{% endif %}" style="position: relative">
+            <label for="{{ form.client.fullname.vars.id }}">
                 Ф.И.О. <b>*</b>
             </label>
-            {{ form_widget(form.userData.fullname, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : ''), placeholder: 'Фамилия Имя Отчество' }})  }}
-            <span id="lfsHelp" onclick="$('#{{ form.userData.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
+            {{ form_widget(form.client.fullname, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : ''), placeholder: 'Фамилия Имя Отчество' }})  }}
+            <span id="lfsHelp" onclick="$('#{{ form.client.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
             <span class="status"></span>
-            {% if errors.userData.fullname is defined %}
-                <div class="error">{{ errors.userData.fullname.0 }}</div>
+            {% if errors.client.fullname is defined %}
+                <div class="error">{{ errors.client.fullname.0 }}</div>
             {% endif %}
             <div class="notice">Достаточно указать имя.</div>
         </div>
 
         <div>
-            {{ form_widget(form.userData.userId) }}
+            {{ form_widget(form.client.userId) }}
         </div>
         <div>
-            {{ form_widget(form.userData.comuserId) }}
+            {{ form_widget(form.client.comuserId) }}
         </div>
 
-        <div class="row h{% if error.userData.phone is defined %} error{% endif %}">
-            <label for="{{ form.userData.phone.vars.id }}">
+        <div class="row h{% if error.client.phone is defined %} error{% endif %}">
+            <label for="{{ form.client.phone.vars.id }}">
                 Телефон <b>*</b>
             </label>
-            {{ form_widget(form.userData.phone, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
+            {{ form_widget(form.client.phone, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
             <span class="status"></span>
-            {% if errors.userData.phone is defined %}
-                <div class="error">{{ errors.userData.phone.0 }}</div>
+            {% if errors.client.phone is defined %}
+                <div class="error">{{ errors.client.phone.0 }}</div>
             {% endif %}
             <div class="notice"><b>Внимание!</b> Вам необходимо указать федеральный номер, чтобы получать информацию о статусе и сроках доставки вашего заказа.<br/>Пример: +7 (963) 100&ndash;44&ndash;55.</div>
         </div>
 
-        <div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
-            {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
-            {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
+        <div class="row h{% if error.client.additionalPhone is defined %} error{% endif %}">
+            {{ form_label(form.client.additionalPhone, 'Дополнительный телефон:') }}
+            {{ form_widget(form.client.additionalPhone, { attr: { class: 'txt' }}) }}
             <span class="status"></span>
-            {% if errors.userData.additionalPhone is defined %}
-                <div class="error">{{ errors.userData.additionalPhone.0 }}</div>
+            {% if errors.client.additionalPhone is defined %}
+                <div class="error">{{ errors.client.additionalPhone.0 }}</div>
             {% endif %}
             <div class="notice">Поле заполняется в случае отсутствия мобильного телефона или при желании оставить запасные номера.</div>
         </div>
 
-        <div class="row h{% if error.userData.email is defined %} error{% endif %}">
-            {{ form_label(form.userData.email, 'Email:') }}
-            {{ form_widget(form.userData.email, { attr: { class: 'txt' }}) }}
+        <div class="row h{% if error.client.email is defined %} error{% endif %}">
+            {{ form_label(form.client.email, 'Email:') }}
+            {{ form_widget(form.client.email, { attr: { class: 'txt' }}) }}
             <span class="status"></span>
-            {% if errors.userData.email is defined %}
-                <div class="error">{{ errors.userData.email.0 }}</div>
+            {% if errors.client.email is defined %}
+                <div class="error">{{ errors.client.email.0 }}</div>
             {% endif %}
             <div class="notice">На этот адрес мы будет высылать уведомления о вашем заказе.</div>
         </div>
@@ -78,7 +78,7 @@
         <div class="row h" style="padding-top:0">
             <label class="inline">
                 Отключить системные оповещения о статусах для заказа
-                {{ form_widget(form.isTranscationalSubscribed) }}{# transactional system #}
+                {{ form_widget(form.isNotificationNeeded) }}{# transactional system #}
             </label>
         </div>
         {% endif %}

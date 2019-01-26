@@ -125,13 +125,13 @@
 		cursor: default;
 	}
   #City.popup .new_point {
-    color: red; 
-    font-size: 10px; 
-    font-weight: normal; 
+    color: red;
+    font-size: 10px;
+    font-weight: normal;
   }
 
     #cheaper_desc p {
-        font-size: 14px; 
+        font-size: 14px;
         margin-bottom:10px;
     }
     #cheaper_desc .rules {
@@ -150,40 +150,41 @@
     #cheaper_desc .rules {
         font-size:14px;
     }
-    
+
     #HomeCredit,
     #RusskijStandart,
     #PochtaBank,
     #RenessanceCredit,
     #Disclaimer {
         color:#333;
+        display: none;
     }
-    
+
     #Disclaimer p {
         margin: 15px 0;
     }
-    
+
     #HomeCredit h3,
     #RusskijStandart h3,
     #PochtaBank h3,
     #RenessanceCredit h3 {
         margin: 25px 0 10px;
     }
-    
+
     #HomeCredit h4,
     #RusskijStandart h4,
     #PochtaBank h4,
     #RenessanceCredit h4 {
         margin: 15px 0 10px;
     }
-    
+
     #HomeCredit ul,
     #RusskijStandart ul,
     #PochtaBank ul,
     #RenessanceCredit ul {
         list-style: disc outside;
     }
-    
+
     #HomeCredit img,
     #RusskijStandart img,
     #PochtaBank img,

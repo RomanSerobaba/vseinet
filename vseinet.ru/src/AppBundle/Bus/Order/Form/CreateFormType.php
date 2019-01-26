@@ -12,22 +12,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\Bus\User\Form\UserDataType;
+use AppBundle\Bus\Order\Form\ClientType;
 use AppBundle\Bus\User\Form\IsHumanType;
 use AppBundle\Bus\Order\Form\OrganizationDetailsType;
-use AppBundle\Bus\Geo\Form\GeoAddressType;
-use AppBundle\Bus\User\Form\PassportDataType;
+use AppBundle\Bus\Order\Form\AddressType;
+use AppBundle\Bus\Order\Form\PassportType;
 use AppBundle\Bus\Order\Command\CreateCommand;
 use AppBundle\Enum\OrderType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\DeliveryTypeCode;
+use AppBundle\Enum\ContactTypeCode;
 use AppBundle\Service\GeoCityIdentity;
 use AppBundle\Entity\GeoCity;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoAddressToPerson;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use AppBundle\Bus\User\Query\DTO\UserData;
+use AppBundle\Bus\Order\Query\DTO\Client;
 use AppBundle\Enum\UserRole;
 use AppBundle\Enum\RepresentativeTypeCode;
 
@@ -87,7 +88,7 @@ class CreateFormType extends AbstractType
                 break;
 
             case OrderType::LEGAL:
-                $this->addUserDataFields($builder, $options);
+                $this->addClientDataFields($builder, $options);
                 $this->addDeliveryTypesFields($builder, $options);
                 $this->addPaymentTypesFields($builder, $options);
                 $this->addAdditionalDataFields($builder, $options);
@@ -95,14 +96,14 @@ class CreateFormType extends AbstractType
                 break;
 
             case OrderType::NATURAL:
-                $this->addUserDataFields($builder, $options);
+                $this->addClientDataFields($builder, $options);
                 $this->addDeliveryTypesFields($builder, $options);
                 $this->addPaymentTypesFields($builder, $options);
                 $this->addAdditionalDataFields($builder, $options);
                 break;
 
             case OrderType::RETAIL:
-                $this->addUserDataFields($builder, $options);
+                $this->addClientDataFields($builder, $options);
                 $this->addDeliveryTypesFields($builder, $options);
                 $this->addPaymentTypesFields($builder, $options);
                 break;
@@ -184,8 +185,58 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addUserDataFields(FormBuilderInterface $builder, array &$options) {
+    private function addClientDataFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
+        $clientDTO = $options['data']->client;
+
+        if (is_object($user) && !$user->isEmployee() && empty($clientDTO)) {
+            $clientDTO = new \AppBundle\Bus\Order\Query\DTO\Client();
+            $clientDTO->userId = $user->getId();
+            $clientDTO->fullname = $user->person->getFullname();
+            $q = $this->em->createQuery("
+                SELECT
+                    c,
+                    CASE WHEN c.isMain = true THEN 1 ELSE 2 END AS HIDDEN ORD1,
+                    CASE WHEN c.contactTypeCode = :mobile THEN 1 ELSE 2 END AS HIDDEN ORD2
+                FROM AppBundle:Contact AS c
+                WHERE c.personId = :personId AND c.contactTypeCode IN (:mobile, :phone)
+                ORDER BY ORD1 ASC, ORD2 ASC
+            ");
+            $q->setParameter('personId', $user->getPersonId());
+            $q->setParameter('mobile', ContactTypeCode::MOBILE);
+            $q->setParameter('phone', ContactTypeCode::PHONE);
+            $phoneList = $q->getResult();
+
+            if (!empty($phoneList[0])) {
+                if (ContactTypeCode::MOBILE == $phoneList[0]->getContactTypeCode()) {
+                    $clientDTO->phone = $phoneList[0]->getValue();
+
+                    if (!empty($phoneList[1])) {
+                        $clientDTO->additionalPhone = $phoneList[1]->getValue();
+                    }
+                } else {
+                    $clientDTO->additionalPhone = $phoneList[0]->getValue();
+                }
+            }
+
+            $q = $this->em->createQuery("
+                SELECT
+                    c,
+                    CASE WHEN c.isMain = true THEN 1 ELSE 2 END AS HIDDEN ORD
+                FROM AppBundle:Contact AS c
+                WHERE c.personId = :personId AND c.contactTypeCode IN (:email)
+                ORDER BY ORD ASC
+            ");
+            $q->setParameter('personId', $user->getPersonId());
+            $q->setParameter('email', ContactTypeCode::EMAIL);
+            $email = $q->getOneOrNullResult();
+
+            if (!empty($email)) {
+                $clientDTO->email = $email->getValue();
+            }
+
+            $options['data']->client = $clientDTO;
+        }
 
         if (NULL === $options['data']->isMarketingSubscribed && (!is_object($user) || $user->getIsMarketingSubscribed())) {
             $isMarketingSubscribed = TRUE;
@@ -199,8 +250,7 @@ class CreateFormType extends AbstractType
                     'data' => $isMarketingSubscribed,
                     'required' => false,
                 ])
-            ->add('isTranscationalSubscribed', CheckboxType::class, ['required' => false,])
-            ->add('userData', UserDataType::class);
+            ->add('client', ClientType::class);
     }
 
     private function addPaymentTypesFields(FormBuilderInterface $builder, array &$options) {
@@ -272,12 +322,12 @@ class CreateFormType extends AbstractType
 
     private function addAddressDataFields(FormBuilderInterface $builder, array &$options) {
         $user = $this->security->getToken()->getUser();
-        $addressDTO = $options['data']->geoAddress;
+        $addressDTO = $options['data']->address;
 
-        if (is_object($user) && !$user->isEmployee()) {
+        if (is_object($user) && !$user->isEmployee() && empty($addressDTO)) {
             $q = $this->em->createQuery("
                 SELECT
-                    NEW AppBundle\Bus\Geo\Query\DTO\Address (
+                    NEW AppBundle\Bus\Order\Query\DTO\Address (
                         ga.geoStreetId,
                         gs.name,
                         ga.house,
@@ -301,11 +351,11 @@ class CreateFormType extends AbstractType
                 $addressDTO = NULL;
             }
 
-            $options['data']->geoAddress = $addressDTO;
+            $options['data']->address = $addressDTO;
         }
 
         $builder
-            ->add('geoAddress', GeoAddressType::class, ['data' => $addressDTO]);
+            ->add('address', AddressType::class, ['data' => $addressDTO]);
     }
 
     private function addDeliveryTypesFields(FormBuilderInterface $builder, array &$options) {
@@ -433,7 +483,7 @@ class CreateFormType extends AbstractType
                         'choice_value' => 'id',
                         'data' => $transportCompany,
                     ])
-                    ->add('passportData', PassportDataType::class);
+                    ->add('passport', PassportType::class);
             }
 
             $deliveryTypes[array_search(DeliveryTypeCode::POST, $allDeliveryTypes)] = DeliveryTypeCode::POST;
@@ -466,7 +516,7 @@ class CreateFormType extends AbstractType
         $user = $this->security->getToken()->getUser();
         $isCallNeeded = null;
 
-        if (!empty($options['data']->isCallNeeded) && null !== $options['data']->isCallNeeded) {
+        if (isset($options['data']->isCallNeeded) && null !== $options['data']->isCallNeeded) {
             $isCallNeeded = $options['data']->isCallNeeded;
         }
 

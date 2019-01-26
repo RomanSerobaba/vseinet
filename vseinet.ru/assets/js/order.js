@@ -33,7 +33,7 @@ $(function() {
         status.form('submit');
     });
 
-    function refreshCartView()
+    function refreshFormEvents()
     {
         var orderForm = $('#order-creation-form');
 
@@ -41,6 +41,17 @@ $(function() {
             afterResponse: function(data) {
                 if ('undefined' !== typeof data.html && data.html.length > 0) {
                     $('#products').html(data.html);
+                }
+            },
+            error: function(errors, submit) {
+                var errorRow = $(this).find('.error').first();
+                destination = errorRow.offset().top;
+
+                if ($(window).width() > 992){
+                    $('body, html ').animate( { scrollTop: destination - 45}, 500 );
+                }
+                else{
+                    $('body, html ').animate( { scrollTop: destination - 10}, 500 );
                 }
             }
         });
@@ -51,7 +62,7 @@ $(function() {
 
     function attachDatePicker()
     {
-        $('[name="create_form[passportData][issuedAt]"]').datepicker({
+        $('[name="create_form[passport][issuedAt]"]').datepicker({
             changeMonth: true,
             changeYear: true,
             changeDay: true,
@@ -62,7 +73,7 @@ $(function() {
     }
 
     function lfsKeydown() {
-        var lfs = $('[name="create_form[userData][fullname]"]'),
+        var lfs = $('[name="create_form[client][fullname]"]'),
             lfsHelp = $('#lfsHelp');
 
         clearTimeout(timer);
@@ -90,10 +101,10 @@ $(function() {
     }
 
     function attachMasks() {
-        Inputmask("+7 (999) 999-99-99").mask($('[name="create_form[userData][phone]"]'));
-        Inputmask("email").mask($('[name="create_form[userData][email]"]'));
+        Inputmask("+7 (999) 999-99-99").mask($('[name="create_form[client][phone]"]'));
+        Inputmask("email").mask($('[name="create_form[client][email]"]'));
 
-        var lfs = $('[name="create_form[userData][fullname]"]'),
+        var lfs = $('[name="create_form[client][fullname]"]'),
             lfsHelp = $('#lfsHelp');
 
         lfsHelp.click(function(e){
@@ -121,7 +132,7 @@ $(function() {
             isRenderComusers,
             cacheUsers = {};
 
-        $('[name="create_form[userData][fullname]"].autocomplete,[name="create_form[userData][phone]"].autocomplete').autocomplete({
+        $('[name="create_form[client][fullname]"].autocomplete,[name="create_form[client][phone]"].autocomplete').autocomplete({
             create: function() {
                 $(this).data('ui-autocomplete').widget().menu({
                     focus: function(event, ui) {
@@ -134,22 +145,22 @@ $(function() {
             },
             minLength: 2,
             select: function(event, ui) {
-                $('[name="create_form[userData][fullname]"]').val(ui.item.fullname);
-                $('[name="create_form[userData][phone]"]').val(ui.item.phone);
-                $('[name="create_form[userData][additionalPhone]"]').val(ui.item.additionalPhone);
-                $('[name="create_form[userData][email]"]').val(ui.item.email);
+                $('[name="create_form[client][fullname]"]').val(ui.item.fullname);
+                $('[name="create_form[client][phone]"]').val(ui.item.phone);
+                $('[name="create_form[client][additionalPhone]"]').val(ui.item.additionalPhone);
+                $('[name="create_form[client][email]"]').val(ui.item.email);
 
                 if ('user' === ui.item.type) {
-                    $('[name="create_form[userData][userId]"]').val(ui.item.id);
+                    $('[name="create_form[client][userId]"]').val(ui.item.id);
                 } else {
-                    $('[name="create_form[userData][comuserId]"]').val(ui.item.id);
+                    $('[name="create_form[client][comuserId]"]').val(ui.item.id);
                 }
 
                 lfsKeydown();
             },
             source: function(request, response) {
                 var q = '',
-                    fieldName = $(this).attr('element').attr('name').replace(/create_form\[userData\]\[/gi, '').replace(/\]/gi, ''),
+                    fieldName = $(this).attr('element').attr('name').replace(/create_form\[client\]\[/gi, '').replace(/\]/gi, ''),
                     term = $.ui.autocomplete.escapeRegex(request.term) + fieldName;
 
                 if (term in cacheUsers) {
@@ -197,12 +208,12 @@ $(function() {
             return li.appendTo(ul);
         }
 
-        if ($('[name="create_form[userData][fullname]"].autocomplete').length > 0) {
-            $('[name="create_form[userData][fullname]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
+        if ($('[name="create_form[client][fullname]"].autocomplete').length > 0) {
+            $('[name="create_form[client][fullname]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
         }
 
-        if ($('[name="create_form[userData][phone]"].autocomplete').length > 0) {
-            $('[name="create_form[userData][phone]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
+        if ($('[name="create_form[client][phone]"].autocomplete').length > 0) {
+            $('[name="create_form[client][phone]"].autocomplete').data('ui-autocomplete')._renderItem = showAutocompleteChoices;
         }
     }
 
@@ -256,10 +267,10 @@ $(function() {
     {
         var cacheGeoStreets = {};
 
-        var txt = $('[name="create_form[geoAddress][geoStreetName]"].autocomplete');
+        var txt = $('[name="create_form[address][geoStreetName]"].autocomplete');
 
         if (txt.length > 0) {
-            var txt = $('[name="create_form[geoAddress][geoStreetName]"].autocomplete').autocomplete({
+            var txt = $('[name="create_form[address][geoStreetName]"].autocomplete').autocomplete({
                 create: function() {
                     $(this).data('ui-autocomplete').widget().menu({
                         focus: function(event, ui) {
@@ -272,7 +283,7 @@ $(function() {
                 },
                 minLength: 2,
                 select: function(event, ui) {
-                    $('[name="create_form[geoAddress][geoStreetId]"]').val(ui.item.id);
+                    $('[name="create_form[address][geoStreetId]"]').val(ui.item.id);
                 },
                 source: function(request, response) {
                     var term = $.ui.autocomplete.escapeRegex(request.term);
@@ -368,7 +379,7 @@ $(function() {
 
                 if (response.hasOwnProperty('html')) {
                     $('#create_form_wrapper').html(response.html);
-                    refreshCartView();
+                    refreshFormEvents();
                     attachMasks();
                     attachUserAutocomplete();
                     attachCityAutocomplete();
@@ -407,7 +418,7 @@ $(function() {
         $('#client_contact_info')['retail' !== $('[name="create_form[typeCode]"]:checked').val() || 'credit' === $('[name="create_form[paymentTypeCode]"]:checked').val() || 'installment' === $('[name="create_form[paymentTypeCode]"]:checked').val() ? 'show' : 'hide']();
     });
 
-    refreshCartView();
+    refreshFormEvents();
     attachMasks();
     attachUserAutocomplete();
     attachCityAutocomplete();

@@ -97,12 +97,17 @@ class CartSummary
     public $discountCode;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $discountCodeId;
+
+    /**
      * @Assert\Type(type="array<AppBundle\Bus\Cart\Query\DTO\Product>")
      */
     public $products;
 
 
-    public function __construct(array $products, string $discountCode = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeCode = NULL, string $paymentTypeName = NULL)
+    public function __construct(array $products, string $discountCode, int $discountCodeId = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeCode = NULL, string $paymentTypeName = NULL)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
@@ -123,6 +128,7 @@ class CartSummary
         $this->deliveryCharges = $deliveryCharges;
         $this->transportCompanyDeliveryCharges = $transportCompanyDeliveryCharges;
         $this->discountCode = $discountCode;
+        $this->discountCodeId = $discountCodeId;
         $this->paymentTypeComissionPercent = $paymentTypeComissionPercent;
         $this->summary = $this->amountWithDiscount + $this->deliveryTaxAmount + $this->liftingCharges + $this->deliveryCharges + $this->transportCompanyDeliveryCharges + $this->deliveryToRepresentativeTaxAmount;
         $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100);
