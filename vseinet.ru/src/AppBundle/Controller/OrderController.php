@@ -136,9 +136,9 @@ class OrderController extends Controller
 
         $command = new Command\CreateCommand($data);
 
-        if (empty($data) && !$this->getUserIsEmployee()) {
-            $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
-        }
+        // if (empty($data) && !$this->getUserIsEmployee()) {
+        //     $this->get('query_bus')->handle(new \AppBundle\Bus\Order\Query\GetUserQuery(), $command->user);
+        // }
 
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
@@ -150,6 +150,8 @@ class OrderController extends Controller
             $command->geoCityId = $this->getParameter('default.city.id');
             $command->deliveryTypeCode = DeliveryTypeCode::EX_WORKS;
         }
+
+        $canCreateRetailOrder = false;
 
         if ($this->getUserIsEmployee()) {
             $canCreateRetailOrder = true;
@@ -168,8 +170,8 @@ class OrderController extends Controller
             'paymentTypeCode' => $command->paymentTypeCode,
             'deliveryTypeCode' => $command->deliveryTypeCode,
             'needLifting' => $command->needLifting,
-            'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
-            'floor' => !empty($command->geoAddress) ? $command->geoAddress->floor : null,
+            'hasLift' => !empty($command->address) ? $command->address->hasLift : null,
+            'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 

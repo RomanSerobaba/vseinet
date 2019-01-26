@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Bus\Geo\Form;
+namespace AppBundle\Bus\Order\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\{ TextType, CheckboxType, HiddenType };
-use AppBundle\Bus\Geo\Query\DTO\Address;
+use AppBundle\Bus\Order\Query\DTO\Address;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoStreet;
 use Doctrine\ORM\EntityManagerInterface;
 
-class GeoAddressType extends AbstractType
+class AddressType extends AbstractType
 {
     /**
      * @var EntityManagerInterface
