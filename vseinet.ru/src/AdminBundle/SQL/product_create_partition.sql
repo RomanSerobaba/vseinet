@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION product_create_partition(geo_city_id int, fill bool DEFAULT true)
+CREATE OR REPLACE FUNCTION product_create_partition(geo_city_id int, fill bool DEFAULT TRUE)
   RETURNS void AS $BODY$
 DECLARE
   partition_name text = 'product_' || geo_city_id;
@@ -15,7 +15,7 @@ BEGIN
       (LIKE public.product)
     ';
 
-    IF geo_city_id > 0 AND fill = true THEN
+    IF geo_city_id > 0 AND fill = TRUE THEN
       -- заполнение из нулевого города
       EXECUTE '
         INSERT INTO aggregation.' || partition_name || '

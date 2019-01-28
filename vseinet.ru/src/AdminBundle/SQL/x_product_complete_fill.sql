@@ -1,15 +1,15 @@
-CREATE OR REPLACE FUNCTION product_complete_fill()
+CREATE OR REPLACE FUNCTION x_product_complete_fill()
   RETURNS void AS $BODY$
 DECLARE
   cities CURSOR FOR
     SELECT gp.geo_city_id
     FROM geo_point AS gp
     INNER JOIN representative AS r ON r.geo_point_id = gp.id
-    WHERE r.is_active = true AND r.has_retail = true AND r.type IN ('our', 'torg', 'partner')
+    WHERE r.is_active = TRUE AND r.has_retail = TRUE AND r.type IN ('our', 'torg', 'partner')
     GROUP BY gp.geo_city_id;
   row record;
 BEGIN
-  PERFORM switch_all_triggers(false);
+  PERFORM switch_all_triggers(FALSE);
 
   -- дозаполнение нулевого города
   INSERT INTO aggregation.product_0 (
@@ -92,7 +92,7 @@ BEGIN
     ';
   END LOOP;
 
-  PERFORM switch_all_triggers(true);
+  PERFORM switch_all_triggers(TRUE);
 END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;

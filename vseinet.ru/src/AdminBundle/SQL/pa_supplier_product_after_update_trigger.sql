@@ -1,12 +1,14 @@
 CREATE OR REPLACE FUNCTION pa_supplier_product_after_update_trigger()
   RETURNS trigger AS $BODY$
 BEGIN
-  INSERT INTO product_update_register (id, geo_city_id)
-  VALUES ('
-    SELECT p.id, p.geo_city_id
-    FROM product AS p
-    WHERE p.base_product_id IN (' || NEW.base_product_id || ',' || OLD.base_product_id || ')'
-  );
+  IF NEW.base_product_id IS NULL THEN
+    INSERT INTO product_update_register (id, geo_city_id)
+    VALUES ('
+      SELECT p.id, p.geo_city_id
+      FROM product AS p
+      WHERE p.base_product_id = ' || OLD.base_product_id
+    );
+  END IF;
 
   RETURN NEW;
 END
