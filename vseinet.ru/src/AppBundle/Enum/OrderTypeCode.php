@@ -13,6 +13,7 @@ class OrderTypeCode
     public const EQUIPMENT = 'equipment';
     public const RESUPPLY = 'resupply';
     public const REQUEST = 'request';
+    public const CONSUMABLES = 'consumables';
 
     public static function isClient($code)
     {

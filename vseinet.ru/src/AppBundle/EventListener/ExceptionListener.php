@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use AppBundle\ApiClient\ApiClientException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ExceptionListener
 {
@@ -31,7 +32,8 @@ class ExceptionListener
         $exception = $event->getException();
 
         if (in_array($this->env, ['dev', 'test'], true)) {
-            if ($exception instanceof ApiClientException && !empty($exception->getDebugTokenLink())) {
+            if ($exception instanceof ApiClientException && !empty($exception->getDebugTokenLink()) && empty($exception->getParamErrors())) {
+                // $event->setResponse(new JsonResponse(json_encode(['errors' => $exception->getParamErrors(),])));
                 $event->setResponse(new RedirectResponse($exception->getDebugTokenLink() . '?panel=exception'));
             }
         }
