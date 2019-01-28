@@ -23,9 +23,11 @@ END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;
 
-DROP TRIGGER IF EXISTS pa_trade_margin_after_upsert_trigger ON trade_margin;
+-- #
+DROP TRIGGER IF EXISTS pa_trade_margin_after_change_trigger ON trade_margin;
 
-CREATE TRIGGER pa_trade_margin_after_upsert_trigger
+-- #
+CREATE TRIGGER pa_trade_margin_after_change_trigger
 AFTER INSERT OR UPDATE OF margin_percent, lower_limit, higher_limit OR DELETE ON trade_margin
 FOR EACH ROW
-EXECUTE PROCEDURE pa_trade_margin_after_upsert_trigger();
+EXECUTE PROCEDURE pa_trade_margin_after_change_trigger();

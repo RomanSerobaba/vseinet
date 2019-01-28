@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.product_before_update_trigger()
+CREATE OR REPLACE FUNCTION product_before_update_trigger()
   RETURNS trigger AS $BODY$
 DECLARE
   partition_name text = 'product_' || NEW.geo_city_id;
@@ -14,8 +14,10 @@ END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;
 
-DROP TRIGGER IF EXISTS product_before_update_trigger ON product_before_update_trigger;
+-- #
+DROP TRIGGER IF EXISTS product_before_update_trigger ON product;
 
+-- #
 CREATE TRIGGER product_before_update_trigger
 BEFORE UPDATE ON product
 FOR EACH ROW

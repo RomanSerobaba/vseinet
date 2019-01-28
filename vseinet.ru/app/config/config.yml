@@ -47,3 +47,5 @@ framework:
         json_manifest_path: '%kernel.project_dir%/web/bundles/manifest.json'
     php_errors:
         log: true
+    templating:
+        engines: ['twig']

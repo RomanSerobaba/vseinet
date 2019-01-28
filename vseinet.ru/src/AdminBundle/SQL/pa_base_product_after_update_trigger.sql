@@ -13,8 +13,10 @@ END
 $BODY$
    LANGUAGE 'plpgsql' VOLATILE;
 
+-- #
 DROP TRIGGER IF EXISTS pa_base_product_after_update_trigger ON base_product;
 
+-- #
 CREATE TRIGGER pa_base_product_after_update_trigger
 AFTER UPDATE OF category_id ON base_product
 FOR EACH ROW

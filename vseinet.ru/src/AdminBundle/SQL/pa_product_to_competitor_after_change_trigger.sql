@@ -21,8 +21,10 @@ END
 $BODY$
    LANGUAGE 'plpgsql' VOLATILE;
 
+-- #
 DROP TRIGGER IF EXISTS pa_product_to_competitor_after_change_trigger ON product_to_competitor;
 
+-- #
 CREATE TRIGGER pa_product_to_competitor_after_change_trigger
 AFTER INSERT OR UPDATE OF competitor_price OR DELETE ON product_to_competitor
 FOR EACH ROW
