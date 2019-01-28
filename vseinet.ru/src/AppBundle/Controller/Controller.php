@@ -11,7 +11,17 @@ class Controller extends BaseController
     protected function addFormErrors(FormInterface $form, array $messages)
     {
         foreach ($messages as $key => $message) {
-            $form->get($key)->addError(new FormError($message));
+            $this->getDeepestChild($form, $key)->addError(new FormError($message));
+        }
+    }
+
+    private function getDeepestChild(FormInterface $form, string $name)
+    {
+        if (False !== strpos($name, '.')) {
+            $chunks = explode('.', $name, 1);
+            return $this->getDeepestChild($form->get($chunks[0]), $chunks[1]);
+        } else {
+            return $form->get($name);
         }
     }
 

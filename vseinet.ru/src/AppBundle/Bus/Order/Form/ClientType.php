@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\{ EmailType, TextType, HiddenType };
 use AppBundle\Form\Type\PhoneType;
-use AppBundle\Bus\Order\Query\DTO\Client;
+use AppBundle\Bus\Order\Command\Schema\Client;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ClientType extends AbstractType

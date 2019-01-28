@@ -63,9 +63,6 @@ $.widget('sp.form', {
             callback = this.options.validate;
         }
         var data = form.serializeArray();
-        if (submit) {
-            data.push({name: 'submit', value: 1});
-        }
         var trigger = $(document.activeElement);
         if (trigger.is('[type=submit]')) {
             var name = trigger.prop('name');

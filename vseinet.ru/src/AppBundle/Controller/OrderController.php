@@ -13,6 +13,7 @@ use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
+use AppBundle\ApiClient\ApiClientException;
 
 class OrderController extends Controller
 {
@@ -135,11 +136,6 @@ class OrderController extends Controller
         }
 
         $command = new Command\CreateCommand($data);
-
-        // if (empty($data) && !$this->getUserIsEmployee()) {
-        //     $this->get('query_bus')->handle(new \AppBundle\Bus\Order\Query\GetUserQuery(), $command->user);
-        // }
-
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
             'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : NULL,
@@ -178,7 +174,7 @@ class OrderController extends Controller
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
+            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
                 try {
                     $this->get('command_bus')->handle($command);
                     // $this->forward('AppBundle:Cart:clear');
@@ -201,6 +197,14 @@ class OrderController extends Controller
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
+                } catch (ApiClientException $e) {
+                    $messages = [];
+
+                    foreach ($e->getParamErrors() as $paramError) {
+                        $messages[$paramError['name']] = $paramError['message'];
+                    }
+
+                    $this->addFormErrors($form, $messages);
                 }
             }
 

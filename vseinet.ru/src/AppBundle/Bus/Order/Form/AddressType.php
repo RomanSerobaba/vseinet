@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\{ TextType, CheckboxType, HiddenType };
-use AppBundle\Bus\Order\Query\DTO\Address;
+use AppBundle\Bus\Order\Command\Schema\Address;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoStreet;
 use Doctrine\ORM\EntityManagerInterface;

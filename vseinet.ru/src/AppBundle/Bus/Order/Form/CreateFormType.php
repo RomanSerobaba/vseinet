@@ -28,7 +28,7 @@ use AppBundle\Entity\GeoCity;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\GeoAddressToPerson;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use AppBundle\Bus\Order\Query\DTO\Client;
+use AppBundle\Bus\Order\Command\Schema\Client;
 use AppBundle\Enum\UserRole;
 use AppBundle\Enum\RepresentativeTypeCode;
 
@@ -190,7 +190,7 @@ class CreateFormType extends AbstractType
         $clientDTO = $options['data']->client;
 
         if (is_object($user) && !$user->isEmployee() && empty($clientDTO)) {
-            $clientDTO = new \AppBundle\Bus\Order\Query\DTO\Client();
+            $clientDTO = new \AppBundle\Bus\Order\Command\Schema\Client();
             $clientDTO->userId = $user->getId();
             $clientDTO->fullname = $user->person->getFullname();
             $q = $this->em->createQuery("
@@ -327,7 +327,7 @@ class CreateFormType extends AbstractType
         if (is_object($user) && !$user->isEmployee() && empty($addressDTO)) {
             $q = $this->em->createQuery("
                 SELECT
-                    NEW AppBundle\Bus\Order\Query\DTO\Address (
+                    NEW AppBundle\Bus\Order\Command\Schema\Address (
                         ga.geoStreetId,
                         gs.name,
                         ga.house,
