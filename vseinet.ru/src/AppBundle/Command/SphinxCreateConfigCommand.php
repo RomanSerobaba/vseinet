@@ -21,7 +21,7 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
 
-        $config = $container->get('templating')->render('AppBundle:Sphinx:config.html.twig', [
+        $config = $container->get('templating')->render('Sphinx/config.html.twig', [
             'pgsql' => [
                 'host' => $container->getParameter('pgsql_host'),
                 'port' => $container->getParameter('pgsql_port'),
@@ -36,7 +36,7 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile($container->getParameter('sphinx.conf.path'), $config);
-        
+
         $output->writeln('<info>Sphinx config created successful.</info>');
     }
 }

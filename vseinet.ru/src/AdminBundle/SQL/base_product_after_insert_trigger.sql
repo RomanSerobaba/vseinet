@@ -5,7 +5,7 @@ DECLARE
     SELECT gp.geo_city_id
     FROM geo_point AS gp
     INNER JOIN representative AS r ON r.geo_point_id = gp.id
-    WHERE r.is_active = true AND r.has_retail = true AND r.type IN ('our', 'torg', 'partner')
+    WHERE r.is_active = TRUE AND r.has_retail = TRUE AND r.type IN ('our', 'torg', 'partner')
     GROUP BY gp.geo_city_id
     UNION
     SELECT 0 AS geo_city_id;
@@ -24,7 +24,7 @@ BEGIN
         rating,
         profit
       )
-      VALUES ( $1, $2, $3, 0, ''pricelist''::product_availability_code, $4, $4, 0, 0)'
+      VALUES ($1, $2, $3, 0, ''pricelist''::product_availability_code, $4, $4, 0, 0)'
     USING
       row.geo_city_id,
       NEW.id,

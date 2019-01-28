@@ -1,233 +1,325 @@
-
-
-CREATE OR REPLACE FUNCTION pa_update(geo_city_id int, id int8 DEFAULT NULL, is_all bool DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION pa_update(update_geo_city_id int, update_id int8 DEFAULT NULL, update_all bool DEFAULT FALSE)
   RETURNS void AS $BODY$
 DECLARE
-  partition_name text = 'product_' || geo_city_id;
-  partition_update_register_name text = 'product_update_register_' || geo_city_id;
-  partition_update_function_name text = 'product_update_' || geo_city_id || '_all()';
-  partition_update_register_join text = '';
-  select_ids_sql text = '';
-  update_ids_sql text = '';
-
   start_time timestamp = NOW();
+  product_found record;
 BEGIN
-  IF is_all THEN
+  IF update_all = TRUE THEN
     EXECUTE '
-      CREATE TEMP VIEW product_update_register (product_id, base_product_id)
-      AS SELECT id, base_product_id FROM aggregation.product_' || geo_city_id;
+      CREATE OR REPLACE TEMP VIEW product_update_register
+      AS SELECT * FROM aggregation.product_' || update_geo_city_id;
   ELSE
-    CREATE TEMP TABLE product_update_register (
-      product_id int8 NOT NULL,
-      base_product_id int8 NOT NULL,
-      CONSTRAINT product_update_register_pkey PRIMARY KEY (product_id)
-    );
+    CREATE TEMP TABLE product_update_register AS SELECT * FROM public.product WITH NO DATA;
+    ALTER TABLE product_update_register ADD CONSTRAINT product_update_register_pkey PRIMARY KEY (id);
     CREATE INDEX product_update_register_base_product_id_idx ON product_update_register USING btree (base_product_id ASC NULLS LAST);
 
-    IF id IS NULL THEN
+    IF update_id IS NULL THEN
       EXECUTE '
-        INSERT INTO product_update_register (product_id, base_product_id)
-        SELECT pur.id, b.base_product_id
-        FROM aggregation.product_update_register_' || geo_city_id || ' AS pur
-        INNER JOIN aggregation.product_ ' || geo_city_id || ' AS p ON p.id = pur.id
-        WHERE queued_at <= $1 AND is_updated = false
-        GROUP BY pur.id'
+        INSERT INTO product_update_register
+        SELECT p.*
+        FROM aggregation.product_ ' || update_geo_city_id || ' AS p
+        INNER JOIN aggregation.product_update_register_' || update_geo_city_id || ' AS pur ON pur.id = p.id
+        WHERE pur.queued_at <= $1 AND pur.is_updated = FALSE
+        GROUP BY p.id'
       USING start_time;
 
-      SELECT product_id INTO id FROM product_update_register LIMIT 1;
+      SELECT id INTO product_found FROM product_update_register LIMIT 1;
       IF NOT found THEN
         RETURN;
       END IF;
     ELSE
       EXECUTE '
-        INSERT INTO product_update_register (product_id, base_product_id)
-        SELECT p.id, p.base_product_id
-        FROM aggregation.product_' || geo_city_id || ' AS p
+        INSERT INTO product_update_register
+        SELECT p.*
+        FROM aggregation.product_' || update_geo_city_id || ' AS p
         WHERE p.id = $1'
-      USING id;
+      USING update_id;
     END IF;
   END IF;
 
-  -- резервы
-  CREATE TEMP TABLE product_tmp_reserve (
-    id int8 NOT NULL,
-    has_free_reserve bool DEFAULT FALSE,          -- available
-    has_other_reserve bool DEFAULT FALSE,         -- on_demand
-    has_free_supplier bool DEFAULT FALSE,         -- on_demand
-    has_inner_transit bool DEFAULT FALSE,         -- in_transit
-    has_from_supplier_transit bool DEFAULT FALSE, -- in_transit
-    has_to_supplier_transit bool DEFAULT FALSE,   -- awating
-    CONSTRAINT product_tmp_reserve_pkey PRIMARY KEY (id)
-  );
+  DROP TABLE IF EXISTS product_tmp;
+  CREATE TEMP TABLE product_tmp AS SELECT * FROM public.product WITH NO DATA;
+  ALTER TABLE product_tmp ADD CONSTRAINT product_tmp_pkey PRIMARY KEY (id);
+  CREATE INDEX product_tmp_base_product_id_idx ON product_tmp USING btree (base_product_id ASC NULLS LAST);
 
-  -- свободные остатки - available
+  -- товары у поставщика
+  INSERT INTO product_tmp (
+    id,
+    base_product_id,
+    product_availability_code,
+    manual_price,
+    ultimate_price,
+    temporary_price
+  )
+  SELECT
+    p.id,
+    p.base_product_id,
+    (CASE WHEN bp.supplier_availability_code = 'in_transit' THEN 'awaiting' ELSE 'on_demand' END)::product_availability_code,
+    p.manual_price,
+    p.ultimate_price,
+    p.temporary_price
+  FROM product_update_register AS p
+  INNER JOIN public.base_product AS bp ON bp.id = p.base_product_id
+  WHERE bp.supplier_availability_code IN ('available', 'in_transit', 'on_demand');
+
+  -- внутреннее перемещение и транзит от поставщика
   WITH
-    data (id, has_free_reserve) AS (
-      SELECT p.id, TRUE
+    data AS (
+      SELECT p.id
       FROM public.goods_reserve_register_current AS grrc
       INNER JOIN product_update_register AS p ON p.base_product_id = grrc.base_product_id
-      WHERE grrc.goods_condition_code = 'free' AND grrc.geo_room_id IN (
-          SELECT gr.id
-          FROM public.geo_room AS gr
-          INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
-          WHERE gp.geo_city_id = geo_city_id
-        )
+      WHERE grrc.goods_condition_code = 'free' AND grrc.destination_geo_room_id IS NOT NULL
       GROUP BY p.id
       HAVING SUM(grrc.delta) > 0
     ),
     updated AS (
-      UPDATE product_tmp_reserve
-      SET has_free_reserve = data.has_free_reserve
+      UPDATE product_tmp
+      SET product_availability_code = 'in_transit'::product_availability_code
       FROM data
-      WHERE product_tmp_reserve.id = data.id
+      WHERE product_tmp.id = data.id
       RETURNING data.id
     )
-  INSERT INTO product_tmp_reserve (id, has_free_reserve)
-  SELECT id, has_free_reserve
+  INSERT INTO product_tmp (
+    id,
+    base_product_id,
+    product_availability_code,
+    manual_price,
+    ultimate_price,
+    temporary_price
+  )
+  SELECT
+    p.id,
+    p.base_product_id,
+    'in_transit'::product_availability_code,
+    p.manual_price,
+    p.ultimate_price,
+    p.temporary_price
   FROM data
-  WHERE id NOT IN (SELECT id FROM updated);
+  INNER JOIN product_update_register AS p ON p.id = data.id
+  WHERE data.id NOT IN (SELECT id FROM updated);
 
-  -- свободные остатки в других городах - on_demand
+  -- свободные остатки в других городах
   WITH
-    data (id, has_other_reserve) AS (
-      SELECT p.id, TRUE
+    data AS (
+      SELECT p.id
       FROM public.goods_reserve_register_current AS grrc
       INNER JOIN product_update_register AS p ON p.base_product_id = grrc.base_product_id
       WHERE grrc.goods_condition_code = 'free' AND grrc.geo_room_id NOT IN (
           SELECT gr.id
           FROM public.geo_room AS gr
           INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
-          WHERE gp.geo_city_id = geo_city_id
+          WHERE gp.geo_city_id = update_geo_city_id
         )
       GROUP BY p.id
       HAVING SUM(grrc.delta) > 0
     ),
     updated AS (
-      UPDATE product_tmp_reserve
-      SET has_other_reserve = data.has_other_reserve
+      UPDATE product_tmp
+      SET product_availability_code = 'on_demand'::product_availability_code
       FROM data
-      WHERE product_tmp_reserve.id = data.id
+      WHERE product_tmp.id = data.id
       RETURNING data.id
     )
-  INSERT INTO product_tmp_reserve (id, has_other_reserve)
-  SELECT id, has_free_reserve
-  FROM data
-  WHERE id NOT IN (SELECT id FROM updated);
-
-  -- в наличии у поставщика - on_demand
-  WITH
-    data (id, has_free_supplier) AS (
-      SELECT p.id, TRUE
-      FROM product_update_register AS p
-      INNER JOIN public.base_product AS bp ON bp.id = p.base_product_id
-      WHERE bp.supplier_availability_code = 'available'
-    ),
-    updated AS (
-      UPDATE product_tmp_reserve
-      SET has_free_supplier = data.has_free_supplier
-      FROM data
-      WHERE product_tmp_reserve.id = data.id
-      RETURNING data.id
-    )
-  INSERT INTO product_tmp_reserve (id, has_free_supplier)
-  SELECT id, has_free_reserve
-  FROM data
-  WHERE id NOT IN (SELECT id FROM updated);
-
-  -- внутреннее перемещение - in_transit
-  WITH
-    data (id, has_inner_transit) AS (
-      SELECT p.id, TRUE
-      FROM public.goods_reserve_register_current AS grrc
-      INNER JOIN product_update_register AS p ON p.base_product_id = grrc.base_product_id
-      WHERE grrc.goods_condition_code = 'free' AND grrc.destination_geo_room_id IS NOT NULL AND grrc.goods_release_id IS NOT NULL
-      GROUP BY p.id
-      HAVING SUM(grrc.delta) > 0
-    ),
-    updated AS (
-      UPDATE product_tmp_reserve
-      SET has_inner_transit = data.has_inner_transit
-      FROM data
-      WHERE product_tmp_reserve.id = data.id
-      RETURNING data.id
-    )
-  INSERT INTO product_tmp_reserve (id, has_inner_transit)
-  SELECT id, has_inner_transit
-  FROM data
-  WHERE id NOT IN (SELECT id FROM updated);
-
-  -- транзит от поставщика - in_transit
-  WITH
-    data (id, has_supplier_transit) AS (
-      SELECT p.id, TRUE
-      FROM public.goods_reserve_register_current AS grrc
-      INNER JOIN product_update_register AS p ON p.base_product_id = grrc.base_product_id
-      WHERE grrc.goods_condition_code = 'free' AND grrc.destination_geo_room_id IS NOT NULL AND grrc.goods_release_id IS NULL
-      GROUP BY p.id
-      HAVING SUM(grrc.delta) > 0
-    ),
-    updated AS (
-      UPDATE product_tmp_reserve
-      SET has_supplier_transit = data.has_supplier_transit
-      FROM data
-      WHERE product_tmp_reserve.id = data.id
-      RETURNING data.id
-    )
-  INSERT INTO product_tmp_reserve (id, has_supplier_transit)
-  SELECT id, has_supplier_transit
-  FROM data
-  WHERE id NOT IN (SELECT id FROM updated);
-
-  -- временные таблицы
-  CREATE TEMP TABLE product_tmp (LIKE public.product);
-  ALTER TABLE product_tmp ADD CONSTRAINT product_tmp_pkey PRIMARY KEY (id);
-  CREATE INDEX product_tmp_base_product_id_idx ON product_tmp USING btree (base_product_id ASC NULLS LAST);
-
-  CREATE TEMP TABLE product_tmp_available () INHERITS (product_tmp);
-  ALTER TABLE product_tmp_available ADD CONSTRAINT product_tmp_available_pkey PRIMARY KEY (id);
-  CREATE INDEX product_tmp_available_base_product_id_idx ON product_tmp_available USING btree (base_product_id ASC NULLS LAST);
-
-  CREATE TEMP TABLE product_tmp_on_demand () INHERITS (product_tmp);
-  ALTER TABLE product_tmp_on_demand ADD CONSTRAINT product_tmp_on_demand_pkey PRIMARY KEY (id);
-  CREATE INDEX product_tmp_on_demand_base_product_id_idx ON product_tmp_on_demand USING btree (base_product_id ASC NULLS LAST);
-
-  -- товары в наличии, включают товары на перемещении и в транзите к нам от поставщика
-  INSERT INTO product_tmp_available (
+  INSERT INTO product_tmp (
     id,
     base_product_id,
     product_availability_code,
-    price,
-    price_type,
     manual_price,
     ultimate_price,
-    competitor_price,
-    temporary_price,
-    profit
+    temporary_price
   )
   SELECT
     p.id,
     p.base_product_id,
-    (CASE WHEN p.has_free_reserve = TRUE THEN 'available' ELSE 'in_transit' END)::product_availability_code,
-    p.price,
-    p.price_type,
+    'in_transit'::product_availability_code,
     p.manual_price,
     p.ultimate_price,
-    p.competitor_price,
-    p.temporary_price,
-    p.profit
-  FROM product_tmp_reserve AS p
+    p.temporary_price
+  FROM data
+  INNER JOIN product_update_register AS p ON p.id = data.id
+  WHERE data.id NOT IN (SELECT id FROM updated);
 
+  -- свободные остатки
+  WITH
+    data AS (
+      SELECT p.id
+      FROM public.goods_reserve_register_current AS grrc
+      INNER JOIN product_update_register AS p ON p.base_product_id = grrc.base_product_id
+      WHERE grrc.goods_condition_code = 'free' AND grrc.geo_room_id IN (
+          SELECT gr.id
+          FROM public.geo_room AS gr
+          INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
+          WHERE gp.geo_city_id = update_geo_city_id
+        )
+      GROUP BY p.id
+      HAVING SUM(grrc.delta) > 0
+    ),
+    updated AS (
+      UPDATE product_tmp
+      SET product_availability_code = 'available'::product_availability_code
+      FROM data
+      WHERE product_tmp.id = data.id
+      RETURNING data.id
+    )
+  INSERT INTO product_tmp (
+    id,
+    base_product_id,
+    product_availability_code,
+    manual_price,
+    ultimate_price,
+    temporary_price
+  )
+  SELECT
+    p.id,
+    p.base_product_id,
+    'available'::product_availability_code,
+    p.manual_price,
+    p.ultimate_price,
+    p.temporary_price
+  FROM data
+  INNER JOIN product_update_register AS p ON p.id = data.id
+  WHERE data.id NOT IN (SELECT id FROM updated);
 
+  -- расчет цен
+  UPDATE product_tmp
+  SET
+    price = data.price,
+    price_type = data.price_type::product_price_type,
+    profit = data.price - data.purchase_price,
+    competitor_price = data.competitor_price
+  FROM (
+    WITH
+      category_delivery AS (
+        SELECT
+          p.id AS product_id,
+          COALESCE(
+            (SELECT
+              c.delivery_tax
+            FROM public.base_product AS bp
+            INNER JOIN public.category_path AS cp ON cp.id = bp.category_id
+            INNER JOIN public.category AS c ON c.id = cp.pid
+            WHERE c.delivery_tax > 0 AND bp.id = p.base_product_id
+            ORDER BY cp.plevel DESC
+            LIMIT 1), 0
+          ) AS delivery_tax
+        FROM product_tmp AS p
+      ),
+      competitor_product AS (
+        SELECT
+          p.id AS product_id,
+          MIN(p2c.competitor_price) AS competitor_price
+        FROM product_tmp AS p
+        INNER JOIN product_to_competitor AS p2c ON p2c.base_product_id = p.base_product_id AND p2c.geo_city_id = update_geo_city_id
+        INNER JOIN competitor AS c ON c.id = p2c.competitor_id
+        WHERE c.is_active = TRUE AND p2c.competitor_price > 0
+          AND
+          CASE
+            WHEN c.channel IN ('site', 'retail')
+            THEN p2c.price_time + INTERVAL '7 day' >= NOW()
+            ELSE p2c.price_time + INTERVAL '30 day' >= NOW()
+          END
+        GROUP BY p.id
+      ),
+      standard_product AS (
+        SELECT
+          p.id AS product_id,
+          ROUND(bp.supplier_price * (
+            SELECT
+              tm.margin_percent
+            FROM
+              trade_margin AS tm
+            INNER JOIN category_path AS cp ON cp.pid = tm.category_id
+            WHERE cp.id = bp.category_id AND bp.supplier_price BETWEEN tm.lower_limit AND tm.higher_limit
+            ORDER BY cp.plevel DESC
+            LIMIT 1
+          ) / 100, -2) AS retail_price
+        FROM product_tmp AS p
+        INNER JOIN base_product AS bp ON bp.id = p.base_product_id
+      )
+    SELECT
+      p.id,
+      bp.supplier_price AS purchase_price,
+      CASE
+        WHEN p.temporary_price > 0 AND p.product_availability_code = 'available' THEN p.temporary_price
+        WHEN p.ultimate_price > 0 AND p.product_availability_code = 'available' THEN p.ultimate_price
+        WHEN p.manual_price > 0 THEN p.manual_price
+        WHEN cp.competitor_price > 0 AND sp.retail_price + cd.delivery_tax > cp.competitor_price
+          AND cp.competitor_price > bp.supplier_price THEN cp.competitor_price * 0.3 + 0.7 * sp.retail_price - cd.delivery_tax
+        WHEN bp.price_retail_min > sp.retail_price THEN bp.price_retail_min
+        ELSE sp.retail_price
+      END AS price,
+      CASE
+        WHEN p.temporary_price > 0 AND p.product_availability_code = 'available' THEN 'temporary'
+        WHEN p.ultimate_price > 0 AND p.product_availability_code = 'available' THEN 'ultimate'
+        WHEN p.manual_price > 0 THEN 'manual'
+        WHEN cp.competitor_price > 0 AND sp.retail_price + cd.delivery_tax > cp.competitor_price
+          AND cp.competitor_price > bp.supplier_price THEN 'compared'
+        WHEN bp.price_retail_min > sp.retail_price THEN 'recommended'
+        ELSE 'standard'
+      END AS price_type,
+      cp.competitor_price
+    FROM product_tmp AS p
+    INNER JOIN base_product AS bp ON bp.id = p.base_product_id
+    LEFT JOIN category_delivery AS cd ON cd.product_id = p.id
+    LEFT JOIN competitor_product AS cp ON cp.product_id = p.id
+    LEFT JOIN standard_product AS sp ON sp.product_id = p.id
+  ) AS data
+  WHERE product_tmp.id = data.id;
 
-  SELECT p.*
-  FROM public.goods_reserve_register_current AS grrc
-  INNER JOIN product_update_register AS pur ON pur.base_product_id = grrc.base_product_id
-  INNER JOIN public.geo_room AS gr ON gr.id = grrc.geo_room_id
-  INNER JOIN public.geo_point AS gp ON gp.id = gr.geo_point_id
-  INNER JOIN aggregation.product_1 AS p ON p.base_product_id = grrc.base_product_id AND p.geo_city_id = gp.geo_city_id
-  WHERE grrc.goods_condition_code = 'free'
-  GROUP BY grrc.base_product_id
-  HAVING SUM(grrc.delta) > 0
+  IF update_id IS NOT NULL THEN
+    EXECUTE '
+      UPDATE aggregation.product_' || update_geo_city_id || ' AS p
+      SET
+        p.product_availability_code = product_tmp.product_availability_code,
+        p.price = product_tmp.price,
+        p.price_type = product_tmp.price_type,
+        p.price_time = CASE WHEN p.price = product_tmp.price THEN p.price_time ELSE NOW() END,
+        p.profit = product_tmp.profit,
+        p.competitor_price = product_tmp.competitor_price
+      FROM product_tmp
+    ';
+  ELSE
+    EXECUTE '
+      UPDATE aggregation.product_' || update_geo_city_id || '
+      SET
+        product_availability_code = data.product_availability_code,
+        price = data.price,
+        price_type = data.price_type,
+        price_time = CASE WHEN aggregation.product_' || update_geo_city_id || '.price = data.price THEN price_time ELSE NOW() END,
+        profit = data.profit
+        competitor_price = data.competitor_price
+      FROM (
+        SELECT
+          id,
+          product_availability_code,
+          price,
+          price_type,
+          profit,
+          competitor_price
+        FROM product_tmp
+        UNION
+        SELECT
+          id,
+          ''out_of_stock''::product_availability_code,
+          price,
+          price_type,
+          profit,
+          competitor_price
+        FROM product_update_register
+        WHERE id NOT IN (SELECT id FROM product_tmp)
+      ) AS data
+      WHERE aggregation.product_' || update_geo_city_id || '.id = data.id
+    ';
+
+    IF update_all = FALSE THEN
+      EXECUTE '
+        UPDATE aggregation.product_update_register_' || update_geo_city_id || '
+        SET is_updated = TRUE
+        WHERE queued_at <= start_time
+      ';
+    END IF;
+  END IF;
+
 END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;
