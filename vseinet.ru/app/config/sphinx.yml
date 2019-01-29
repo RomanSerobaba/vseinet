@@ -1,5 +1,5 @@
 parameters:
-    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/manticore.conf'
+    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/sphinx.conf'
 
 services:
     sphinxql:
