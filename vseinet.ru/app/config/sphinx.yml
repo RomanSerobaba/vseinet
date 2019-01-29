@@ -1,8 +1,8 @@
 parameters:
-    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/pgsql/dev.conf'
+    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/manticore.conf'
 
 services:
     sphinxql:
         class: AppBundle\SphinxQL\SphinxQL
-        public: true 
-        arguments: [ '%sphinxql_host%', '%sphinxql_port%' ] 
+        public: true
+        arguments: [ '%sphinxql_host%', '%sphinxql_port%' ]
