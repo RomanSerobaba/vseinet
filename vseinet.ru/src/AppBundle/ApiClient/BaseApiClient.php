@@ -25,10 +25,16 @@ abstract class BaseApiClient
      */
     protected $client;
 
+    /**
+     * @var string
+     */
+    var $env;
+
     public function __construct(
         string $apiHost,
         MessageFactory $factory,
-        PluginClient $client
+        PluginClient $client,
+        string $env
     )
     {
         $this->apiHost = $apiHost;
@@ -109,6 +115,10 @@ abstract class BaseApiClient
             if (JSON_ERROR_NONE == json_last_error()) {
                 if (!empty($content['message'])) {
                     $message = $content['message'];
+                }
+
+                if ('dev' !== $this->env) {
+                    $message = 'Внутренняя ошибка приложения';
                 }
 
                 if ('Ошибки валидации входящих параметров' == $message) {

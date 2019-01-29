@@ -28,7 +28,8 @@ class UserApiClient extends BaseApiClient
         SessionInterface $session,
         NativeSessionStorage $storage,
         MessageFactory $factory,
-        PluginClient $client
+        PluginClient $client,
+        string $env
     )
     {
         $this->apiHost = $apiHost;
@@ -36,6 +37,7 @@ class UserApiClient extends BaseApiClient
         $this->storage = $storage;
         $this->factory = $factory;
         $this->client = $client;
+        $this->env = $env;
     }
 
     public function getAuth(): array

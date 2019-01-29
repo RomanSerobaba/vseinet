@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\ApiClient;
 
@@ -23,14 +23,15 @@ class SiteApiClient extends BaseApiClient
      */
     protected $session;
 
- 
+
     public function __construct(
-        $apiHost, 
-        $publicId, 
-        $secret, 
-        SessionInterface $session, 
-        MessageFactory $factory, 
-        PluginClient $client
+        $apiHost,
+        $publicId,
+        $secret,
+        SessionInterface $session,
+        MessageFactory $factory,
+        PluginClient $client,
+        string $env
     )
     {
         $this->apiHost = $apiHost;
@@ -39,16 +40,17 @@ class SiteApiClient extends BaseApiClient
         $this->session = $session;
         $this->factory = $factory;
         $this->client = $client;
+        $this->env = $env;
     }
 
-    public function getAuth(): array 
+    public function getAuth(): array
     {
         $auth = $this->session->get('site.api.auth');
         if (null === $auth || $auth['expiresAt'] < new \DateTime()) {
-            $auth = $this->doRequest('POST', '/authorize/', [], ['publicId' => $this->publicId, 'secret' => $this->secret]); 
+            $auth = $this->doRequest('POST', '/authorize/', [], ['publicId' => $this->publicId, 'secret' => $this->secret]);
             $auth['expiresAt'] = new \DateTime(sprintf('+%d seconds', $auth['expiresIn'] - 10));
 
-            $this->session->set('site.api.auth', $auth);    
+            $this->session->set('site.api.auth', $auth);
         }
 
         return $auth;

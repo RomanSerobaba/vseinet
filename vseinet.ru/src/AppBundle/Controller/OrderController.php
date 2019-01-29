@@ -198,13 +198,14 @@ class OrderController extends Controller
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (ApiClientException $e) {
-                    $messages = [];
+                    $paramErrors = $e->getParamErrors();
 
-                    foreach ($e->getParamErrors() as $paramError) {
-                        $messages[$paramError['name']] = $paramError['message'];
+                    if (!empty($paramErrors)) {
+                        $messages = array_combine(array_column($paramErrors, 'name'), array_column($paramErrors, 'message'));
+                        $this->addFormErrors($form, $messages);
+                    } else {
+                        $this->addFormErrors($form, ['' => $e->getMessage()]);
                     }
-
-                    $this->addFormErrors($form, $messages);
                 }
             }
 

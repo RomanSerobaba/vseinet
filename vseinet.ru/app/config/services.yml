@@ -22,12 +22,12 @@ services:
 
     user.api.client:
         class: 'AppBundle\ApiClient\UserApiClient'
-        arguments: [ '%api.host%', '@session', '@session.storage.native', '@httplug.message_factory', '@httplug.client.guzzle' ]
+        arguments: [ '%api.host%', '@session', '@session.storage.native', '@httplug.message_factory', '@httplug.client.guzzle', '%kernel.environment%' ]
         public: true
 
     site.api.client:
         class: 'AppBundle\ApiClient\SiteApiClient'
-        arguments: [ '%api.host%', '%api.public_id%', '%api.secret%', '@session', '@httplug.message_factory', '@httplug.client.guzzle' ]
+        arguments: [ '%api.host%', '%api.public_id%', '%api.secret%', '@session', '@httplug.message_factory', '@httplug.client.guzzle', '%kernel.environment%' ]
         public: true
 
     geo_city.identity:
