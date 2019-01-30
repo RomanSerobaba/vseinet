@@ -181,17 +181,18 @@ class OrderController extends Controller
                     $this->get('session')->remove('discountCode');
                     $this->get('session')->remove('form.orderCreation');
 
-                    if (OrderType::isInnerOrder($command->typeCode)) {
-                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
-                    }
+                    $this->get('session')->set('order_successfully_created', TRUE);
 
                     if ($request->isXmlHttpRequest()) {
                         return $this->json([
                             'id' => $command->id,
+                            'isInnerOrder' => OrderType::isInnerOrder($command->typeCode),
                         ]);
                     }
 
-                    $this->get('session')->set('order_successfully_created', TRUE);
+                    if (OrderType::isInnerOrder($command->typeCode)) {
+                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
+                    }
 
                     return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
 

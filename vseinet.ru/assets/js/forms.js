@@ -4,13 +4,16 @@ $.widget('sp.form', {
             var element = this;
             xhr.done(function (data) {
                 if (!data.errors || 0 === data.errors.length) {
-                    element.form('submit');
+                    element.data('spForm').options.onSuccess.call(element, data);
                 }
             });
         },
         error: $.noop,
         beforeSubmit: $.noop,
         afterResponse: $.noop,
+        onSuccess: function(data) {
+            this.form('submit');
+        },
         validate: $.noop,
         action: ''
     },
