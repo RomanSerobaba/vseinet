@@ -1,3 +1,4 @@
+<?php
 
 namespace AppBundle\Bus\Order\Form;
 
@@ -7,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use AppBundle\Bus\Order\Query\DTO\Passport;
+use AppBundle\Bus\Order\Command\Schema\Passport;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PassportType extends AbstractType
