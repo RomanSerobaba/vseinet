@@ -25,10 +25,16 @@ abstract class BaseApiClient
      */
     protected $client;
 
+    /**
+     * @var string
+     */
+    var $env;
+
     public function __construct(
         string $apiHost,
         MessageFactory $factory,
-        PluginClient $client
+        PluginClient $client,
+        string $env
     )
     {
         $this->apiHost = $apiHost;
@@ -100,12 +106,28 @@ abstract class BaseApiClient
 
         $debugTokenLink = $response->getHeaders()['X-Debug-Token-Link'] ?? [];
         $debugTokenLink = reset($debugTokenLink) ?? '';
+        $content = json_decode($response->getBody()->getContents(), true);
 
         if (!in_array($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_CREATED, Response::HTTP_NO_CONTENT])) {
-            throw new ApiClientException($response->getReasonPhrase(), null, $response->getStatusCode(), $debugTokenLink);
-        }
+            $message = $response->getReasonPhrase();
+            $paramErrors = [];
 
-        $content = json_decode($response->getBody()->getContents(), true);
+            if (JSON_ERROR_NONE == json_last_error()) {
+                if (!empty($content['message'])) {
+                    $message = $content['message'];
+                }
+
+                if ('dev' !== $this->env) {
+                    $message = 'Внутренняя ошибка приложения';
+                }
+
+                if ('Ошибки валидации входящих параметров' == $message) {
+                    $paramErrors = $content['parameters'];
+                }
+            }
+
+            throw new ApiClientException($message, null, $response->getStatusCode(), $paramErrors, $debugTokenLink);
+        }
 
         return $content;
     }

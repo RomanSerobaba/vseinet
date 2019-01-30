@@ -13,6 +13,7 @@ use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
+use AppBundle\ApiClient\ApiClientException;
 
 class OrderController extends Controller
 {
@@ -135,11 +136,6 @@ class OrderController extends Controller
         }
 
         $command = new Command\CreateCommand($data);
-
-        if (empty($data) && !$this->getUserIsEmployee()) {
-            $this->get('query_bus')->handle(new \AppBundle\Bus\User\Query\GetUserDataQuery(), $command->userData);
-        }
-
         $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
             'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : NULL,
@@ -150,6 +146,8 @@ class OrderController extends Controller
             $command->geoCityId = $this->getParameter('default.city.id');
             $command->deliveryTypeCode = DeliveryTypeCode::EX_WORKS;
         }
+
+        $canCreateRetailOrder = false;
 
         if ($this->getUserIsEmployee()) {
             $canCreateRetailOrder = true;
@@ -168,37 +166,47 @@ class OrderController extends Controller
             'paymentTypeCode' => $command->paymentTypeCode,
             'deliveryTypeCode' => $command->deliveryTypeCode,
             'needLifting' => $command->needLifting,
-            'hasLift' => !empty($command->geoAddress) ? $command->geoAddress->hasLift : null,
-            'floor' => !empty($command->geoAddress) ? $command->geoAddress->floor : null,
+            'hasLift' => !empty($command->address) ? $command->address->hasLift : null,
+            'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
         ]), $cart);
 
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
+            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
                 try {
                     $this->get('command_bus')->handle($command);
                     // $this->forward('AppBundle:Cart:clear');
                     $this->get('session')->remove('discountCode');
                     $this->get('session')->remove('form.orderCreation');
 
-                    if (OrderType::isInnerOrder($command->typeCode)) {
-                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
-                    }
+                    $this->get('session')->set('order_successfully_created', TRUE);
 
                     if ($request->isXmlHttpRequest()) {
                         return $this->json([
                             'id' => $command->id,
+                            'isInnerOrder' => OrderType::isInnerOrder($command->typeCode),
                         ]);
                     }
 
-                    $this->get('session')->set('order_successfully_created', TRUE);
+                    if (OrderType::isInnerOrder($command->typeCode)) {
+                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
+                    }
 
                     return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
 
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
+                } catch (ApiClientException $e) {
+                    $paramErrors = $e->getParamErrors();
+
+                    if (!empty($paramErrors)) {
+                        $messages = array_combine(array_column($paramErrors, 'name'), array_column($paramErrors, 'message'));
+                        $this->addFormErrors($form, $messages);
+                    } else {
+                        $this->addFormErrors($form, ['' => $e->getMessage()]);
+                    }
                 }
             }
 

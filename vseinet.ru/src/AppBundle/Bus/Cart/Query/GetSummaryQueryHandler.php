@@ -3,7 +3,6 @@
 namespace AppBundle\Bus\Cart\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
-use AppBundle\Entity\DiscountCode;
 use AppBundle\Entity\Representative;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\PaymentTypeCode;
@@ -84,6 +83,6 @@ class GetSummaryQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\CartSummary($products, $query->cart->discountCode, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeCode ?? '', $paymentTypeName ?? '');
+        return new DTO\CartSummary($products, $query->cart->discountCode, $query->cart->discountCodeId, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeCode ?? '', $paymentTypeName ?? '');
     }
 }

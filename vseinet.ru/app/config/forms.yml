@@ -35,7 +35,7 @@ services:
             - { name: 'form.type' }
 
     geo_address.form:
-        class: 'AppBundle\Bus\Geo\Form\GeoAddressType'
+        class: 'AppBundle\Bus\Order\Form\AddressType'
         public: false
         arguments: [ '@doctrine.orm.entity_manager' ]
         tags:

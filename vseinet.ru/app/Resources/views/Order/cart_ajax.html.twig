@@ -26,7 +26,7 @@
                 <small>Доставка до регионального склада: +{{ product.deliveryTax|price_format }} <span class="RUR">Р</span></small>
             {% endif %}
             {% if product.liftingCost %}
-                <small class="rise">Подъем: <span>{{ product.liftingCost|price_format }}</span><span class="RUR">Р</span>{% if not form.geoAddress.hasLift.vars.value and form.floor.vars.value > 1 %} <span class="floor">за этаж</span>{% endif %}</small>
+                <small class="rise">Подъем: <span>{{ product.liftingCost|price_format }}</span><span class="RUR">Р</span>{% if not form.address.hasLift.vars.value and form.floor.vars.value > 1 %} <span class="floor">за этаж</span>{% endif %}</small>
             {% endif %}
         </div>
     {% endfor %}
