@@ -205,7 +205,7 @@ class OrderController extends Controller
                         $messages = array_combine(array_column($paramErrors, 'name'), array_column($paramErrors, 'message'));
                         $this->addFormErrors($form, $messages);
                     } else {
-                        $this->addFormErrors($form, ['' => $e->getMessage()]);
+                        $this->addFormErrors($form, ['' => $e->getMessage() . ' ' . $e->getDebugTokenLink()]);
                     }
                 }
             }
