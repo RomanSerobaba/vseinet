@@ -23,6 +23,7 @@ class OrganizationDetailsType extends AbstractType
             ->add('bankId', HiddenType::class, ['required' => false,])
             ->add('bankName', TextType::class, ['required' => false,])
             ->add('withVat', ChoiceType::class, [
+                'required' => false,
                 'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
             ]);
     }

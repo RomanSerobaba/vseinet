@@ -110,7 +110,7 @@ class CreateFormType extends AbstractType
         }
 
         $builder
-            ->add('typeCode', ChoiceType::class, ['choices' => $types,])
+            ->add('typeCode', ChoiceType::class, ['required' => false, 'choices' => $types,])
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class);
     }
@@ -178,6 +178,7 @@ class CreateFormType extends AbstractType
         $options['data']->geoPointId = $point->id;
         $builder
             ->add('geoPointId', ChoiceType::class, [
+                'required' => false,
                 'choices' => $points,
                 'choice_label' => 'name',
                 'choice_value' => 'id',
@@ -435,6 +436,7 @@ class CreateFormType extends AbstractType
                 $options['data']->geoPointId = $point->id;
                 $builder
                     ->add('geoPointId', ChoiceType::class, [
+                        'required' => false,
                         'choices' => $points,
                         'choice_label' => 'name',
                         'choice_value' => 'id',
@@ -478,6 +480,7 @@ class CreateFormType extends AbstractType
                 $options['data']->transportCompanyId = $transportCompany->id;
                 $builder
                     ->add('transportCompanyId', ChoiceType::class, [
+                        'required' => false,
                         'choices' => $transportCompanies,
                         'choice_label' => 'name',
                         'choice_value' => 'id',
@@ -504,12 +507,14 @@ class CreateFormType extends AbstractType
                     'data' => $geoCityId,
                 ])
             ->add('geoCityName', TextType::class, [
+                    'required' => false,
                     'data' => $city->getName(),
                 ])
             ->add('deliveryTypeCode', ChoiceType::class, [
-                'choices' => $deliveryTypes,
-                'data' => $deliveryType,
-            ]);
+                    'required' => false,
+                    'choices' => $deliveryTypes,
+                    'data' => $deliveryType,
+                ]);
     }
 
     private function addAdditionalDataFields(FormBuilderInterface $builder, array &$options) {
@@ -536,6 +541,7 @@ class CreateFormType extends AbstractType
             ->add('isCallNeeded', ChoiceType::class, [
                 'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
                 'data' => $isCallNeeded,
+                'required' => false,
             ])
             ->add('callNeedComment', TextType::class, ['required' => false,])
             ->add('comment', TextareaType::class, ['required' => false,])
