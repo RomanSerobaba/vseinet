@@ -16,6 +16,7 @@ use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
 use AppBundle\Bus\Favorite\Query\GetInfoQuery as GetFavoriteInfoQuery;
 use AppBundle\Bus\Main\Command\AddLastviewProductCommand;
 use AppBundle\Enum\DetailType;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductController extends Controller
 {
@@ -27,7 +28,7 @@ class ProductController extends Controller
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
      *     }
-     * )    
+     * )
      * @VIA\Get(
      *     name="catalog_product_with_category",
      *     path="/product/{id}/{categoryId}/",
@@ -52,7 +53,7 @@ class ProductController extends Controller
         } else {
             $brand =  null;
         }
-         
+
         $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]), $images);
 
         $this->get('query_bus')->handle(new GetCartInfoQuery(), $cart);
@@ -60,7 +61,7 @@ class ProductController extends Controller
 
         $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);
         $product->inFavorites = in_array($product->id, $favorites->ids);
-        
+
         $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $product->id]), $points);
 
         $this->get('query_bus')->handle(new Query\GetDetailsQuery(['baseProductId' => $product->id]), $details);

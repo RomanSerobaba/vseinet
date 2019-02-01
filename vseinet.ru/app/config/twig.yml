@@ -46,6 +46,7 @@ services:
         arguments: [ '@service_container' ]
 
 twig:
+    exception_controller: exception.controller:showAction
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
@@ -53,6 +54,8 @@ twig:
         credit_threshold: '%const.payment.credit.threshold%'
         post_delivery_cost: '%const.delivery.post.cost%'
         transport_company_delivery_cost: '%const.delivery.transport_company.cost%'
+    paths:
+        '%kernel.project_dir%/app/Resources/TwigBundle/views': ~
 
     number_format:
         decimals: 0
