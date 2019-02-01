@@ -63,3 +63,10 @@ services:
         arguments: ["%kernel.environment%"]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    exception.controller:
+        class: AppBundle\Controller\ExceptionController
+        public: true
+        autowire: true
+        arguments:
+            $debug: '%kernel.debug%'

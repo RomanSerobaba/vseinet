@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query;
 
@@ -14,19 +14,19 @@ class GetQueryHandler extends MessageHandler
 
         $q = $em->createQuery("
             SELECT bpml.newId
-            FROM AppBundle:BaseProductMergeLog bpml 
-            WHERE bpml.oldId = :id 
+            FROM AppBundle:BaseProductMergeLog bpml
+            WHERE bpml.oldId = :id
         ");
         $q->setParameter('id', $query->id);
         $q->setMaxResults(1);
         try {
-            $id = $q->getSingleScalarResult();               
+            $id = $q->getSingleScalarResult();
         } catch (NoResultException $e) {
             $id = $query->id;
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Product\Query\DTO\Product (
                     bp.id,
                     bp.name,
@@ -43,15 +43,15 @@ class GetQueryHandler extends MessageHandler
                     d.description,
                     bp.estimate
                 )
-            FROM AppBundle:BaseProduct AS bp 
+            FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id
             INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id
-            LEFT OUTER JOIN AppBundle:BaseProductDescription AS d WITH d.baseProductId = bp.id 
+            LEFT OUTER JOIN AppBundle:BaseProductDescription AS d WITH d.baseProductId = bp.id
             WHERE bp.id = :id AND p.geoCityId = :geoCityId
         ");
         $q->setParameter('id', $id);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
-        $product = $q->getSingleResult();
+        $product = $q->getOneOrNullResult();
         if (!$product instanceof DTO\Product) {
             throw new NotFoundHttpException();
         }
