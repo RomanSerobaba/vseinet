@@ -64,6 +64,6 @@ class OrganizationDetails
 
     public function setWithVat($withVat)
     {
-        $this->withVat = Null === $withVat ? Null : (bool) $comuserId;
+        $this->withVat = Null === $withVat ? Null : (bool) $withVat;
     }
 }

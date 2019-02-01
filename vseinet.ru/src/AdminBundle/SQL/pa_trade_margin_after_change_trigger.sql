@@ -9,14 +9,11 @@ BEGIN
     row = NEW;
   END IF;
 
-  INSERT INTO product_update_register (id, geo_city_id)
-  VALUES ('
-    SELECT p.id, p.geo_city_id
-    FROM product AS p
-    INNER JOIN base_product AS bp ON bp.id = b.base_product_id
-    INNER JOIN category_path AS cp ON cp.id = bp.category_id
-    WHERE cp.pid = ' || row.category_id
-  );
+  INSERT INTO product_update_register (base_product_id)
+  SELECT bp.id
+  FROM base_product As bp
+  INNER JOIN category_path AS cp ON cp.id = bp.category_id
+  WHERE cp.pid = row.category_id;
 
   RETURN row;
 END

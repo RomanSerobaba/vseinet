@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Controller;
 
@@ -58,7 +58,7 @@ class CompetitorController extends Controller
                     throw new NotFoundHttpException(sprintf('Товар конкурента %d не найден', $id));
                 }
                 $command->competitorId = $revision->getCompetitorId();
-                $command->productId = $revision->getProductId();
+                $command->baseProductId = $revision->getBaseProductId();
                 $command->link = $revision->getLink();
                 if (empty($command->link)) {
                     $command->competitorPrice = $revision->getCompetitorPrice();
@@ -72,7 +72,7 @@ class CompetitorController extends Controller
                 if (!$product instanceof Product) {
                     throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $request->query->get('baseProductId')));
                 }
-                $command->productId = $product->getId();
+                $command->baseProductId = $product->getBaseProductId();
             }
         }
         $form = $this->createForm(Form\AddRevisionFormType::class, $command);
@@ -145,6 +145,6 @@ class CompetitorController extends Controller
                 'revisions' => $revisions,
                 'competitors' => $competitors,
             ]),
-        ]);  
+        ]);
     }
 }

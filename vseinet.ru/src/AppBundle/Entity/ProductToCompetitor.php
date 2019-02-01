@@ -24,9 +24,16 @@ class ProductToCompetitor
     /**
      * @var int
      *
-     * @ORM\Column(name="product_id", type="integer")
+     * @ORM\Column(name="base_product_id", type="integer")
      */
-    private $productId;
+    private $baseProductId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_city_id", type="integer")
+     */
+    private $geoCityId;
 
     /**
      * @var int
@@ -110,27 +117,51 @@ class ProductToCompetitor
     }
 
     /**
-     * Set productId
+     * Set baseProductId
      *
-     * @param integer $productId
+     * @param integer $baseProductId
      *
      * @return ProductToCompetitor
      */
-    public function setProductId($productId)
+    public function setBaseProductId($baseProductId)
     {
-        $this->productId = $productId;
+        $this->baseProductId = $baseProductId;
 
         return $this;
     }
 
     /**
-     * Get productId
+     * Get baseProductId
      *
      * @return int
      */
-    public function getProductId()
+    public function getBaseProductId()
     {
-        return $this->productId;
+        return $this->baseProductId;
+    }
+
+    /**
+     * Set geoCityId
+     *
+     * @param integer $geoCityId
+     *
+     * @return ProductToCompetitor
+     */
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = $geoCityId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoCityId
+     *
+     * @return int
+     */
+    public function getGeoCityId()
+    {
+        return $this->geoCityId;
     }
 
     /**

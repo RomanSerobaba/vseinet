@@ -31,25 +31,20 @@ class Product
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="base_product_id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private $baseProductId;
 
     /**
      * @var int
      *
      * @ORM\Column(name="geo_city_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $geoCityId;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="base_product_id", type="integer")
-     */
-    private $baseProductId;
 
     /**
      * @var string
@@ -87,39 +82,11 @@ class Product
     private $discountAmount;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="offer_percent", type="integer", nullable=true)
-     */
-    private $offerPercent;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="modified_at", type="datetime", nullable=true)
-     */
-    private $modifiedAt;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="delivery_tax", type="integer", nullable=true)
-     */
-    private $deliveryTax;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="lifting_tax", type="integer", nullable=true)
-     */
-    private $liftingTax;
 
     /**
      * @var int
@@ -198,15 +165,36 @@ class Product
      */
     private $rating;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="profit", type="integer")
+     */
+    private $profit;
+
 
     /**
-     * Get id
+     * Set baseProductId
+     *
+     * @param integer $baseProductId
+     *
+     * @return Product
+     */
+    public function setBaseProductId($baseProductId)
+    {
+        $this->baseProductId = $baseProductId;
+
+        return $this;
+    }
+
+    /**
+     * Get baseProductId
      *
      * @return int
      */
-    public function getId()
+    public function getBaseProductId()
     {
-        return $this->id;
+        return $this->baseProductId;
     }
 
     /**
@@ -231,30 +219,6 @@ class Product
     public function getGeoCityId()
     {
         return $this->geoCityId;
-    }
-
-    /**
-     * Set baseProductId
-     *
-     * @param integer $baseProductId
-     *
-     * @return Product
-     */
-    public function setBaseProductId($baseProductId)
-    {
-        $this->baseProductId = $baseProductId;
-
-        return $this;
-    }
-
-    /**
-     * Get baseProductId
-     *
-     * @return int
-     */
-    public function getBaseProductId()
-    {
-        return $this->baseProductId;
     }
 
     /**
@@ -378,30 +342,6 @@ class Product
     }
 
     /**
-     * Set offerPercent
-     *
-     * @param integer $offerPercent
-     *
-     * @return Product
-     */
-    public function setOfferPercent($offerPercent)
-    {
-        $this->offerPercent = $offerPercent;
-
-        return $this;
-    }
-
-    /**
-     * Get offerPercent
-     *
-     * @return int
-     */
-    public function getOfferPercent()
-    {
-        return $this->offerPercent;
-    }
-
-    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
@@ -423,78 +363,6 @@ class Product
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    /**
-     * Set modifiedAt
-     *
-     * @param \DateTime $modifiedAt
-     *
-     * @return Product
-     */
-    public function setModifiedAt($modifiedAt)
-    {
-        $this->modifiedAt = $modifiedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get modifiedAt
-     *
-     * @return \DateTime
-     */
-    public function getModifiedAt()
-    {
-        return $this->modifiedAt;
-    }
-
-    /**
-     * Set deliveryTax
-     *
-     * @param integer $deliveryTax
-     *
-     * @return Product
-     */
-    public function setDeliveryTax($deliveryTax)
-    {
-        $this->deliveryTax = $deliveryTax;
-
-        return $this;
-    }
-
-    /**
-     * Get deliveryTax
-     *
-     * @return int
-     */
-    public function getDeliveryTax()
-    {
-        return $this->deliveryTax;
-    }
-
-    /**
-     * Set liftingTax
-     *
-     * @param integer $liftingTax
-     *
-     * @return Product
-     */
-    public function setLiftingTax($liftingTax)
-    {
-        $this->liftingTax = $liftingTax;
-
-        return $this;
-    }
-
-    /**
-     * Get liftingTax
-     *
-     * @return int
-     */
-    public function getLiftingTax()
-    {
-        return $this->liftingTax;
     }
 
     /**
@@ -759,5 +627,29 @@ class Product
     public function getRating()
     {
         return $this->rating;
+    }
+
+    /**
+     * Set profit
+     *
+     * @param integer $profit
+     *
+     * @return Product
+     */
+    public function setProfit($profit)
+    {
+        $this->profit = $profit;
+
+        return $this;
+    }
+
+    /**
+     * Get profit
+     *
+     * @return int
+     */
+    public function getProfit()
+    {
+        return $this->profit;
     }
 }

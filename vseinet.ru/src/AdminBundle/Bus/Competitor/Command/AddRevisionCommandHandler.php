@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Competitor\Command;
 
@@ -26,10 +26,18 @@ class AddRevisionCommandHandler extends MessageHandler
         if (!$competitor instanceof Competitor) {
             throw new NotFoundHttpException(sprintf('Конкурент %d не найден', $command->competitorId));
         }
-        // @todo: check revision link by competitor link 
-        $product = $em->getRepository(Product::class)->find($command->productId);
+
+        $geoCityId = $this->get('geo_city.identity')->getGeoCity()->getId();
+
+        // @todo: check revision link by competitor link
+        $product = $em->getRepository(Product::class)->findOneBy([
+            'baseProductId' => $command->baseProductId,
+            'geoCityId' => [0, $geoCityId],
+        ], [
+            'geoCity' => 'DESC',
+        ]);
         if (!$product instanceof Product) {
-            throw new NotFoundHttpException(sprintf('Товар %d не найден', $command->productId));
+            throw new NotFoundHttpException(sprintf('Товар %d не найден', $command->baseProductId));
         }
 
         if ($command->id) {
@@ -43,7 +51,8 @@ class AddRevisionCommandHandler extends MessageHandler
 
         $revision = new ProductToCompetitor();
         $revision->setCompetitorId($competitor->getId());
-        $revision->setProductId($product->getId());
+        $revision->setBaseProductId($product->getBaseProductId());
+        $revision->setGeoCityId($geoCityId);
         $revision->setLink($command->link);
         if ($command->competitorPrice) {
             $revision->setCompetitorPrice($command->competitorPrice);
@@ -55,7 +64,5 @@ class AddRevisionCommandHandler extends MessageHandler
 
         $em->persist($revision);
         $em->flush();
-
-        $command->baseProductId = $product->getBaseProductId();
     }
 }
