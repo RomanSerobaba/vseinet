@@ -195,7 +195,6 @@ class OrderController extends Controller
                     }
 
                     return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 } catch (ApiClientException $e) {
