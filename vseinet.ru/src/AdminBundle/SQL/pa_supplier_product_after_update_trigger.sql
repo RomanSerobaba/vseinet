@@ -1,16 +1,17 @@
 CREATE OR REPLACE FUNCTION pa_supplier_product_after_update_trigger()
   RETURNS trigger AS $BODY$
+DECLARE
+  row record;
 BEGIN
-  IF NEW.base_product_id IS NULL THEN
-    INSERT INTO product_update_register (id, geo_city_id)
-    VALUES ('
-      SELECT p.id, p.geo_city_id
-      FROM product AS p
-      WHERE p.base_product_id = ' || OLD.base_product_id
-    );
+  IF TG_OP = 'DELETE' THEN
+    row = OLD;
+  ELSE
+    row = NEW;
   END IF;
 
-  RETURN NEW;
+  INSERT INTO product_update_register (base_product_id) VALUES (row.base_product_id);
+
+  RETURN row;
 END
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE;

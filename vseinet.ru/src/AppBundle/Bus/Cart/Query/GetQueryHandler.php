@@ -73,10 +73,8 @@ class GetQueryHandler extends MessageHandler
                         bpi.basename,
                         COALESCE(p2.price, p.price),
                         COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
-                        COALESCE(p2.deliveryTax, p.deliveryTax),
                         c.quantity,
                         cp.id,
-                        p.liftingTax,
                         p.discountAmount,
                         (
                             SELECT
@@ -123,10 +121,8 @@ class GetQueryHandler extends MessageHandler
                             bpi.basename,
                             COALESCE(p2.price, p.price),
                             COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
-                            COALESCE(p2.deliveryTax, p.deliveryTax),
                             0,
                             cp.id,
-                            p.liftingTax,
                             p.discountAmount,
                             (
                                 SELECT
