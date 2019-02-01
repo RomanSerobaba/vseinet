@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExceptionController extends \Symfony\Bundle\TwigBundle\Controller\ExceptionController
 {
-    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
+    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
         if (Response::HTTP_NOT_FOUND == $exception->getStatusCode()) {
             return new Response($this->twig->render(
