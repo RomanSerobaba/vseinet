@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Competitor\Query;
 
@@ -32,16 +32,17 @@ class GetRevisionsQueryHandler extends MessageHandler
                 ptc.competitor_price,
                 ptc.price_time,
                 ptc.requested_at,
-                ptc.status, 
+                ptc.status,
                 CASE WHEN ptc.competitor_price IS NOT NULL AND ptc.competitor_price > :price THEN :ice ELSE :warning END AS state,
                 ptc.server_response,
                 false AS read_only
             FROM product_to_competitor AS ptc
             INNER JOIN competitor AS c ON c.id = ptc.competitor_id
-            WHERE ptc.product_id = :product_id AND c.is_active = true
+            WHERE ptc.base_product_id = :base_product_id AND ptc.geo_city_id = :geo_city_id AND c.is_active = true
             ORDER BY ptc.price_time
         ", new DTORSM(DTO\Revision::class));
-        $q->setParameter('product_id', $product->getId());
+        $q->setParameter('base_product_id', $product->getBaseProductId());
+        $q->setParameter('geo_city_id', $this->getGeoCity()->getId());
         $q->setParameter('price', $product->getPrice());
         $q->setParameter('ice', ProductToCompetitorState::ICE);
         $q->setParameter('warning', ProductToCompetitorState::WARNING);
@@ -61,14 +62,14 @@ class GetRevisionsQueryHandler extends MessageHandler
                 true AS read_only
             FROM supplier_product AS sp
             INNER JOIN product AS p ON p.base_product_id = sp.base_product_id
-            WHERE sp.competitor_price IS NOT NULL 
-                AND sp.product_availability_code = :available 
-                AND sp.supplier_id = :supplier_id 
-                AND p.id = :product_id
+            WHERE sp.competitor_price IS NOT NULL
+                AND sp.product_availability_code = :available
+                AND sp.supplier_id = :supplier_id
+                AND sp.base_product_id = :base_product_id
         ", new DTORSM(DTO\Revision::class));
-        $q->setParameter('product_id', $product->getId());
+        $q->setParameter('base_product_id', $product->getBaseProductId());
         $q->setParameter('price', $product->getPrice());
-        $q->setParameter('supplier_id', 220); 
+        $q->setParameter('supplier_id', 220);
         $q->setParameter('completed', ProductToCompetitorStatus::COMPLETED);
         $q->setParameter('ice', ProductToCompetitorState::ICE);
         $q->setParameter('warning', ProductToCompetitorState::WARNING);

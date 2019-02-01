@@ -1,12 +1,11 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Competitor\Command;
 
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Annotation\Output;
 
-class AddRevisionCommand extends Message 
+class AddRevisionCommand extends Message
 {
     /**
      * @Assert\Type(type="numeric")
@@ -23,7 +22,7 @@ class AddRevisionCommand extends Message
      * @Assert\NotBlank(message="Выберите товар")
      * @Assert\Type(type="numeric")
      */
-    public $productId;
+    public $baseProductId;
 
     /**
      * @Assert\Type(type="string")
@@ -34,9 +33,4 @@ class AddRevisionCommand extends Message
      * @Assert\Type(type="integer")
      */
     public $competitorPrice;
-
-    /**
-     * @Output(type="integer")
-     */
-    public $baseProductId;
 }
