@@ -2,10 +2,10 @@ parameters:
     default.city.id: 1
     default.point.id: 141
     default.room.id: 18
-    default.pageLimit: 25
-    default.ourConteragent.id: 190
-    default.counteragentWithVat.id: 2
-    default.counteragentWithoutVat.id: 190
+    default.page_limit: 25
+    default.our_conteragent.id: 190
+    default.counteragent_with_vat.id: 2
+    default.counteragent_without_vat.id: 190
     default.cardNumber: '5469 4800 1201 9128'
 
     default.page.title: 'Интернет-магазин Vseinet.ru'

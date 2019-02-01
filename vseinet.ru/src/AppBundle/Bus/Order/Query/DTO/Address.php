@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Bus\Geo\Query\DTO;
+namespace AppBundle\Bus\Order\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -77,7 +77,7 @@ class Address
 
     public function setFloor($floor)
     {
-        $this->floor = null !== $floor ? (int) $floor : $floor;
+        $this->floor = !empty($floor) ? (int) $floor : Null;
     }
 
     public function setHasLift($hasLift)

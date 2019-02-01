@@ -74,6 +74,12 @@ class CartSummary
     public $paymentTypeComissionAmount = 0;
 
     /**
+     * @Enum("AppBundle\Enum\PaymentTypeCode")
+     * @VIA\Description("Код способа оплаты")
+     */
+    public $paymentTypeCode;
+
+    /**
      * @Assert\Type(type="string")
      * @VIA\Description("Способ оплаты")
      */
@@ -91,17 +97,22 @@ class CartSummary
     public $discountCode;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $discountCodeId;
+
+    /**
      * @Assert\Type(type="array<AppBundle\Bus\Cart\Query\DTO\Product>")
      */
     public $products;
 
 
-    public function __construct(array $products, string $discountCode = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeName = NULL)
+    public function __construct(array $products, string $discountCode, int $discountCodeId = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeCode = NULL, string $paymentTypeName = NULL)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
             $this->amount += $product->quantity * $product->price;
-            $this->amountWithDiscount += $product->quantity * ($discountCode ? $product->priceWithDiscount : $product->price);
+            $this->amountWithDiscount += $product->quantity * $product->priceWithDiscount;
             $this->deliveryTaxAmount += $product->quantity * $product->deliveryTax;
             $this->deliveryToRepresentativeTaxAmount += $product->quantity * $product->regionDeliveryTax;
             $this->liftingCharges += $product->quantity * $liftingFloor * $product->liftingCost;
@@ -112,10 +123,12 @@ class CartSummary
             }
         }
 
+        $this->paymentTypeCode = $paymentTypeCode;
         $this->paymentTypeName = $paymentTypeName;
         $this->deliveryCharges = $deliveryCharges;
         $this->transportCompanyDeliveryCharges = $transportCompanyDeliveryCharges;
         $this->discountCode = $discountCode;
+        $this->discountCodeId = $discountCodeId;
         $this->paymentTypeComissionPercent = $paymentTypeComissionPercent;
         $this->summary = $this->amountWithDiscount + $this->deliveryTaxAmount + $this->liftingCharges + $this->deliveryCharges + $this->transportCompanyDeliveryCharges + $this->deliveryToRepresentativeTaxAmount;
         $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100);

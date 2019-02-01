@@ -11,17 +11,12 @@
 {% block menu %}{% endblock %}
 
 {% block content %}
-    <nav id="nav">
-        {{ render(controller('AppBundle:Main:getMenu')) }}
-    </nav>
-
-    <div class="wrapper">
-        <h1>Ошибка 404</h1>
-        <h3>Такой страницы не существует</h3>
-        <ul>
-            <li><h4><a href="{{ path('index') }}">Перейти на главную страницу</a></h4></li>
-            <li><h4><a href="{{ path('catalog_category') }}">Перейти в каталог товаров</a></h4></li>
-            <li><h4><a href="{{ path('about_page') }}">Информация о компании</a></h4></li>
-        </ul>
-    </div>
+    <div class="breadcrumbs"> <a href="{{ path('catalog_category') }}">Каталог</a></div>
+    <h1>Ошибка 404</h1>
+    <h3>Такой страницы не существует</h3>
+    <ul>
+        <li><h4><a href="{{ path('index') }}">Перейти на главную страницу</a></h4></li>
+        <li><h4><a href="{{ path('catalog_category') }}">Перейти в каталог товаров</a></h4></li>
+        <li><h4><a href="{{ path('about_page') }}">Информация о компании</a></h4></li>
+    </ul>
 {% endblock %}

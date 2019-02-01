@@ -39,6 +39,11 @@ class Cart
     /**
      * @Assert\Type(type="integer")
      */
+    public $discountCodeId;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $geoPointId;
 
     /**
@@ -49,12 +54,14 @@ class Cart
     public $products;
 
 
-    public function __construct(array $products, string $discountCode = NULL, int $geoPointId = NULL)
+    public function __construct(array $products, string $discountCode, int $discountCodeId = NULL, int $geoPointId = NULL)
     {
         foreach ($products as $key => $product) {
             $this->total += $product->quantity;
             $this->amount += $product->quantity * $product->price;
-            $this->amountWithDiscount += $product->quantity * ($discountCode ? $product->priceWithDiscount : $product->price);
+            $this->amountWithDiscount += $product->quantity * ($discountCodeId ? $product->priceWithDiscount : $product->price);
+            $product->priceWithDiscount = $discountCodeId ? $product->priceWithDiscount : $product->price;
+            $this->products[$key] = $product;
 
             if ($product->hasStroika) {
                 $this->hasStroika = true;
@@ -63,6 +70,7 @@ class Cart
 
         $this->products = $products;
         $this->discountCode = $discountCode;
+        $this->discountCodeId = $discountCodeId;
         $this->geoPointId = $geoPointId;
     }
 }

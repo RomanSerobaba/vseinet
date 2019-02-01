@@ -1,9 +1,8 @@
 <?php
 
-namespace AppBundle\Bus\User\Query\DTO;
+namespace AppBundle\Bus\Order\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Bus\User\Query\DTO\Contact;
 use AppBundle\Enum\OrderItemStatus;
 
 class Passport

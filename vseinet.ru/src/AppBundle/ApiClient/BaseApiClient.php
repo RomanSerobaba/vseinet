@@ -25,10 +25,16 @@ abstract class BaseApiClient
      */
     protected $client;
 
+    /**
+     * @var string
+     */
+    var $env;
+
     public function __construct(
         string $apiHost,
         MessageFactory $factory,
-        PluginClient $client
+        PluginClient $client,
+        string $env
     )
     {
         $this->apiHost = $apiHost;
@@ -97,12 +103,31 @@ abstract class BaseApiClient
         if (Response::HTTP_UNAUTHORIZED === $response->getStatusCode()) {
             throw new UnauthorizedHttpException();
         }
-// var_dump(array_column($response->getHeaders(), 'X-Debug-Token-Link', ''), $response->getBody()->getContents());die();
-        if (!in_array($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_CREATED, Response::HTTP_NO_CONTENT])) {
-            throw new BadRequestHttpException($response->getReasonPhrase(), null, $response->getStatusCode());
-        }
 
+        $debugTokenLink = $response->getHeaders()['X-Debug-Token-Link'] ?? [];
+        $debugTokenLink = reset($debugTokenLink) ?? '';
         $content = json_decode($response->getBody()->getContents(), true);
+
+        if (!in_array($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_CREATED, Response::HTTP_NO_CONTENT])) {
+            $message = $response->getReasonPhrase();
+            $paramErrors = [];
+
+            if (JSON_ERROR_NONE == json_last_error()) {
+                if (!empty($content['message'])) {
+                    $message = $content['message'];
+                }
+
+                if ('dev' !== $this->env) {
+                    $message = 'Внутренняя ошибка приложения';
+                }
+
+                if ('Ошибки валидации входящих параметров' == $message || 'Внутренняя ошибка приложения' == $message) {
+                    $paramErrors = $content['parameters'];
+                }
+            }
+
+            throw new ApiClientException($message, null, $response->getStatusCode(), $paramErrors, $debugTokenLink);
+        }
 
         return $content;
     }

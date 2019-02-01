@@ -15,8 +15,8 @@ class UserDataType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('position', TextType::class)
-            ->add('fullname', TextType::class)
+            ->add('position', TextType::class, ['required' => false])
+            ->add('fullname', TextType::class, ['required' => false])
             ->add('phone', PhoneType::class, [
                 'required' => false])
             ->add('additionalPhone', TextType::class, [

@@ -1,30 +1,30 @@
 <div class="row subrow h">
-    <label for="{{ form.passportData.seria.vars.id }}">
+    <label for="{{ form.passport.seria.vars.id }}">
         Паспорт: <b>*</b>
     </label>
     <span class="col w80 passport_series">
-        {{ form_widget(form.passportData.seria, { attr: { class: 'txt', maxlength: 4 }}) }}
+        {{ form_widget(form.passport.seria, { attr: { class: 'txt', maxlength: 4 }}) }}
         <div class="notice">Серия</div>
         <span class="status"></span>
     </span>
     <span class="col w100">
-        {{ form_widget(form.passportData.number, { attr: { class: 'txt', maxlength: 6 }}) }}
+        {{ form_widget(form.passport.number, { attr: { class: 'txt', maxlength: 6 }}) }}
         <div class="notice">Номер</div>
         <span class="status"></span>
     </span>
     <span class="col w160 passport_date">
-        {{ form_widget(form.passportData.issuedAt, { attr: { class: 'txt datepicker' }}) }}
+        {{ form_widget(form.passport.issuedAt, { attr: { class: 'txt datepicker' }}) }}
         <div class="notice">Дата выдачи (ДД.ММ.ГГГГ)</div>
         <span class="status"></span>
     </span>
-    {% if errors.passportData.seria is defined %}
-        <div class="error">{{ errors.passportData.seria.0 }}</div>
+    {% if errors.passport.seria is defined %}
+        <div class="error">{{ errors.passport.seria.0 }}</div>
     {% endif %}
-    {% if errors.passportData.number is defined %}
-        <div class="error">{{ errors.passportData.number.0 }}</div>
+    {% if errors.passport.number is defined %}
+        <div class="error">{{ errors.passport.number.0 }}</div>
     {% endif %}
-    {% if errors.passportData.issuedAt is defined %}
-        <div class="error">{{ errors.passportData.issuedAt.0 }}</div>
+    {% if errors.passport.issuedAt is defined %}
+        <div class="error">{{ errors.passport.issuedAt.0 }}</div>
     {% endif %}
     <div class="notice">*Заполнение паспортных данных является требованием транспортной компании</div>
 </div>

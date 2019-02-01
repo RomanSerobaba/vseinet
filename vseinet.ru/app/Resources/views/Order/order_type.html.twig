@@ -5,9 +5,14 @@
         <div class="row v">
             <label for="{{ form.typeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="{{ form.typeCode.vars.id }}_{{ choice.value }}" name="{{ form.typeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.typeCode.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.typeCode.vars.id }}_{{ choice.value }}" name="{{ form.typeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.typeCode.vars.value)  %} checked="checked"{% endif %}{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == choice.value and canCreateRetailOrder is same as(false) %} disabled="disabled"{% endif %} />
             </label>
         </div>
+        {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == choice.value and canCreateRetailOrder is same as(false) %}
+        <div class="notice">
+            Продажа с магазина не возможна, так как на точке нет требуемого количества товара или он уже зарезервирован под других клиентов.
+        </div><br/>
+        {% endif %}
         {% endfor %}
     </div>
 </fieldset>
