@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Competitor\Form;
 
@@ -22,7 +22,7 @@ class AddRevisionFormType extends AbstractType
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-    } 
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -35,13 +35,13 @@ class AddRevisionFormType extends AbstractType
         $builder
             ->add('id', HiddenType::class, ['required' => false])
             ->add('competitorId', ChoiceType::class, ['choices' => $competitorsChoice])
-            ->add('productId', HiddenType::class)
+            ->add('baseProductId', HiddenType::class)
             ->add('link', TextType::class, ['required' => false])
             ->add('competitorPrice', PriceType::class, ['required' => false])
             ->add('submit', SubmitType::class)
         ;
     }
-    
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

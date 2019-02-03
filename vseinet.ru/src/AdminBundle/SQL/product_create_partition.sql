@@ -107,20 +107,14 @@ BEGIN
     ';
 
     -- создание триггера на добавление товара
-    EXECUTE '
-      CREATE TRIGGER product_after_insert_trigger
-      AFTER INSERT
-      ON aggregation.' || partition_name || '
-      FOR EACH ROW
-      EXECUTE PROCEDURE aggregation.product_after_insert_trigger()
-    ';
+    -- EXECUTE '
+    --   CREATE TRIGGER product_after_insert_trigger
+    --   AFTER INSERT
+    --   ON aggregation.' || partition_name || '
+    --   FOR EACH ROW
+    --   EXECUTE PROCEDURE aggregation.product_after_insert_trigger()
+    -- ';
 
-    -- создание регистра обновления цен и наличия
-    EXECUTE '
-      CREATE TABLE aggregation.' || partition_update_register_name || ' (
-        CONSTRAINT ' || partition_update_register_name || '_pkey PRIMARY KEY (id, queued_at)
-      ) INHERITS (public.product_update_register)
-    ';
 
   END IF;
 END

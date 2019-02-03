@@ -79,7 +79,7 @@ index product_index_rt_{{ geo_city_id }}
 index product_index_{{ geo_city_id }}
 {
     type                    = distributed
-    local                   = product_index_plain{{ geo_city_id }}
+    local                   = product_index_plain_{{ geo_city_id }}
     local                   = product_index_rt_{{ geo_city_id }}
 }
 {% endautoescape %}

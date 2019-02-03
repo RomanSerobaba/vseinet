@@ -1,12 +1,10 @@
 CREATE OR REPLACE FUNCTION product_before_update_trigger()
   RETURNS trigger AS $BODY$
-DECLARE
-  partition_name text = 'product_' || NEW.geo_city_id;
 BEGIN
-  EXECUTE 'DELETE FROM aggregation.' || partition_name || ' WHERE id = $1'
+  EXECUTE 'DELETE FROM aggregation.product_' || NEW.geo_city_id || ' WHERE id = $1'
   USING NEW.id;
 
-  EXECUTE 'INSERT INTO aggregation.' || partition_name || ' VALUES ($1.*)'
+  EXECUTE 'INSERT INTO aggregation.product_' || NEW.geo_city_id || ' VALUES ($1.*)'
   USING NEW;
 
   RETURN NULL;

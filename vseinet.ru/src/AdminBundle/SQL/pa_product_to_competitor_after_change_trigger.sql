@@ -9,12 +9,7 @@ BEGIN
     row = NEW;
   END IF;
 
-  INSERT INTO product_update_register (id, geo_city_id)
-  VALUES ('
-    SELECT p.id, p.geo_city_id
-    FROM product AS p
-    WHERE p.geo_city_id = ' || row.geo_city_id || ' AND p.base_product_id = ' || row.base_product_id
-  );
+  INSERT INTO product_update_register (base_product_id) VALUES (row.base_product_id);
 
   RETURN row;
 END

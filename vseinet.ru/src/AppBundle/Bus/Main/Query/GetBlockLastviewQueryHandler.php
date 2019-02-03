@@ -14,10 +14,10 @@ class GetBlockLastviewQueryHandler extends MessageHandler
 
         if (null !== $user) {
             $q = $em->createQuery("
-                SELECT bplv.baseProductId 
+                SELECT bplv.baseProductId
                 FROM AppBundle:BaseProductLastview AS bplv
-                WHERE bplv.userId = :userId 
-                ORDER BY bplv.viewedAt ASC 
+                WHERE bplv.userId = :userId
+                ORDER BY bplv.viewedAt ASC
             ");
             $q->setParameter('userId', $user->getId());
             $productIds = $q->getResult('ListHydrator');
@@ -31,22 +31,22 @@ class GetBlockLastviewQueryHandler extends MessageHandler
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Main\Query\DTO\Product (
                     bp.id,
                     bp.name,
                     bp.categoryId,
                     c.name,
                     p.price,
-                    bpi.basename 
+                    bpi.basename
                 )
-            FROM AppBundle:BaseProduct AS bp 
+            FROM AppBundle:BaseProduct AS bp
             LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-            INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id 
-            INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId 
+            INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id
+            INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
             INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
             WHERE bp.id IN (:ids) AND p.geoCityId = :geoCityId
-            GROUP BY bp.id, c.id, p.id, bpi.id
+            GROUP BY bp.id, c.id, p.price, bpi.id
         ");
         $q->setParameter('ids', $productIds);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
