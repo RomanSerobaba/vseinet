@@ -55,6 +55,11 @@ class Product
     /**
      * @Assert\Type(type="integer")
      */
+    public $regionDeliveryTax;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $quantity;
 
     /**
@@ -89,6 +94,7 @@ class Product
         $this->availabilityCode = $availabilityCode;
         $this->quantity = $quantity;
         $this->deliveryTax = $deliveryTax;
+        $this->regionDeliveryTax = 0;
         $this->liftingCost = $liftingCost;
         $this->hasStroika = (bool) $hasStroika;
         $this->priceWithDiscount = (int) round($price - $discountAmount, -2);

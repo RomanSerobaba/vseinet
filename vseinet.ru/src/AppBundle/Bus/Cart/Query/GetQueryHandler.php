@@ -73,8 +73,30 @@ class GetQueryHandler extends MessageHandler
                         bpi.basename,
                         COALESCE(p2.price, p.price),
                         COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
-                        COALESCE(p2.deliveryTax, p.deliveryTax),
-                        COALESCE(p2.liftingTax, p.liftingTax),
+                        COALESCE(FIRST(
+                            SELECT
+                                cat1.deliveryTax
+                            FROM
+                                AppBundle:Category AS cat1
+                            INNER JOIN
+                                AppBundle:CategoryPath AS cp1 WITH cp1.pid = cat1.id
+                            WHERE
+                                cp1.id = bp.categoryId AND cat1.deliveryTax IS NOT NULL
+                            ORDER BY
+                                cp1.plevel DESC
+                        ), 0),
+                        COALESCE(FIRST(
+                            SELECT
+                                cat2.liftingTax
+                            FROM
+                                AppBundle:Category AS cat2
+                            INNER JOIN
+                                AppBundle:CategoryPath AS cp2 WITH cp2.pid = cat2.id
+                            WHERE
+                                cp2.id = bp.categoryId AND cat2.liftingTax IS NOT NULL
+                            ORDER BY
+                                cp2.plevel DESC
+                        ), 0),
                         c.quantity,
                         cp.id,
                         p.discountAmount,
@@ -123,8 +145,30 @@ class GetQueryHandler extends MessageHandler
                             bpi.basename,
                             COALESCE(p2.price, p.price),
                             COALESCE(p2.productAvailabilityCode, p.productAvailabilityCode),
-                            COALESCE(p2.deliveryTax, p.deliveryTax),
-                            COALESCE(p2.liftingTax, p.liftingTax),
+                            COALESCE(FIRST(
+                                SELECT
+                                    cat1.deliveryTax
+                                FROM
+                                    AppBundle:Category AS cat1
+                                INNER JOIN
+                                    AppBundle:CategoryPath AS cp1 WITH cp1.pid = cat1.id
+                                WHERE
+                                    cp1.id = bp.categoryId AND cat1.deliveryTax IS NOT NULL
+                                ORDER BY
+                                    cp1.plevel DESC
+                            ), 0),
+                            COALESCE(FIRST(
+                                SELECT
+                                    cat2.liftingTax
+                                FROM
+                                    AppBundle:Category AS cat2
+                                INNER JOIN
+                                    AppBundle:CategoryPath AS cp2 WITH cp2.pid = cat2.id
+                                WHERE
+                                    cp2.id = bp.categoryId AND cat2.liftingTax IS NOT NULL
+                                ORDER BY
+                                    cp2.plevel DESC
+                            ), 0),
                             0,
                             cp.id,
                             p.discountAmount,
