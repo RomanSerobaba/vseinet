@@ -9,11 +9,6 @@ use AppBundle\Enum\OrderItemStatus;
 class OrganizationDetails
 {
     /**
-     * @Assert\Type(type="boolean")
-     */
-    public $withVat;
-
-    /**
      * @Assert\Type(type="string")
      */
     public $name;

@@ -107,6 +107,11 @@ class CreateCommand extends Message
     public $callNeedComment;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $withVat;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $comment;
@@ -176,6 +181,11 @@ class CreateCommand extends Message
         } else {
             $this->organizationDetails = null;
         }
+    }
+
+    public function setWithVat($withVat)
+    {
+        $this->withVat = null !== $withVat ? (bool) $withVat : $withVat;
     }
 
     public function setIsNotificationNeeded($isNotificationNeeded)
