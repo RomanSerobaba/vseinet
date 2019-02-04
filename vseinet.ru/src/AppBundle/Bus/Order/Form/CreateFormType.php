@@ -263,7 +263,8 @@ class CreateFormType extends AbstractType
                     p.name,
                     p.isInternal,
                     p.isRemote,
-                    p.description
+                    p.description,
+                    p.cashlessPercent
                 )
             FROM AppBundle:PaymentType AS p
             WHERE p.isActive = TRUE
