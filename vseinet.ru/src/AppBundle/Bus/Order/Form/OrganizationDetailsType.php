@@ -21,11 +21,7 @@ class OrganizationDetailsType extends AbstractType
             ->add('kpp', TextType::class, ['required' => false,])
             ->add('bic', TextType::class, ['required' => false,])
             ->add('bankId', HiddenType::class, ['required' => false,])
-            ->add('bankName', TextType::class, ['required' => false,])
-            ->add('withVat', ChoiceType::class, [
-                'required' => false,
-                'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
-            ]);
+            ->add('bankName', TextType::class, ['required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

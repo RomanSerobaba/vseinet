@@ -9,11 +9,6 @@ use AppBundle\Enum\OrderItemStatus;
 class OrganizationDetails
 {
     /**
-     * @Assert\Type(type="boolean")
-     */
-    public $withVat;
-
-    /**
      * @Assert\Type(type="string")
      */
     public $name;
@@ -60,10 +55,5 @@ class OrganizationDetails
     public function setBankId($bankId)
     {
         $this->bankId = empty($bankId) ? Null : (int) $bankId;
-    }
-
-    public function setWithVat($withVat)
-    {
-        $this->withVat = Null === $withVat ? Null : (bool) $withVat;
     }
 }

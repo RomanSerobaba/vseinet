@@ -551,6 +551,10 @@ class CreateFormType extends AbstractType
 
     private function addOrganizationDetailsFields(FormBuilderInterface $builder, array &$options) {
         $builder
-            ->add('organizationDetails', OrganizationDetailsType::class);
+            ->add('organizationDetails', OrganizationDetailsType::class)
+            ->add('withVat', ChoiceType::class, [
+                'required' => false,
+                'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
+            ]);
     }
 }
