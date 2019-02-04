@@ -32,12 +32,18 @@ class PaymentType
      */
     public $description;
 
-    public function __construct($code, $name, $isInternal, $isRemote, $description)
+    /**
+     * @Assert\Type(type="float")
+     */
+    public $cashlessPercent;
+
+    public function __construct($code, $name, $isInternal, $isRemote, $description, $cashlessPercent)
     {
         $this->code = $code;
         $this->name = $name;
         $this->isInternal = $isInternal;
         $this->isRemote = $isRemote;
         $this->description = $description;
+        $this->cashlessPercent = $cashlessPercent;
     }
 }
