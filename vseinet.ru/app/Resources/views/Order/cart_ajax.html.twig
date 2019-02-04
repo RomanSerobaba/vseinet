@@ -47,7 +47,7 @@
             <p>Доставка до представительства: <strong>+{{ cart.deliveryToRepresentativeTaxAmount|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.transportCompanyDeliveryCharges %}
-            <p>{% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == cart.deliveryTypeCode %}Доставка почтой{% else %}Доставка до транспортной компании{% endif %}: <strong>+{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
+            <p>{% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == form.deliveryTypeCode.vars.value %}Доставка почтой{% else %}Доставка до транспортной компании{% endif %}: <strong>+{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.discountCode %}
             <p>Скидка по коду {{ cart.discountCode }}: <strong>-{{ (cart.amount - cart.amountWithDiscount)|price_format }} <span class="RUR">Р</span></strong></p>
