@@ -4,7 +4,7 @@
             <h2>
                 Заказ №
                 {% if app.userIsEmployee %}
-                    <a href="{{ path('authority', { targetUrl: '/admin/orders?id=' ~ order.id }) }}">
+                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders?id=' ~ order.id }) }}">
                         {{ order.id }}
                     </a>
                 {% else %}

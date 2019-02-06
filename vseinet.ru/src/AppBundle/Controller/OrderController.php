@@ -191,7 +191,7 @@ class OrderController extends Controller
                     }
 
                     if (OrderType::isInnerOrder($command->typeCode)) {
-                        return $this->redirectToRoute('authority', ['targetUrl' => '/admin/orders/?id=' . $command->id]);
+                        return $this->redirectToRoute('authority', ['targetUrl' => $this->getParameter('admin.host') . '/admin/orders/?id=' . $command->id]);
                     }
 
                     return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
