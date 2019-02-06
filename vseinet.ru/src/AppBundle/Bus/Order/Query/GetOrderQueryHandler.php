@@ -10,7 +10,7 @@ class GetOrderQueryHandler extends MessageHandler
 {
     public function handle(GetOrderQuery $query)
     {
-        $api = $this->getUser() ? $this->get('user.api.client') : $this->get('site.api.client');
+        $api = $this->get('site.api.client');
 
         try {
             $parameters = [
