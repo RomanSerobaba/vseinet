@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query;
 
@@ -20,13 +20,13 @@ class GetLocalAvailabilityQueryHandler extends MessageHandler
 
         if (!$this->getUserIsEmployee()) {
             // для клиентов наличие только по текущему городу
-            $criteria = " AND gp.geoCityId = ".$this->getGeoCity()->getRealId();   
+            $criteria = " AND gp.geoCityId = ".$this->getGeoCity()->getRealId();
         } else {
             $criteria = "";
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Product\Query\DTO\GeoPoint (
                     gp.id,
                     gp.code,
@@ -35,8 +35,8 @@ class GetLocalAvailabilityQueryHandler extends MessageHandler
                 )
             FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
             INNER JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
-            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = gr.geoPointId 
-            WHERE grrc.baseProductId = :baseProductId AND grrc.goodsConditionCode = :conditionCode {$criteria}
+            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = gr.geoPointId
+            WHERE grrc.baseProductId = :baseProductId AND grrc.goodsConditionCode = :conditionCode AND grrc.orderItemId IS NULL {$criteria}
             GROUP BY gp.id
             ORDER BY gp.geoCityId, gp.name
         ");
