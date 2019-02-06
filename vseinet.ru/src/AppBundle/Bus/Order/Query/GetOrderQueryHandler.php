@@ -25,7 +25,14 @@ class GetOrderQueryHandler extends MessageHandler
             return null;
         }
 
+        try {
+            $items = $api->get('/api/v1/orderItems/?orderIds[]='.$query->id);
+        } catch (BadRequestHttpException $e) {
+            return null;
+        }
+
         $order = reset($result['items']);
+        $order['items'] = $items;
 
         return new DTO\Order($order);
     }
