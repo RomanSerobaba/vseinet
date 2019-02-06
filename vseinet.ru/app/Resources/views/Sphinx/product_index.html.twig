@@ -30,7 +30,7 @@ index product_index_plain_{{ geo_city_id }}
 {
     type                    = plain
     source                  = product_index_plain_{{ geo_city_id }}
-    path                    = {{ workdir }}data/product_index_plain_{{ geo_city_id }}
+    path                    = /var/lib/sphinx/pgsql/dev/product_index_plain_{{ geo_city_id }}
     docinfo                 = extern
     morphology              = stem_en, lemmatize_ru
     min_infix_len           = 1
@@ -39,7 +39,6 @@ index product_index_plain_{{ geo_city_id }}
     index_exact_words       = 1
     charset_table           = 0..9, A..Z->a..z, _, a..z, \
                             U+410..U+42F->U+430..U+44F, U+430..U+44F, U+401->U+0435, U+451->U+0435
-    #wordforms               = {{ workdir }}wordforms.txt
 }
 
 index product_index_rt_{{ geo_city_id }}
@@ -64,7 +63,7 @@ index product_index_rt_{{ geo_city_id }}
     rt_attr_bool            = no_manual_link
     rt_attr_timestamp       = created_at
     rt_attr_bool            = killbill
-    path                    = {{ workdir }}data/product_index_rt_{{ geo_city_id }}
+    path                    = /var/lib/sphinx/pgsql/dev/product_index_rt_{{ geo_city_id }}
     docinfo                 = extern
     min_infix_len           = 1
     min_word_len            = 1
@@ -72,8 +71,6 @@ index product_index_rt_{{ geo_city_id }}
     index_exact_words       = 1
     charset_table           = 0..9, A..Z->a..z, _, a..z, \
                             U+410..U+42F->U+430..U+44F, U+430..U+44F, U+401->U+0435, U+451->U+0435
-    rt_mem_limit            = 1024M
-    #wordforms               = {{ workdir }}wordforms.txt
 }
 
 index product_index_{{ geo_city_id }}
