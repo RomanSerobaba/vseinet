@@ -59,6 +59,11 @@ class Order
     public $username;
 
     /**
+     * @Assert\Type(type="string")
+     */
+    public $addresseename;
+
+    /**
      * @Assert\All({
      *     @Assert\Type(type="AppBundle\Bus\User\Query\DTO\Contact")
      * })
@@ -94,6 +99,7 @@ class Order
         $this->deliveryType = $order['deliveryType'] ?? null;
         $this->deliveryTypeName = $order['deliveryType'] ?? null;
         $this->username = $order['financialCounteragentName'] ?? null;
+        $this->addresseename = $order['personName'] ?? null;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['type'], $contact['value']);
         }

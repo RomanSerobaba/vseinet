@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION pa_update(update_base_product_id int DEFAULT NULL, update bool DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION pa_update(update_base_product_id int DEFAULT NULL, update_all bool DEFAULT FALSE)
   RETURNS void AS $BODY$
 DECLARE
   update_start timestamp = NOW();
@@ -111,6 +111,55 @@ BEGIN
   WHERE data.base_product_id NOT IN (SELECT base_product_id FROM updated);
 
   -- расчет цен
+  WITH
+    competitor_product AS (
+      SELECT
+        p.base_product_id,
+        MIN(p2c.competitor_price) AS competitor_price
+      FROM product_0_tmp AS p
+      INNER JOIN product_to_competitor AS p2c ON p2c.base_product_id = p.base_product_id AND p2c.geo_city_id = 0
+      INNER JOIN competitor AS c ON c.id = p2c.competitor_id
+      WHERE c.is_active = TRUE AND p2c.competitor_price > 0
+        AND
+        CASE
+          WHEN c.channel IN ('site', 'retail')
+          THEN p2c.price_time + INTERVAL '7 day' >= NOW()
+          ELSE p2c.price_time + INTERVAL '30 day' >= NOW()
+        END
+      GROUP BY p.base_product_id
+    ),
+    category_delivery AS (
+      SELECT
+        p.base_product_id,
+        COALESCE(
+          (SELECT
+            c.delivery_tax
+          FROM public.base_product AS bp
+          INNER JOIN public.category_path AS cp ON cp.id = bp.category_id
+          INNER JOIN public.category AS c ON c.id = cp.pid
+          WHERE c.delivery_tax > 0 AND bp.id = p.base_product_id
+          ORDER BY cp.plevel DESC
+          LIMIT 1), 0
+        ) AS delivery_tax
+      FROM product_0_tmp AS p
+      WHERE p.base_product_id IN (SELECT base_product_id FROM competitor_product)
+    ),
+    standard_product AS (
+      SELECT
+        p.base_product_id,
+        ROUND(bp.supplier_price * (
+          SELECT
+            tm.margin_percent
+          FROM
+            trade_margin AS tm
+          INNER JOIN category_path AS cp ON cp.pid = tm.category_id
+          WHERE tm.geo_city_id = 0 AND cp.id = bp.category_id AND bp.supplier_price BETWEEN tm.lower_limit AND tm.higher_limit
+          ORDER BY cp.plevel DESC
+          LIMIT 1
+        ) / 100, -2) AS retail_price
+      FROM product_0_tmp AS p
+      INNER JOIN base_product AS bp ON bp.id = p.base_product_id
+    )
   UPDATE product_0_tmp
   SET
     price = data.price,
@@ -119,55 +168,6 @@ BEGIN
     competitor_price = data.competitor_price,
     profit = data.price - data.purchase_price
   FROM (
-    WITH
-      competitor_product AS (
-        SELECT
-          p.base_product_id,
-          MIN(p2c.competitor_price) AS competitor_price
-        FROM product_0_tmp AS p
-        INNER JOIN product_to_competitor AS p2c ON p2c.base_product_id = p.base_product_id AND p2c.geo_city_id = 0
-        INNER JOIN competitor AS c ON c.id = p2c.competitor_id
-        WHERE c.is_active = TRUE AND p2c.competitor_price > 0
-          AND
-          CASE
-            WHEN c.channel IN ('site', 'retail')
-            THEN p2c.price_time + INTERVAL '7 day' >= NOW()
-            ELSE p2c.price_time + INTERVAL '30 day' >= NOW()
-          END
-        GROUP BY p.base_product_id
-      ),
-      category_delivery AS (
-        SELECT
-          p.base_product_id,
-          COALESCE(
-            (SELECT
-              c.delivery_tax
-            FROM public.base_product AS bp
-            INNER JOIN public.category_path AS cp ON cp.id = bp.category_id
-            INNER JOIN public.category AS c ON c.id = cp.pid
-            WHERE c.delivery_tax > 0 AND bp.id = p.base_product_id
-            ORDER BY cp.plevel DESC
-            LIMIT 1), 0
-          ) AS delivery_tax
-        FROM product_0_tmp AS p
-        WHERE p.base_product_id IN (SELECT base_product_id FROM competitor_product)
-      ),
-      standard_product AS (
-        SELECT
-          p.base_product_id,
-          ROUND(bp.supplier_price * (
-            SELECT
-              tm.margin_percent
-            FROM
-              trade_margin AS tm
-            INNER JOIN category_path AS cp ON cp.pid = tm.category_id
-            WHERE tm.geo_city_id = 0 AND cp.id = bp.category_id AND bp.supplier_price BETWEEN tm.lower_limit AND tm.higher_limit
-            ORDER BY cp.plevel DESC
-            LIMIT 1
-          ) / 100, -2) AS retail_price
-        FROM product_0_tmp AS p
-        INNER JOIN base_product AS bp ON bp.id = p.base_product_id
-      )
     SELECT
       p.base_product_id,
       bp.supplier_price AS purchase_price,
@@ -275,6 +275,55 @@ BEGIN
     WHERE p0.product_availability_code = 'on_demand';
 
     -- расчет цен
+    WITH
+      competitor_product AS (
+        SELECT
+          p.base_product_id,
+          MIN(p2c.competitor_price) AS competitor_price
+        FROM product_x_tmp AS p
+        INNER JOIN product_to_competitor AS p2c ON p2c.base_product_id = p.base_product_id AND p2c.geo_city_id = city.id
+        INNER JOIN competitor AS c ON c.id = p2c.competitor_id
+        WHERE c.is_active = TRUE AND p2c.competitor_price > 0
+          AND
+          CASE
+            WHEN c.channel IN ('site', 'retail')
+            THEN p2c.price_time + INTERVAL '7 day' >= NOW()
+            ELSE p2c.price_time + INTERVAL '30 day' >= NOW()
+          END
+        GROUP BY p.base_product_id
+      ),
+      category_delivery AS (
+        SELECT
+          p.base_product_id,
+          COALESCE(
+            (SELECT
+              c.delivery_tax
+            FROM public.base_product AS bp
+            INNER JOIN public.category_path AS cp ON cp.id = bp.category_id
+            INNER JOIN public.category AS c ON c.id = cp.pid
+            WHERE c.delivery_tax > 0 AND bp.id = p.base_product_id
+            ORDER BY cp.plevel DESC
+            LIMIT 1), 0
+          ) AS delivery_tax
+        FROM product_x_tmp AS p
+        WHERE p.base_product_id IN (SELECT base_product_id FROM competitor_product)
+      ),
+      standard_product AS (
+        SELECT
+          p.base_product_id,
+          ROUND(bp.supplier_price * (
+            SELECT
+              tm.margin_percent
+            FROM
+              trade_margin AS tm
+            INNER JOIN category_path AS cp ON cp.pid = tm.category_id
+            WHERE tm.geo_city_id IN (0, 1) AND cp.id = bp.category_id AND bp.supplier_price BETWEEN tm.lower_limit AND tm.higher_limit
+            ORDER BY tm.geo_city_id DESC, cp.plevel DESC
+            LIMIT 1
+          ) / 100, -2) AS retail_price
+        FROM product_x_tmp AS p
+        INNER JOIN base_product AS bp ON bp.id = p.base_product_id
+      )
     UPDATE product_x_tmp
     SET
       price = data.price,
@@ -283,55 +332,6 @@ BEGIN
       competitor_price = data.competitor_price,
       profit = data.price - data.purchase_price
     FROM (
-      WITH
-        competitor_product AS (
-          SELECT
-            p.base_product_id,
-            MIN(p2c.competitor_price) AS competitor_price
-          FROM product_x_tmp AS p
-          INNER JOIN product_to_competitor AS p2c ON p2c.base_product_id = p.base_product_id AND p2c.geo_city_id = city.id
-          INNER JOIN competitor AS c ON c.id = p2c.competitor_id
-          WHERE c.is_active = TRUE AND p2c.competitor_price > 0
-            AND
-            CASE
-              WHEN c.channel IN ('site', 'retail')
-              THEN p2c.price_time + INTERVAL '7 day' >= NOW()
-              ELSE p2c.price_time + INTERVAL '30 day' >= NOW()
-            END
-          GROUP BY p.base_product_id
-        ),
-        category_delivery AS (
-          SELECT
-            p.base_product_id,
-            COALESCE(
-              (SELECT
-                c.delivery_tax
-              FROM public.base_product AS bp
-              INNER JOIN public.category_path AS cp ON cp.id = bp.category_id
-              INNER JOIN public.category AS c ON c.id = cp.pid
-              WHERE c.delivery_tax > 0 AND bp.id = p.base_product_id
-              ORDER BY cp.plevel DESC
-              LIMIT 1), 0
-            ) AS delivery_tax
-          FROM product_x_tmp AS p
-          WHERE p.base_product_id IN (SELECT base_product_id FROM competitor_product)
-        ),
-        standard_product AS (
-          SELECT
-            p.base_product_id,
-            ROUND(bp.supplier_price * (
-              SELECT
-                tm.margin_percent
-              FROM
-                trade_margin AS tm
-              INNER JOIN category_path AS cp ON cp.pid = tm.category_id
-              WHERE tm.geo_city_id IN (0, 1) AND cp.id = bp.category_id AND bp.supplier_price BETWEEN tm.lower_limit AND tm.higher_limit
-              ORDER BY tm.geo_city_id DESC, cp.plevel DESC
-              LIMIT 1
-            ) / 100, -2) AS retail_price
-          FROM product_x_tmp AS p
-          INNER JOIN base_product AS bp ON bp.id = p.base_product_id
-        )
       SELECT
         p.base_product_id,
         bp.supplier_price AS purchase_price,
@@ -364,23 +364,19 @@ BEGIN
 
     DELETE FROM product_x_tmp
     WHERE base_product_id IN (
-        SELECT p.base_product_id
-        FROM product_x_tmp AS p
-        INNER JOIN aggregation.product_0_new AS p0 ON p0.base_product_id = p.base_product_id
-        WHERE p.product_availability_code = 'on_demand' AND p.price = p0.price
+      SELECT p.base_product_id
+      FROM product_x_tmp AS p
+      INNER JOIN aggregation.product_0_new AS p0 ON p0.base_product_id = p.base_product_id
+      WHERE p.product_availability_code = 'on_demand' AND p.price = p0.price
     );
 
     IF update_all = FALSE THEN
       DELETE FROM product_x WHERE base_product_id IN (SELECT base_product_id FROM product_update_register_tmp);
       INSERT INTO product_x SELECT * FROM product_x_tmp;
       DROP TABLE product_x_tmp;
-
-      UPDATE public.product_update_register
-      SET is_updated = TRUE
-      WHERE queued_at <= update_start;
     ELSE
       EXECUTE 'DROP TABLE aggregation.product_' || city.id || ' CASCADE';
-      EXECUTE 'ALTER TABLE aggregation.product_' || city.id || '_new RENAME TO aggregation.product_' || city.id;
+      EXECUTE 'ALTER TABLE aggregation.product_' || city.id || '_new RENAME TO product_' || city.id;
       EXECUTE 'ALTER TABLE aggregation.product_' || city.id || ' SET LOGGED';
       EXECUTE 'ALTER TABLE aggregation.product_' || city.id || ' INHERIT public.product';
       EXECUTE '
@@ -432,14 +428,16 @@ BEGIN
   END LOOP;
 
   IF update_all = FALSE THEN
-    DELETE FROM aggregation.product_0 WHERE base_product_id IN (SELECT base_product_id FROM product_0_new);
+    DELETE FROM aggregation.product_0 WHERE base_product_id IN (SELECT base_product_id FROM aggregation.product_0_new);
     UPDATE aggregation.product_0
     SET product_availability_code = 'out_of_stock'::product_availability_code
     WHERE base_product_id IN (SELECT base_product_id FROM product_update_register_tmp);
-    INSERT INTO aggregation.product_0 SELECT * FROM product_0_new;
+    INSERT INTO aggregation.product_0 SELECT * FROM aggregation.product_0_new;
+    UPDATE public.product_update_register
+    SET is_updated = TRUE
+    WHERE queued_at <= update_start;
   ELSE
     INSERT INTO aggregation.product_0_new (
-      id,
       geo_city_id,
       base_product_id,
       product_availability_code,
@@ -456,7 +454,6 @@ BEGIN
       profit
     )
     SELECT
-      p.id,
       p.geo_city_id,
       p.base_product_id,
       'out_of_stock'::product_availability_code,
@@ -472,10 +469,10 @@ BEGIN
       p.rating,
       p.profit
     FROM aggregation.product_0 AS p
-    WHERE p.id NOT IN (SELECT id FROM aggregation.product_0_new);
+    WHERE p.base_product_id NOT IN (SELECT base_product_id FROM aggregation.product_0_new);
 
     DROP TABLE aggregation.product_0 CASCADE;
-    ALTER TABLE aggregation.product_0_new RENAME TO aggregation.product_0;
+    ALTER TABLE aggregation.product_0_new RENAME TO product_0;
     ALTER TABLE aggregation.product_0 SET LOGGED;
 
     ALTER TABLE aggregation.product_0 INHERIT public.product;

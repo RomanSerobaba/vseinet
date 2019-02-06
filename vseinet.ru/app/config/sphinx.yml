@@ -1,5 +1,5 @@
 parameters:
-    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/sphinx.conf'
+    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/config/sphinx.conf'
 
 services:
     sphinxql:
