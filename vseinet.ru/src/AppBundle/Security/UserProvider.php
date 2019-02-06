@@ -51,6 +51,7 @@ class UserProvider implements UserProviderInterface
             $contact = $this->em->getRepository(Contact::class)->findOneBy([
                 'contactTypeCode' => ContactTypeCode::MOBILE,
                 'value' => $phone,
+                'isMain' => true,
             ]);
             if (!$contact instanceof Contact) {
                 throw new UsernameNotFoundException(sprintf('Пользователь с мобильным телефоном %s не найден', $phone));
@@ -59,6 +60,7 @@ class UserProvider implements UserProviderInterface
             $contact = $this->em->getRepository(Contact::class)->findOneBy([
                 'contactTypeCode' => ContactTypeCode::EMAIL,
                 'value' => $username,
+                'isMain' => true,
             ]);
             if (!$contact instanceof Contact) {
                 throw new UsernameNotFoundException(sprintf('Пользователь с email %s не найден', $username));
