@@ -2,7 +2,6 @@ CREATE OR REPLACE FUNCTION product_create_partition(geo_city_id int, fill bool D
   RETURNS void AS $BODY$
 DECLARE
   partition_name text = 'product_' || geo_city_id;
-  partition_update_register_name text = 'product_update_register_' || geo_city_id;
   partition_found record;
 BEGIN
   -- проверка на существование сегмента таблицы
@@ -42,14 +41,7 @@ BEGIN
     -- создание первичного ключа
     EXECUTE '
       ALTER TABLE aggregation.' || partition_name || '
-      ADD CONSTRAINT ' || partition_name || '_pkey PRIMARY KEY (id)
-    ';
-
-    -- создание уникального ключа
-    EXECUTE '
-      CREATE UNIQUE INDEX ' || partition_name || '_base_product_id
-      ON aggregation.' || partition_name || '
-      USING BTREE (base_product_id)
+      ADD CONSTRAINT ' || partition_name || '_pkey PRIMARY KEY (base_product_id)
     ';
 
     -- создание индексов
@@ -105,17 +97,6 @@ BEGIN
       ON UPDATE CASCADE
       ON DELETE RESTRICT
     ';
-
-    -- создание триггера на добавление товара
-    -- EXECUTE '
-    --   CREATE TRIGGER product_after_insert_trigger
-    --   AFTER INSERT
-    --   ON aggregation.' || partition_name || '
-    --   FOR EACH ROW
-    --   EXECUTE PROCEDURE aggregation.product_after_insert_trigger()
-    -- ';
-
-
   END IF;
 END
 $BODY$

@@ -5,7 +5,6 @@ BEGIN
 
   -- дозаполнение нулевого города
   INSERT INTO aggregation.product_0 (
-    id,
     geo_city_id,
     base_product_id,
     product_availability_code,
@@ -13,16 +12,11 @@ BEGIN
     price_type,
     price_time,
     discount_amount,
-    offer_percent,
     created_at,
-    modified_at,
-    delivery_tax,
-    lifting_tax,
     rating,
     profit
   )
   SELECT
-    nextval('product_id_seq'::regclass),
     0,
     bp.id,
     COALESCE(p.product_availability_code, 'out_of_stock'),
