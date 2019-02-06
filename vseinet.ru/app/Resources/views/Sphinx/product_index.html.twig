@@ -5,7 +5,7 @@ source product_index_plain_{{ geo_city_id }} : vseinet
     sql_attr_uint           = category_id
     sql_attr_uint           = category_section_id
     sql_attr_uint           = brand_id
-    sql_attr_multi          = uint supplier_id from ranged-main-query; SELECT sp.base_product_id AS id, sp.supplier_id FROM supplier_product sp INNER JOIN supplier s ON s.id = sp.supplier_id WHERE s.is_active = true AND sp.base_product_id BETWEEN $start AND $end GROUP BY sp.base_product_id, sp.supplier_id
+    sql_attr_multi          = uint supplier_id from ranged-query; SELECT sp.base_product_id AS id, sp.supplier_id FROM supplier_product sp INNER JOIN supplier s ON s.id = sp.supplier_id WHERE s.is_active = true AND sp.base_product_id BETWEEN $start AND $end GROUP BY sp.base_product_id, sp.supplier_id; SELECT MIN(bp.id), MAX(bp.id) FROM base_product AS bp
     sql_attr_bool           = is_forbidden
     sql_attr_json           = details
     sql_attr_uint           = availability
