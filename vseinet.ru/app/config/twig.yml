@@ -54,6 +54,7 @@ twig:
         credit_threshold: '%const.payment.credit.threshold%'
         post_delivery_cost: '%const.delivery.post.cost%'
         transport_company_delivery_cost: '%const.delivery.transport_company.cost%'
+        admin_host: '%admin.host%'
     paths:
         '%kernel.project_dir%/app/Resources/TwigBundle/views': ~
 
