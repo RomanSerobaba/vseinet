@@ -4,13 +4,13 @@
         <div class="row h">
             <label>Приобрести товар:</label>
             <div class="value">
-            <label for="{{ form.organizationDetails.withVat.vars.id }}_0">
+            <label for="{{ form.withVat.vars.id }}_0">
                 без НДС
-                <input type="radio" id="{{ form.organizationDetails.withVat.vars.id }}_0" name="{{ form.organizationDetails.withVat.vars.full_name }}" value="0" required="required"{% if (not form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.withVat.vars.id }}_0" name="{{ form.withVat.vars.full_name }}" value="0"{% if (not form.withVat.vars.value)  %} checked="checked"{% endif %} />
             </label>
-            <label for="{{ form.organizationDetails.withVat.vars.id }}_1">
+            <label for="{{ form.withVat.vars.id }}_1">
                 с НДС
-                <input type="radio" id="{{ form.organizationDetails.withVat.vars.id }}_1" name="{{ form.organizationDetails.withVat.vars.full_name }}" value="1" required="required"{% if (form.organizationDetails.withVat.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.withVat.vars.id }}_1" name="{{ form.withVat.vars.full_name }}" value="1"{% if (form.withVat.vars.value)  %} checked="checked"{% endif %} />
             </label>
             </div>
         </div>

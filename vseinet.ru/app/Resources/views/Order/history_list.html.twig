@@ -2,14 +2,14 @@
     <div class="wrapper">
         <div class="column">
             <h2>
-                Заказ № 
+                Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: '/admin/orders?id=' ~ order.id }) }}">
                         {{ order.id }}
                     </a>
                 {% else %}
                     {{ order.id }}
-                {% endif %} 
+                {% endif %}
                 <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
             </h2>
             <dl>
@@ -39,8 +39,12 @@
         <div class="column">
             <h2>Данные покупателя</h2>
             <dl>
-                <dt>Фамилия и имя:</dt>
+                {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == order.statusCode %}
+                <dt>Организация:</dt>
                 <dd>{{ order.username }}</dd>
+                {% endif %}
+                <dt>Фамилия и имя:</dt>
+                <dd>{{ order.addresseename }}</dd>
                 {% for contact in order.contacts %}
                     <dt>{{ contact.typeCodeName }}</dt>
                     {% if contact.isPhone %}
@@ -59,7 +63,7 @@
     <div class="wrapper white">
         <h2>
             Состав заказа
-            {% if constant('AppBundle\\Enum\\OrderItemStatus::CREATED') == order.statusCode %} 
+            {% if constant('AppBundle\\Enum\\OrderItemStatus::CREATED') == order.statusCode %}
                 <span style="font-size: 0.7em; font-weight: normal; vertical-align: top;">Внимание! Обращаем Ваше внимание, что окончательная стоимость заказа, будет подтверждена после обработки заказа сотрудником компании.</span>
             {% endif %}
         </h2>
@@ -78,9 +82,9 @@
                         </a>
                     </p>
                     <p>
-                        {{ item.quantity }} шт 
+                        {{ item.quantity }} шт
                         <strong>
-                            {{ item.retailPrice|price_format }} 
+                            {{ item.retailPrice|price_format }}
                             <span class="RUR">Р</span>
                         </strong>
                     </p>
@@ -91,7 +95,7 @@
                     {/if#}
                     <p>Код товара: {{ item.baseProductId }}</p>
                     <p>
-                        Статус: 
+                        Статус:
                         <strong>
                             <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
                         </strong>

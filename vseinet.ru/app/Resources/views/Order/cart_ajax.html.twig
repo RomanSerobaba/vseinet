@@ -47,13 +47,17 @@
             <p>Доставка до представительства: <strong>+{{ cart.deliveryToRepresentativeTaxAmount|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.transportCompanyDeliveryCharges %}
-            <p>{% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == cart.deliveryTypeCode %}Доставка почтой{% else %}Доставка до транспортной компании{% endif %}: <strong>+{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
+            <p>{% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == form.deliveryTypeCode.vars.value %}Доставка почтой{% else %}Доставка до транспортной компании{% endif %}: <strong>+{{ cart.transportCompanyDeliveryCharges|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.discountCode %}
             <p>Скидка по коду {{ cart.discountCode }}: <strong>-{{ (cart.amount - cart.amountWithDiscount)|price_format }} <span class="RUR">Р</span></strong></p>
         {% endif %}
         {% if cart.paymentTypeComissionAmount %}
-            <p>{{ cart.paymentTypeName }} +{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == cart.paymentTypeCode %}{{ cart.paymentTypeComissionPercent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT') }}{% else %}{{ cart.paymentTypeComissionPercent }}{% endif %}%: <strong>+{{ cart.paymentTypeComissionAmount|price_format }} <span class="RUR">Р</span></strong></p>
+            {% for choice in form.paymentTypeCode.vars.choices %}
+            {% if choice.value == form.paymentTypeCode.vars.value %}
+                <p>{{ choice.data.name }} +{% if constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == choice.value %}{{ choice.data.cashlessPercent + constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT_PERCENT') }}{% else %}{{ choice.data.cashlessPercent }}{% endif %}%: <strong>+{{ cart.paymentTypeComissionAmount|price_format }} <span class="RUR">Р</span></strong></p>
+            {% endif %}
+            {% endfor %}
         {% endif %}
         <strong class="all">Итого: {{ cart.summary|price_format }}</span> <span class="RUR">Р</span></strong>
     </div>

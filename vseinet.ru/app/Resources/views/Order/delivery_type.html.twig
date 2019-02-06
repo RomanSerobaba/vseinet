@@ -23,7 +23,7 @@
         <div class="row v">
             <label for="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}" required="required"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} />
             </label>
         </div>
 
@@ -32,7 +32,7 @@
             <div class="row subrow">
                 <label for="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}">
                     {{ subchoice.label }}
-                    <input type="radio" id="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}" name="{{ form.geoPointId.vars.full_name }}" value="{{ subchoice.value }}" required="required"{% if (subchoice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
+                    <input type="radio" id="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}" name="{{ form.geoPointId.vars.full_name }}" value="{{ subchoice.value }}"{% if (subchoice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
                 </label>
                 <div class="notice2"><a href="/contacts/{{ subchoice.value }}/">{{ subchoice.data.address }}</a></div>
             </div>
@@ -112,7 +112,7 @@
             <div class="row subrow">
                 <label for="{{ form.transportCompanyId.vars.id }}_{{ subchoice.value }}">
                     {{ subchoice.label }}<span style="font-size:12px;color:#666">, 2 - 14 дней</span>, <a href='{{ subchoice.data.url }}' onclick='window.open(this.href); return false;'>рассчитать стоимость услуг</a>
-                    <input type="radio" id="{{ form.transportCompanyId.vars.id }}_{{ subchoice.value }}" name="{{ form.transportCompanyId.vars.full_name }}" value="{{ subchoice.value }}" required="required"{% if (subchoice.value == form.transportCompanyId.vars.value)  %} checked="checked"{% endif %} />
+                    <input type="radio" id="{{ form.transportCompanyId.vars.id }}_{{ subchoice.value }}" name="{{ form.transportCompanyId.vars.full_name }}" value="{{ subchoice.value }}"{% if (subchoice.value == form.transportCompanyId.vars.value)  %} checked="checked"{% endif %} />
                 </label>
                 <div class="notice2">доставка до ТК: 200 <span class="RUR">Р</span> <b style="font-size: 18px">*</b></div>
             </div>

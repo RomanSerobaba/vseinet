@@ -15,17 +15,17 @@ class OrderType
     {
         if ($forEmployee) {
             return [
-                self::NATURAL => 'Заказ на физ. лицо',
-                self::LEGAL => 'Заказ на юр. лицо',
-                self::RETAIL => 'Продажа с магазина',
+                self::NATURAL => 'Частное лицо',
+                self::LEGAL => 'Организацию',
+                self::RETAIL => 'Продажу с магазина',
                 self::RESUPPLY => 'Пополнение складских запасов',
-                self::CONSUMABLES => 'Покупка расходных материалов',
-                // self::EQUIPMENT => 'Покупка оборудования',
+                self::CONSUMABLES => 'Покупку расходных материалов',
+                // self::EQUIPMENT => 'Покупку оборудования',
             ];
         } else {
             return [
-                self::NATURAL => 'Заказ на физ. лицо',
-                self::LEGAL => 'Заказ на юр. лицо',
+                self::NATURAL => 'Частное лицо',
+                self::LEGAL => 'Организацию',
             ];
         }
     }

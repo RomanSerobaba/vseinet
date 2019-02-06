@@ -5,13 +5,13 @@
         <div class="row v">
             <label for="{{ form.isCallNeeded.vars.id }}_0">
                 Не требуется, со сроками доставки ознакомлен
-                <input type="radio" id="{{ form.isCallNeeded.vars.id }}_0" name="{{ form.isCallNeeded.vars.full_name }}" value="0" required="required"{% if (form.isCallNeeded.vars.value is same as("0"))  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.isCallNeeded.vars.id }}_0" name="{{ form.isCallNeeded.vars.full_name }}" value="0"{% if (form.isCallNeeded.vars.value is same as("0"))  %} checked="checked"{% endif %} />
             </label>
         </div>
         <div class="row v">
             <label for="{{ form.isCallNeeded.vars.id }}_1">
                 Требуется (у меня остались вопросы)
-                <input type="radio" id="{{ form.isCallNeeded.vars.id }}_1" name="{{ form.isCallNeeded.vars.full_name }}" value="1" required="required"{% if (form.isCallNeeded.vars.value is same as("1"))  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.isCallNeeded.vars.id }}_1" name="{{ form.isCallNeeded.vars.full_name }}" value="1"{% if (form.isCallNeeded.vars.value is same as("1"))  %} checked="checked"{% endif %} />
             </label>
         </div>
         <div class="row v subrow"{% if not(form.isCallNeeded.vars.value is same as("1")) %} style="display: none"{% endif %}>
