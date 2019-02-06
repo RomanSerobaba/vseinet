@@ -39,7 +39,7 @@
         <div class="column">
             <h2>Данные покупателя</h2>
             <dl>
-                {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == order.statusCode %}
+                {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == order.typeCode %}
                 <dt>Организация:</dt>
                 <dd>{{ order.username }}</dd>
                 {% endif %}
@@ -47,7 +47,7 @@
                 <dd>{{ order.addresseename }}</dd>
                 {% for contact in order.contacts %}
                     <dt>{{ contact.typeCodeName }}</dt>
-                    {% if contact.isPhone %}
+                    {% if constant('AppBundle\\Enum\\ContactTypeCode::MOBILE') == contact.typeCode %}
                         <dd>{{ contact.value|phone_format }}</dd>
                     {% else %}
                         <dd>{{ contact.value }}</dd>

@@ -44,6 +44,11 @@ class Order
     public $deliveryTypeName;
 
     /**
+     * @Enum("AppBundle\Enum\OrderTypeCode")
+     */
+    public $typeCode;
+
+    /**
      * @Enum("AppBundle\Enum\OrderItemStatus")
      */
     public $statusCode;
@@ -100,6 +105,7 @@ class Order
         $this->deliveryTypeName = $order['deliveryType'] ?? null;
         $this->username = $order['financialCounteragentName'] ?? null;
         $this->addresseename = $order['personName'] ?? null;
+        $this->typeCode = $order['orderTypeCode'];
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['type'], $contact['value']);
         }

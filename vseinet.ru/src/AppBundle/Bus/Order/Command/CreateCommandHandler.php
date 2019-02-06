@@ -65,7 +65,7 @@ class CreateCommandHandler extends MessageHandler
             'transportCompanyId' => $command->transportCompanyId,
             'isNotificationNeeded' => $command->isNotificationNeeded,
             'isMarketingSubscribed' => $command->isMarketingSubscribed,
-            'isCallNeeded' => null !== $command->isCallNeeded ? $command->isCallNeeded : false,
+            'isCallNeeded' => $this->getUserIsEmployee() ? false : $command->isCallNeeded,
             'callNeedComment' => $command->callNeedComment,
             'comment' => $command->comment,
             'discountCode' => $cart->discountCode,

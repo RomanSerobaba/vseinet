@@ -8,13 +8,13 @@ use AppBundle\Annotation AS VIA;
 class Cart
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Количество товаров должно быть числом")
      * @VIA\Description("Количество товаров")
      */
     public $total = 0;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Общая сумма товаров должна быть числом")
      * @VIA\Description("Общая сумма товаров")
      */
     public $amount = 0;
@@ -26,7 +26,7 @@ class Cart
     public $hasStroika = false;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Общая сумма товаров со скидкой должна быть числом")
      * @VIA\Description("Общая сумма товаров со скидкой")
      */
     public $amountWithDiscount = 0;
@@ -37,12 +37,14 @@ class Cart
     public $discountCode;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Ид кода скидки должен быть числом")
+     * @VIA\Description("Ид кода скидки")
      */
     public $discountCodeId;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Ид точки должен быть числом")
+     * @VIA\Description("Ид точки")
      */
     public $geoPointId;
 
