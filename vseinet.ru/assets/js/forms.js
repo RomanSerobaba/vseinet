@@ -54,7 +54,7 @@ $.widget('sp.form', {
     },
     _add: function (input, change) {
         var inputs = this.element.data('inputs') || {};
-        inputs[input.id] = {id: input.id, change: change || (input.value ? true : false)};
+        inputs[input.name.replace(/\[/igu, '_').replace(/\]/igu, '')] = {id: input.id, name: input.name, change: change || (input.value ? true : false)};
         this.element.data('inputs', inputs);
     },
     _validate: function (submit) {
@@ -79,7 +79,7 @@ $.widget('sp.form', {
         xhr.done(function (data) {
             var errors = [];
             for (var id in inputs) {
-                var input = form.find('#' + inputs[id].id), row = input.closest('div');
+                var input = form.find('[name="' + inputs[id].name + '"]'), row = input.closest('div');
                 if (submit || inputs[id].change) {
                     var error = false;
                     if (data.errors)

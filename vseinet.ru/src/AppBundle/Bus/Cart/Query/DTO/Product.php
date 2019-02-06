@@ -8,7 +8,7 @@ use AppBundle\Validator\Constraints as VIC;
 class Product
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Ид должен быть числом")
      */
     public $id;
 
@@ -18,12 +18,12 @@ class Product
     public $name;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Ид категории должен быть числом")
      */
     public $categoryId;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Минимальное количество заказа должно быть числом")
      */
     public $minQuantity;
 
@@ -33,7 +33,7 @@ class Product
     public $baseSrc;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Цена должна быть числом")
      */
     public $price;
 
@@ -43,22 +43,22 @@ class Product
     public $availabilityCode;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Стоимость доставки до центрального склада должна быть числом")
      */
     public $deliveryTax;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Стоимость подъема за этаж должна быть числом")
      */
     public $liftingCost;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Стоимость доставки до представительства должна быть числом")
      */
     public $regionDeliveryTax;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Количество должно быть числом")
      */
     public $quantity;
 
@@ -68,19 +68,19 @@ class Product
     public $hasStroika;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Цена со скидкой должна быть числом")
+     */
+    public $priceWithDiscount;
+
+    /**
+     * @Assert\Type(type="integer", message="Количество в наличии должно быть числом")
      */
     public $reserveQuantity;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="integer", message="Ценник в магазине должна быть числом")
      */
     public $storePricetag;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $priceWithDiscount;
 
 
     public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $liftingCost, $quantity, $hasStroika, $discountAmount, $reserveQuantity, $storePricetag)
@@ -98,7 +98,7 @@ class Product
         $this->liftingCost = $liftingCost;
         $this->hasStroika = (bool) $hasStroika;
         $this->priceWithDiscount = (int) round($price - $discountAmount, -2);
-        $this->reserveQuantity = $reserveQuantity;
+        $this->reserveQuantity = (int) $reserveQuantity;
         $this->storePricetag = $storePricetag;
     }
 }

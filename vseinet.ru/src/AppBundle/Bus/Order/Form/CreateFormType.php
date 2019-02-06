@@ -190,6 +190,12 @@ class CreateFormType extends AbstractType
         $user = $this->security->getToken()->getUser();
         $clientDTO = $options['data']->client;
 
+        if (!empty($options['data']->isNotificationNeeded) && null !== $options['data']->isNotificationNeeded) {
+            $isNotificationNeeded = $options['data']->isNotificationNeeded;
+        } else {
+            $isNotificationNeeded = TRUE;
+        }
+
         if (is_object($user) && !$user->isEmployee() && empty($clientDTO)) {
             $clientDTO = new \AppBundle\Bus\Order\Command\Schema\Client();
             $clientDTO->userId = $user->getId();
@@ -246,12 +252,14 @@ class CreateFormType extends AbstractType
         }
 
         $options['data']->isMarketingSubscribed = $isMarketingSubscribed;
+        $options['data']->isNotificationNeeded = $isNotificationNeeded;
         $builder
             ->add('isMarketingSubscribed', CheckboxType::class, [
                     'data' => $isMarketingSubscribed,
                     'required' => false,
                 ])
-            ->add('client', ClientType::class);
+            ->add('client', ClientType::class)
+            ->add('isNotificationNeeded', CheckBoxType::class, ['required' => false, 'data' => $isNotificationNeeded,]);
     }
 
     private function addPaymentTypesFields(FormBuilderInterface $builder, array &$options) {
@@ -530,14 +538,7 @@ class CreateFormType extends AbstractType
             $isCallNeeded = false;
         }
 
-        if (!empty($options['data']->isNotificationNeeded) && null !== $options['data']->isNotificationNeeded) {
-            $isNotificationNeeded = $options['data']->isNotificationNeeded;
-        } else {
-            $isNotificationNeeded = TRUE;
-        }
-
         $options['data']->isCallNeeded = $isCallNeeded;
-        $options['data']->isNotificationNeeded = $isNotificationNeeded;
         $builder
             ->add('isCallNeeded', ChoiceType::class, [
                 'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
@@ -545,8 +546,7 @@ class CreateFormType extends AbstractType
                 'required' => false,
             ])
             ->add('callNeedComment', TextType::class, ['required' => false,])
-            ->add('comment', TextareaType::class, ['required' => false,])
-            ->add('isNotificationNeeded', CheckBoxType::class, ['required' => false, 'data' => $isNotificationNeeded,]);
+            ->add('comment', TextareaType::class, ['required' => false,]);
     }
 
     private function addOrganizationDetailsFields(FormBuilderInterface $builder, array &$options) {

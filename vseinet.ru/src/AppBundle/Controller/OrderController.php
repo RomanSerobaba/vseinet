@@ -149,7 +149,7 @@ class OrderController extends Controller
 
         $canCreateRetailOrder = false;
 
-        if ($this->getUserIsEmployee()) {
+        if ($this->getUserIsEmployee() && $this->getUser()->defaultGeoPointId) {
             $canCreateRetailOrder = true;
 
             foreach ($cart->products as $product) {

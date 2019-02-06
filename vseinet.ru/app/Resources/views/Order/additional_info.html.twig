@@ -13,6 +13,10 @@
                 Требуется (у меня остались вопросы)
                 <input type="radio" id="{{ form.isCallNeeded.vars.id }}_1" name="{{ form.isCallNeeded.vars.full_name }}" value="1"{% if (form.isCallNeeded.vars.value is same as("1"))  %} checked="checked"{% endif %} />
             </label>
+            <span class="status"></span>
+            {% if errors.isCallNeeded is defined %}
+                <div class="error">{{ errors.isCallNeeded.0 }}</div>
+            {% endif %}
         </div>
         <div class="row v subrow"{% if not(form.isCallNeeded.vars.value is same as("1")) %} style="display: none"{% endif %}>
             {{ form_widget(form.callNeedComment, { attr: { class: 'txt', placeholder: 'Краткая суть вопроса' }}) }}
