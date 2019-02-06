@@ -27,7 +27,7 @@ SELECT
     CASE WHEN d.base_product_id IS NULL THEN 1 ELSE 0 END AS no_description,
     CASE WHEN COALESCE(bpd.manufacturer_link, '') = '' THEN 1 ELSE 0 END AS no_manufacturer_link,
     CASE WHEN COALESCE(bpd.manual_link, '') = '' THEN 1 ELSE 0 END AS no_manual_link,
-    UNIX_TIMESTAMP(bp.created_at) AS created_at,
+    bp.created_at,
     0 AS killbill
 FROM public.base_product AS bp
 INNER JOIN public.base_product_data AS bpd ON bpd.base_product_id = bp.id

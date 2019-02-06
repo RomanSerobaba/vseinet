@@ -12,8 +12,8 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setDescription('Manticore create config.')
-            ->setName('manticore:create:config')
+            ->setDescription('Sphinx create config.')
+            ->setName('sphinx:create:config')
             ;
     }
 
@@ -24,17 +24,14 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
         $templating = $container->get('templating');
 
         $geoCities = $connection->query("
+            SELECT 0 AS id
+            UNION
             SELECT gp.geo_city_id AS id
             FROM representative AS r
             INNER JOIN geo_point AS gp ON gp.id = r.geo_point_id
             WHERE r.is_active = true AND r.has_retail = true AND r.type IN ('our', 'torg', 'partner')
             GROUP BY gp.geo_city_id
-            UNION
-            SELECT 0 AS id
         ");
-
-        $workdir = '/var/lib/manticore/';
-        $pidfile = '/var/run/searchd.pid';
 
         $productIndexes = [];
         foreach ($geoCities as $geoCity) {
@@ -44,7 +41,6 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
             $productIndexes[] = $templating->render('Sphinx/product_index.html.twig', [
                 'geo_city_id' => $geoCity['id'],
                 'product_query' => preg_replace('/\s+/', ' ', implode(' ', explode("\n", $productQuery))),
-                'workdir' => $workdir,
             ]);
         }
 
@@ -60,8 +56,6 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
                 'port' => $container->getParameter('sphinxql_port'),
             ],
             'product_indexes' => $productIndexes,
-            'workdir' => $workdir,
-            'pidfile' => $pidfile,
         ]);
 
         $configPath = $container->getParameter('sphinx.conf.path');
@@ -69,6 +63,6 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
         $filesystem = new Filesystem();
         $filesystem->dumpFile($configPath, $config);
 
-        $output->writeln(sprintf('<info>Manticore config (%s) created successful.</info>', $configPath));
+        $output->writeln(sprintf('<info>Sphinx config (%s) created successful.</info>', $configPath));
     }
 }
