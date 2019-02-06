@@ -23,7 +23,7 @@ class CreateCommandHandler extends MessageHandler
         }
 
         $user = $this->getUser();
-        $api = NULL !== $user ? $this->get('user.api.client') : $this->get('site.api.client');
+        $api = $this->getUserIsEmployee() ? $this->get('user.api.client') : $this->get('site.api.client');
 
         switch ($command->typeCode) {
             case OrderType::CONSUMABLES:
