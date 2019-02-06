@@ -39,7 +39,7 @@
         <div class="column">
             <h2>Данные покупателя</h2>
             <dl>
-                {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == order.typeCode %}
+                {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == order.typeCode and order.username is not empty %}
                 <dt>Организация:</dt>
                 <dd>{{ order.username }}</dd>
                 {% endif %}
