@@ -1,0 +1,25 @@
+const cp = require('child_process');
+const mysql = require('mysql');
+
+const INDEXER_COMMAND = ['-u', 'sphinx', 'indexer', '--config', '/home/dev/www/vseinet.ru/bin/sphinx/pgsql/dev.conf', '--rotate', '--all'];
+const SEARCHD_COMMAND = ['/usr/bin/systemctl', 'restart', 'searchd-pgsql-dev'];
+
+const indexer = cp.spawn('sudo', INDEXER_COMMAND);
+
+indexer.stdout.on('data', console.log);
+indexer.stderr.on('data', console.error);
+
+indexer.on('close', code => console.log('child process exited with code ' + code));
+
+const connection = mysql.createConnection({
+    host: '192.168.122.195',
+    port: 9318
+});
+
+connection.connect();
+
+{% for geo_city_id in geo_city_ids %}
+connection.query('ATTACH INDEX product_index_plain_{{ geo_city_id }} TO RTINDEX product_index_rt_{{ geo_city_id }}');
+{% endfor %}
+
+connection.end();
