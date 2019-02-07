@@ -33,9 +33,9 @@ class GetQueryHandler extends MessageHandler
                     bpd.exname,
                     bp.categoryId,
                     bp.brandId,
-                    p.productAvailabilityCode,
-                    p.price,
-                    p.priceType,
+                    COALESCE(p.productAvailabilityCode, p2.productAvailabilityCode),
+                    COALESCE(p.price, p2.price),
+                    COALESCE(p.priceType, p2.priceType),
                     bp.minQuantity,
                     bpd.model,
                     bpd.manufacturerLink,
@@ -45,9 +45,10 @@ class GetQueryHandler extends MessageHandler
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id
-            INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id
+            LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+            INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
             LEFT OUTER JOIN AppBundle:BaseProductDescription AS d WITH d.baseProductId = bp.id
-            WHERE bp.id = :id AND p.geoCityId = :geoCityId
+            WHERE bp.id = :id AND p2.geoCityId = 0
         ");
         $q->setParameter('id', $id);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());

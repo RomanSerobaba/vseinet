@@ -37,16 +37,17 @@ class GetBlockLastviewQueryHandler extends MessageHandler
                     bp.name,
                     bp.categoryId,
                     c.name,
-                    p.price,
+                    COALESCE(p.price, p2.price),
                     bpi.basename
                 )
             FROM AppBundle:BaseProduct AS bp
             LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-            INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id
+            LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+            INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
             INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
             INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
-            WHERE bp.id IN (:ids) AND p.geoCityId = :geoCityId
-            GROUP BY bp.id, c.id, p.price, bpi.id
+            WHERE bp.id IN (:ids) AND p2.geoCityId = 0
+            GROUP BY bp.id, c.id, p.price, p2.price, bpi.id
         ");
         $q->setParameter('ids', $productIds);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
