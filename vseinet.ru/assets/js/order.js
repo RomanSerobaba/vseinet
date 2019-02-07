@@ -55,11 +55,11 @@ $(function() {
                 }
             },
             onSuccess: function(data) {
-                if (data.isInnerOrder) {
-                    window.location = Routing.generate('authority', { targetUrl: '/admin/orders/?id=' + data.id });
-                } else {
+                // if (data.isInnerOrder) {
+                //     window.location = Routing.generate('authority', { targetUrl: '/admin/orders/?id=' + data.id });
+                // } else {
                     window.location = Routing.generate('order_created_page', { id: data.id });
-                }
+                // }
             }
         });
     }
