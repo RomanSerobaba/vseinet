@@ -128,8 +128,10 @@ class CreateFormType extends AbstractType
 
         if (count($user->geoRooms) > 0) {
             $points = array_column($user->geoRooms, 'geo_point_id');
-        } else {
-            $points = [$this->container->getParameter('default.point.id')];
+        }
+
+        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN]) && empty($points)) {
+            return [];
         }
 
         $clause = "";

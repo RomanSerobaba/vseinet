@@ -138,9 +138,6 @@ class UserProvider implements UserProviderInterface
                     $defaultGeoRoom = reset($user->geoRooms);
                     $user->defaultGeoPointId = $defaultGeoRoom['geo_point_id'];
                     $user->defaultGeoRoomId = $defaultGeoRoom['id'];
-                } else {
-                    $user->defaultGeoPointId = $this->getParameter('default.point.id');
-                    $user->defaultGeoRoomId = $this->getParameter('default.room.id');
                 }
             }
         }
