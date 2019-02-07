@@ -22,29 +22,34 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
         $container = $this->getContainer();
         $connection = $container->get('doctrine')->getManager()->getConnection();
         $templating = $container->get('templating');
+        $filesystem = new Filesystem();
 
-        $geoCities = $connection->query("
-            SELECT 0 AS id
-            UNION
+        $geoCityIds = $connection->query("
             SELECT gp.geo_city_id AS id
             FROM representative AS r
             INNER JOIN geo_point AS gp ON gp.id = r.geo_point_id
             WHERE r.is_active = true AND r.has_retail = true AND r.type IN ('our', 'torg', 'partner')
             GROUP BY gp.geo_city_id
-        ");
+        ")->fetchAll(\PDO::FETCH_COLUMN);
+
+        $indexer = $templating->render('Sphinx/indexer.js.twig',[
+            'geo_city_ids' => $geoCityIds,
+        ]);
+
+        $filesystem->dumpFile($container->getParameter('sphinx.indexer.path'), $indexer);
 
         $productIndexes = [];
-        foreach ($geoCities as $geoCity) {
+        foreach (array_merge([0], $geoCityIds) as $geoCityId) {
             $productQuery = $templating->render('Sphinx/product_query.sql.twig', [
-                'geo_city_id' => $geoCity['id'],
+                'geo_city_id' => $geoCityId,
             ]);
             $productIndexes[] = $templating->render('Sphinx/product_index.html.twig', [
-                'geo_city_id' => $geoCity['id'],
+                'geo_city_id' => $geoCityId,
                 'product_query' => preg_replace('/\s+/', ' ', implode(' ', explode("\n", $productQuery))),
             ]);
         }
 
-        $config = $container->get('templating')->render('Sphinx/config.html.twig', [
+        $config = $templating->render('Sphinx/config.html.twig', [
             'pgsql' => [
                 'host' => $container->getParameter('pgsql_host'),
                 'port' => $container->getParameter('pgsql_port'),
@@ -58,11 +63,8 @@ class SphinxCreateConfigCommand extends ContainerAwareCommand
             'product_indexes' => $productIndexes,
         ]);
 
-        $configPath = $container->getParameter('sphinx.conf.path');
+        $filesystem->dumpFile($container->getParameter('sphinx.conf.path'), $config);
 
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile($configPath, $config);
-
-        $output->writeln(sprintf('<info>Sphinx config (%s) created successful.</info>', $configPath));
+        $output->writeln('<info>Sphinx config created successful.</info>');
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Query;
 
@@ -12,8 +12,18 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         $q = $em->createQuery("
+            SELECT MIN(bp.id)
+            FROM AppBundle:BaseProduct AS bp
+        ");
+        try {
+            $minId = $q->getSingleScalarResult();
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        $q = $em->createQuery("
             SELECT MAX(bp.id)
-            FROM AppBundle:BaseProduct AS bp 
+            FROM AppBundle:BaseProduct AS bp
         ");
         try {
             $maxId = $q->getSingleScalarResult();
@@ -22,6 +32,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
         }
 
         $products = [];
+        $random = rand($minId, $maxId);
         while ($query->count--) {
             $q = $em->createQuery("
                 SELECT
@@ -30,22 +41,23 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                         bp.name,
                         bp.categoryId,
                         c.name,
-                        p.price,
-                        bpi.basename 
-                    ) 
-                FROM AppBundle:BaseProduct AS bp 
+                        COALESCE(p.price, p2.price),
+                        bpi.basename
+                    )
+                FROM AppBundle:BaseProduct AS bp
                 INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id 
-                INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId 
-                INNER JOIN AppBundle:Category AS c WITH c.id = cp.id 
-                WHERE 
-                    bp.id >= RANDOM() * :maxId 
-                    AND bp.id NOT IN (:ids) 
-                    AND p.price > 0 AND p.geoCityId = :geoCityId 
-                    AND p.productAvailabilityCode = :available 
-                    AND cp.pid = :categoryId 
+                LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+                INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
+                INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
+                INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
+                WHERE
+                    bp.id >= :random
+                    AND bp.id NOT IN (:ids)
+                    AND COALESCE(p.price, p2.price) > 0 AND p2.geoCityId = 0
+                    AND COALESCE(p.productAvailabilityCode, p2.productAvailabilityCode) = :available
+                    AND cp.pid = :categoryId
             ");
-            $q->setParameter('maxId', $maxId);
+            $q->setParameter('random', $random);
             $q->setParameter('ids', empty($products) ? [0] : array_keys($products));
             $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
             $q->setParameter('categoryId', $query->categoryId);
