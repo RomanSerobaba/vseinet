@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Http\Message\MessageFactory;
 use Http\Client\Common\PluginClient;
+use AppBundle\Bus\Message\Message;
 
 abstract class BaseApiClient
 {
@@ -91,10 +92,22 @@ abstract class BaseApiClient
         return $this->request('UNLINK', $uri, $headers, $body);
     }
 
+    private function prepareParams(&$params)
+    {
+        foreach ($params as &$param) {
+            if (is_array($param) || $param instanceof Message) {
+                $this->prepareParams($param);
+            } elseif ($param instanceof \DateTimeInterface) {
+                $param = $param->format('Y-m-dT00:00:00');
+            }
+        }
+    }
+
     protected function doRequest($method, $uri, array $headers = [], $body = null)
     {
         $headers['Content-Type'] = 'application/json';
         if (is_array($body)) {
+            $this->prepareParams($body);
             $body = json_encode($body);
         }
 
