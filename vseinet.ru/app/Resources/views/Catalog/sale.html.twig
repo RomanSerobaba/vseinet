@@ -19,7 +19,7 @@
 <div class="price-wrapper{% if not app.userIsEmployee %} client{% endif %}">
     <div class="status-mobile-screens">
         {{ macro.availability(product) }}
-    </div>  
+    </div>
     {% if isAvailable %}
         <div class="price">
             <b class="old">{{ product.price|discount_price|price_format }} <span class="RUR">Р</span></b>
@@ -34,7 +34,7 @@
 </div>
 <div class="sale-btns-wrapper">
     <div class="sale-btns to-cart">
-        <a 
+        <a
             href="{{ path('cart_add', { id: product.id }) }}"
             {#onclick="yaCounter13639594.reachGoal('cartadd');return true;" #}
             class="bttn {% if isAvailable or isInTransit or isOnDemand %}green{% else %}greengray{% endif %} cart-add"
@@ -44,27 +44,27 @@
                 Добавить в корзину
             {% else %}
                 Сообщить<br/>о поступлении
-            {% endif %}    
+            {% endif %}
         </a>
             {% if (isAvailable or isInTransit or isOnDemand) and 300000 < product.price %}
                 {% set credit = product.price*1.2582/24 %}
-                <a 
-                    href="{{ path('cart_add', { id: product.id }) }}" 
+                <a
+                    href="{{ path('cart_add', { id: product.id }) }}"
                     data-url="{{ path('credit_calculators', { id: product.id }) }}"
-                    class="bttn blue credit" 
+                    class="bttn blue credit"
                     rel="nofollow"
                 >
                     Кредит от {{ credit|round(-2)|price_format }} <span class="RUR">Р</span>
                 </a>
             {% endif %}
             {% if (isAvailable or isInTransit or isOnDemand) and product.price and app.geoCity.geoRegionId in [44, 59] %}
-                <a 
+                <a
                     class="bttn orange cheaper"
-                    href="{{ path('catalog_product_cheaper', { id: product.id }) }}"
+                    href="{{ path('cheaper_request', { id: product.id }) }}"
                     rel="nofollow"
                 >
                     Нашли дешевле?
-                </a>   
+                </a>
             {% endif %}
     </div>
     <div class="sale-btns in-cart">

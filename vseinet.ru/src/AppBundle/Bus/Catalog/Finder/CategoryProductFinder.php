@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Finder;
 
@@ -26,22 +26,22 @@ class CategoryProductFinder extends ProductFinder
      */
     protected $filter;
 
-    
-    public function setCategory(Category $category): self  
+
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
 
         return $this;
     }
 
-    public function setBrand(?Brand $brand): self 
+    public function setBrand(?Brand $brand): self
     {
         $this->brand = $brand;
 
         return $this;
     }
-    
-    public function getFilter(): Filter 
+
+    public function getFilter(): Filter
     {
         if ($this->filter instanceof Filter) {
             return $this->filter;
@@ -53,7 +53,7 @@ class CategoryProductFinder extends ProductFinder
         $detailFacets = "";
         if ($this->category->isTplEnabled) {
             $q = $em->createQuery("
-                SELECT 
+                SELECT
                     NEW AppBundle\Bus\Catalog\Query\DTO\Filter\Detail (
                         d.id,
                         d.name,
@@ -62,10 +62,10 @@ class CategoryProductFinder extends ProductFinder
                         mu.name
                     )
                 FROM AppBundle:Detail d
-                INNER JOIN AppBundle:DetailGroup dg WITH dg.id = d.groupId 
-                LEFT OUTER JOIN AppBundle:MeasureUnit mu WITH mu.id = d.unitId 
+                INNER JOIN AppBundle:DetailGroup dg WITH dg.id = d.groupId
+                LEFT OUTER JOIN AppBundle:MeasureUnit mu WITH mu.id = d.unitId
                 WHERE dg.categoryId = :categoryId AND d.typeCode IN (:typeCodes) AND d.pid IS NULL
-                ORDER BY dg.sortOrder, d.sortOrder  
+                ORDER BY dg.sortOrder, d.sortOrder
             ");
             $q->setParameter('categoryId', $this->category->id);
             $q->setParameter('typeCodes', [
@@ -85,28 +85,28 @@ class CategoryProductFinder extends ProductFinder
 
         $query = "
             SELECT {$this->getSelectPrice()}{$detailSelect}
-            FROM base_product
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            FACET section_id 
+            FACET section_id
             {$detailFacets}
             ;
-            SELECT COUNT(*) AS total 
-            FROM base_product
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} 
+            SELECT COUNT(*) AS total
+            FROM product_index_{$this->getGeoCity()->getRealId()}
+            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
             {$this->getFacetsNofilled()}
             ;
-            SELECT COUNT(*) AS total 
-            FROM base_product
+            SELECT COUNT(*) AS total
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE category_id = {$this->category->id} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             FACET brand_id
             ;
-            SELECT COUNT(*) AS total 
-            FROM base_product
+            SELECT COUNT(*) AS total
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
             {$this->getFacetAvailability()}
             ;
-            SELECT COUNT(*) AS total 
-            FROM base_product 
+            SELECT COUNT(*) AS total
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
             ;
         ";
@@ -131,14 +131,15 @@ class CategoryProductFinder extends ProductFinder
                 }
             }
         }
+        // print_r($results); exit;
 
-        if ($this->category->isTplEnabled) {
-            $sectionId2count = [];
-            foreach (array_shift($results) as $row) {
-                $sectionId2count[$row['section_id']] = $row['count(*)'];
-            }
-            $this->filter->sections = Block\CategorySections::build($sectionId2count, $em);
-        }
+        // if ($this->category->isTplEnabled) {
+        //     $sectionId2count = [];
+        //     foreach (array_shift($results) as $row) {
+        //         $sectionId2count[$row['section_id']] = $row['count(*)'];
+        //     }
+        //     $this->filter->sections = Block\CategorySections::build($sectionId2count, $em);
+        // }
 
         foreach ($results as $index => $result) {
             if (empty($result)) {
@@ -163,7 +164,7 @@ class CategoryProductFinder extends ProductFinder
                 }
             }
 
-        }  
+        }
         if ($this->category->isTplEnabled) {
             $valueIds = $this->filter->details = [];
             foreach ($details as $id => $detail) {
@@ -174,7 +175,7 @@ class CategoryProductFinder extends ProductFinder
                     if (1 === count($detail->values)) {
                         continue;
                     }
-                    $valueIds = array_merge($valueIds, array_keys($detail->values)); 
+                    $valueIds = array_merge($valueIds, array_keys($detail->values));
                 } elseif (DetailType::CODE_NUMBER === $detail->typeCode && $detail->values->min === $detail->values->max) {
                     continue;
                 }
@@ -185,49 +186,48 @@ class CategoryProductFinder extends ProductFinder
                     SELECT
                         NEW AppBundle\Bus\Catalog\Query\DTO\Filter\DetailValue (
                             dv.id,
-                            dv.value 
+                            dv.value
                         )
-                    FROM AppBundle:DetailValue dv 
+                    FROM AppBundle:DetailValue dv
                     WHERE dv.id IN (:ids)
-                    ORDER BY dv.value 
+                    ORDER BY dv.value
                 ");
                 $q->setParameter('ids', $valueIds);
                 $this->filter->values = $q->getResult('IndexByHydrator');
             }
             foreach ($this->filter->details as $id => $detail) {
-                if (isset($this->filter->sections[$detail->sectionId])) { 
-                    $this->filter->sections[$detail->sectionId]->detailIds[] = $id;
-                }
-                if (0 !== $detail->sectionId) {
+                // if (isset($this->filter->sections[$detail->sectionId])) {
+                //     $this->filter->sections[$detail->sectionId]->detailIds[] = $id;
+                // }
+                // if (0 !== $detail->sectionId) {
                     $this->filter->sections[0]->detailIds[] = $id;
-                } 
+                // }
             }
             if (2 === count($this->filter->sections)) {
                 $this->filter->sections = array_filter($this->filter->sections, function($section) { return 0 == $section->id; });
-            }            
-        }  
+            }
+        }
 
-        $results = array_slice($results, $index + 1);
+        // $results = array_slice($results, $index + 1);
 
-        foreach (Nofilled::getOptions() as $type => $_) {
-            $row = array_shift($results);
-            $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
-        }  
+        // foreach (Nofilled::getOptions() as $type => $_) {
+        //     $row = array_shift($results);
+        //     $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
+        // }
 
-        array_shift($results);
+        // array_shift($results);
 
         $brandId2count = [];
-        foreach (array_shift($results) as $row) {
-            $brandId2count[$row['brand_id']] = $row['count(*)'];
-        }
+        // foreach (array_shift($results) as $row) {
+        //     $brandId2count[$row['brand_id']] = $row['count(*)'];
+        // }
         $this->filter->brands = Block\Brands::build($brandId2count, $em);
 
-        array_shift($results);
+        // array_shift($results);
 
-        $geoCityId = $this->getGeoCity()->getRealId();
-        foreach (array_shift($results) as $row) {
-            $availability[$row['availability.'.$geoCityId]] = $row['count(*)'];
-        }
+        // foreach (array_shift($results) as $row) {
+        //     $availability[$row['availability']] = $row['count(*)'];
+        // }
         foreach (Availability::getOptions($this->getUserIsEmployee()) as $type => $_) {
             if (!isset($availability[$type])) {
                 $availability[$type] = 0;
@@ -235,7 +235,7 @@ class CategoryProductFinder extends ProductFinder
         }
         $this->filter->availability = Block\Availability::build($availability);
 
-        $this->filter->total = $results[0][0]['total'];
+        $this->filter->total = 1000; //$results[0][0]['total'];
 
         return $this->filter;
     }
@@ -246,23 +246,23 @@ class CategoryProductFinder extends ProductFinder
 
         $query = "
             SELECT COUNT(*) AS total
-            FROM base_product 
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getCriteria()}
             ;
             SELECT {$this->getSelectPrice()}
-            FROM base_product
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getCriteria('price')}
             ;
             SELECT COUNT(*) AS total
-            FROM base_product
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getCriteria('brands')}
             FACET brand_id LIMIT 1000
             ;
         ";
         if ($this->category->isTplEnabled) {
             $query .= "
-                SELECT COUNT(*) AS total 
-                FROM base_product
+                SELECT COUNT(*) AS total
+                FROM product_index_{$this->getGeoCity()->getRealId()}
                 WHERE {$this->getCriteria('sections')}
                 FACET section_id
                 ;
@@ -271,14 +271,14 @@ class CategoryProductFinder extends ProductFinder
                 if (DetailType::CODE_NUMBER === $detail->typeCode) {
                     $query .= "
                         SELECT MIN(DOUBLE(details.{$id})) AS min_{$id}, MAX(DOUBLE(details.{$id})) AS max_{$id}
-                        FROM base_product 
+                        FROM product_index_{$this->getGeoCity()->getRealId()}
                         WHERE {$this->getCriteria($id)}
-                        ;    
+                        ;
                     ";
                 } else {
                     $query .= "
-                        SELECT COUNT(*) AS total 
-                        FROM base_product
+                        SELECT COUNT(*) AS total
+                        FROM product_index_{$this->getGeoCity()->getRealId()}
                         WHERE {$this->getCriteria($id)}
                         FACET details.{$id}
                         ;
@@ -297,7 +297,7 @@ class CategoryProductFinder extends ProductFinder
         if (isset($result[0])) {
             $facets->price = new Filter\Range($result[0]['min_price'], $result[0]['max_price']);
         }
-        
+
         array_shift($results);
         foreach (array_shift($results) as $row) {
             if (isset($filter->brands[$row['brand_id']])) {
@@ -309,9 +309,9 @@ class CategoryProductFinder extends ProductFinder
 
         if ($this->category->isTplEnabled) {
             array_shift($results);
-            foreach (array_shift($results) as $row) {
-                $facets->sectionIds[$row['section_id']] = 1;
-            }
+            // foreach (array_shift($results) as $row) {
+            //     $facets->sectionIds[$row['section_id']] = 1;
+            // }
             foreach ($results as $index => $result) {
                 if (isset($result[0]['total'])) {
                     break;
@@ -333,7 +333,7 @@ class CategoryProductFinder extends ProductFinder
                     $values = array_values($row);
                     if (null !== $values[0]) {
                         $id = str_replace('details.', '', $keys[0]);
-                        $facets->details[$id][$values[0]] = 1;    
+                        $facets->details[$id][$values[0]] = 1;
                     }
                 }
             }
@@ -354,7 +354,7 @@ class CategoryProductFinder extends ProductFinder
             $criteria .= " AND $condition";
         }
         if ('sections' != $exclude && !empty($data->sectionIds)) {
-            $criteria .= " AND section_id IN (".implode(',', $this->data->sectionIds).")";
+            //$criteria .= " AND section_id IN (".implode(',', $this->data->sectionIds).")";
         }
         if (!empty($this->data->details)) {
             foreach ($this->data->details as $id => $values) {
@@ -375,7 +375,7 @@ class CategoryProductFinder extends ProductFinder
                         break;
 
                     case DetailType::CODE_ENUM:
-                        $criteria .= " AND details.{$id} IN (".implode(',', $values).")";    
+                        $criteria .= " AND details.{$id} IN (".implode(',', $values).")";
                         break;
 
                     case DetailType::CODE_BOOLEAN:
