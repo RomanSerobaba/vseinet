@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Finder;
 
@@ -31,13 +31,13 @@ abstract class ProductFinder extends ContainerAware
 
     abstract public function getFacets(): Filter\Facets;
 
-    public function getProductIds(): array 
+    public function getProductIds(): array
     {
         $query = "
-            SELECT 
-                id, 
-                WEIGHT() AS weight 
-            FROM base_product 
+            SELECT
+                id,
+                WEIGHT() AS weight
+            FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getCriteria()}
             ORDER BY {$this->getSortOrder()}
             LIMIT {$this->getOffsetPage()}
@@ -45,19 +45,18 @@ abstract class ProductFinder extends ContainerAware
         ";
         $results = $this->get('sphinxql')->execute($query);
 
-        return array_map(function($row) { return intval($row['id']); }, $results[0]);   
+        return array_map(function($row) { return intval($row['id']); }, $results[0]);
     }
 
     abstract protected function getCriteria(string $exclude = null): string;
 
-    protected function getSortOrder(): string 
+    protected function getSortOrder(): string
     {
         $direction = SortDirection::ASC === $this->data->sortDirection ? 'ASC' : 'DESC';
-        $geoCity = $this->getGeoCity();
 
         switch ($this->data->sort) {
             case Sort::PRICE:
-                return "price_order.{$geoCity->getRealId()} ASC, price.{$geoCity->getRealId()} {$direction}";
+                return "price_order ASC, price {$direction}";
 
             case Sort::NOVELTY:
                 return "created_at {$direction}";
@@ -66,7 +65,7 @@ abstract class ProductFinder extends ContainerAware
                 return "name {$direction}";
         }
 
-        return "availability.{$geoCity->getRealId()} ASC, weight DESC, profit DESC";
+        return "availability ASC, weight DESC, profit DESC";
     }
 
     protected function getOffsetPage(): string
@@ -74,7 +73,7 @@ abstract class ProductFinder extends ContainerAware
         $page = min($this->data->page, ceil(self::MAX_MATCHES / self::PER_PAGE));
         $offset = ($page - 1) * self::PER_PAGE;
 
-        return $offset.', '.self::PER_PAGE;        
+        return $offset.', '.self::PER_PAGE;
     }
 
     protected function getSearchOptions(): string
@@ -85,18 +84,17 @@ abstract class ProductFinder extends ContainerAware
 
     protected function getSelectPrice(): string
     {
-        $geoCity = $this->getGeoCity();
-
-        return "MIN(INTEGER(price.{$geoCity->getRealId()})) AS min_price, MAX(INTEGER(price.{$geoCity->getRealId()})) AS max_price";
-    } 
+        return "MIN(INTEGER(price)) AS min_price, MAX(INTEGER(price)) AS max_price";
+    }
 
     protected function getFacetAvailability(): string
     {
-        return "FACET availability.{$this->getGeoCity()->getRealId()}";
+        return "FACET availability";
     }
 
     protected function getFacetsNofilled(): string
     {
+        return "";
         return "
             FACET nofilled.".Nofilled::DETAILS."
             FACET nofilled.".Nofilled::IMAGES."
@@ -118,14 +116,16 @@ abstract class ProductFinder extends ContainerAware
             $availability = min($availability, Availability::ACTIVE);
         }
 
-        return "availability.{$this->getGeoCity()->getRealId()} <= {$availability}";
+        return "availability <= {$availability}";
     }
 
-    protected function getCriteriaNofilled(): ?string 
+    protected function getCriteriaNofilled(): ?string
     {
         if (!$this->getUserIsEmployee() || null === $this->data->nofilled) {
             return "";
         }
+
+        return "";
 
         $criteria = [];
         foreach ($this->data->nofilled as $nofilled) {
@@ -141,20 +141,18 @@ abstract class ProductFinder extends ContainerAware
             return null;
         }
 
-        $geoCity = $this->getGeoCity();
-
         if (null === $this->data->price->min) {
-            return "price.{$geoCity->getRealId()} <= {$this->data->price->max}";
+            return "price <= {$this->data->price->max}";
         }
 
         if (null === $this->data->price->max) {
-            return "price.{$geoCity->getRealId()} >= {$this->data->price->min}";
+            return "price >= {$this->data->price->min}";
         }
 
-        return "price.{$geoCity->getRealId()} BETWEEN {$this->data->price->min} AND {$this->data->price->max}";
+        return "price BETWEEN {$this->data->price->min} AND {$this->data->price->max}";
     }
 
-    protected function getCriteriaCategories(Filter\Category ...$categories): ?string 
+    protected function getCriteriaCategories(Filter\Category ...$categories): ?string
     {
         $categoryIds = $this->data->categoryIds;
         if (empty($categoryIds)) {
@@ -168,7 +166,7 @@ abstract class ProductFinder extends ContainerAware
             unset($categoryIds[-1]);
         }
 
-        return "category_id IN (".implode(',', $categoryIds).")";        
+        return "category_id IN (".implode(',', $categoryIds).")";
     }
 
     protected function getCriteriaBrands(Filter\Brand ...$brands): ?string
