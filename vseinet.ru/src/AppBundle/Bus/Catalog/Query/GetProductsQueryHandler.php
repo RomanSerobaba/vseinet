@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query;
 
@@ -9,22 +9,23 @@ class GetProductsQueryHandler extends MessageHandler
     public function handle(GetProductsQuery $query)
     {
         $q = $this->getDoctrine()->getManager()->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Catalog\Query\DTO\Product (
                     bp.id,
                     bp.name,
                     bpi.basename,
-                    p.productAvailabilityCode,
-                    p.price,
-                    p.priceType,
+                    COALESCE(p.productAvailabilityCode, p2.productAvailabilityCode),
+                    COALESCE(p.price, p2.price),
+                    COALESCE(p.priceType, p2.priceType),
                     bpd.shortDescription,
                     bp.minQuantity,
                     bp.updatedAt
                 )
-            FROM AppBundle:BaseProduct bp 
+            FROM AppBundle:BaseProduct bp
             INNER JOIN AppBundle:BaseProductData bpd WITH bpd.baseProductId = bp.id
-            INNER JOIN AppBundle:Product p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
-            LEFT OUTER JOIN AppBundle:BaseProductImage bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+            LEFT JOIN AppBundle:Product p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+            INNER JOIN AppBundle:Product p2 WITH p2.baseProductId = bp.id
+            LEFT OUTER JOIN AppBundle:BaseProductImage bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND p2.geoCityId = 0
             WHERE bp.id IN (:ids)
         ");
         $q->setParameter('ids', $query->ids);

@@ -45,7 +45,7 @@ class GetQueryHandler extends MessageHandler
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id
-            LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+            LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
             INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
             LEFT OUTER JOIN AppBundle:BaseProductDescription AS d WITH d.baseProductId = bp.id
             WHERE bp.id = :id AND p2.geoCityId = 0
