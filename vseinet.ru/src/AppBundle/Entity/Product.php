@@ -159,6 +159,7 @@ class Product
     private $temporaryPriceOperatedBy;
 
     /**
+     * @deprecated
      * @var int
      *
      * @ORM\Column(name="rating", type="integer")
@@ -606,6 +607,7 @@ class Product
     }
 
     /**
+     * @deprecated
      * Set rating
      *
      * @param integer $rating
@@ -620,6 +622,7 @@ class Product
     }
 
     /**
+     * @deprecated
      * Get rating
      *
      * @return int
