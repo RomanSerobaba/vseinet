@@ -23,8 +23,8 @@ class GetInfoQueryHandler extends MessageHandler
                     )
                 FROM AppBundle:Cart AS c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
-                LEFT OUTER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
-                LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
+                INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
                 WHERE c.userId = :userId
             ");
             $q->setParameter('userId', $user->getId());
@@ -42,8 +42,8 @@ class GetInfoQueryHandler extends MessageHandler
                             bp.minQuantity
                         )
                     FROM AppBundle:BaseProduct AS bp
-                    LEFT OUTER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
-                    LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                    LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
                     WHERE bp.id IN (:ids)
                 ");
                 $q->setParameter('ids', array_keys($products));

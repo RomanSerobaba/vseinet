@@ -46,7 +46,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                     )
                 FROM AppBundle:BaseProduct AS bp
                 INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+                LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
                 INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
                 INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
                 INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
