@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Entity\Product;
+use AppBundle\Entity\BaseProduct;
 
 class IncreaseRatingCommandHandler extends MessageHandler
 {
@@ -12,8 +12,8 @@ class IncreaseRatingCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->baseProductId]);
-        if (!$product instanceof Product) {
+        $product = $em->getRepository(BaseProduct::class)->find($command->baseProductId);
+        if (!$product instanceof BaseProduct) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->baseProductId));
         }
 

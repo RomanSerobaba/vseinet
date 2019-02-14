@@ -111,6 +111,8 @@ class CategoryProductFinder extends ProductFinder
             ;
         ";
         $results = $this->get('sphinxql')->execute($query);
+        print_r($query.PHP_EOL);
+        print_r($results); exit;
 
         $this->filter = new Filter();
         $this->filter->price = new Filter\Range(0, 0);
