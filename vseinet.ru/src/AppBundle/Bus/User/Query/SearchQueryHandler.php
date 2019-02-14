@@ -23,17 +23,26 @@ class SearchQueryHandler extends MessageHandler
                 NEW AppBundle\Bus\User\Query\DTO\FoundUser (
                     u.id,
                     CONCAT_WS(' ', p.lastname, p.firstname, p.secondname),
-                    mobile.value,
-                    email.value,
-                    phone.value,
+                    (
+                        SELECT mobile.value
+                        FROM AppBundle:Contact AS mobile
+                        WHERE p.id = mobile.personId AND mobile.contactTypeCode = :contactTypeCode_MOBILE AND mobile.isMain = TRUE
+                    ),
+                    (
+                        SELECT email.value
+                        FROM AppBundle:Contact AS email
+                        WHERE p.id = email.personId AND email.contactTypeCode = :contactTypeCode_EMAIL AND email.isMain = TRUE
+                    ),
+                    FIRST(
+                        SELECT phone.value
+                        FROM AppBundle:Contact AS phone
+                        WHERE p.id = phone.personId AND phone.contactTypeCode IN (:contactTypeCode_MOBILE, :contactTypeCode_PHONE) AND phone.isMain = TRUE
+                    ),
                     'user',
                     eh.orgEmployeeUserId
                 )
             FROM AppBundle:User AS u
             JOIN AppBundle:Person AS p WITH p.id = u.personId
-            LEFT JOIN AppBundle:Contact AS mobile WITH p.id = mobile.personId AND mobile.contactTypeCode = :contactTypeCode_MOBILE AND mobile.isMain = TRUE
-            LEFT JOIN AppBundle:Contact AS email WITH p.id = email.personId AND email.contactTypeCode = :contactTypeCode_EMAIL AND email.isMain = TRUE
-            LEFT JOIN AppBundle:Contact AS phone WITH p.id = phone.personId AND phone.contactTypeCode = :contactTypeCode_PHONE AND phone.isMain = FALSE
             LEFT JOIN AppBundle:EmploymentHistory AS eh WITH eh.orgEmployeeUserId = u.id AND eh.hiredAt IS NOT NULL AND eh.firedAt IS NULL
             WHERE {$where}
         ");
