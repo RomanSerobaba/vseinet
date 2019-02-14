@@ -72,35 +72,35 @@ class BaseProduct
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="min_quantity", type="integer")
      */
     private $minQuantity;
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="estimate", type="integer")
      */
     private $estimate;
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="supplier_id", type="integer")
      */
     private $supplierId;
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="supplier_price", type="integer")
      */
     private $supplierPrice;
 
     /**
      * @var bool
-     * 
+     *
      * @ORM\Column(name="is_hidden", type="boolean")
      */
     private $isHidden;
@@ -113,12 +113,33 @@ class BaseProduct
     private $supplierAvailabilityCode;
 
     /**
+     * @deprecated
      * @var int
      *
      * @ORM\Column(name="free_reserve", type="integer")
      */
     private $freeReserve;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="rating", type="integer")
+     */
+    private $rating;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cannonical_d", type="integer")
+     */
+    private $cannonicalId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="old_id", type="integer")
+     */
+    private $oldId;
 
     /**
      * Get id
@@ -300,9 +321,9 @@ class BaseProduct
 
     /**
      * Set minQuantity
-     * 
+     *
      * @param integer $minQuantity
-     * 
+     *
      * @return BaseProduct
      */
     public function setMinQuantity($minQuantity)
@@ -314,7 +335,7 @@ class BaseProduct
 
     /**
      * Get minQuantity
-     * 
+     *
      * @return int
      */
     public function getMinQuantity()
@@ -324,9 +345,9 @@ class BaseProduct
 
     /**
      * Set estimate
-     * 
+     *
      * @param integer $estimate
-     * 
+     *
      * @return BaseProduct
      */
     public function setEstimate($estimate)
@@ -338,7 +359,7 @@ class BaseProduct
 
     /**
      * Get estimate
-     * 
+     *
      * @return int
      */
     public function getEstimate()
@@ -348,9 +369,9 @@ class BaseProduct
 
     /**
      * Set supplierId
-     * 
+     *
      * @param integer $supplierId
-     * 
+     *
      * @return BaseProduct
      */
     public function setSupplierId($supplierId)
@@ -362,7 +383,7 @@ class BaseProduct
 
     /**
      * Get supplierId
-     * 
+     *
      * @return int
      */
     public function getSupplierId()
@@ -372,9 +393,9 @@ class BaseProduct
 
     /**
      * Set supplierPrice
-     * 
+     *
      * @param integer $supplierPrice
-     * 
+     *
      * @return BaseProduct
      */
     public function setSupplierPrice($supplierPrice)
@@ -386,7 +407,7 @@ class BaseProduct
 
     /**
      * Get supplierPrice
-     * 
+     *
      * @return int
      */
     public function getSupplierPrice()
@@ -396,9 +417,9 @@ class BaseProduct
 
     /**
      * Set isHidden
-     * 
+     *
      * @param boolean $isHidden
-     * 
+     *
      * @return BaseProduct
      */
     public function setIsHidden($isHidden)
@@ -410,7 +431,7 @@ class BaseProduct
 
     /**
      * Get isHidden
-     * 
+     *
      * @return bool
      */
     public function getIsHidden()
@@ -443,6 +464,7 @@ class BaseProduct
     }
 
     /**
+     * @deprecated
      * Set freeReserve
      *
      * @param string $freeReserve
@@ -457,6 +479,7 @@ class BaseProduct
     }
 
     /**
+     * @deprecated
      * Get freeReserve
      *
      * @return string
@@ -464,6 +487,78 @@ class BaseProduct
     public function getFreeReserve()
     {
         return $this->freeReserve;
+    }
+
+    /**
+     * Set rating
+     *
+     * @param integer $rating
+     *
+     * @return BaseProduct
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return int
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Set cannonicalId
+     *
+     * @param integer $cannonicalId
+     *
+     * @return BaseProduct
+     */
+    public function setCannonicalId($cannonicalId)
+    {
+        $this->cannonicalId = $cannonicalId;
+
+        return $this;
+    }
+
+    /**
+     * Get cannonicalId
+     *
+     * @return int
+     */
+    public function getCannonicalId()
+    {
+        return $this->cannonicalId;
+    }
+
+    /**
+     * Set oldId
+     *
+     * @param integer $oldId
+     *
+     * @return BaseProduct
+     */
+    public function setOldId($oldId)
+    {
+        $this->oldId = $oldId;
+
+        return $this;
+    }
+
+    /**
+     * Get oldId
+     *
+     * @return int
+     */
+    public function getOldId()
+    {
+        return $this->oldId;
     }
 }
 

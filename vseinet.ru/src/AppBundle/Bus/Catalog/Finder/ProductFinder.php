@@ -84,7 +84,7 @@ abstract class ProductFinder extends ContainerAware
 
     protected function getSelectPrice(): string
     {
-        return "MIN(INTEGER(price)) AS min_price, MAX(INTEGER(price)) AS max_price";
+        return "MIN(price) AS min_price, MAX(price) AS max_price";
     }
 
     protected function getFacetAvailability(): string
