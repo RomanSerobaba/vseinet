@@ -84,35 +84,36 @@ class CategoryProductFinder extends ProductFinder
         }
 
         $query = "
-            SELECT {$this->getSelectPrice()}{$detailSelect}
+            SELECT COUNT(*) AS total, {$this->getSelectPrice()}{$detailSelect}
             FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            FACET section_id
-            {$detailFacets}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
-            {$this->getFacetsNofilled()}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE category_id = {$this->category->id} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
+            FACET category_section_id
             FACET brand_id
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
-            {$this->getFacetAvailability()}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            ;
+            {$detailFacets}
         ";
+        // "
+        //     ;
+        //     SELECT COUNT(*) AS total
+        //     FROM product_index_{$this->getGeoCity()->getRealId()}
+        //     WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
+        //     {$this->getFacetsNofilled()}
+        //     ;
+        //     SELECT COUNT(*) AS total
+        //     FROM product_index_{$this->getGeoCity()->getRealId()}
+        //     WHERE category_id = {$this->category->id} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
+        //     FACET brand_id
+        //     ;
+        //     SELECT COUNT(*) AS total
+        //     FROM product_index_{$this->getGeoCity()->getRealId()}
+        //     WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
+        //     {$this->getFacetAvailability()}
+        //     ;
+        //     SELECT COUNT(*) AS total
+        //     FROM product_index_{$this->getGeoCity()->getRealId()}
+        //     WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
+        //     ;
+        // ";
         $results = $this->get('sphinxql')->execute($query);
-        print_r($query.PHP_EOL);
-        print_r($results); exit;
 
         $this->filter = new Filter();
         $this->filter->price = new Filter\Range(0, 0);
