@@ -21,7 +21,7 @@ class CartController extends Controller
      */
     public function getAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery($request->request->all()), $cart);
+        $cart = $this->get('query_bus')->handle(new Query\GetQuery($request->request->all()));
 
         if ($request->isXmlHttpRequest()) {
             if ($request->isMethod('POST')) {
@@ -104,7 +104,7 @@ class CartController extends Controller
      */
     public function decQuantityAction(int $id, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
+        $cart = $this->get('query_bus')->handle(new Query\GetInfoQuery());
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
         }
@@ -125,7 +125,7 @@ class CartController extends Controller
      */
     public function incQuantityAction(int $id, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
+        $cart = $this->get('query_bus')->handle(new Query\GetInfoQuery());
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
         }
@@ -191,8 +191,8 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new AddFavoriteCommand(['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);
-            $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);
+            $cart = $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()));
+            $favorites = $this->get('query_bus')->handle(new GetFavoriteInfoQuery());
 
             return $this->json([
                 'cart' => $cart,
@@ -212,7 +212,7 @@ class CartController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
+        $cart = $this->get('query_bus')->handle(new Query\GetInfoQuery());
 
         return $this->render('Cart/info.html.twig', [
             'cart' => $cart,

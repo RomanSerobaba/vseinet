@@ -1,7 +1,3 @@
-parameters:
-    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/pgsql/dev.conf'
-    sphinx.indexer.path: '%kernel.project_dir%/bin/sphinx/pgsql/indexer.js'
-
 services:
     sphinxql:
         class: AppBundle\SphinxQL\SphinxQL

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Brand\Query;
 
@@ -17,7 +17,7 @@ class GetByIdQueryHandler extends MessageHandler
                     b.url,
                     b.isForbidden
                 )
-            FROM AppBundle:Brand b 
+            FROM AppBundle:Brand AS b
             WHERE b.id = :id
         ");
         $q->setParameter('id', $query->id);

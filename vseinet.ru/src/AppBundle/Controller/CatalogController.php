@@ -6,15 +6,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Catalog\Query;
-use AppBundle\Bus\Brand\Query\GetByIdQuery as GetBrandByIdQuery;
 use AppBundle\Bus\Brand\Query\GetByNameQuery as GetBrandByNameQuery;
 use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
-use AppBundle\Bus\Catalog\Paging;
-use AppBundle\Bus\Catalog\Sorting;
-use AppBundle\Bus\Catalog\Enum\Availability;
-use AppBundle\Bus\Catalog\Enum\Nofilled;
-use AppBundle\Bus\Catalog\Enum\Sort;
-use AppBundle\Bus\Catalog\Enum\SortDirection;
 
 class CatalogController extends Controller
 {
@@ -39,58 +32,31 @@ class CatalogController extends Controller
      *     }
      * )
      */
-    public function indexAction(int $id = 0, $brandName = null, Request $request)
+    public function showCategoryPageAction(int $id = 0, $brandName = null, Request $request)
     {
-        if (null !== $brandName) {
-            $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]), $brand);
-        } else {
-            $brand = null;
-        }
-        $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]), $category);
+        $brand = $brandName ? $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName])) : null;
+        $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
+
+        $finder = $this->get('category.products.finder');
+        $finder->setFilterData($request->query->all(), $category, $brand);
+        exit;
 
         if ($request->isMethod('POST')) {
-            if ($category->isLeaf) {
-                $data = $this->get('catalog.query_string')->fromPost($request->request->get('filter'), $request->query->all());
-
-                $route = $request->attributes->get('_route');
-                if (!empty($data->brandIds)) {
-                    if (1 === count($data->brandIds) && -1 < reset($data->brandIds)) {
-                        $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($data->brandIds)]), $brand);
-                        $data->brandIds = null;
-                        $brandName = $brand->name;
-                        $route = 'catalog_category_with_brand';
-                    } else {
-                        $brandName = null;
-                        $route = 'catalog_category';
-                        $brand = null;
-                    }
-                } else {
-                    $brandName = null;
-                    $route = 'catalog_category';
-                    $brand = null;
-                }
-
-                $url = $this->generateUrl(
-                    $route,
-                    array_merge(
-                        $this->get('catalog.query_string')->build($data),
-                        ['id' => $id, 'brandName' => $brandName]
-                    )
-                );
-
-                if ($request->isXmlHttpRequest()) {
-                    $finder = $this->get('catalog.category_product_finder')->setCategory($category)->setBrand($brand)->setData($data);
-
-                    return $this->json([
-                        'facets' => $finder->getFacets(),
-                        'url' => $url,
-                    ]);
-                }
-
-                return $this->redirect($url);
+            if (!$category->isLeaf) {
+                throw new BadRequestHttpException();
             }
 
-            throw new NotFoundHttpException();
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $finder->getFilterUrl($brand ? 'catalog_category_with_brand' : 'catalog_category');
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ]);
+            }
+
+            return $this->redirect($filterUrl);
         }
 
         if (empty($category->pageTitle)) {
@@ -101,7 +67,7 @@ class CatalogController extends Controller
         }
 
         if (!$category->isLeaf) {
-            $this->get('query_bus')->handle(new Query\GetSubcategoriesQuery(['pid' => $category->id]), $subcategories);
+            $subcategories = $this->get('query_bus')->handle(new Query\GetSubcategoriesQuery(['pid' => $category->id]));
 
             return $this->render('Catalog/category_list.html.twig', [
                 'category' => $category,
@@ -113,45 +79,184 @@ class CatalogController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $data = $this->get('catalog.query_string')->parse($request->query->all());
-        $finder = $this->get('catalog.category_product_finder')->setCategory($category)->setBrand($brand)->setData($data);
-
-        if (1 !== $data->page) {
+        if (1 === $finder->getParameter('page') && !empty($category->description)) {
+            $category->image = $this->get('query_bus')->handle(new Query\GetCategoryImageQuery(['categoryId' => $category->id]));
+        } else {
             $category->description = null;
         }
-        if ($category->description) {
-            $this->get('query_bus')->handle(new Query\GetCategoryImageQuery(['categoryId' => $category->id]), $category->image);
+
+        return $this->show($request, $finder, ['category' => $category, 'brand' => $brand]);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="catalog_specials",
+     *     path="/specials/",
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function showSpecialsPageAction(Request $request)
+    {
+        $finder = $this->get('specials.products.finder');
+        $finder->setFilterData($request->query->all());
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ]);
+            }
+
+            return $this->redirect($filterUrl);
         }
 
+        return $this->show($request, $finder);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="catalog_search",
+     *     path="/search/",
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function showSearchPageAction(Request $request)
+    {
+        $finder = $this->get('search.products.finder');
+        $finder->setFilterData($request->query->all());
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ]);
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show($request, $finder);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="catalog_brand",
+     *     path="/brand/{name}/",
+     *     requirements={"name" = "[^\/]*"},
+     *     parameters={
+     *         @VIA\Parameter(name="name", type="string")
+     *     },
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function showBrandPageAction(string $name, Request $request)
+    {
+        $brand = $this->get('query_bus')->handle(new Query\GetBrandByNameQuery(['name' => $name]));
+        if (null === $brand) {
+            throw new NotFoundHttpException();
+        }
+
+        $finder = $this->get('brand.products.finder');
+        $finder->setFilterData($request->query->all(), ['name' => $name]);
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+
+            if ($request->isXmlHttpRequest()) {
+                return [
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ];
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show($request, $finder, ['brand' => $brand]);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="catalog_detail",
+     *     path="/detail/{id}/",
+     *     requirements={"id" = "\d+"},
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function showDetailPageAction(int $id, Request $request)
+    {
+        $detail = $this->get('query_bus')->handle(new Query\GetDetailQuery(['id' => $id]));
+
+        $finder = $this->get('detail.products.finder');
+        $finder->setFilterData($this->request->query->all(), ['id' => $id]);
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+
+            if ($request->isXmlHttpRequest()) {
+                return [
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ];
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show($request, $finder, ['detail' => $detail]);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="catalog_supplier",
+     *     path="/supplier/{code}/",
+     *     requirements={"code" = "[^\/]*"},
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function showSupplierPageAction(string $code, Request $request)
+    {
+        $supplier = $this->get('query_bus')->handle(new Query\GetSupplierQuery(['code' => $code]));
+
+        $finder = $this->get('supplier.products.finder');
+        $finder->setFilterData($request->query->all(), ['code' => $code]);
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ]);
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show($request, $finder, ['supplier' => $supplier]);
+    }
+
+    protected function show(Request $request, Finder $finder, array $parameters = [])
+    {
+        $baseUrl = $finder->getBaseUrl($request->attributes->get('_route'));
         $filter = $finder->getFilter();
         $facets = $finder->getFacets();
-        $productIds = $facets->total ? $finder->getProductIds() : [];
-        if (!empty($productIds)) {
-            $this->get('query_bus')->handle(new Query\GetProductsQuery(['ids' => $productIds]), $products);
-            $paging = new Paging([
-                'total' => $facets->total,
-                'page' => $data->page,
-                'perpage' => $finder::PER_PAGE,
-                'lines' => 8,
-                'baseUrl' => $this->generateUrl($request->attributes->get('_route'), ['id' => $id, 'brandName' => $brandName]),
-                'attributes' => $this->get('catalog.query_string')->build($data),
-            ]);
-            $sorting = new Sorting([
-                'options' => Sort::getOptions($this->getUserIsEmployee()),
-                'sort' => $data->sort,
-                'sortDirection' => $data->sortDirection,
-                'baseUrl' => $this->generateUrl($request->attributes->get('_route'), ['id' => $id, 'brandName' => $brandName]),
-                'attributes' => $this->get('catalog.query_string')->build($data),
-            ]);
-            $this->get('query_bus')->handle(new GetCartInfoQuery(), $info);
-            array_walk($products, function(&$product) use ($info) {
-                $product->quantityInCart = $info->products[$product->id]->quantity ?? 0;
-            });
-        } else {
-            $products = [];
-            $paging = null;
-            $sorting = null;
-        }
+        $products = $finder->getProducts();
+        $paging = $finder->getPaging($baseUrl);
+        $sorting = $finder->getSorting($baseUrl);
+
 
         if ($request->isXmlHttpRequest()) {
             $productsHtml = $this->renderView('Catalog/products_list.html.twig', [
@@ -175,22 +280,18 @@ class CatalogController extends Controller
             ]);
         }
 
-        if (null !== $brand) {
-            $data->brandIds[$brand->id] = $brand->id;
-        }
-
-        return $this->render('Catalog/category.html.twig', [
-            'category' => $category,
-            'brand' => $brand,
+        return $this->render('Catalog/category.html.twig', $parameters + [
             'products' => $products,
             'filter' => $filter,
             'facets' => $facets,
-            'data' => $data,
+            // 'data' => $data,
             'paging' => $paging,
             'sorting' => $sorting,
-            'availabilityOptions' => Availability::getOptions($this->getUserIsEmployee()),
-            'nofilledOptions' => Nofilled::getOptions(),
-            'resetUrl' => $this->generateUrl($request->attributes->get('_route'), ['id' => $id, 'brandName' => $brandName]),
+            'availabilityChoices' => $finder->getAvailabilityChoices(),
+            'nofilledChoices' => $finder->getNofilledChoices(),
+            // 'availabilityOptions' => Availability::getOptions($this->getUserIsEmployee()),
+            // 'nofilledOptions' => Nofilled::getOptions(),
+            'baseUrl' => $baseUrl,
         ]);
     }
 }

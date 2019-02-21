@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-namespace AppBundle\Bus\About\Query;
+namespace AppBundle\Bus\ContentPage\Query;
 
 use AppBundle\Bus\Message\Message;
 

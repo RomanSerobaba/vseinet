@@ -2,14 +2,12 @@
 
 namespace AppBundle\Bus\Catalog\Finder;
 
-use AppBundle\Enum\DetailType;
-use AppBundle\Bus\Catalog\Enum\Availability;
-use AppBundle\Bus\Catalog\Enum\Nofilled;
 use AppBundle\Bus\Catalog\Query\DTO\Category;
 use AppBundle\Bus\Brand\Query\DTO\Brand;
-use AppBundle\Bus\Catalog\Query\DTO\Filter;
+use AppBundle\Bus\Catalog\Query\Filter\Filter;
+use AppBundle\Enum\DetailType;
 
-class CategoryProductFinder extends ProductFinder
+class CategoryProductFinder extends AbstractProductFinder
 {
     /**
      * @var Category
@@ -21,102 +19,58 @@ class CategoryProductFinder extends ProductFinder
      */
     protected $brand;
 
+
     /**
-     * @var Filter
+     * @param iterable $values
+     * @param Category $category
+     * @param Brand    $brand
      */
-    protected $filter;
-
-
-    public function setCategory(Category $category): self
+    public function setFilterData(iterable $values, Category $category, ?Brand $brand) : self
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    public function setBrand(?Brand $brand): self
-    {
         $this->brand = $brand;
 
+        $this->filter = new Filter($values);
+        unset($this->filter->categoryIds);
+        if (null !== $this->brand) {
+            unset($this->filter->brandIds);
+        }
+
         return $this;
     }
 
-    public function getFilter(): Filter
+    public function getFeatures() : Features
     {
-        if ($this->filter instanceof Filter) {
-            return $this->filter;
+        if ($this->features instanceof Features) {
+            return $this->features;
         }
 
-        $em = $this->getDoctrine()->getManager();
+        $this->select('MIN(price) AS min_price, MAX(price) AS max_price');
+        $this->facet('FACET brand_id');
 
-        $detailSelect = "";
-        $detailFacets = "";
         if ($this->category->isTplEnabled) {
-            $q = $em->createQuery("
-                SELECT
-                    NEW AppBundle\Bus\Catalog\Query\DTO\Filter\Detail (
-                        d.id,
-                        d.name,
-                        COALESCE(d.sectionId, 0),
-                        d.typeCode,
-                        mu.name
-                    )
-                FROM AppBundle:Detail d
-                INNER JOIN AppBundle:DetailGroup dg WITH dg.id = d.groupId
-                LEFT OUTER JOIN AppBundle:MeasureUnit mu WITH mu.id = d.unitId
-                WHERE dg.categoryId = :categoryId AND d.typeCode IN (:typeCodes) AND d.pid IS NULL
-                ORDER BY dg.sortOrder, d.sortOrder
-            ");
-            $q->setParameter('categoryId', $this->category->id);
-            $q->setParameter('typeCodes', [
-                DetailType::CODE_NUMBER,
-                DetailType::CODE_ENUM,
-                DetailType::CODE_BOOLEAN,
-            ]);
-            $details = $q->getResult('IndexByHydrator');
-            foreach ($details as $id => $detail) {
-                if (DetailType::CODE_NUMBER === $detail->typeCode) {
-                    $detailSelect .= ", MIN(DOUBLE(details.{$id})) AS min_{$id}, MAX(DOUBLE(details.{$id})) AS max_{$id}";
-                    continue;
+            $details = $this->getDetails();
+            if (!empty($details)) {
+                $this->facet('FACET category_section_id');
+                foreach ($details as $id => $detail) {
+                    if (DetailType::CODE_NUMBER === $detail->typeCode) {
+                        $this->select("MIN(DOUBLE(details.{$id})) AS min_{$id}, MAX(DOUBLE(details.{$id})) AS max_{$id}");
+                    } else {
+                        $this->facet("FACET details.{$id}");
+                    }
                 }
-                $detailFacets .= " FACET details.{$id}";
             }
         }
 
-        $query = "
-            SELECT {$this->getSelectPrice()}{$detailSelect}
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            FACET section_id
-            {$detailFacets}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
-            {$this->getFacetsNofilled()}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE category_id = {$this->category->id} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            FACET brand_id
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
-            {$this->getFacetAvailability()}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getMainCriteria('brands')} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            ;
-        ";
-        $results = $this->get('sphinxql')->execute($query);
-        print_r($query.PHP_EOL);
+        $this->criteria('category_id = '.$this->category->id);
+        if (null !== $this->brand) {
+            $this->criteria('brand_id = '.$this->brand->id);
+        }
+
+        $results = $this->queryFilter();
         print_r($results); exit;
 
-        $this->filter = new Filter();
-        $this->filter->price = new Filter\Range(0, 0);
-
+        $filter = new Filter();
         foreach (array_shift($results) as $row) {
             $this->filter->price = new Filter\Range($row['min_price'], $row['max_price']);
             if ($this->category->isTplEnabled) {
@@ -124,285 +78,47 @@ class CategoryProductFinder extends ProductFinder
                 $ranges = [];
                 foreach ($row as $key => $value) {
                     list($bound, $id) = explode('_', $key, 2);
-                    $ranges[$id][$bound] = $value;
+                    $ranges[$id][$bound.'_value'] = $value;
                 }
                 foreach ($ranges as $id => $range) {
                     if (isset($details[$id])) {
-                       $details[$id]->values = new Filter\Range($range['min'], $range['max']);
+                        $details[$id]->values = new Filter\Range($range['min_value'], $range['max_value']);
+                        $filter->details[$id] = $details[$id];
                     }
                 }
             }
         }
-        // print_r($results); exit;
 
-        // if ($this->category->isTplEnabled) {
-        //     $sectionId2count = [];
-        //     foreach (array_shift($results) as $row) {
-        //         $sectionId2count[$row['section_id']] = $row['count(*)'];
-        //     }
-        //     $this->filter->sections = Block\CategorySections::build($sectionId2count, $em);
-        // }
 
-        foreach ($results as $index => $result) {
-            if (empty($result)) {
-                continue;
-            }
-            if (array_key_exists('total', $result[0])) {
-                break;
-            }
-            foreach ($result as $row) {
-                $keys = array_keys($row);
-                $values = array_values($row);
-                if (null !== $values[0]) {
-                    if (!is_int($values[1])) {
-                        $this->get('simple.logger')->setName('search')
-                            ->error(sprintf('Value id in to integer, category = %d', $this->category->id));
-                        continue;
-                    }
-                    $id = str_replace('details.', '', $keys[0]);
-                    if (isset($details[$id])) {
-                        $details[$id]->values[$values[0]] = $values[1];
-                    }
-                }
-            }
 
-        }
-        if ($this->category->isTplEnabled) {
-            $valueIds = $this->filter->details = [];
-            foreach ($details as $id => $detail) {
-                if (empty($detail->values)) {
-                    continue;
-                }
-                if (DetailType::CODE_ENUM === $detail->typeCode) {
-                    if (1 === count($detail->values)) {
-                        continue;
-                    }
-                    $valueIds = array_merge($valueIds, array_keys($detail->values));
-                } elseif (DetailType::CODE_NUMBER === $detail->typeCode && $detail->values->min === $detail->values->max) {
-                    continue;
-                }
-                $this->filter->details[$id] = $detail;
-            }
-            if (!empty($valueIds)) {
-                $q = $em->createQuery("
-                    SELECT
-                        NEW AppBundle\Bus\Catalog\Query\DTO\Filter\DetailValue (
-                            dv.id,
-                            dv.value
-                        )
-                    FROM AppBundle:DetailValue dv
-                    WHERE dv.id IN (:ids)
-                    ORDER BY dv.value
-                ");
-                $q->setParameter('ids', $valueIds);
-                $this->filter->values = $q->getResult('IndexByHydrator');
-            }
-            foreach ($this->filter->details as $id => $detail) {
-                // if (isset($this->filter->sections[$detail->sectionId])) {
-                //     $this->filter->sections[$detail->sectionId]->detailIds[] = $id;
-                // }
-                // if (0 !== $detail->sectionId) {
-                    $this->filter->sections[0]->detailIds[] = $id;
-                // }
-            }
-            if (2 === count($this->filter->sections)) {
-                $this->filter->sections = array_filter($this->filter->sections, function($section) { return 0 == $section->id; });
-            }
-        }
-
-        // $results = array_slice($results, $index + 1);
-
-        // foreach (Nofilled::getOptions() as $type => $_) {
-        //     $row = array_shift($results);
-        //     $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
-        // }
-
-        // array_shift($results);
-
-        $brandId2count = [];
-        // foreach (array_shift($results) as $row) {
-        //     $brandId2count[$row['brand_id']] = $row['count(*)'];
-        // }
-        $this->filter->brands = Block\Brands::build($brandId2count, $em);
-
-        // array_shift($results);
-
-        // foreach (array_shift($results) as $row) {
-        //     $availability[$row['availability']] = $row['count(*)'];
-        // }
-        foreach (Availability::getOptions($this->getUserIsEmployee()) as $type => $_) {
-            if (!isset($availability[$type])) {
-                $availability[$type] = 0;
-            }
-        }
-        $this->filter->availability = Block\Availability::build($availability);
-
-        $this->filter->total = 1000; //$results[0][0]['total'];
-
-        return $this->filter;
     }
 
-    public function getFacets(): Filter\Facets
+
+    public function getFacets()
     {
-        $filter = $this->getFilter();
 
-        $query = "
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getCriteria()}
-            ;
-            SELECT {$this->getSelectPrice()}
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getCriteria('price')}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getCriteria('brands')}
-            FACET brand_id LIMIT 1000
-            ;
-        ";
-        if ($this->category->isTplEnabled) {
-            $query .= "
-                SELECT COUNT(*) AS total
-                FROM product_index_{$this->getGeoCity()->getRealId()}
-                WHERE {$this->getCriteria('sections')}
-                FACET section_id
-                ;
-            ";
-            foreach ($filter->details as $id => $detail) {
-                if (DetailType::CODE_NUMBER === $detail->typeCode) {
-                    $query .= "
-                        SELECT MIN(DOUBLE(details.{$id})) AS min_{$id}, MAX(DOUBLE(details.{$id})) AS max_{$id}
-                        FROM product_index_{$this->getGeoCity()->getRealId()}
-                        WHERE {$this->getCriteria($id)}
-                        ;
-                    ";
-                } else {
-                    $query .= "
-                        SELECT COUNT(*) AS total
-                        FROM product_index_{$this->getGeoCity()->getRealId()}
-                        WHERE {$this->getCriteria($id)}
-                        FACET details.{$id}
-                        ;
-                    ";
-                }
-            }
-        }
-        $results = $this->get('sphinxql')->execute($query);
-
-        $facets = new Filter\Facets();
-
-        $result = array_shift($results);
-        $facets->total = $result[0]['total'];
-
-        $result = array_shift($results);
-        if (isset($result[0])) {
-            $facets->price = new Filter\Range($result[0]['min_price'], $result[0]['max_price']);
-        }
-
-        array_shift($results);
-        foreach (array_shift($results) as $row) {
-            if (isset($filter->brands[$row['brand_id']])) {
-                $facets->brandIds[$row['brand_id']] = 1;
-            } else {
-                $facets->brandIds[-1] = 1;
-            }
-        }
-
-        if ($this->category->isTplEnabled) {
-            array_shift($results);
-            // foreach (array_shift($results) as $row) {
-            //     $facets->sectionIds[$row['section_id']] = 1;
-            // }
-            foreach ($results as $index => $result) {
-                if (isset($result[0]['total'])) {
-                    break;
-                }
-                foreach ($result as $row) {
-                    $ranges = [];
-                    foreach ($row as $key => $value) {
-                        list($bound, $id) = explode('_', $key, 2);
-                        $ranges[$id][$bound] = $value;
-                    }
-                    foreach ($ranges as $id => $range) {
-                        $facets->details[$id] = new Filter\Range($range['min'], $range['max']);
-                    }
-                }
-            }
-            for ($i = ($index ?? 0) + 1; $i < count($results); $i += 2) {
-                foreach ($results[$i] as $row) {
-                    $keys = array_keys($row);
-                    $values = array_values($row);
-                    if (null !== $values[0]) {
-                        $id = str_replace('details.', '', $keys[0]);
-                        $facets->details[$id][$values[0]] = 1;
-                    }
-                }
-            }
-        }
-
-        return $facets;
     }
 
-    protected function getCriteria(string $exclude = null): string
+    protected function getDetails()
     {
-        $filter = $this->getFilter();
+        $q = $this->getDoctrine()->getManager()->createQuery("
+            SELECT
+                NEW AppBundle\Bus\Catalog\Query\DTO\Filter\Detail (
+                    d.id,
+                    d.name,
+                    COALESCE(d.sectionId, 0),
+                    d.typeCode,
+                    mu.name
+                )
+            FROM AppBundle:Detail d
+            INNER JOIN AppBundle:DetailGroup dg WITH dg.id = d.groupId
+            LEFT OUTER JOIN AppBundle:MeasureUnit mu WITH mu.id = d.unitId
+            WHERE dg.categoryId = :categoryId AND d.typeCode IN (:typeCodes) AND d.pid IS NULL
+            ORDER BY dg.sortOrder, d.sortOrder
+        ");
+        $q->setParameter('categoryId', $this->category->id);
+        $q->setParameter('typeCodes', DetailType::getFilterTypeCodes());
 
-        $criteria = "{$this->getMainCriteria($exclude)} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}";
-        if ('price' != $exclude && ($condition = $this->getCriteriaPrice())) {
-            $criteria .= " AND $condition";
-        }
-        if ('brands' != $exclude && ($condition = $this->getCriteriaBrands(...$filter->brands))) {
-            $criteria .= " AND $condition";
-        }
-        if ('sections' != $exclude && !empty($data->sectionIds)) {
-            //$criteria .= " AND section_id IN (".implode(',', $this->data->sectionIds).")";
-        }
-        if (!empty($this->data->details)) {
-            foreach ($this->data->details as $id => $values) {
-                if ($id == $exclude || !isset($filter->details[$id])) {
-                    continue;
-                }
-                $detail = $filter->details[$id];
-                switch ($detail->typeCode) {
-                    case DetailType::CODE_NUMBER:
-                        if (null === $values->min) {
-                            $criteria .= " AND details.{$id} <= {$values->max}";
-                        } elseif (null === $values->max) {
-                            $criteria .= " AND details.{$id} >= {$values->min}";
-                        } else {
-                            $criteria .= " AND details.{$id} BETWEEN {$values->min} AND {$values->max}";
-                        }
-                        $criteria .= " AND details.{$id} IS NOT NULL";
-                        break;
-
-                    case DetailType::CODE_ENUM:
-                        $criteria .= " AND details.{$id} IN (".implode(',', $values).")";
-                        break;
-
-                    case DetailType::CODE_BOOLEAN:
-                        $criteria .= " AND details.{$id} = {$values}";
-                        break;
-
-                    default:
-                        throw new \LogicException(sprintf('Detail type %s not supported', $detail->typeCode));
-                }
-            }
-        }
-        if ($this->data->name) {
-            $criteria .= " AND MATCH('".$this->get('sphinxql')->escapeMatch($this->data->name)."')";
-        }
-
-        return $criteria;
-    }
-
-    protected function getMainCriteria(string $exclude = null): string
-    {
-        $criteria = "category_id = {$this->category->id}";
-        if ($this->brand && 'brands' != $exclude) {
-            $criteria .= " AND brand_id = {$this->brand->id}";
-        }
-
-        return $criteria;
+        return $q->getResult('IndexByHydrator');
     }
 }

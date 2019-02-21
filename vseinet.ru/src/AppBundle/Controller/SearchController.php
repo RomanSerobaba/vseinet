@@ -19,8 +19,8 @@ class SearchController extends Controller
 {
     /**
      * @VIA\Route(
-     *     name="catalog_search", 
-     *     path="/search/", 
+     *     name="catalog_search",
+     *     path="/search/",
      *     methods={"GET", "POST"}
      * )
      */
@@ -86,7 +86,7 @@ class SearchController extends Controller
             ]);
             $showmoreHtml = $this->renderView('Catalog/showmore.html.twig', [
                 'paging' => $paging,
-            ]); 
+            ]);
             $sortingHtml = $this->renderView('Catalog/sorting.html.twig', [
                 'sorting' => $sorting,
             ]);
@@ -107,14 +107,14 @@ class SearchController extends Controller
             'paging' => $paging,
             'sorting' => $sorting,
             'availabilityOptions' => Availability::getOptions($this->getUserIsEmployee()),
-            'nofilledOptions' => Nofilled::getOptions(),   
-            'resetUrl' => $this->generateUrl($request->attributes->get('_route')), 
+            'nofilledOptions' => Nofilled::getOptions(),
+            'resetUrl' => $this->generateUrl($request->attributes->get('_route')),
         ]);
     }
 
     /**
      * @VIA\Get(
-     *     name="catalog_search_autocomplete", 
+     *     name="catalog_search_autocomplete",
      *     path="/search/autocomplete/",
      *     parameters={
      *         @VIA\Parameter(name="q", type="string", in="query", required=true)
@@ -122,11 +122,11 @@ class SearchController extends Controller
      * )
      */
     public function autocompleteAction(Request $request)
-    {    
+    {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
-            
-        }    
+
+        }
         $data = $this->get('catalog.query_string')->parse($request->query->all());
         $finder = $this->get('catalog.autocomplete_finder')->setData($data);
 
@@ -144,7 +144,7 @@ class SearchController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $this->get('query_bus')->handle(new GetCounterQuery(), $counter);
+        $counter = $this->get('query_bus')->handle(new GetCounterQuery());
 
         return $this->render('Search/placeholder.html.twig', [
             'counter' => $counter,
