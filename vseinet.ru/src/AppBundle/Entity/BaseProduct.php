@@ -130,7 +130,7 @@ class BaseProduct
     /**
      * @var int
      *
-     * @ORM\Column(name="cannonical_d", type="integer")
+     * @ORM\Column(name="cannonical_id", type="integer")
      */
     private $cannonicalId;
 
