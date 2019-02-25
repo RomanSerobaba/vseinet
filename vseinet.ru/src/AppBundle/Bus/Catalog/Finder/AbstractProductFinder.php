@@ -3,135 +3,199 @@
 namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Container\ContainerAware;
-use AppBundle\Bus\Catalog\Enum\Availability;
+use AppBundle\Bus\Catalog\Enum\{ Availability, Nofilled };
 
 class AbstractProductFinder extends ContainerAware
 {
-    /**
-     * @var Filter
-     */
-    protected $filter;
+    const COUNT_GET_BRANDS = 50;
+    const COUNT_TOP_BRANDS = 7;
 
     /**
-     * @var Features
+     * @return Filter
      */
-    protected $features;
+    public function getFilter(): Filter
+    {
+        return $this->get('catalog.product.finder.filter');
+    }
 
     /**
-     * @var array
+     * @return QueryBuilder
      */
-    protected $select = [];
+    public function getQueryBuilder(): QueryBuilder
+    {
+        return $this->get('catalog.product.finder.query_builder');
+    }
 
     /**
-     * @var array
+     * @param  array $found
+     *
+     * @return array
      */
-    protected $facets = [];
+    protected function getCategories(array $found): array
+    {
+        if (empty($found)) {
+            return [];
+        }
+
+        $categoryId2count = [];
+        foreach ($found as $row) {
+            $categoryId2count[$row['category_id']] = $row['count(*)'];
+        }
+
+        $q = $this->getDoctrine()->getManager()->createQuery("
+            SELECT
+                c.id,
+                c.name,
+                c.isTplEnabled,
+                c2.id AS id2,
+                c2.name AS name2,
+                CASE WHEN c.isTplEnabled = true THEN 1 ELSE 2 END AS HIDDEN ORD1,
+                CASE WHEN c.isTplEnabled = true THEN c.name ELSE c2.name END AS HIDDEN ORD2
+            FROM AppBundle:Category c
+            INNER JOIN AppBundle:CategoryPath cp WITH cp.id = c.id AND cp.plevel = 2
+            INNER JOIN AppBundle:Category c2 WITH c2.id = cp.pid
+            WHERE c.id IN (:ids)
+            ORDER BY ORD1, ORD2, c.name
+        ");
+        $q->setParameter('ids', array_keys($categoryId2count));
+        $categories = $q->getResult();
+
+        $main = [];
+        $tree = [];
+        foreach ($categories as $category) {
+            $id = $category['id'];
+            if ($category['isTplEnabled']) {
+                $main[$id] = new DTO\Category($id, $category['name'], $categoryId2count[$id]);
+            } else {
+                $id2 = $category['id2'];
+                if (empty($tree[$id2])) {
+                    $tree[$id2] = new DTO\Category($id2, $category['name2']);
+                }
+                $tree[$id2]->children[$id] = new DTO\Category($id, $category['name'], $categoryId2count[$id]);
+                $tree[$id2]->countProducts += $categoryId2count[$id];
+            }
+            if (!empty($main)) {
+                $tree[0] = new DTO\Category(0, 'Каталог', 0, $main);
+            }
+            // @todo
+            // if (!empty($tree)) {
+            //     if (20 < count($tree)) {
+            //         $other = new Category(-1, 'Прочие');
+            //         foreach ($tree as $id2 => $cat2) {
+            //             if (1 == count($cat2->children)) {
+            //                 $cat2->name .= ' » '.reset($cat2->children)->name;
+            //                 $other->children[$cat2->id] = $cat2;
+            //             }
+            //         }
+            //         if (!empty($other->children)) {
+            //             $tree[-1] = $other;
+            //         }
+            //     }
+            // }
+        }
+
+        return $tree;
+    }
 
     /**
-     * @var array
+     * @param  array $found
+     *
+     * @return array
      */
-    protected $criteria = [];
-
-
-    protected function queryFilter()
+    protected function getBrands(array $found): array
     {
-        $select = implode(', ', $this->select);
-        $facets = implode(' ', $this->facets);
-        $criteria = implode(' AND ', $this->criteria);
-
-        $this->reset();
-
-        $query = "
-            SELECT {$select}
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getCriteriaIsAlive()} AND {$criteria} AND {$this->getCriteriaAvailability()} AND {$this->getCriteriaNofilled()}
-            {$facets}
-            ;
-            SELECT COUNT(*) AS total
-            FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE {$this->getCriteriaIsAlive()} AND {$criteria} AND {$this->getCriteriaNofilled()}
-            FACET availability
-            ;
-        ";
-        if ($this->getUserIsEmployee()) {
-            $query .= "
-                SELECT COUNT(*) AS total
-                FROM product_index_{$this->getGeoCity()->getRealId()}
-                WHERE {$this->getCriteriaIsAlive()} AND {$criteria} AND {$this->getCriteriaAvailability()}
-                FACET no_details
-                FACET no_image
-                FACET no_description
-                FACET no_manufacturer_link
-                FACET no_manual_link
-                ;
-            ";
+        if (empty($found)) {
+            return [];
         }
 
-        return $this->get('sphinxql')->execute($query);
-    }
+        $brandId2count = [];
+        foreach ($found as $row) {
+            $brandId2count[$row['brand_id']] = $row['count(*)'];
+        }
+        arsort($brandId2count);
 
-    protected function queryFacets()
-    {
-
-    }
-
-    protected function select($expression)
-    {
-        if (!empty($expression)) {
-            $this->select[] = $expression;
+        if (self::COUNT_GET_BRANDS < count($brandId2count)) {
+            $otherBrandId2Count = array_slice($brandId2count, self::COUNT_GET_BRANDS, null, true);
+            $brandId2count = array_slice($brandId2count, 0, self::COUNT_GET_BRANDS, true);
         }
 
-        return $this;
-    }
+        $q = $this->getDoctrine()->getManager()->createQuery("
+            SELECT
+                NEW AppBundle\Bus\Catalog\Finder\DTO\Brand (
+                    b.id,
+                    b.name
+                ),
+                CASE WHEN b.id > 0 THEN 1 ELSE 2 END AS HIDDEN ORD
+            FROM AppBundle:Brand AS b
+            WHERE b.id IN (:ids)
+            ORDER BY ORD, b.name
+        ");
+        $q->setParameter('ids', array_keys($brandId2count));
+        $brands = $q->getResult('IndexByHydrator');
 
-    protected function facet($expression)
-    {
-        if (!empty($expression)) {
-            $this->facets[] = $expression;
+        $brandId2count = array_intersect_key($brandId2count, $brands);
+
+        foreach ($brandId2count as $id => $count) {
+            $brands[$id]->countProducts = $count;
+        }
+        $brandId2count = array_slice($brandId2count, 0, self::COUNT_TOP_BRANDS, true);
+        foreach ($brandId2count as $id => $count) {
+            $brands[$id]->isTop = true;
         }
 
-        return $this;
-    }
-
-    protected function criteria($expression)
-    {
-        if (!empty($expression)) {
-            $this->criteria[] = $expression;
+        if (!empty($otherBrandId2Count)) {
+            $brands[-1] = new Brand(-1, 'Прочие');
+            $brands[-1]->countProducts = array_sum($otherBrandId2Count);
+            $brands[-1]->includeIds = array_keys($otherBrandId2Count);
         }
 
-        return $this;
+        return $brands;
     }
 
-    protected function reset()
+    /**
+     * @param  array $found
+     *
+     * @return array
+     */
+    protected function getAvailability(array $found): array
     {
-        $this->select = [];
-        $this->facets = [];
-        $this->criteria = [];
-    }
-
-    protected function getCriteriaIsAlive()
-    {
-        return 'is_forbidden = 0';
-    }
-
-    protected function getCriteriaAvailability()
-    {
-        $availability = $this->filter->availability;
-        if (!$this->getUserIsEmployee()) {
-            $availability = min($availability, Availability::ACTIVE);
+        $availability = [];
+        foreach ($found as $row) {
+            $availability[$row['availability']] = $row['count(*)'];
+        }
+        foreach (Availability::getChoises($this->getUserIsEmployee()) as $type => $_) {
+            if (!isset($availability[$type])) {
+                $availability[$type] = 0;
+            }
         }
 
-        return 'availability <= '.$availability;
-    }
-
-    protected function getCriteriaNofilled()
-    {
-        if (!$this->getUserIsEmployee()) {
-            return '1 = 1';
+        ksort($availability);
+        $acc = 0;
+        foreach ($availability as $index => $count) {
+            $availability[$index] = $acc += $count;
         }
 
-        return implode(' AND ', array_map(function($nofilled) {
-            return $nofilled.' = 1';
-        }, $this->getFilter()->data->nofilled));
+        return $availability;
+    }
+
+    /**
+     * @param  array $found
+     *
+     * @return array
+     */
+    protected function getNofilled(array $found): array
+    {
+        $nofilled = [];
+        foreach ($found as $result) {
+            foreach ($result as $row) {
+                $keys = array_keys($row);
+                $values = array_values($row);
+                if (1 == $values[0]) {
+                    $nofilled[$keys[0]] = $values[1];
+                }
+            }
+        }
+
+        return $nofilled;
     }
 }

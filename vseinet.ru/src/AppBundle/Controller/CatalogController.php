@@ -37,9 +37,8 @@ class CatalogController extends Controller
         $brand = $brandName ? $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName])) : null;
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
-        $finder = $this->get('category.products.finder');
+        $finder = $this->get('catalog.category_product.finder');
         $finder->setFilterData($request->query->all(), $category, $brand);
-        exit;
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
@@ -47,7 +46,19 @@ class CatalogController extends Controller
             }
 
             $finder->handleRequest($request->request->get('filter'));
-            $filterUrl = $finder->getFilterUrl($brand ? 'catalog_category_with_brand' : 'catalog_category');
+
+            $filter = $finder->getFilter();
+            $parameters
+            if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
+                $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
+                $filter->brandIds = null;
+                $brandName = $brand->name;
+                $route = 'catalog_category_with_brand';
+            } else {
+                $brandName = null;
+                $route = 'catalog_category';
+            }
+            $filterUrl = $this->generateUrl($route, $filter->build(['id' => $id, 'brandName' => $brandName]));
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
@@ -79,13 +90,13 @@ class CatalogController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (1 === $finder->getParameter('page') && !empty($category->description)) {
+        if (1 === $finder->getFilter()->page && !empty($category->description)) {
             $category->image = $this->get('query_bus')->handle(new Query\GetCategoryImageQuery(['categoryId' => $category->id]));
         } else {
             $category->description = null;
         }
 
-        return $this->show($request, $finder, ['category' => $category, 'brand' => $brand]);
+        return $this->show('category', $finder, $request, ['category' => $category, 'brand' => $brand], ['id' => $id, 'brandName' => $brandName]);
     }
 
     /**
@@ -97,12 +108,12 @@ class CatalogController extends Controller
      */
     public function showSpecialsPageAction(Request $request)
     {
-        $finder = $this->get('specials.products.finder');
+        $finder = $this->get('catalog.special_product.finder');
         $finder->setFilterData($request->query->all());
 
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
-            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build());
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
@@ -114,7 +125,7 @@ class CatalogController extends Controller
             return $this->redirect($filterUrl);
         }
 
-        return $this->show($request, $finder);
+        return $this->show('specials', $finder, $request);
     }
 
     /**
@@ -126,12 +137,12 @@ class CatalogController extends Controller
      */
     public function showSearchPageAction(Request $request)
     {
-        $finder = $this->get('search.products.finder');
+        $finder = $this->get('catalog.search_product.finder');
         $finder->setFilterData($request->query->all());
 
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
-            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build());
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
@@ -143,7 +154,7 @@ class CatalogController extends Controller
             return $this->redirect($filterUrl);
         }
 
-        return $this->show($request, $finder);
+        return $this->show('search', $finder, $request);
     }
 
     /**
@@ -159,17 +170,17 @@ class CatalogController extends Controller
      */
     public function showBrandPageAction(string $name, Request $request)
     {
-        $brand = $this->get('query_bus')->handle(new Query\GetBrandByNameQuery(['name' => $name]));
+        $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $name]));
         if (null === $brand) {
             throw new NotFoundHttpException();
         }
 
-        $finder = $this->get('brand.products.finder');
-        $finder->setFilterData($request->query->all(), ['name' => $name]);
+        $finder = $this->get('catalog.brand_product.finder');
+        $finder->setFilterData($request->query->all(), $brand);
 
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
-            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build(['name' => $name]));
 
             if ($request->isXmlHttpRequest()) {
                 return [
@@ -181,7 +192,7 @@ class CatalogController extends Controller
             return $this->redirect($filterUrl);
         }
 
-        return $this->show($request, $finder, ['brand' => $brand]);
+        return $this->show('brand', $finder, $request, ['brand' => $brand], ['name' => $name]);
     }
 
     /**
@@ -196,12 +207,12 @@ class CatalogController extends Controller
     {
         $detail = $this->get('query_bus')->handle(new Query\GetDetailQuery(['id' => $id]));
 
-        $finder = $this->get('detail.products.finder');
-        $finder->setFilterData($this->request->query->all(), ['id' => $id]);
+        $finder = $this->get('catalog.detail_product.finder');
+        $finder->setFilterData($this->request->query->all(), $detail);
 
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
-            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build(['id' => $id]));
 
             if ($request->isXmlHttpRequest()) {
                 return [
@@ -213,7 +224,7 @@ class CatalogController extends Controller
             return $this->redirect($filterUrl);
         }
 
-        return $this->show($request, $finder, ['detail' => $detail]);
+        return $this->show('detail', $finder, $request, ['detail' => $detail], ['id' => $id]);
     }
 
     /**
@@ -228,12 +239,12 @@ class CatalogController extends Controller
     {
         $supplier = $this->get('query_bus')->handle(new Query\GetSupplierQuery(['code' => $code]));
 
-        $finder = $this->get('supplier.products.finder');
-        $finder->setFilterData($request->query->all(), ['code' => $code]);
+        $finder = $this->get('catalog.supplier_product.finder');
+        $finder->setFilterData($request->query->all(), $supplier);
 
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
-            $filterUrl = $finder->getFilterUrl($request->attributes->get('_route'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build(['code' => $code]));
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
@@ -245,18 +256,33 @@ class CatalogController extends Controller
             return $this->redirect($filterUrl);
         }
 
-        return $this->show($request, $finder, ['supplier' => $supplier]);
+        return $this->show('supplier', $finder, $request, ['supplier' => $supplier], ['code' => $code]);
     }
 
-    protected function show(Request $request, Finder $finder, array $parameters = [])
+    protected function show(string $view, $finder, Request $request, array $parameters = [], array $attributes = [])
     {
-        $baseUrl = $finder->getBaseUrl($request->attributes->get('_route'));
         $filter = $finder->getFilter();
         $facets = $finder->getFacets();
         $products = $finder->getProducts();
-        $paging = $finder->getPaging($baseUrl);
-        $sorting = $finder->getSorting($baseUrl);
 
+        $baseUrl = $this->generateUrl($request->attributes->get('_route'));
+        $attributes = $filter->build($attributes);
+
+        $paging = new Paging([
+            'total' => $facets->total,
+            'page' => $filter->page,
+            'perpage' => $finder->getQueryBuilder()::PER_PAGE,
+            'lines' => 8,
+            'baseUrl' => $baseUrl,
+            'attributes' => $attributes,
+        ]);
+        $sorting = new Sorting([
+            'options' => Sort::getOptions($this->getUserIsEmployee()),
+            'sort' => $filter->sort,
+            'sortDirection' => $filter->sortDirection,
+            'baseUrl' => $baseUrl,
+            'attributes' => $attributes,
+        ]);
 
         if ($request->isXmlHttpRequest()) {
             $productsHtml = $this->renderView('Catalog/products_list.html.twig', [
@@ -280,17 +306,15 @@ class CatalogController extends Controller
             ]);
         }
 
-        return $this->render('Catalog/category.html.twig', $parameters + [
-            'products' => $products,
+        return $this->render('Catalog/'.$view.'.html.twig', $parameters + [
+            'feactures' => $finder->getFeatures(),
             'filter' => $filter,
             'facets' => $facets,
-            // 'data' => $data,
+            'products' => $products,
             'paging' => $paging,
             'sorting' => $sorting,
-            'availabilityChoices' => $finder->getAvailabilityChoices(),
-            'nofilledChoices' => $finder->getNofilledChoices(),
-            // 'availabilityOptions' => Availability::getOptions($this->getUserIsEmployee()),
-            // 'nofilledOptions' => Nofilled::getOptions(),
+            'availabilityChoices' => Availability::getChoices($this->getUserIsEmployee()),
+            'nofilledChoices' => Nofilled::getChoices(),
             'baseUrl' => $baseUrl,
         ]);
     }

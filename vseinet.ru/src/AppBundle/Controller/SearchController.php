@@ -17,13 +17,7 @@ use AppBundle\Bus\Catalog\Enum\SortDirection;
 
 class SearchController extends Controller
 {
-    /**
-     * @VIA\Route(
-     *     name="catalog_search",
-     *     path="/search/",
-     *     methods={"GET", "POST"}
-     * )
-     */
+
     public function indexAction(Request $request)
     {
         if ($request->isMethod('POST')) {

@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Http\HttplugBundle\HttplugBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Javer\SphinxBundle\JaverSphinxBundle(),
             new AppBundle\AppBundle(),
             new AdminBundle\AdminBundle(),
         ];

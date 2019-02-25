@@ -20,6 +20,7 @@
         "friendsofsymfony/jsrouting-bundle": "^2.2",
         "guzzlehttp/psr7": "^1.4",
         "incenteev/composer-parameter-handler": "^2.0",
+        "k2fl/sphinx-bundle": "^1.2",
         "league/tactician": "^1.0",
         "league/tactician-bundle": "^1.1",
         "oro/doctrine-extensions": "dev-master",

@@ -17,11 +17,13 @@ class TestController extends Controller
      *     }
      * )
      */
-    public function testAction(int $id, Request $request)
+    public function testAction(int $id = 0, Request $request)
     {
-        $image = $this->get('query_bus')->handle(new Query\GetCategoryImageQuery(['categoryId' => $id]));
+        $this->get('catalog.product.finder.filter')->parse(['a' => 1, 'b' => 2]);
+        $filter = $this->get('catalog.product.finder.filter');
+        print_r($filter->availability);
+        print_r($filter->brandIds);
         // return $this->render('Main/index.html.twig');
-        var_dump($image);
         exit;
     }
 }
