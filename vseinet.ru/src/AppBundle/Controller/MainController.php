@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
@@ -69,7 +70,7 @@ class MainController extends Controller
         $command->competitors = $em->getRepository(Competitor::class)->getActive();
 
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
             $command->geoCityId = $this->getGeoCity()->getId();
         }
         $form = $this->createForm(Form\CheaperRequestFormType::class, $command);
@@ -138,7 +139,7 @@ class MainController extends Controller
         $command = new Command\ComplaintCommand();
 
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
         }
         $form = $this->createForm(Form\ComplaintFormType::class, $command);
 
@@ -176,7 +177,7 @@ class MainController extends Controller
     {
         $command = new Command\ClientSuggestionCommand();
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
         }
         $form = $this->createForm(Form\ClientSuggestionFormType::class, $command);
 
@@ -209,9 +210,9 @@ class MainController extends Controller
      */
     public function getMenuAction()
     {
-        $this->get('query_bus')->handle(new Query\GetMenuQuery(), $menu);
+        $menu = $this->get('query_bus')->handle(new Query\GetMenuQuery());
         foreach ($menu as &$item) {
-            $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $item->id, 'count' => 1]), $products);
+            $products = $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $item->id, 'count' => 1]));
             if (!empty($products)) {
                 $item->product = reset($products);
             }
@@ -227,7 +228,7 @@ class MainController extends Controller
      */
     public function getBannerMainAction()
     {
-        $this->get('query_bus')->handle(new Query\GetBannerMainQuery(), $data);
+        $data = $this->get('query_bus')->handle(new Query\GetBannerMainQuery());
 
         return $this->render('Main/banner_main.html.twig', $data);
     }
@@ -237,7 +238,7 @@ class MainController extends Controller
      */
     public function getBlockSpecialsAction(int $categoryId = 0)
     {
-        $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $categoryId, 'count' => 6]), $products);
+        $products = $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $categoryId, 'count' => 6]));
 
         return $this->render('Main/block_specials.html.twig', [
             'products' => $products,
@@ -249,7 +250,7 @@ class MainController extends Controller
      */
     public function getBlockPopularsAction()
     {
-        $this->get('query_bus')->handle(new Query\GetBlockPopularsQuery(['count' => 4]), $products);
+        $products = $this->get('query_bus')->handle(new Query\GetBlockPopularsQuery(['count' => 4]));
 
         return $this->render('Main/block_populars.html.twig', [
             'products' => $products,
@@ -261,7 +262,7 @@ class MainController extends Controller
      */
     public function getBlockLastviewAction()
     {
-        $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 4]), $products);
+        $products = $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 6]));
 
         return $this->render('Main/block_lastview.html.twig', [
             'products' => $products,
@@ -275,8 +276,13 @@ class MainController extends Controller
      * )
      * @Security("is_granted('ROLE_ADMIN')")
      */
-    public function sysinfoAction(Request $request)
+    public function sysinfoAction()
     {
-        echo phpinfo();
+        ob_start();
+        phpinfo();
+        $response = new Response(ob_get_contents());
+        ob_end_clean();
+
+        return $response;
     }
 }

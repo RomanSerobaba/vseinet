@@ -8,22 +8,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Annotation as VIA;
 
 /**
- * @Security("is_granted('ROLE_EMPLOYEE')") 
+ * @Security("is_granted('ROLE_EMPLOYEE')")
  */
 class MainController extends Controller
 {
-    /**
-     * @VIA\Get(
-     *     name="admin",
-     *     path="/admin/",
-     *     description="Stab for Admin page on localhost"
-     * )
-     */
-    public function adminAction()
-    {
-        return new Response('Welcome, '.$this->getUser()->person->getFirstName().', to admin page!');
-    }
-
     /**
      * @VIA\Get(
      *     name="authority",

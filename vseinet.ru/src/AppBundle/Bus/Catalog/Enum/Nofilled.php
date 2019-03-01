@@ -1,20 +1,20 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Enum;
 
 class Nofilled
 {
-    const DETAILS = 1;
-    const IMAGES = 2;
-    const DESCRIPTION = 3;
-    const MANUFACTURER_LINK = 4;
-    const MANUAL_LINK = 5;
+    const DETAILS = 'no_details';
+    const IMAGE = 'no_image';
+    const DESCRIPTION = 'no_description';
+    const MANUFACTURER_LINK = 'no_manufacturer_link';
+    const MANUAL_LINK = 'no_manual_link';
 
-    public static function getOptions(): array
+    public function getChoices(): array
     {
         return [
             self::DETAILS => 'Нет характеристик',
-            self::IMAGES => 'Нет изображений',
+            self::IMAGE => 'Нет изображений',
             self::DESCRIPTION => 'Нет описания',
             self::MANUFACTURER_LINK => 'Нет ссылки на страницу товара',
             self::MANUAL_LINK => 'Нет ссылки на инструкцию',

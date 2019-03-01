@@ -33,7 +33,7 @@ class OrderController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('query_bus')->handle($query, $order);
+                    $order = $this->get('query_bus')->handle($query);
 
                     if ($request->isXmlHttpRequest()) {
                         $count = count($order->items);
@@ -93,7 +93,7 @@ class OrderController extends Controller
     public function historyAction(Request $request)
     {
         $query = new Query\GetHistoryQuery($request->query->all());
-        $this->get('query_bus')->handle($query, $history);
+        $history = $this->get('query_bus')->handle($query);
 
         $paging = new Paging([
             'total' => $history->total,
@@ -136,10 +136,10 @@ class OrderController extends Controller
         }
 
         $command = new Command\CreateCommand($data);
-        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
+        $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
             'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : NULL,
-        ]), $cart);
+        ]));
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
             $command->geoPointId = $this->getParameter('default.point.id');
@@ -160,7 +160,7 @@ class OrderController extends Controller
         }
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
-        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetSummaryQuery([
+        $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetSummaryQuery([
             'cart' => $cart,
             'geoPointId' => $command->geoPointId,
             'paymentTypeCode' => $command->paymentTypeCode,
@@ -169,7 +169,7 @@ class OrderController extends Controller
             'hasLift' => !empty($command->address) ? $command->address->hasLift : null,
             'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
-        ]), $cart);
+        ]));
 
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
@@ -250,7 +250,7 @@ class OrderController extends Controller
     public function createdPageAction(int $id, Request $request)
     {
         $query = new Query\GetOrderQuery(['id' => $id,]);
-        $this->get('query_bus')->handle($query, $order);
+        $order = $this->get('query_bus')->handle($query);
 
         if (null === $order || !$this->getUserIsEmployee() && !$this->get('session')->get('order_successfully_created') && (NULL === $this->getUser() ||$order->financialCounteragentId != $this->getUser()->financialCounteragent->getId())) {
             throw new NotFoundHttpException();
@@ -272,7 +272,7 @@ class OrderController extends Controller
      */
     public function getBankAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetBankQuery($request->query->all()), $bank);
+        $bank = $this->get('query_bus')->handle(new Query\GetBankQuery($request->query->all()));
 
         return $this->json([
             'data' => $bank,

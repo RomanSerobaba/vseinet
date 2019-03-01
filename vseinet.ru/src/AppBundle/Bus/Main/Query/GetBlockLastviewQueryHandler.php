@@ -52,7 +52,7 @@ class GetBlockLastviewQueryHandler extends MessageHandler
         $q->setParameter('ids', $productIds);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
         $q->setMaxResults($query->count);
-        $products = $q->getArrayResult('IndexByHydrator');
+        $products = $q->getResult('IndexByHydrator');
 
         $sorted = [];
         foreach ($productIds as $id) {

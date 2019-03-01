@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Message;
 
@@ -8,6 +8,8 @@ use Doctrine\Common\Inflector\Inflector;
 abstract class MessageHandler extends ContainerAware
 {
     /**
+     * Camelize keys.
+     *
      * @param array $array
      *
      * @return array

@@ -6,7 +6,6 @@ imports:
     - { resource: 'bus-services.yml', ignore_errors: true }
     - { resource: 'defaults.yml' }
     - { resource: 'constants.yml' }
-    - { resource: 'rabbitmq.yml' }
     - { resource: 'doctrine.yml' }
     - { resource: 'monolog.yml' }
     - { resource: 'sphinx.yml' }
@@ -16,6 +15,7 @@ imports:
     - { resource: 'twig.yml' }
     - { resource: 'js-routing.yml' }
     - { resource: 'forms.yml' }
+    - { resource: 'cache.yml' }
     - { resource: "@AdminBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed

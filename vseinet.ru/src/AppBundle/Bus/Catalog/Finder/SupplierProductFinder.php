@@ -1,178 +1,117 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Finder;
 
-use AppBundle\Bus\Catalog\Enum\Availability;
-use AppBundle\Bus\Catalog\Enum\Nofilled;
 use AppBundle\Bus\Catalog\Query\DTO\Supplier;
-use AppBundle\Bus\Catalog\Query\DTO\Filter;
 
-class SupplierProductFinder extends ProductFinder
+class SupplierProductFinder extends AbstractProductFinder
 {
     /**
-     * @var Supplier 
+     * @var Supplier
      */
     protected $supplier;
 
     /**
-     * @var Filter
+     * @param iterable $values
+     *
+     * @return self
      */
-    protected $filter;
-
-
-    public function setSupplier(Supplier $supplier): self
+    public function setFilterData(iterable $values, Supplier $supplier): self
     {
         $this->supplier = $supplier;
+        $filter = $this->getFilter()->parse($values);
 
         return $this;
     }
 
-    public function getFilter(): Filter
+    /**
+     * @return DTO\Features
+     */
+    public function getFeatures(): DTO\Features
     {
-        if ($this->filter instanceof Filter) {
-            return $this->filter;
+        $qb = $this->getQueryBuilder();
+
+        $qb->facet('FACET category_id FACET brand_id');
+        $qb->criteria('supplier_id = '.$this->supplier->id);
+        $name = $this->getFilter()->name;
+        if (!empty($name)) {
+            $qb->match($name);
         }
 
-        $query = "
-            SELECT {$this->getSelectPrice()}
-            FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            FACET category_id LIMIT 1000
-            FACET brand_id LIMIT 1000
-            ;
-            SELECT COUNT(*) AS total 
-            FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()}
-            {$this->getFacetsNofilled()}
-            ;
-            SELECT COUNT(*) AS total 
-            FROM base_product
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} {$this->getCriteriaNofilled()}
-            {$this->getFacetAvailability()}
-            ;
-            SELECT COUNT(*) AS total 
-            FROM base_product 
-            WHERE {$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}
-            ;
-        ";
-        $results = $this->get('sphinxql')->execute($query);
+        $results = $qb->getFeatures();
 
-        $this->filter = new Filter();
-        
-        $result = array_shift($results);
-        $this->filter->price = new Filter\Range($result[0]['min_price'], $result[0]['max_price']);
-        
-        $categoryId2count = [];
-        foreach (array_shift($results) as $row) {
-            $categoryId2count[$row['category_id']] = $row['count(*)'];
-        }
-        $this->filter->categories = Block\Categories::build($categoryId2count, $this->getDoctrine()->getManager());
+        $features = new DTO\Features();
 
-        $brandId2count = [];
-        foreach (array_shift($results) as $row) {
-            $brandId2count[$row['brand_id']] = $row['count(*)'];
-        }
-        $this->filter->brands = Block\Brands::build($brandId2count, $this->getDoctrine()->getManager());
-
-        array_shift($results);
-        foreach (Nofilled::getOptions() as $type => $_) {
-            $row = array_shift($results);
-            $this->filter->nofilled[$type] = array_key_exists(1, $row) ? $row[1]['count(*)'] : 0;
+        $features->total = $results[0][0]['total'];
+        $features->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
+        $features->availability = $this->getAvailability($results[3]);
+        if ($this->getUserIsEmployee()) {
+            $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $results = array_slice($results, 5);
+        } else {
+            $results = array_slice($results, 4);
         }
 
-        array_shift($results);
-        $geoCityId = $this->getGeoCity()->getRealId();
-        foreach (array_shift($results) as $row) {
-            $availability[$row['availability.'.$geoCityId]] = $row['count(*)'];
-        }
-        $user = $this->getUser();
-        foreach (Availability::getOptions($this->getUserIsEmployee()) as $type => $_) {
-            if (!isset($availability[$type])) {
-                $availability[$type] = 0;
-            }
-        }
-        $this->filter->availability = Block\Availability::build($availability);
+        $features->categories = $this->getCategories($results[1]);
+        $features->brands = $this->getBrands($results[2]);
 
-        $this->filter->total = $results[0][0]['total'];
-
-        return $this->filter;
+        return $features;
     }
 
-    public function getFacets(): Filter\Facets
+    /**
+     * @return DTO\Facets
+     */
+    public function getFacets(): DTO\Facets
     {
-        $filter = $this->getFilter();
+        $qb = $this->getQueryBuilder();
 
-        $query = "
-            SELECT COUNT(*) AS total
-            FROM base_product 
-            WHERE {$this->getCriteria()}
-            ;
-            SELECT {$this->getSelectPrice()}
-            FROM base_product
-            WHERE {$this->getCriteria('price')}
-            ;
-            SELECT COUNT(*) AS total
-            FROM base_product
-            WHERE {$this->getCriteria('categories')}
-            FACET category_id LIMIT 1000
-            ;
-            SELECT COUNT(*) AS total
-            FROM base_product
-            WHERE {$this->getCriteria('brands')}
-            FACET brand_id LIMIT 1000
-            ;
-        ";
-        $results = $this->get('sphinxql')->execute($query);
-
-        $facets = new Filter\Facets();
-
-        $result = array_shift($results);
-        $facets->total = $result[0]['total'];
-
-        $result = array_shift($results);
-        $facets->price = new Filter\Range($result[0]['min_price'], $result[0]['max_price']);
-
-        array_shift($results);
-        foreach (array_shift($results) as $row) {
-            if (isset($filter->categories[$row['category_id']])) {
-                $facets->categoryIds[$row['category_id']] = 1;
-            } else {
-                $facets->categoryIds[-1] = 1;
-            }
+        $qb->facet('FACET category_id', $qb->getCriteriaCategories());
+        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
+        $qb->criteria('supplier_id = '.$this->supplier->id);
+        $name = $this->getFilter()->name;
+        if (!empty($name)) {
+            $qb->match($name);
         }
 
-        array_shift($results);
-        foreach (array_shift($results) as $row) {
-            if (isset($filter->brands[$row['brand_id']])) {
-                $facets->brandIds[$row['brand_id']] = 1;
-            } else {
-                $facets->brandIds[-1] = 1;
-            }
+        $results = $qb->getFacets();
+
+        $facets = new DTO\Facets();
+        $facets->total = $results[0][0]['total'];
+        if (0 === $facets->total) {
+            return $facets;
         }
+        $facets->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
+        $facets->availability = $this->getAvailability($results[3]);
+        if ($this->getUserIsEmployee()) {
+            $facets->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $results = array_slice($results, 5);
+        } else {
+            $results = array_slice($results, 4);
+        }
+
+        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[1])), 1);
+        $facets->brandIds = array_fill_keys(array_keys($this->getBrands($results[3])), 1);
 
         return $facets;
     }
 
-    protected function getCriteria(string $exclude = null): string
+    /**
+     * @return array
+     */
+    public function getProducts(): array
     {
-        $filter = $this->getFilter();
+        $qb = $this->getQueryBuilder();
 
-        $criteria = "{$this->getMainCriteria()} AND {$this->getCriteriaAlive()} AND {$this->getCriteriaAvailability()} {$this->getCriteriaNofilled()}";
-        if ('price' != $exclude && ($condition = $this->getCriteriaPrice())) {
-            $criteria .= " AND $condition";
-        }
-        if ('categories' != $exclude && ($condition = $this->getCriteriaCategories(...$filter->categories))) {
-            $criteria .= " AND $condition";
-        }
-        if ('brands' != $exclude && ($condition = $this->getCriteriaBrands(...$filter->brands))) {
-            $criteria .= " AND $condition";
+        $qb->criteria($qb->getCriteriaCategories());
+        $qb->criteria($qb->getCriteriaBrands());
+        $qb->criteria('supplier_id = '.$this->supplier->id);
+        $name = $this->getFilter()->name;
+        if (!empty($name)) {
+            $qb->match($name);
         }
 
-        return $criteria;
-    }
+        $products = $qb->getProducts();
 
-    protected function getMainCriteria()
-    {
-        return "supplier_id = {$this->supplier->id}";
+        return $products;
     }
 }

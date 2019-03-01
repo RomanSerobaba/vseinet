@@ -9,31 +9,33 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
 {
     public function handle(GetBlockSpecialsQuery $query)
     {
+        $products = [];
+
+        $cache = $this->get('cache.provider.memcached');
+        $cachedBlock = $cache->getItem('block_specials_'.$this->getGeoCity()->getRealId().'_'.$query->categoryId);
+        if ($cachedBlock->isHit()) {
+            foreach ($cachedBlock->get() as $id) {
+                $cachedProduct = $cache->getItem('block_specials_product_'.$id.'_'.$query->categoryId);
+                if ($cachedProduct->isHit()) {
+                    $products[$id] = $cachedProduct->get();
+                }
+            }
+        }
+
+        if (0 === ($query->count -= count($products))) {
+            return $products;
+        }
+
         $em = $this->getDoctrine()->getManager();
 
-        $q = $em->createQuery("
-            SELECT MIN(bp.id)
+        $q = $em->createQuery('
+            SELECT MIN(bp.id), MAX(bp.id)
             FROM AppBundle:BaseProduct AS bp
-        ");
-        try {
-            $minId = $q->getSingleScalarResult();
-        } catch (\Exception $e) {
-            return [];
-        }
+        ');
+        $values = $q->getSingleResult();
 
-        $q = $em->createQuery("
-            SELECT MAX(bp.id)
-            FROM AppBundle:BaseProduct AS bp
-        ");
-        try {
-            $maxId = $q->getSingleScalarResult();
-        } catch (\Exception $e) {
-            return [];
-        }
-
-        $products = [];
-        $random = rand($minId, $maxId);
         while ($query->count--) {
+            $random = rand($values[2], $values[1]);
             $q = $em->createQuery("
                 SELECT
                     NEW AppBundle\Bus\Main\Query\DTO\Product (
@@ -66,9 +68,19 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
             try {
                 $product = $q->getSingleResult();
                 $products[$product->id] = $product;
+
+                $cachedProduct = $cache->getItem('block_specials_product_'.$product->id.'_'.$query->categoryId);
+                $cachedProduct->set($product);
+                $cachedProduct->expiresAfter(300 + rand(0, 100));
+                $cache->save($cachedProduct);
+
             } catch (\Exception $e) {
             }
         }
+
+        $cachedBlock->set(array_keys($products));
+        $cachedBlock->expiresAfter(300 + rand(0, 100));
+        $cache->save($cachedBlock);
 
         return $products;
     }

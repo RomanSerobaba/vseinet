@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Image 
+class Image
 {
     /**
      * @Assert\Type(type="integer")

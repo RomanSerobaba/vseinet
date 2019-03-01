@@ -1,30 +1,37 @@
-# https://symfony.com/blog/new-in-symfony-3-4-services-are-private-by-default
 services:
+    tactician.middleware.param_fetcher:
+        class: AppBundle\Bus\Middleware\ParamFetcherMiddleware
+        public: false
+        arguments: [ '@annotation_reader' ]
+
+    tactician.middleware.validation:
+        class: AppBundle\Bus\Middleware\ValidationMiddleware
+        public: false
+        arguments: [ '@validator' ]
+
+    tactician.middleware.transaction:
+        class: AppBundle\Bus\Middleware\TransactionMiddleware
+        public: false
+        arguments: [ '@doctrine.orm.entity_manager' ]
+
     command_bus:
-        alias: simple_bus.command_bus
+        alias: tactician.commandbus
         public: true
 
     query_bus:
-        alias: simple_bus.query_bus
+        alias: tactician.commandbus.query
         public: true
 
-    command_bus.middleware.builder:
-        class: AppBundle\Bus\Middleware\CommandBuilderMiddleware 
-        public: false 
-        arguments: [ '@annotation_reader' ]
-        tags:
-            - { name: command_bus_middleware, priority: 120  }
-
-    command_bus.middleware.validation:
-        class: AppBundle\Bus\Middleware\CommandValidationMiddleware
-        public: false
-        arguments: [ '@validator' ]
-        tags: 
-            - { name: command_bus_middleware, priority: 110  }
-            
-    query_bus.middleware.validation:
-        class: AppBundle\Bus\Middleware\QueryValidationMiddleware
-        public: false
-        arguments: [ '@validator' ]
-        tags: 
-            - { name: query_bus_middleware }
+tactician:
+    commandbus:
+        default:
+            middleware:
+                - tactician.middleware.param_fetcher
+                - tactician.middleware.validation
+                - tactician.middleware.transaction
+                - tactician.middleware.command_handler
+        query:
+            middleware:
+                - tactician.middleware.param_fetcher
+                - tactician.middleware.validation
+                - tactician.commandbus.query.middleware.command_handler

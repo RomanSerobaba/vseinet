@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Controller;
 
@@ -26,7 +26,7 @@ class SupplierController extends Controller
      */
     public function remiansAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetRemainsQuery($request->query->all()), $remains);
+        $remains = $this->get('query_bus')->handle(new Query\GetRemainsQuery($request->query->all()));
 
         return $this->json([
             'html' => $this->renderView('@Admin/Supplier/remains.html.twig', [

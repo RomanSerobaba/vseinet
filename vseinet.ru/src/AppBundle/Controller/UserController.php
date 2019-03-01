@@ -22,9 +22,9 @@ class UserController extends Controller
      */
     public function accountAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
-        $this->get('query_bus')->handle(new Query\GetContactsQuery(), $contacts);
-        $this->get('query_bus')->handle(new Query\GetAddressesQuery(), $addresses);
+        $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
+        $contacts = $this->get('query_bus')->handle(new Query\GetContactsQuery());
+        $addresses = $this->get('query_bus')->handle(new Query\GetAddressesQuery());
 
         $account = [
             'info' => $info,
@@ -57,7 +57,7 @@ class UserController extends Controller
     {
         $command = new Command\UpdateCommand();
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
+            $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
             $command->init((array) $info);
             if ($info->cityId) {
                 $command->city = $this->getDoctrine()->getRepository(GeoCity::class)->find($info->cityId);
@@ -74,7 +74,7 @@ class UserController extends Controller
                     $notice = 'Ваш профиль успешно обновлен';
 
                     if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $info);
+                        $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
 
                         return $this->json([
                             'html' => $this->renderView('User/account_info.html.twig', [
@@ -132,7 +132,7 @@ class UserController extends Controller
     {
         $command = new Command\AddContactCommand(['id' => $id]);
         if ($id && $request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]), $contact);
+            $contact = $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]));
             $command->init((array) $contact);
         }
         $form = $this->createForm(Form\AddContactType::class, $command);
@@ -146,7 +146,7 @@ class UserController extends Controller
                     $notice = $id ? 'Контакт успешно обновлен' : 'Контакт успешно добавлен';
 
                     if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]), $contact);
+                        $contact = $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]));
 
                         return $this->json([
                             'html' => $this->renderView('User/contact.html.twig', [
@@ -228,7 +228,7 @@ class UserController extends Controller
     {
         $command = new Command\AddAddressCommand(['id' => $id]);
         if ($id && $request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]), $address);
+            $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]));
             $command->init((array) $address);
         }
         $form = $this->createForm(Form\AddAddressType::class, $command);
@@ -240,7 +240,7 @@ class UserController extends Controller
                     $this->get('command_bus')->handle($command);
 
                     if ($request->isXmlHttpRequest()) {
-                        $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]), $address);
+                        $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]));
 
                         return $this->json([
                             'html' => $this->renderView('User/address.html.twig', [
@@ -320,7 +320,7 @@ class UserController extends Controller
      */
     public function searchAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()), $users);
+        $users = $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()));
 
         return $this->json([
             'users' => $users,
