@@ -37,13 +37,11 @@ class SearchProductFinder extends AbstractProductFinder
         $features->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
-            $results = array_slice($results, 5);
-        } else {
-            $results = array_slice($results, 4);
+            $results = array_slice($results, 1);
         }
 
-        $features->categories = $this->getCategories($results[1]);
-        $features->brands = $this->getBrands($results[2]);
+        $features->categories = $this->getCategories($results[5]);
+        $features->brands = $this->getBrands($results[6]);
 
         return $features;
     }
@@ -70,13 +68,11 @@ class SearchProductFinder extends AbstractProductFinder
         $facets->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $facets->nofilled = $this->getNofilled(array_splice($results, 5, 5));
-            $results = array_slice($results, 5);
-        } else {
-            $results = array_slice($results, 4);
+            $results = array_slice($results, 1);
         }
 
-        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[1])), 1);
-        $facets->brandIds = array_fill_keys(array_keys($this->getBrands($results[3])), 1);
+        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[5])), 1);
+        $facets->brandIds = array_fill_keys(array_keys($this->getBrands($results[7])), 1);
 
         return $facets;
     }

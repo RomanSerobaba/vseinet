@@ -13,6 +13,7 @@ class BrandProductFinder extends AbstractProductFinder
 
     /**
      * @param iterable $values
+     * @param Brand    $brand
      *
      * @return self
      */
@@ -47,12 +48,10 @@ class BrandProductFinder extends AbstractProductFinder
         $features->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
-            $results = array_slice($results, 5);
-        } else {
-            $results = array_slice($results, 4);
+            $results = array_slice($results, 1);
         }
 
-        $features->categories = $this->getCategories($results[1]);
+        $features->categories = $this->getCategories($results[5]);
 
         return $features;
     }
@@ -83,12 +82,10 @@ class BrandProductFinder extends AbstractProductFinder
         $facets->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $facets->nofilled = $this->getNofilled(array_splice($results, 5, 5));
-            $results = array_slice($results, 5);
-        } else {
-            $results = array_slice($results, 4);
+            $results = array_slice($results, 1);
         }
 
-        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[1])), 1);
+        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[5])), 1);
 
         return $facets;
     }
