@@ -5,7 +5,6 @@ namespace AppBundle\Bus\Catalog\Finder;
 use AppBundle\Bus\Catalog\Query\DTO\Category;
 use AppBundle\Bus\Brand\Query\DTO\Brand;
 use AppBundle\Enum\DetailType;
-use AppBundle\Bus\Catalog\Finder\DTO\Detail;
 
 class CategoryProductFinder extends AbstractProductFinder
 {
@@ -18,7 +17,6 @@ class CategoryProductFinder extends AbstractProductFinder
      * @var Brand
      */
     protected $brand;
-
 
     /**
      * @param iterable $values
@@ -79,10 +77,10 @@ class CategoryProductFinder extends AbstractProductFinder
         $features->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
-            $results = array_slice($results, 5);
-        } else {
-            $results = array_slice($results, 4);
+            $results = array_slice($results, 1);
         }
+
+        $results = array_slice($results, 4);
 
         if ($this->category->isTplEnabled) {
             foreach (array_shift($results) as $row) {
@@ -98,6 +96,8 @@ class CategoryProductFinder extends AbstractProductFinder
                     $details[$id]->values = new DTO\Range($range['min_value'], $range['max_value']);
                 }
             }
+        } else {
+            $results = array_slice($results, 1);
         }
 
         $features->brands = $this->getBrands(array_shift($results));
@@ -315,7 +315,7 @@ class CategoryProductFinder extends AbstractProductFinder
 
     protected function getDetailValues(array $ids): array
     {
-         $q = $this->getDoctrine()->getManager()->createQuery("
+        $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\Catalog\Finder\DTO\DetailValue (
                     dv.id,
