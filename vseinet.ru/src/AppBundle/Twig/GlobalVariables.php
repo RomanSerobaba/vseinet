@@ -3,7 +3,6 @@
 namespace AppBundle\Twig;
 
 use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables as BaseGlobalVariables;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * An extended value object to store additional global variables to be accessed in Smarty.
@@ -31,7 +30,7 @@ class GlobalVariables extends BaseGlobalVariables
     }
 
     /**
-     * Return true if current user is employee
+     * Return true if current user is employee.
      *
      * @return bool
      */
@@ -43,6 +42,21 @@ class GlobalVariables extends BaseGlobalVariables
         }
 
         return $user->isEmployee();
+    }
+
+    /**
+     * Return true if current user is programmer.
+     *
+     * @return bool
+     */
+    public function getUserIsProgrammer()
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return false;
+        }
+
+        return $user->isProgrammer();
     }
 
     /**
