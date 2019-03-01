@@ -27,6 +27,14 @@ class AbstractProductFinder extends ContainerAware
     }
 
     /**
+     * @param array $filter
+     */
+    public function handleRequest(array $filter = [])
+    {
+        $this->getFilter()->handleRequest($filter);
+    }
+
+    /**
      * @param  array $found
      *
      * @return array
@@ -144,7 +152,7 @@ class AbstractProductFinder extends ContainerAware
         }
 
         if (!empty($otherBrandId2Count)) {
-            $brands[-1] = new Brand(-1, 'Прочие');
+            $brands[-1] = new DTO\Brand(-1, 'Прочие');
             $brands[-1]->countProducts = array_sum($otherBrandId2Count);
             $brands[-1]->includeIds = array_keys($otherBrandId2Count);
         }
@@ -163,7 +171,7 @@ class AbstractProductFinder extends ContainerAware
         foreach ($found as $row) {
             $availability[$row['availability']] = $row['count(*)'];
         }
-        foreach (Availability::getChoises($this->getUserIsEmployee()) as $type => $_) {
+        foreach (Availability::getChoices($this->getUserIsEmployee()) as $type => $_) {
             if (!isset($availability[$type])) {
                 $availability[$type] = 0;
             }

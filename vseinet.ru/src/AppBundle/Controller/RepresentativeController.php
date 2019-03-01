@@ -23,14 +23,14 @@ class RepresentativeController extends Controller
      */
     public function getAction(int $id, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]), $representative);
+        $representative = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
         if ($request->isXmlHttpRequest()) {
             return $this->render('AppBundle:Representative:info.html.smarty', [
                 'representative' => $representative,
             ]);
         }
 
-        $this->get('query_bus')->handle(new Query\GetDescriptionQuery(['id' => $id]), $description);
+        $description = $this->get('query_bus')->handle(new Query\GetDescriptionQuery(['id' => $id]));
 
         return $this->render('AppBundle:Representative:page.html.smarty', [
             'representative' => $representative,

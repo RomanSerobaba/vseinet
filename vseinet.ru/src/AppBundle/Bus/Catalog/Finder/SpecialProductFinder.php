@@ -25,22 +25,86 @@ class SpecialProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->select('MIN(price) AS min_price, MAX(price) AS max_price');
         $qb->facet('FACET category_id FACET brand_id');
         $qb->criteria('availability = '.Availability::AVAILABLE);
 
         $results = $qb->getFeatures();
+        // print_r($results);exit;
 
         $features = new DTO\Features();
-        $row = array_shift($results)[0];
-        $features->price = new DTO\Range($results[0][0]['min_price'], $results[0][0]['max_price']);
+        $features->total = $results[0][0]['total'];
+        if (0 === $features->total) {
+            return $features;
+        }
+        $features->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
+        // $features->availability = $this->getAvailability($results[3]);
+        if ($this->getUserIsEmployee()) {
+            $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $results = array_slice($results, 5);
+        } else {
+            $results = array_slice($results, 4);
+        }
         $features->categories = $this->getCategories($results[1]);
         $features->brands = $this->getBrands($results[2]);
-        $features->total = $results[3][0]['total'];
-        if ($this->getUserIsEmployee()) {
-            $features->nofilled = $this->getNofilled(array_slice($results, 6));
-        }
 
         return $features;
+    }
+
+    /**
+     * @return DTO\Facets
+     */
+    public function getFacets(): DTO\Facets
+    {
+        $qb = $this->getQueryBuilder();
+
+        $qb->facet('FACET category_id', $qb->getCriteriaCategories());
+        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
+        $qb->criteria('availability = '.Availability::AVAILABLE);
+        $name = $this->getFilter()->name;
+        if (!empty($name)) {
+            $qb->match($name);
+        }
+
+        $results = $qb->getFacets();
+
+        $facets = new DTO\Facets();
+        $facets->total = $results[0][0]['total'];
+        if (0 === $facets->total) {
+            return $facets;
+        }
+        $facets->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
+        // $facets->availability = $this->getAvailability($results[3]);
+        if ($this->getUserIsEmployee()) {
+            $facets->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $results = array_slice($results, 5);
+        } else {
+            $results = array_slice($results, 4);
+        }
+        // print_r($results);exit;
+
+        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[1])), 1);
+        $facets->brandIds = array_fill_keys(array_keys($this->getBrands($results[3])), 1);
+
+        return $facets;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProducts(): array
+    {
+        $qb = $this->getQueryBuilder();
+
+        $qb->criteria($qb->getCriteriaCategories());
+        $qb->criteria($qb->getCriteriaBrands());
+        $qb->criteria('availability = '.Availability::AVAILABLE);
+        $name = $this->getFilter()->name;
+        if (!empty($name)) {
+            $qb->match($name);
+        }
+
+        $products = $qb->getProducts();
+
+        return $products;
     }
 }

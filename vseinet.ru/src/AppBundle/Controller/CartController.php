@@ -57,7 +57,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new Command\AddCommand($request->query->all(), ['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $cart);
+            $cart = $this->get('query_bus')->handle(new Query\GetInfoQuery());
 
             return $this->json([
                 'cart' => $cart,
@@ -82,7 +82,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new Command\SetQuantityCommand($request->query->all(), ['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);
+            $cart = $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()));
 
             return $this->json([
                 'cart' => $cart,
@@ -149,7 +149,7 @@ class CartController extends Controller
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()), $cart);
+            $cart = $this->get('query_bus')->handle(new Query\GetQuery($request->query->all()));
 
             return $this->json([
                 'cart' => $cart,

@@ -7,7 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Catalog\Query;
 use AppBundle\Bus\Brand\Query\GetByNameQuery as GetBrandByNameQuery;
-use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
+use AppBundle\Bus\Brand\Query\GetByIdQuery as GetBrandByIdQuery;
+use AppBundle\Bus\Catalog\{ Paging, Sorting };
+use AppBundle\Bus\Catalog\Enum\{ Availability, Nofilled, Sort, SortDirection };
 
 class CatalogController extends Controller
 {
@@ -48,7 +50,6 @@ class CatalogController extends Controller
             $finder->handleRequest($request->request->get('filter'));
 
             $filter = $finder->getFilter();
-            $parameters
             if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
                 $filter->brandIds = null;
@@ -265,8 +266,8 @@ class CatalogController extends Controller
         $facets = $finder->getFacets();
         $products = $finder->getProducts();
 
-        $baseUrl = $this->generateUrl($request->attributes->get('_route'));
-        $attributes = $filter->build($attributes);
+        $baseUrl = $this->generateUrl($request->attributes->get('_route'), $attributes);
+        $attributes = $filter->build();
 
         $paging = new Paging([
             'total' => $facets->total,
@@ -307,7 +308,7 @@ class CatalogController extends Controller
         }
 
         return $this->render('Catalog/'.$view.'.html.twig', $parameters + [
-            'feactures' => $finder->getFeatures(),
+            'features' => $finder->getFeatures(),
             'filter' => $filter,
             'facets' => $facets,
             'products' => $products,

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Controller;
 
@@ -25,7 +25,7 @@ class ReservesController extends Controller
      */
     public function getReservesAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetReservesQuery($request->query->all()), $reserves);
+        $reserves = $this->get('query_bus')->handle(new Query\GetReservesQuery($request->query->all()));
 
         return $this->json([
             'html' => $this->renderView('@Admin/Reserves/reserves.html.twig', [

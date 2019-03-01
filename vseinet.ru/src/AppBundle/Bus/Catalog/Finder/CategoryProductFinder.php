@@ -79,10 +79,10 @@ class CategoryProductFinder extends AbstractProductFinder
         $features->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $results = array_slice($results, 5);
+        } else {
+            $results = array_slice($results, 4);
         }
-
-        $results = array_slice($results, 5);
-
 
         if ($this->category->isTplEnabled) {
             foreach (array_shift($results) as $row) {
@@ -141,7 +141,7 @@ class CategoryProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET brand_id LIMIT 1000', $qb->getCriteriaBrands());
+        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
 
         if ($this->category->isTplEnabled) {
             $details = $this->getDetails();
@@ -257,8 +257,7 @@ class CategoryProductFinder extends AbstractProductFinder
 
         $products = $qb->getProducts();
 
-        print_r($products);
-        exit;
+        return $products;
     }
 
     protected function getCategorySections(array $found): array

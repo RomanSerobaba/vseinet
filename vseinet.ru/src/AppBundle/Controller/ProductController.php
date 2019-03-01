@@ -41,30 +41,30 @@ class ProductController extends Controller
      */
     public function indexAction(int $id, int $categoryId = null, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]), $product);
+        $product = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
 
         if (null === $categoryId) {
             $categoryId = $product->categoryId;
         }
-        $this->get('query_bus')->handle(new GetBreadcrumbsQuery(['categoryId' => $categoryId]), $breadcrumbs);
+        $breadcrumbs = $this->get('query_bus')->handle(new GetBreadcrumbsQuery(['categoryId' => $categoryId]));
 
         if ($product->brandId) {
-            $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => $product->brandId]), $brand);
+            $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => $product->brandId]));
         } else {
             $brand =  null;
         }
 
-        $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]), $images);
+        $images = $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]));
 
-        $this->get('query_bus')->handle(new GetCartInfoQuery(), $cart);
+        $cart = $this->get('query_bus')->handle(new GetCartInfoQuery());
         $product->quantityInCart = $cart->products[$product->id]->quantity ?? 0;
 
-        $this->get('query_bus')->handle(new GetFavoriteInfoQuery(), $favorites);
+        $favorites = $this->get('query_bus')->handle(new GetFavoriteInfoQuery());
         $product->inFavorites = in_array($product->id, $favorites->ids);
 
-        $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $product->id]), $points);
+        $points = $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $product->id]));
 
-        $this->get('query_bus')->handle(new Query\GetDetailsQuery(['baseProductId' => $product->id]), $details);
+        $details = $this->get('query_bus')->handle(new Query\GetDetailsQuery(['baseProductId' => $product->id]));
 
         if (!empty($details)) {
             $count = 0;
@@ -109,8 +109,8 @@ class ProductController extends Controller
      */
     public function galleryAction(int $id, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]), $product);
-        $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]), $images);
+        $product = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
+        $images = $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]));
 
         if (empty($images)) {
             throw new NotFoundHttpException();

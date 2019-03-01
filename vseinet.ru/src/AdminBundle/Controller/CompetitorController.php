@@ -137,7 +137,7 @@ class CompetitorController extends Controller
      */
     protected function getRevisions(int $baseProductId)
     {
-        $this->get('query_bus')->handle(new Query\GetRevisionsQuery(['baseProductId' => $baseProductId]), $revisions);
+        $revisions = $this->get('query_bus')->handle(new Query\GetRevisionsQuery(['baseProductId' => $baseProductId]));
         $competitors = $this->getDoctrine()->getManager()->getRepository(Competitor::class)->getActive();
 
         return $this->json([

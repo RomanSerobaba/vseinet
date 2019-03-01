@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
@@ -261,7 +262,7 @@ class MainController extends Controller
      */
     public function getBlockLastviewAction()
     {
-        $products = $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 4]));
+        $products = $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 6]));
 
         return $this->render('Main/block_lastview.html.twig', [
             'products' => $products,
@@ -275,8 +276,13 @@ class MainController extends Controller
      * )
      * @Security("is_granted('ROLE_ADMIN')")
      */
-    public function sysinfoAction(Request $request)
+    public function sysinfoAction()
     {
-        echo phpinfo();
+        ob_start();
+        phpinfo();
+        $response = new Response(ob_get_contents());
+        ob_end_clean();
+
+        return $response;
     }
 }

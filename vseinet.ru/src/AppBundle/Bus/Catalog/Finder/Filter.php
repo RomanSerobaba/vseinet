@@ -95,7 +95,7 @@ class Filter extends ContainerAware
                     break;
 
                 case 's':
-                    $this->sectionIds = $this->parseSet($value);
+                    $this->categorySectionIds = $this->parseSet($value);
                     break;
 
                 case 'q':
@@ -177,7 +177,7 @@ class Filter extends ContainerAware
      */
     public function handleRequest(array $request): self
     {
-        $query = array_diff_key($query, array_flip(['p', 'b', 'c', 's', 'n', 'd', 'a', 'f', 'page']));
+        $query = array_diff_key($request, array_flip(['p', 'b', 'c', 's', 'n', 'd', 'a', 'f', 'page']));
 
         foreach ($request as $key => $value) {
             switch ($key) {
@@ -247,8 +247,8 @@ class Filter extends ContainerAware
         if ($this->categoryIds) {
             $query['c'] = $this->buildSet($this->categoryIds);
         }
-        if ($this->sectionIds) {
-            $query['s'] = $this->buildSet($this->sectionIds);
+        if ($this->categorySectionIds) {
+            $query['s'] = $this->buildSet($this->categorySectionIds);
         }
         if ($this->q) {
             $query['q'] = $this->q;

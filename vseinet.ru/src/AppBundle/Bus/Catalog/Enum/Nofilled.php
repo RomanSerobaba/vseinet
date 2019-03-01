@@ -10,7 +10,7 @@ class Nofilled
     const MANUFACTURER_LINK = 'no_manufacturer_link';
     const MANUAL_LINK = 'no_manual_link';
 
-    public function getChoises(): array
+    public function getChoices(): array
     {
         return [
             self::DETAILS => 'Нет характеристик',

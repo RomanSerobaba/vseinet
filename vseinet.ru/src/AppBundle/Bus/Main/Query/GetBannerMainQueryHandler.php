@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Query;
 
@@ -10,33 +10,44 @@ class GetBannerMainQueryHandler extends MessageHandler
 {
     public function handle(GetBannerMainQuery $query)
     {
+        $cache = $this->get('cache.provider.memcached');
+        $cachedBanners = $cache->getItem('banners');
+        if ($cachedBanners->isHit()) {
+            return $cachedBanners->get();
+        }
+
+        $result = ['banners' => []];
+
         $em = $this->getDoctrine()->getManager();
 
         $q = $em->createQuery("
             SELECT b
             FROM AppBundle:BannerMainData AS b
-            WHERE 
-                b.isVisible = true 
+            WHERE
+                b.isVisible = true
                 AND (b.startVisibleDate IS NULL OR b.startVisibleDate >= CURRENT_TIMESTAMP())
-                AND (b.endVisibleDate IS NULL OR b.endVisibleDate <= CURRENT_TIMESTAMP()) 
+                AND (b.endVisibleDate IS NULL OR b.endVisibleDate <= CURRENT_TIMESTAMP())
             ORDER BY b.weight, b.id
         ");
+        $banners = $q->getResult();
+        if (!empty($banners)) {
+            foreach ($banners as $banner) {
+                $result['banners'][$banner->getId()] = $banner;
+            }
 
-        $banners = [];
-        foreach ($q->getResult() as $banner) {
-            $banners[$banner->getId()] = $banner;
+            $products = $em->getRepository(BannerMainProductData::class)->findBy(['bannerId' => array_keys($result['banners'])], ['id' => 'ASC']);
+            $bannerId2products = [];
+            foreach ($products as $product) {
+                $bannerId2products[$product->getBannerId()][] = $product;
+            }
+
+            $result['products'] = $bannerId2products;
         }
 
-        if (empty($banners)) {
-            return ['banners' => []];
-        }
+        $cachedBanners->set($result);
+        $cachedBanners->expiresAfter(300 + rand(0, 100));
+        $cache->save($cachedBanners);
 
-        $products = $em->getRepository(BannerMainProductData::class)->findBy(['bannerId' => array_keys($banners)], ['id' => 'ASC']);
-        $bannerId2products = [];
-        foreach ($products as $product) {
-            $bannerId2products[$product->getBannerId()][] = $product;
-        }
-
-        return ['banners' => $banners, 'products' => $bannerId2products];
+        return $result;
     }
 }

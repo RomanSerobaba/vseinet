@@ -274,6 +274,9 @@ class QueryBuilder extends ContainerAware
         $this->reset();
 
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
+        if (empty($results[0])) {
+            return [];
+        }
         $ids = array_map(function($row) { return intval($row['id']); }, $results[0]);
         $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $ids]));
         $cartInfo = $this->get('query_bus')->handle(new GetCartInfoQuery());
@@ -473,7 +476,7 @@ class QueryBuilder extends ContainerAware
     {
         return implode("\n", array_map(function($nofilled) {
             return 'FACET '.$nofilled;
-        }, array_keys(Nofilled::getChoises())));
+        }, array_keys(Nofilled::getChoices())));
     }
 
     /**
