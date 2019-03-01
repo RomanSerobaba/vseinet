@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Bus\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
@@ -14,7 +13,6 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Competitor;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class MainController extends Controller
 {
@@ -52,7 +50,7 @@ class MainController extends Controller
      * @VIA\Route(
      *     name="cheaper_request",
      *     path="/cheaper/request/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -85,7 +83,6 @@ class MainController extends Controller
                     return $this->json([
                         'notice' => 'Ваш запрос отправлен',
                     ]);
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -109,7 +106,7 @@ class MainController extends Controller
      * @VIA\Get(
      *     name="credit_calculators",
      *     path="/credit/calculators/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     condition="request.isXmlHttpRequest()"
      * )
      */
@@ -153,7 +150,6 @@ class MainController extends Controller
                     $this->addFlash('notice', 'Спасибо за Ваше сообщение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');
 
                     return $this->redirectToRoute('index');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessage());
                 }
@@ -191,7 +187,6 @@ class MainController extends Controller
                     $this->addFlash('notice', 'Спасибо за Ваше предложение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');
 
                     return $this->redirectToRoute('index');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessage());
                 }
@@ -203,7 +198,6 @@ class MainController extends Controller
             'errors' => $this->getFormErrors($form),
         ]);
     }
-
 
     /**
      * @internal
@@ -267,22 +261,5 @@ class MainController extends Controller
         return $this->render('Main/block_lastview.html.twig', [
             'products' => $products,
         ]);
-    }
-
-    /**
-     * @VIA\Get(
-     *     name="system_info",
-     *     path="/sysinfo/"
-     * )
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
-    public function sysinfoAction()
-    {
-        ob_start();
-        phpinfo();
-        $response = new Response(ob_get_contents());
-        ob_end_clean();
-
-        return $response;
     }
 }

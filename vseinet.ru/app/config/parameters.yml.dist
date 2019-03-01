@@ -12,11 +12,6 @@ parameters:
     sphinxql_host: 192.168.122.195 # 127.0.0.1
     sphinxql_port: 9318 # 9306
 
-    rabbit_host: 'localhost'
-    rabbit_port: 5672
-    rabbit_user:  admin
-    rabbit_password: ~
-
     memcached_host: 'localhost'
     memcached_port: 11211
 
@@ -41,8 +36,6 @@ parameters:
     default.page_description: 'DEFAULT PAGE DESCRIPTION'
 
     catalog.page_limit: 25
-
-    profiler.only_exceptions: false
 
     admin.host: 'https://vseinet.bitbucket.io'
     api.host: 'https://dev.vseinet.ru'

@@ -66,6 +66,7 @@
         <script src="{{ asset('bundles/libs.js') }}"></script>
         <script src="{{ asset('bundles/scripts.js')}}"></script>
         {% block javascripts %}{% endblock %}
+        {% include 'profiler.html.twig' %}
     </body>
 </html>
 {#% endspaceless %#}
