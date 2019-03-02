@@ -22,6 +22,9 @@ services:
         alias: tactician.commandbus.query
         public: true
 
+    validation_bus:
+        alias: tactician.commandbus.validation
+
 tactician:
     commandbus:
         default:
@@ -35,3 +38,8 @@ tactician:
                 - tactician.middleware.param_fetcher
                 - tactician.middleware.validation
                 - tactician.commandbus.query.middleware.command_handler
+
+        validation:
+            middleware:
+                - tactician.middleware.param_fetcher
+                - tactician.middleware.validation

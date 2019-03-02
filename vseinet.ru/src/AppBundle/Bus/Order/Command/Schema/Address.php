@@ -2,9 +2,10 @@
 
 namespace AppBundle\Bus\Order\Command\Schema;
 
+use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Address
+class Address extends Message
 {
     /**
      * @Assert\Type(type="integer", message="Идентификатор улицы должен быть числом")
@@ -56,19 +57,19 @@ class Address
      */
     public $geoCityId;
 
-    public function __construct($geoStreetId = NULL, $geoStreetName = NULL, $house = NULL, $building = NULL, $apartment = NULL, $floor = NULL, $hasLift = NULL, $office = NULL, $postalCode = NULL, $geoCityId = NULL)
-    {
-        $this->setGeoStreetId($geoStreetId);
-        $this->geoStreetName = $geoStreetName;
-        $this->house = $house;
-        $this->building = $building;
-        $this->apartment = $apartment;
-        $this->setFloor($floor);
-        $this->setHasLift($hasLift);
-        $this->office = $office;
-        $this->postalCode = $postalCode;
-        $this->setGeoCityId($geoCityId);
-    }
+    // public function __construct($geoStreetId = NULL, $geoStreetName = NULL, $house = NULL, $building = NULL, $apartment = NULL, $floor = NULL, $hasLift = NULL, $office = NULL, $postalCode = NULL, $geoCityId = NULL)
+    // {
+    //     $this->setGeoStreetId($geoStreetId);
+    //     $this->geoStreetName = $geoStreetName;
+    //     $this->house = $house;
+    //     $this->building = $building;
+    //     $this->apartment = $apartment;
+    //     $this->setFloor($floor);
+    //     $this->setHasLift($hasLift);
+    //     $this->office = $office;
+    //     $this->postalCode = $postalCode;
+    //     $this->setGeoCityId($geoCityId);
+    // }
 
     public function setGeoStreetId($geoStreetId)
     {
@@ -77,7 +78,7 @@ class Address
 
     public function setFloor($floor)
     {
-        $this->floor = !empty($floor) ? (int) $floor : Null;
+        $this->floor = !empty($floor) ? (int) $floor : null;
     }
 
     public function setHasLift($hasLift)

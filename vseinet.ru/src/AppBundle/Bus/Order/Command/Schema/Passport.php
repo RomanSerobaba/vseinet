@@ -2,9 +2,8 @@
 
 namespace AppBundle\Bus\Order\Command\Schema;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Bus\Message\Message;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Passport extends Message
 {
@@ -19,7 +18,7 @@ class Passport extends Message
     public $number;
 
     /**
-     * @Assert\Type(type="datetime", message="Дата выдачи паспорта должна быть в формате ДД.ММ.ГГГГ")
+     * @Assert\Date(message="Дата выдачи паспорта должна быть в формате ДД.ММ.ГГГГ")
      */
     public $issuedAt;
 
@@ -33,7 +32,7 @@ class Passport extends Message
         if (!empty($issuedAt) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', $issuedAt)) {
             $this->issuedAt = new \Datetime(date('Y-m-d', strtotime($issuedAt)));
         } elseif (empty($issuedAt)) {
-            $this->issuedAt = NULL;
+            $this->issuedAt = null;
         }
     }
 }

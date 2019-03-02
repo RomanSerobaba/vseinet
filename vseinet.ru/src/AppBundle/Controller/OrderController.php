@@ -8,11 +8,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Enum\OrderType;
-use AppBundle\Bus\Order\{ Command, Query, Form };
+use AppBundle\Bus\Order\Command;
+use AppBundle\Bus\Order\Query;
+use AppBundle\Bus\Order\Form;
 use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
-use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\ApiClient\ApiClientException;
 
 class OrderController extends Controller
@@ -51,7 +52,6 @@ class OrderController extends Controller
                             ]),
                         ]);
                     }
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -138,7 +138,7 @@ class OrderController extends Controller
         $command = new Command\CreateCommand($data);
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode', null),
-            'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : NULL,
+            'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null,
         ]));
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
@@ -159,9 +159,13 @@ class OrderController extends Controller
             }
         }
 
+        $this->get('validation_bus')->handle($command);
+
         $form = $this->createForm(Form\CreateFormType::class, $command);
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetSummaryQuery([
-            'cart' => $cart,
+            'products' => $cart->products,
+            'discountCode' => $cart->discountCode,
+            'discountCodeId' => $cart->discountCodeId,
             'geoPointId' => $command->geoPointId,
             'paymentTypeCode' => $command->paymentTypeCode,
             'deliveryTypeCode' => $command->deliveryTypeCode,
@@ -181,7 +185,7 @@ class OrderController extends Controller
                     $this->get('session')->remove('discountCode');
                     $this->get('session')->remove('form.orderCreation');
 
-                    $this->get('session')->set('order_successfully_created', TRUE);
+                    $this->get('session')->set('order_successfully_created', true);
 
                     if ($request->isXmlHttpRequest()) {
                         return $this->json([
@@ -204,7 +208,7 @@ class OrderController extends Controller
                         $messages = array_combine(array_column($paramErrors, 'name'), array_column($paramErrors, 'message'));
                         $this->addFormErrors($form, $messages);
                     } else {
-                        $this->addFormErrors($form, ['' => $e->getMessage() . ' ' . $e->getDebugTokenLink()]);
+                        $this->addFormErrors($form, ['' => $e->getMessage().' '.$e->getDebugTokenLink()]);
                     }
                 }
             }
@@ -223,7 +227,7 @@ class OrderController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
-                'html' => $this->renderView('Order/' . $command->typeCode . '_creation_ajax.html.twig', [
+                'html' => $this->renderView('Order/'.$command->typeCode.'_creation_ajax.html.twig', [
                     'form' => $form->createView(),
                     'canCreateRetailOrder' => $canCreateRetailOrder,
                     'cart' => $cart,
@@ -237,22 +241,21 @@ class OrderController extends Controller
             'cart' => $cart,
             'errors' => $this->getFormErrors($form),
         ]);
-
     }
 
     /**
      * @VIA\Get(
      *     name="order_created_page",
      *     path="/order/success/{id}/",
-     *     requirements={"id" = "\d+"}
+     *     requirements={"id": "\d+"}
      * )
      */
     public function createdPageAction(int $id, Request $request)
     {
-        $query = new Query\GetOrderQuery(['id' => $id,]);
+        $query = new Query\GetOrderQuery(['id' => $id]);
         $order = $this->get('query_bus')->handle($query);
 
-        if (null === $order || !$this->getUserIsEmployee() && !$this->get('session')->get('order_successfully_created') && (NULL === $this->getUser() ||$order->financialCounteragentId != $this->getUser()->financialCounteragent->getId())) {
+        if (null === $order || !$this->getUserIsEmployee() && !$this->get('session')->get('order_successfully_created') && (null === $this->getUser() || $order->financialCounteragentId != $this->getUser()->financialCounteragent->getId())) {
             throw new NotFoundHttpException();
         }
 

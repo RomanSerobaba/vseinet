@@ -2,11 +2,11 @@
 
 namespace AppBundle\Bus\Order\Command\Schema;
 
+use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Bus\User\Query\DTO\Contact;
-use AppBundle\Enum\OrderItemStatus;
+use AppBundle\Validator\Constraints as VIC;
 
-class OrganizationDetails
+class OrganizationDetails extends Message
 {
     /**
      * @Assert\Type(type="string")
@@ -19,26 +19,22 @@ class OrganizationDetails
     public $legalAddress;
 
     /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=20, max=20, exactMessage="Номер расчетного счёта должен состоять из 9 цифр")
+     * @VIC\SettlementAccount
      */
     public $settlementAccount;
 
     /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=12, max=12, exactMessage="ИНН должен состоять из 12 цифр")
+     * @VIC\TIN
      */
     public $tin;
 
     /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=9, max=9, exactMessage="КПП должен состоять из 9 цифр")
+     * @VIC\KPP
      */
     public $kpp;
 
     /**
-     * @Assert\Type(type="string")
-     * @Assert\Length(min=9, max=9, exactMessage="БИК должен состоять из 9 цифр")
+     * @VIC\BIC
      */
     public $bic;
 
@@ -54,6 +50,6 @@ class OrganizationDetails
 
     public function setBankId($bankId)
     {
-        $this->bankId = empty($bankId) ? Null : (int) $bankId;
+        $this->bankId = empty($bankId) ? null : (int) $bankId;
     }
 }

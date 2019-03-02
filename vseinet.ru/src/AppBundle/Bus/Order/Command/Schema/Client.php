@@ -2,11 +2,12 @@
 
 namespace AppBundle\Bus\Order\Command\Schema;
 
+use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\MobilePhone;
 use AppBundle\Validator\Constraints\PersonName;
 
-class Client
+class Client extends Message
 {
     /**
      * @assert\Type(type="integer", message="Идентификатор пользователя должен быть числом")
@@ -46,14 +47,13 @@ class Client
      */
     public $email;
 
-
     public function setUserId($userId)
     {
-        $this->userId = empty($userId) ? Null : (int) $userId;
+        $this->userId = empty($userId) ? null : (int) $userId;
     }
 
     public function setComuserId($comuserId)
     {
-        $this->comuserId = empty($comuserId) ? Null : (int) $comuserId;
+        $this->comuserId = empty($comuserId) ? null : (int) $comuserId;
     }
 }
