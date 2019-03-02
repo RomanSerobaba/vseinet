@@ -45,15 +45,16 @@ class GetBlockPopularsQueryHandler extends MessageHandler
                         bp.name,
                         bp.categoryId,
                         c.name,
-                        COALESCE(p.price, p0.price),
+                         (
+                            SELECT COALESCE(p.price, p0.price)
+                            FROM AppBundle:Product AS p0
+                            WHERE p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
+                        ),
                         (SELECT bpi.basename FROM AppBundle:BaseProductImage AS bpi WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1)
                     )
                 FROM AppBundle:BaseProduct AS bp
-                INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
                 LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
-                INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
-                INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
-                INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
+                INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId
                 WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds)
             ");
             $q->setParameter('randomId', $randomId);
