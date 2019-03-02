@@ -34,6 +34,21 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
         ');
         $baseProductIds = $q->getSingleResult();
 
+        $excludeIdsSpec = '';
+        if (1 < $query->count + count($products)) {
+            $excludeIdsSpec = 'AND bp.id NOT IN (:ids)';
+        }
+
+        $categoryIdSpec = '';
+        $categoryJoinSpec = '';
+        if (0 < $query->categoryId) {
+            $categoryIdSpec = 'AND cp.pid = :categoryId';
+            $categoryJoinSpec = '
+                INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
+                INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
+            ';
+        }
+
         while ($query->count--) {
             $randomId = rand($baseProductIds[1], $baseProductIds[2]);
             $q = $em->createQuery("
@@ -42,23 +57,29 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                         bp.id,
                         bp.name,
                         bp.categoryId,
-                        c.name,
-                        COALESCE(p.price, p0.price),
+                        '',
+                        (
+                            SELECT COALESCE(p.price, p0.price)
+                            FROM AppBundle:Product AS p0
+                            WHERE p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
+                        ),
                         (SELECT bpi.basename FROM AppBundle:BaseProductImage AS bpi WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1)
                     )
                 FROM AppBundle:BaseProduct AS bp
                 LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
-                INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
-                INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
-                INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
-                WHERE bp.id >= :randomId AND bp.id NOT IN (:ids) AND cp.pid = :categoryId
+                {$categoryJoinSpec}
+                WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec}
             ");
             $q->setParameter('randomId', $randomId);
-            $q->setParameter('ids', empty($products) ? [0] : array_keys($products));
             $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
-            $q->setParameter('categoryId', $query->categoryId);
             $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
             $q->setParameter('on_demand', ProductAvailabilityCode::ON_DEMAND);
+            if ($excludeIdsSpec) {
+                $q->setParameter('ids', empty($products) ? [0] : array_keys($products));
+            }
+            if ($categoryIdSpec) {
+                $q->setParameter('categoryId', $query->categoryId);
+            }
             $q->setMaxResults(1);
             try {
                 $product = $q->getSingleResult();
