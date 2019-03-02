@@ -4,7 +4,6 @@ namespace AppBundle\Bus\Main\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\ProductAvailabilityCode;
-use AppBundle\Doctrine\ORM\Query\DTORSM;
 
 class GetBlockPopularsQueryHandler extends MessageHandler
 {
@@ -33,12 +32,12 @@ class GetBlockPopularsQueryHandler extends MessageHandler
             SELECT MIN(bp.id), MAX(bp.id)
             FROM AppBundle:BaseProduct AS bp
         ');
-        $values = $q->getSingleResult();
-        $random = rand($values[2], $values[1]);
+        $baseProductIds = $q->getSingleResult();
 
-        $categoryIds = array_merge([0], array_map(function($product) { return $product->categoryId; }, $products));
+        $categoryIds = array_merge([0], array_map(function ($product) { return $product->categoryId; }, $products));
 
         while ($query->count--) {
+            $randomId = rand($baseProductIds[2], $baseProductIds[1]);
             $q = $em->createQuery("
                 SELECT
                     NEW AppBundle\Bus\Main\Query\DTO\Product (
@@ -46,25 +45,22 @@ class GetBlockPopularsQueryHandler extends MessageHandler
                         bp.name,
                         bp.categoryId,
                         c.name,
-                        COALESCE(p.price, p2.price),
-                        bpi.basename
+                        COALESCE(p.price, p0.price),
+                        (SELECT bpi.basename FROM AppBundle:BaseProductImage AS bpi WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1)
                     )
                 FROM AppBundle:BaseProduct AS bp
                 INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
-                INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
+                LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
+                INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
                 INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
                 INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
-                WHERE
-                    bp.id >= :random
-                    AND bp.categoryId NOT IN (:categoryIds)
-                    AND COALESCE(p.price, p2.price) > 0 AND p2.geoCityId = 0
-                    AND COALESCE(p.productAvailabilityCode, p2.productAvailabilityCode) = :available
+                WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds)
             ");
-            $q->setParameter('random', $random);
+            $q->setParameter('randomId', $randomId);
             $q->setParameter('categoryIds', $categoryIds);
             $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
             $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
+            $q->setParameter('on_demand', ProductAvailabilityCode::ON_DEMAND);
             $q->setMaxResults(1);
             try {
                 $product = $q->getSingleResult();
@@ -75,7 +71,6 @@ class GetBlockPopularsQueryHandler extends MessageHandler
                 $cachedProduct->set($product);
                 $cachedProduct->expiresAfter(300 + rand(0, 100));
                 $cache->save($cachedProduct);
-
             } catch (\Exception $e) {
             }
         }
