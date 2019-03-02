@@ -5,11 +5,8 @@ namespace AppBundle\Bus\Cart\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\Representative;
 use AppBundle\Enum\DeliveryTypeCode;
-use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\OrderType;
-use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Enum\RepresentativeTypeCode;
-use AppBundle\Entity\TransportCompany;
 use AppBundle\Entity\PaymentType;
 
 class GetSummaryQueryHandler extends MessageHandler
@@ -20,9 +17,8 @@ class GetSummaryQueryHandler extends MessageHandler
         $user = $this->getUser();
         $geoCity = $this->getGeoCity();
         $representative = $em->getRepository(Representative::class)->findOneBy(['geoPointId' => $query->geoPointId]);
-        $transportCompany = $em->getRepository(TransportCompany::class)->findOneBy(['id' => $query->transportCompanyId]);
         $paymentType = $em->getRepository(PaymentType::class)->findOneBy(['code' => $query->paymentTypeCode]);
-        $products = $query->cart->products;
+        $products = $query->products;
 
         if (OrderType::RETAIL == $query->orderTypeCode) {
             foreach ($products as $key => $product) {
@@ -66,9 +62,9 @@ class GetSummaryQueryHandler extends MessageHandler
         if (in_array($query->deliveryTypeCode, [DeliveryTypeCode::COURIER, DeliveryTypeCode::EX_WORKS])) {
             if (RepresentativeTypeCode::PARTNER == $representative->getType() || 214 == $representative->getGeoPointId()) {
                 foreach ($products as $key => $product) {
-                        $amount = $product->price * $product->quantity;
-                        $products[$key]->regionDeliveryTax = round((1000000 < $amount ? 100000 : $amount * .1) / $product->quantity, -3);
-                    }
+                    $amount = $product->price * $product->quantity;
+                    $products[$key]->regionDeliveryTax = round((1000000 < $amount ? 100000 : $amount * .1) / $product->quantity, -3);
+                }
             } elseif (RepresentativeTypeCode::FRANCHISER == $representative->getType()) {
                 $mostExpensive = reset($products);
 
@@ -84,6 +80,6 @@ class GetSummaryQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\CartSummary($products, $query->cart->discountCode, $query->cart->discountCodeId, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $postDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeCode ?? '', $paymentTypeName ?? '');
+        return new DTO\CartSummary($products, $query->discountCode, $query->discountCodeId, $deliveryCharges ?? 0, $floor ?? 0, $transportCompanyDeliveryCharges ?? 0, $postDeliveryCharges ?? 0, $paymentTypeComissionPercent ?? 0, $paymentTypeCode ?? '', $paymentTypeName ?? '');
     }
 }
