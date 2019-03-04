@@ -58,9 +58,6 @@ class CategoryProductFinder extends AbstractProductFinder
         }
 
         $qb->criteria('category_id = '.$this->category->id);
-        if (null !== $this->brand) {
-            $qb->criteria('brand_id = '.$this->brand->id);
-        }
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -69,8 +66,8 @@ class CategoryProductFinder extends AbstractProductFinder
         $results = $qb->getFeatures();
 
         $features = new DTO\Features();
-        $features->total = $results[0][0]['total'];
-        if (0 === $features->total) {
+        $features->total = min($results[0][0]['total'], $qb::MAX_MATCHES);
+        if (0 == $features->total) {
             return $features;
         }
         $features->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
@@ -160,9 +157,6 @@ class CategoryProductFinder extends AbstractProductFinder
         }
 
         $qb->criteria('category_id = '.$this->category->id);
-        if (null !== $this->brand) {
-            $qb->criteria('brand_id = '.$this->brand->id);
-        }
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -171,14 +165,15 @@ class CategoryProductFinder extends AbstractProductFinder
         $results = $qb->getFacets();
 
         $facets = new DTO\Facets();
-        $facets->total = $results[0][0]['total'];
-        if (0 === $facets->total) {
+        $facets->total = min($results[0][0]['total'], $qb::MAX_MATCHES);
+        if (0 == $facets->total) {
             return $facets;
         }
         $facets->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
         $facets->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
             $facets->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $results = array_slice($results, 1);
         }
 
         $results = array_slice($results, 5);
@@ -247,9 +242,6 @@ class CategoryProductFinder extends AbstractProductFinder
         }
 
         $qb->criteria('category_id = '.$this->category->id);
-        if (null !== $this->brand) {
-            $qb->criteria('brand_id = '.$this->brand->id);
-        }
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);

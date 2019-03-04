@@ -1,12 +1,12 @@
 /* category
 -------------------------------------------------------------------*/
 #category .wrapper{
-       
+
     padding-left: 15px;
 }
 #category {
     padding-top: 0px;
-    clear: both;    
+    clear: both;
 }
 #category .product {
     margin: 0 0 22px;
@@ -190,6 +190,7 @@
 #category #nav {
     font-size: 13px;
     line-height: 15px;
+    min-height: 100px;
 }
 #category #nav LI {
     margin: 0 0 15px;

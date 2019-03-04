@@ -3,14 +3,17 @@
 namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Container\ContainerAware;
-use AppBundle\Bus\Catalog\Enum\{ Availability, Nofilled, Sort, SortDirection };
+use AppBundle\Bus\Catalog\Enum\Availability;
+use AppBundle\Bus\Catalog\Enum\Nofilled;
+use AppBundle\Bus\Catalog\Enum\Sort;
+use AppBundle\Bus\Catalog\Enum\SortDirection;
 use AppBundle\Bus\Catalog\Query\GetProductsQuery;
 use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
 
 class QueryBuilder extends ContainerAware
 {
-    const MAX_MATCHES = 10000;
-    const PER_PAGE = 25;
+    public const MAX_MATCHES = 10000;
+    public const PER_PAGE = 25;
 
     /**
      * @var array
@@ -184,7 +187,7 @@ class QueryBuilder extends ContainerAware
 
         // ranges
         foreach ($this->select as $select) {
-            $criteria = array_filter($this->criteria, function($criteria, $expression) use ($select) {
+            $criteria = array_filter($this->criteria, function ($criteria, $expression) use ($select) {
                 return $select !== $expression && !empty($criteria);
             }, ARRAY_FILTER_USE_BOTH);
             $criteria[] = $this->getCriteriaPrice();
@@ -203,7 +206,7 @@ class QueryBuilder extends ContainerAware
 
         // enums, booleans
         foreach ($this->facets as $facet) {
-            $criteria = array_filter($this->criteria, function($criteria, $expression) use ($facet) {
+            $criteria = array_filter($this->criteria, function ($criteria, $expression) use ($facet) {
                 return $facet !== $expression && !empty($criteria);
             }, ARRAY_FILTER_USE_BOTH);
             $criteria[] = $this->getCriteriaPrice();
@@ -277,7 +280,7 @@ class QueryBuilder extends ContainerAware
         if (empty($results[0])) {
             return [];
         }
-        $ids = array_map(function($row) { return intval($row['id']); }, $results[0]);
+        $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
         $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $ids]));
         $cartInfo = $this->get('query_bus')->handle(new GetCartInfoQuery());
 
@@ -289,8 +292,8 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  string $expression
-     * @param  string|null $criteria
+     * @param string      $expression
+     * @param string|null $criteria
      *
      * @return self
      */
@@ -307,8 +310,8 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  string $expression
-     * @param  string|null $criteria
+     * @param string      $expression
+     * @param string|null $criteria
      *
      * @return self
      */
@@ -325,7 +328,7 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  string $expression
+     * @param string $expression
      *
      * @return self
      */
@@ -339,7 +342,7 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  string $words
+     * @param string $words
      *
      * @return self
      */
@@ -464,8 +467,10 @@ class QueryBuilder extends ContainerAware
             return '';
         }
 
-        return implode(' AND ', array_map(function($nofilled) {
-            return $nofilled.' = 1';
+        $mnemos = Nofilled::getMnemos();
+
+        return implode(' AND ', array_map(function ($nofilled) use ($mnemos) {
+            return $mnemos[$nofilled].' = 1';
         }, $this->getFilter()->nofilled));
     }
 
@@ -474,9 +479,9 @@ class QueryBuilder extends ContainerAware
      */
     public function getNofilledFacets(): string
     {
-        return implode("\n", array_map(function($nofilled) {
+        return implode("\n", array_map(function ($nofilled) {
             return 'FACET '.$nofilled;
-        }, array_keys(Nofilled::getChoices())));
+        }, Nofilled::getMnemos()));
     }
 
     /**
@@ -493,7 +498,7 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  int $id
+     * @param int $id
      *
      * @return string
      */
@@ -503,7 +508,7 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  int $id
+     * @param int $id
      *
      * @return string
      */
@@ -518,7 +523,7 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  int $id
+     * @param int $id
      *
      * @return string
      */
@@ -533,7 +538,7 @@ class QueryBuilder extends ContainerAware
     }
 
     /**
-     * @param  int $id
+     * @param int $id
      *
      * @return string
      */

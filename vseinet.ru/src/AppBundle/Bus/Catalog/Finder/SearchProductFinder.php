@@ -24,13 +24,18 @@ class SearchProductFinder extends AbstractProductFinder
         $qb = $this->getQueryBuilder();
 
         $qb->facet('FACET category_id FACET brand_id');
-        $qb->match($this->getFilter()->q);
+        $q = $this->getFilter()->q;
+        if (!empty($q)) {
+            $qb->match($q);
+        } else {
+            return new DTO\Features();
+        }
 
         $results = $qb->getFeatures();
 
         $features = new DTO\Features();
-        $features->total = $results[0][0]['total'];
-        if (0 === $features->total) {
+        $features->total = min($results[0][0]['total'], $qb::MAX_MATCHES);
+        if (0 == $features->total) {
             return $features;
         }
         $features->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
@@ -55,13 +60,18 @@ class SearchProductFinder extends AbstractProductFinder
 
         $qb->facet('FACET category_id', $qb->getCriteriaCategories());
         $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
-        $qb->match($this->getFilter()->q);
+        $q = $this->getFilter()->q;
+        if (!empty($q)) {
+            $qb->match($q);
+        } else {
+            return new DTO\Facets();
+        }
 
         $results = $qb->getFacets();
 
         $facets = new DTO\Facets();
-        $facets->total = $results[0][0]['total'];
-        if (0 === $facets->total) {
+        $facets->total = min($results[0][0]['total'], $qb::MAX_MATCHES);
+        if (0 == $facets->total) {
             return $facets;
         }
         $facets->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
@@ -86,7 +96,12 @@ class SearchProductFinder extends AbstractProductFinder
 
         $qb->criteria($qb->getCriteriaCategories());
         $qb->criteria($qb->getCriteriaBrands());
-        $qb->match($this->getFilter()->q);
+        $q = $this->getFilter()->q;
+        if (!empty($q)) {
+            $qb->match($q);
+        } else {
+            return [];
+        }
 
         $products = $qb->getProducts();
 

@@ -42,8 +42,10 @@ class DetailProductFinder extends AbstractProductFinder
         $results = $qb->getFeatures();
 
         $features = new DTO\Features();
-
-        $features->total = $results[0][0]['total'];
+        $features->total = min($results[0][0]['total'], $qb::MAX_MATCHES);
+        if (0 == $features->total) {
+            return $features;
+        }
         $features->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
         $features->availability = $this->getAvailability($results[3]);
         if ($this->getUserIsEmployee()) {
@@ -75,8 +77,8 @@ class DetailProductFinder extends AbstractProductFinder
         $results = $qb->getFacets();
 
         $facets = new DTO\Facets();
-        $facets->total = $results[0][0]['total'];
-        if (0 === $facets->total) {
+        $facets->total = min($results[0][0]['total'], $qb::MAX_MATCHES);
+        if (0 == $facets->total) {
             return $facets;
         }
         $facets->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);

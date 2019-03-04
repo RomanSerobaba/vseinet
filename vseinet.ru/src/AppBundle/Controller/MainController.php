@@ -230,12 +230,13 @@ class MainController extends Controller
     /**
      * @internal
      */
-    public function getBlockSpecialsAction(int $categoryId = 0)
+    public function getBlockSpecialsAction(int $categoryId = 0, $title = null)
     {
         $products = $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $categoryId, 'count' => 6]));
 
         return $this->render('Main/block_specials.html.twig', [
             'products' => $products,
+            'title' => $title ?? 'Тотальная распродажа',
         ]);
     }
 
