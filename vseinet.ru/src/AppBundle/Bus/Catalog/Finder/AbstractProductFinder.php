@@ -3,12 +3,13 @@
 namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Container\ContainerAware;
-use AppBundle\Bus\Catalog\Enum\{ Availability, Nofilled };
+use AppBundle\Bus\Catalog\Enum\Availability;
+use AppBundle\Bus\Catalog\Enum\Nofilled;
 
 class AbstractProductFinder extends ContainerAware
 {
-    const COUNT_GET_BRANDS = 50;
-    const COUNT_TOP_BRANDS = 7;
+    public const COUNT_GET_BRANDS = 50;
+    public const COUNT_TOP_BRANDS = 7;
 
     /**
      * @return Filter
@@ -27,7 +28,15 @@ class AbstractProductFinder extends ContainerAware
     }
 
     /**
-     * @param  array $found
+     * @param array $filter
+     */
+    public function handleRequest(array $filter = [])
+    {
+        $this->getFilter()->handleRequest($filter);
+    }
+
+    /**
+     * @param array $found
      *
      * @return array
      */
@@ -42,7 +51,7 @@ class AbstractProductFinder extends ContainerAware
             $categoryId2count[$row['category_id']] = $row['count(*)'];
         }
 
-        $q = $this->getDoctrine()->getManager()->createQuery("
+        $q = $this->getDoctrine()->getManager()->createQuery('
             SELECT
                 c.id,
                 c.name,
@@ -56,7 +65,7 @@ class AbstractProductFinder extends ContainerAware
             INNER JOIN AppBundle:Category c2 WITH c2.id = cp.pid
             WHERE c.id IN (:ids)
             ORDER BY ORD1, ORD2, c.name
-        ");
+        ');
         $q->setParameter('ids', array_keys($categoryId2count));
         $categories = $q->getResult();
 
@@ -98,7 +107,7 @@ class AbstractProductFinder extends ContainerAware
     }
 
     /**
-     * @param  array $found
+     * @param array $found
      *
      * @return array
      */
@@ -144,7 +153,7 @@ class AbstractProductFinder extends ContainerAware
         }
 
         if (!empty($otherBrandId2Count)) {
-            $brands[-1] = new Brand(-1, 'Прочие');
+            $brands[-1] = new DTO\Brand(-1, 'Прочие');
             $brands[-1]->countProducts = array_sum($otherBrandId2Count);
             $brands[-1]->includeIds = array_keys($otherBrandId2Count);
         }
@@ -153,7 +162,7 @@ class AbstractProductFinder extends ContainerAware
     }
 
     /**
-     * @param  array $found
+     * @param array $found
      *
      * @return array
      */
@@ -163,7 +172,7 @@ class AbstractProductFinder extends ContainerAware
         foreach ($found as $row) {
             $availability[$row['availability']] = $row['count(*)'];
         }
-        foreach (Availability::getChoises($this->getUserIsEmployee()) as $type => $_) {
+        foreach (Availability::getChoices($this->getUserIsEmployee()) as $type => $_) {
             if (!isset($availability[$type])) {
                 $availability[$type] = 0;
             }
@@ -179,19 +188,20 @@ class AbstractProductFinder extends ContainerAware
     }
 
     /**
-     * @param  array $found
+     * @param array $found
      *
      * @return array
      */
     protected function getNofilled(array $found): array
     {
+        $mnemos = array_flip(Nofilled::getMnemos());
         $nofilled = [];
         foreach ($found as $result) {
             foreach ($result as $row) {
                 $keys = array_keys($row);
                 $values = array_values($row);
                 if (1 == $values[0]) {
-                    $nofilled[$keys[0]] = $values[1];
+                    $nofilled[$mnemos[$keys[0]]] = $values[1];
                 }
             }
         }

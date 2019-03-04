@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Command;
 
@@ -9,7 +9,7 @@ use AppBundle\Entity\BaseProductLastview;
 
 class AddLastviewProductCommandHandler extends MessageHandler
 {
-    const LIMIT = 6;
+    public const LIMIT = 6;
 
     public function handle(AddLastviewProductCommand $command)
     {
@@ -22,30 +22,30 @@ class AddLastviewProductCommandHandler extends MessageHandler
         }
 
         if (null !== $user) {
-            $q = $em->createQuery("
+            $q = $em->createQuery('
                 SELECT bplv.baseProductId, bplv.baseProductId
                 FROM AppBundle:BaseProductLastview AS bplv
-                WHERE bplv.userId = :userId 
-                ORDER BY bplv.viewedAt DESC 
-            ");
+                WHERE bplv.userId = :userId
+                ORDER BY bplv.viewedAt DESC
+            ');
             $q->setParameter('userId', $user->getId());
             $baseProductIds = $q->getResult('ListHydrator');
             if (!empty($baseProductIds)) {
                 if (isset($baseProductIds[$command->baseProductId])) {
-                    $q = $em->createQuery("
+                    $q = $em->createQuery('
                         DELETE FROM AppBundle:BaseProductLastview AS bplv
                         WHERE bplv.baseProductId = :baseProductId
-                    ");
+                    ');
                     $q->setParameter('baseProductId', $command->baseProductId);
                     $q->execute();
                     unset($baseProductIds[$command->baseProductId]);
                 }
                 if (self::LIMIT < count($baseProductIds)) {
                     $deleteIds = array_slice($baseProductIds, self::LIMIT);
-                    $q = $em->createQuery("
-                        DELETE FROM AppBundle:BaseProductLastview AS bplv 
+                    $q = $em->createQuery('
+                        DELETE FROM AppBundle:BaseProductLastview AS bplv
                         WHERE bplv.baseProductId IN (:baseProductIds) AND bplv.userId = :userId
-                    ");
+                    ');
                     $q->setParameter('baseProductIds', $deleteIds);
                     $q->setParameter('userId', $user->getId());
                     $q->execute();
@@ -65,7 +65,9 @@ class AddLastviewProductCommandHandler extends MessageHandler
                 $baseProductIds = array_filter(array_map('intval', explode(',', $baseProductIdsStr)));
             }
             if (!empty($baseProductIds)) {
-                unset($baseProductIds[$command->baseProductId]);
+                if (false !== $index = array_search($command->baseProductId, $baseProductIds)) {
+                    unset($baseProductIds[$index]);
+                }
                 if (self::LIMIT < count($baseProductIds)) {
                     $baseProductIds = array_slice($baseProductIds, count($baseProductIds) - self::LIMIT);
                 }

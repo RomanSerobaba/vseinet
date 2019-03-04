@@ -15,7 +15,7 @@ class CreateCommandHandler extends MessageHandler
     public function handle(CreateCommand $command)
     {
         $em = $this->getDoctrine()->getManager();
-        $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery(), $cart);
+        $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery());
         $items = [];
 
         foreach ($cart->products as $product) {

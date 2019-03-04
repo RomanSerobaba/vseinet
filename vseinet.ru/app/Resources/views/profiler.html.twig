@@ -1,0 +1,9 @@
+{% if app.userIsProgrammer %}
+    <a href="{{ path('profiler_toggle') }}" style="right:0;top:0;position:fixed;z-index:9999;padding:10px;border:none;color:#fff">
+        {% if app.session.get('profiler.enabled') %}
+            Отключить профилирование
+        {% else %}
+            Включить профилирование
+        {% endif %}
+    </a>
+{% endif %}

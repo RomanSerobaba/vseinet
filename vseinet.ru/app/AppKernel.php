@@ -17,10 +17,11 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
-            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Http\HttplugBundle\HttplugBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Javer\SphinxBundle\JaverSphinxBundle(),
+            new Cache\CacheBundle\CacheBundle(),
+            new Cache\AdapterBundle\CacheAdapterBundle(),
             new AppBundle\AppBundle(),
             new AdminBundle\AdminBundle(),
         ];

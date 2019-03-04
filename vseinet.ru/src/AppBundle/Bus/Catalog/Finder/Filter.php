@@ -4,13 +4,15 @@ namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Container\ContainerAware;
 use AppBundle\Enum\DetailType;
-use AppBundle\Bus\Catalog\Enum\{ Availability, Sort, SortDirection };
+use AppBundle\Bus\Catalog\Enum\Availability;
+use AppBundle\Bus\Catalog\Enum\Sort;
+use AppBundle\Bus\Catalog\Enum\SortDirection;
 
 class Filter extends ContainerAware
 {
-    const RANGE_DELIMITER = '~';
-    const SET_DELIMETER = '|';
-    const SORT_DELIMITER = '-';
+    public const RANGE_DELIMITER = '~';
+    public const SET_DELIMETER = '|';
+    public const SORT_DELIMITER = '-';
 
     /**
      * @var Range
@@ -72,13 +74,12 @@ class Filter extends ContainerAware
      */
     public $details = [];
 
-
     /**
      * @param array $query
      *
      * @return self
      */
-    public function parse($values) : self
+    public function parse($values): self
     {
         foreach ($values as $key => $value) {
             switch ($key) {
@@ -95,7 +96,7 @@ class Filter extends ContainerAware
                     break;
 
                 case 's':
-                    $this->sectionIds = $this->parseSet($value);
+                    $this->categorySectionIds = $this->parseSet($value);
                     break;
 
                 case 'q':
@@ -154,7 +155,7 @@ class Filter extends ContainerAware
             }
         }
 
-        $this->page = max(1, intval($this->page));
+        $this->page = min(QueryBuilder::MAX_MATCHES / QueryBuilder::PER_PAGE, max(1, intval($this->page)));
 
         if (!$this->getUserIsEmployee()) {
             $this->nofilled = null;
@@ -171,14 +172,14 @@ class Filter extends ContainerAware
     }
 
     /**
-     * @param  array  $request
+     * @param array $request
      *
      * @return self
      */
     public function handleRequest(array $request): self
     {
-        $query = array_diff_key($query, array_flip(['p', 'b', 'c', 's', 'n', 'd', 'a', 'f', 'page']));
-
+        $this->reset();
+        $query = [];
         foreach ($request as $key => $value) {
             switch ($key) {
                 case 'price':
@@ -231,7 +232,7 @@ class Filter extends ContainerAware
     }
 
     /**
-     * @param  array $extra
+     * @param array $extra
      *
      * @return array
      */
@@ -247,8 +248,8 @@ class Filter extends ContainerAware
         if ($this->categoryIds) {
             $query['c'] = $this->buildSet($this->categoryIds);
         }
-        if ($this->sectionIds) {
-            $query['s'] = $this->buildSet($this->sectionIds);
+        if ($this->categorySectionIds) {
+            $query['s'] = $this->buildSet($this->categorySectionIds);
         }
         if ($this->q) {
             $query['q'] = $this->q;
@@ -261,7 +262,7 @@ class Filter extends ContainerAware
             foreach ($this->details as $id => $values) {
                 if (isset($types[$id])) {
                     if (DetailType::CODE_NUMBER === $types[$id]) {
-                        $query['d'][$id] =  $this->buildRange($values);
+                        $query['d'][$id] = $this->buildRange($values);
                     } elseif (DetailType::CODE_ENUM === $types[$id]) {
                         $query['d'][$id] = $this->buildSet($values);
                     } elseif (DetailType::CODE_BOOLEAN === $types[$id]) {
@@ -291,11 +292,11 @@ class Filter extends ContainerAware
 
     protected function getDetailTypes(array $ids): array
     {
-        $q = $this->getDoctrine()->getManager()->createQuery("
+        $q = $this->getDoctrine()->getManager()->createQuery('
             SELECT d.id, d.typeCode
             FROM AppBundle:Detail AS d
             WHERE d.id IN (:ids)
-        ");
+        ');
         $q->setParameter('ids', $ids);
         $types = $q->getResult('ListHydrator');
 
@@ -344,7 +345,7 @@ class Filter extends ContainerAware
             $reflector = new \ReflectionClass($enum);
             $constants = $reflector->getConstants();
 
-            $values = array_filter($values, function($value) use ($constants) {
+            $values = array_filter($values, function ($value) use ($constants) {
                 return in_array($value, $constants);
             });
         }
@@ -401,7 +402,7 @@ class Filter extends ContainerAware
     protected function toSet($value): string
     {
         if (is_array($value)) {
-            $values = array_map(function($v) { return (string) $v; }, array_keys($value));
+            $values = array_map(function ($v) { return (string) $v; }, array_keys($value));
             if (!empty($values)) {
                 return implode(self::SET_DELIMETER, $values);
             }
@@ -413,5 +414,21 @@ class Filter extends ContainerAware
     protected function getFromArray(array $array, string $key): string
     {
         return array_key_exists($key, $array) ? (string) $array[$key] : '';
+    }
+
+    protected function reset(): void
+    {
+        $this->price = null;
+        $this->brandIds = [];
+        $this->categoryIds = [];
+        $this->categorySectionIds = [];
+        $this->q = null;
+        $this->name = null;
+        $this->availability = Availability::ACTIVE;
+        $this->nofilled = [];
+        $this->page = 1;
+        $this->sort = Sort::DEFAULT;
+        $this->sortDirection = SortDirection::ASC;
+        $this->details = [];
     }
 }

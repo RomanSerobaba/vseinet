@@ -35,6 +35,12 @@ services:
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
+    catalog.autocomplete.finder:
+        class: 'AppBundle\Bus\Catalog\Finder\AutocompleteFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
     catalog.product.finder.filter:
         class: 'AppBundle\Bus\Catalog\Finder\Filter'
         public: true
@@ -46,3 +52,4 @@ services:
         public: true
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
+

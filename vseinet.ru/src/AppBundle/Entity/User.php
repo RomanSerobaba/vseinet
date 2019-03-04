@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Enum\UserRole;
 
 /**
- * User
+ * User.
  *
  * @ORM\Table("`user`")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
@@ -64,14 +64,14 @@ class User implements UserInterface
     private $geoCityId;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_marketing_subscribed", type="boolean")
      */
     private $isMarketingSubscribed;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_transactional_subscribed", type="boolean")
      */
@@ -98,7 +98,7 @@ class User implements UserInterface
     public $geoRooms;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $isFired;
 
@@ -122,9 +122,8 @@ class User implements UserInterface
      */
     public $defaultGeoRoomId;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -134,7 +133,7 @@ class User implements UserInterface
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
      *
@@ -148,7 +147,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get id as username for security service
+     * Get id as username for security service.
      *
      * @return string
      */
@@ -158,7 +157,7 @@ class User implements UserInterface
     }
 
     /**
-     * Set hashed password
+     * Set hashed password.
      *
      * @param string $password
      *
@@ -172,7 +171,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPassword()
     {
@@ -180,7 +179,7 @@ class User implements UserInterface
     }
 
     /**
-     * Set last logined time
+     * Set last logined time.
      *
      * @param \DateTime $time
      *
@@ -194,7 +193,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get last logined time
+     * Get last logined time.
      *
      * @return \DateTime
      */
@@ -204,7 +203,7 @@ class User implements UserInterface
     }
 
     /**
-     * Set registered time
+     * Set registered time.
      *
      * @param \DateTime $time
      *
@@ -218,7 +217,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get registered time
+     * Get registered time.
      *
      * @return \DateTime
      */
@@ -228,9 +227,9 @@ class User implements UserInterface
     }
 
     /**
-     * Set personId
+     * Set personId.
      *
-     * @param integer $personId
+     * @param int $personId
      *
      * @return User
      */
@@ -242,7 +241,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get personId
+     * Get personId.
      *
      * @return int
      */
@@ -252,9 +251,9 @@ class User implements UserInterface
     }
 
     /**
-     * Set geoCityId
+     * Set geoCityId.
      *
-     * @param integer $geoCityId
+     * @param int $geoCityId
      *
      * @return User
      */
@@ -266,7 +265,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get geoCityId
+     * Get geoCityId.
      *
      * @return int
      */
@@ -276,9 +275,9 @@ class User implements UserInterface
     }
 
     /**
-     * Set isMarketingSubscribed
+     * Set isMarketingSubscribed.
      *
-     * @param integer $isMarketingSubscribed
+     * @param int $isMarketingSubscribed
      *
      * @return User
      */
@@ -290,7 +289,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get isMarketingSubscribed
+     * Get isMarketingSubscribed.
      *
      * @return int
      */
@@ -300,9 +299,9 @@ class User implements UserInterface
     }
 
     /**
-     * Set isTransactionalSubscribed
+     * Set isTransactionalSubscribed.
      *
-     * @param integer $isTransactionalSubscribed
+     * @param int $isTransactionalSubscribed
      *
      * @return User
      */
@@ -314,7 +313,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get isTransactionalSubscribed
+     * Get isTransactionalSubscribed.
      *
      * @return int
      */
@@ -324,7 +323,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRoles()
     {
@@ -332,7 +331,7 @@ class User implements UserInterface
     }
 
     /**
-     * Check role
+     * Check role.
      *
      * @param string $role
      *
@@ -344,7 +343,7 @@ class User implements UserInterface
     }
 
     /**
-     * Check roles
+     * Check roles.
      *
      * @param array $roles
      *
@@ -362,7 +361,7 @@ class User implements UserInterface
     }
 
     /**
-     * Check is client
+     * Check is client.
      *
      * @return bool
      */
@@ -372,7 +371,7 @@ class User implements UserInterface
     }
 
     /**
-     * Check is employee
+     * Check is employee.
      *
      * @return bool
      */
@@ -382,7 +381,7 @@ class User implements UserInterface
     }
 
     /**
-     * Check is contenter
+     * Check is contenter.
      *
      * @return bool
      */
@@ -392,7 +391,17 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * Check is programmer.
+     *
+     * @return bool
+     */
+    public function isProgrammer()
+    {
+        return $this->isRole(UserRole::PROGRAMMER);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getSalt()
     {
@@ -400,7 +409,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function eraseCredentials()
     {

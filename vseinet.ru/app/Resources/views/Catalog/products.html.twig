@@ -1,12 +1,8 @@
 <div id="upper-paging">
-    {% include 'Catalog/paging.html.twig' %}    
+    {% include 'Catalog/paging.html.twig' %}
 </div>
 <div id="product-list">
-    {% if products|length %}
-        {% include 'Catalog/products_list.html.twig' %}
-    {% else %}
-        <p>Не найдено ни одного товара, удовлетворяющего заданным параметрам.</p>
-    {% endif %}
+    {% include 'Catalog/products_list.html.twig' %}
 </div>
 <div class="showmore-container" id="showmore-container">
     {% include 'Catalog/showmore.html.twig' %}

@@ -15,7 +15,8 @@ $.widget('sp.form', {
             this.form('submit');
         },
         validate: $.noop,
-        action: ''
+        action: '',
+        delay: 0
     },
     _create: function () {
         this._on({
@@ -39,15 +40,24 @@ $.widget('sp.form', {
         Inputmask("+7 (999) 999-99-99").mask(this.element.find('input.phone'));
 
         setTimeout($.proxy(function() {
+            var timer = null;
             this._on({
                 change: function(e) {
-                    var input = e.target;
-                    if (input.id) {
-                        this._add(input, true);
-                        if (this.element.is(':visible')) {
-                            this._validate();
+                    var that = this;
+                    clearTimeout(timer);
+                    timer = setTimeout(function() {
+                        var input = e.target;
+                        if (input.id) {
+                            if (input.getAttribute('novalidate')) {
+                                that._validate(true);
+                            } else {
+                                that._add(input, true);
+                                if (that.element.is(':visible')) {
+                                    that._validate();
+                                }
+                            }
                         }
-                    }
+                    }, this.options.delay);
                 }
             });
         }, this), 250);

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query;
 
@@ -13,9 +13,5 @@ class GetCategoryQuery extends Message
      */
     public $id;
 
-    /**
-     * @Assert\Type(type="AppBundle\Bus\Brand\Query\DTO\Brand")
-     */
     public $brand;
-
 }

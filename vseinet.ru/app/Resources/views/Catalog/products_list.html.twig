@@ -1,3 +1,7 @@
-{% for product in products %}
-    {% include 'Catalog/product.html.twig' %}
-{% endfor %}
+{% if products|length %}
+    {% for product in products %}
+        {% include 'Catalog/product.html.twig' %}
+    {% endfor %}
+{% else %}
+    {% include 'Catalog/empty_result.html.twig' %}
+{% endif %}
