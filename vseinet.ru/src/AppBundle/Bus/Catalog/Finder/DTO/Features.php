@@ -2,7 +2,7 @@
 
 namespace AppBundle\Bus\Catalog\Finder\DTO;
 
-use Symfony\Component\Validator\Constraints AS Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
 
 class Features
@@ -10,7 +10,7 @@ class Features
     /**
      * @Assert\Type(type="integer")
      */
-    public $total;
+    public $total = 0;
 
     /**
      * @Assert\Type(type="AppBundle\Bus\Catalog\Finder\DTO\Range")
@@ -48,7 +48,7 @@ class Features
     public $availability;
 
     /**
-     * @Assert\All( @Enum("AppBundle\Bus\Catalog\Enum\Nofilled"))
+     * @Assert\All(@Enum("AppBundle\Bus\Catalog\Enum\Nofilled"))
      */
     public $nofilled;
 }

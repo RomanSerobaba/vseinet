@@ -18,7 +18,15 @@
         </nav>
         <div id="category">
             <nav id="nav">
-                {% include 'Catalog/filter.html.twig' %}
+                {% if facets.total > 0 %}
+                    {% include 'Catalog/filter.html.twig' %}
+                {% else %}
+                    {% if app.userIsProgrammer %}
+                        <p style="color:red;font-size:14px">
+                            Вывести блок
+                        </p>
+                    {% endif %}
+                {% endif %}
             </nav>
             <div class="wrapper">
                 {% include 'Catalog/products.html.twig' %}

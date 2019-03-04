@@ -8,8 +8,11 @@ use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Catalog\Query;
 use AppBundle\Bus\Brand\Query\GetByNameQuery as GetBrandByNameQuery;
 use AppBundle\Bus\Brand\Query\GetByIdQuery as GetBrandByIdQuery;
-use AppBundle\Bus\Catalog\{ Paging, Sorting };
-use AppBundle\Bus\Catalog\Enum\{ Availability, Nofilled, Sort, SortDirection };
+use AppBundle\Bus\Catalog\Paging;
+use AppBundle\Bus\Catalog\Sorting;
+use AppBundle\Bus\Catalog\Enum\Availability;
+use AppBundle\Bus\Catalog\Enum\Nofilled;
+use AppBundle\Bus\Catalog\Enum\Sort;
 
 class CatalogController extends Controller
 {
@@ -17,7 +20,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category",
      *     path="/catalog/{id}/",
-     *     requirements={"id" = "\d*"},
+     *     requirements={"id": "\d*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
@@ -26,7 +29,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category_with_brand",
      *     path="/catalog/{id}/{brandName}/",
-     *     requirements={"id" = "\d*", "brandName" = "[^\/]*"},
+     *     requirements={"id": "\d*", "brandName": "[^\/]*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
@@ -36,7 +39,13 @@ class CatalogController extends Controller
      */
     public function showCategoryPageAction(int $id = 0, $brandName = null, Request $request)
     {
-        $brand = $brandName ? $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName])) : null;
+        // $brand = $brandName ? $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName])) : null;
+        if ($brandName) {
+            $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
+            $request->query->set('b', $brand->id);
+        } else {
+            $brand = null;
+        }
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
@@ -52,7 +61,6 @@ class CatalogController extends Controller
             $filter = $finder->getFilter();
             if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
-                $filter->brandIds = null;
                 $brandName = $brand->name;
                 $route = 'catalog_category_with_brand';
             } else {
@@ -162,7 +170,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_brand",
      *     path="/brand/{name}/",
-     *     requirements={"name" = "[^\/]*"},
+     *     requirements={"name": "[^\/]*"},
      *     parameters={
      *         @VIA\Parameter(name="name", type="string")
      *     },
@@ -200,7 +208,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_detail",
      *     path="/detail/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"}
      * )
      */
@@ -232,7 +240,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_supplier",
      *     path="/supplier/{code}/",
-     *     requirements={"code" = "[^\/]*"},
+     *     requirements={"code": "[^\/]*"},
      *     methods={"GET", "POST"}
      * )
      */

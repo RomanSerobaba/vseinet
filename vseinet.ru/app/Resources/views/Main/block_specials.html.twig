@@ -1,5 +1,5 @@
 <section id="specials">
-    <h1><a href="{{ url('catalog_specials') }}" class="black">Тотальная распродажа</a></h1>
+    <h1><a href="{{ url('catalog_specials') }}" class="black">{{ title }}</a></h1>
     <div class="products">
         {% for product in products %}
             {% if loop.index == 4 %}
@@ -7,9 +7,9 @@
             {% endif %}
             <div class="product">
                 <a href="{{ url('catalog_product', { id: product.id }) }}" class="image">
-                    <img 
-                        src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" 
-                        alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                    <img
+                        src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
+                        alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
                     />
                 </a>
                 <h4><a href="{{ url('catalog_product', { id: product.id }) }}">{{ product.name }}</a></h4>

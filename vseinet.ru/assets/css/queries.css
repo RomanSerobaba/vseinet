@@ -1,6 +1,6 @@
 @media screen and (min-width: 768px) and (max-width: 991px){
 	.holder {
-	    width: 750px;	    
+	    width: 750px;
 	  }
 	 body{
 	 	width: 100%;
@@ -13,44 +13,44 @@
 		width: 100%;
 		margin-bottom: 30px;
 		padding-right: 0;
-	}	
+	}
 	.smpl-container{
 		min-width: 768px;
 	}
 	#top .claim{
-		display: none;		
+		display: none;
 	}
 	#top .employee-statistics{
-		display: none;		
+		display: none;
 	}
 	#top .employee-cabinet{
-		display: none;		
+		display: none;
 	}
 	#top{
 		height: 75px;
-		position: relative;		
+		position: relative;
 	}
 	#top .auth{
 		display: none;
 	}
 	#top .mobile-collapsed .auth{
-		display: block;		
+		display: block;
 	}
 	#top .holder{
 		padding: 15px;
-		position: static;	
-		
+		position: static;
+
 	}
 	#top NAV A.cart{
-		background-image: url('../icons/top_icon_mobile_basket.png');			
+		background-image: url('../icons/top_icon_mobile_basket.png');
 	}
 	#top NAV A.favorite{
-		background-image: url('../icons/top_icon_mobile_favorite.png');			
+		background-image: url('../icons/top_icon_mobile_favorite.png');
 	}
 	#top NAV A.status {
-		background-image: url('../icons/top_icon_mobile_status.png');			
+		background-image: url('../icons/top_icon_mobile_status.png');
 	}
-	
+
 	#top NAV A{
 		font-size: 13px;
 		padding-top: 2px;
@@ -59,16 +59,16 @@
 	}
 	#top .mob-top-btn{
 		display: block;
-	}		
+	}
 	#header{
 		padding-top: 30px;
 		padding-bottom: 5px;
 	}
 	#header .location{
-		display: none;		
+		display: none;
 	}
 	#header .menu{
-		display: none;		
+		display: none;
 	}
 	#header .logo-area{
 		margin-right: 5px;
@@ -82,19 +82,19 @@
 	#header .search{
 		margin-right: 0;
 		margin-top: 0;
-	}	
+	}
 	#services{
-		display: none;		
+		display: none;
 	}
 	#slideshow-sticky-wrapper{
     display: none;
 	}
 	#nav > a{
-		display: none;		
+		display: none;
 	}
 	#tree-trigger{
 		display: none;
-	}	
+	}
 	#tree > UL{
 		display: none;
 		border: 1px solid #dcdcde;
@@ -106,14 +106,14 @@
 		display: block;
 		width: 100%;
 		margin-bottom: 30px !important;
-	}	
+	}
 	#tree .tree-title{
 		border-radius: 8px;
 		padding: 18px;
 		font-size: 16px;
-		line-height: 16px;	
+		line-height: 16px;
 		position: relative;
-		cursor: pointer;		
+		cursor: pointer;
 	}
 	#tree .tree-title:before{
 		content: '';
@@ -150,11 +150,11 @@
 		margin-bottom: -2px;
 	}
 	#tree .product{
-		display: none;		
+		display: none;
 	}
 	#tree .subtree UL LI:not(.top){
-		display: none;		
-	}	
+		display: none;
+	}
 	#tree .subtree UL LI:not(.top) a{
 		font-size: 13px;
 	}
@@ -178,15 +178,15 @@
 	#tree .subtree UL{
 		float: none;
 		width: 100%;
-		padding: 0;		
+		padding: 0;
 	}
 	#tree .subtree > ul{
 		margin-left: 20px;
 		margin-right: 20px;
-		width: auto;		
+		width: auto;
 	}
 	#tree .subtree > ul:last-child li.top {
-		border-bottom: none;		
+		border-bottom: none;
 	}
 	#tree > UL > LI  A{
 		font-size: 14px;
@@ -221,7 +221,7 @@
 		background: #e9f7cd !important;
 		font-weight: bold;
 		padding-top: 20px;
-		padding-bottom: 20px;	
+		padding-bottom: 20px;
 	}
 	#tree > UL > LI.opened > a:after{
 		content: '';
@@ -244,7 +244,7 @@
 	}
 	#tree .subtree ul.third-menu-open li.top .go-to-category{
 		display: block;
-		position: absolute;	
+		position: absolute;
 	}
 	#tree > UL > LI.opened{
 		position: relative;
@@ -277,7 +277,7 @@
 		background: #5fad12 !important;
 	}
 	#slideshow .tab div{
-		display: none;		
+		display: none;
 	}
 	#slideshow .cursor{
 		display: none;
@@ -286,10 +286,10 @@
 		width: 100% !important;
 		left: 0 !important;
 		background: transparent;
-		text-align: center;		
+		text-align: center;
 	}
 	#slideshow .sheet > A{
-		border-bottom: none;		
+		border-bottom: none;
 	}
 	.benifits{
 		margin-bottom: 30px!important;
@@ -319,19 +319,19 @@
 		line-height: 18px;
 	}
 	#page-footer{
-		height: auto;		
+		height: auto;
 	}
 	#page-footer .holder{
 		padding-bottom: 150px;
 		overflow: hidden;
-		
+
 	}
 	H1, DIV.title{
 		margin-bottom: 20px;
 	}
 	#page-footer .menu LI{
 		margin-bottom: 15px;
-	}	
+	}
 	#page-footer .contacts{
 		float: none;
 		position: absolute;
@@ -340,12 +340,12 @@
 		width: 100%;
 		padding-top: 20px;
 		border-top: 1px solid #dcdcde;
-	}	
+	}
 	#page-footer .error-report{
-		clear: both;		
+		clear: both;
 	}
 	#page-footer .claim{
-		float: right;		
+		float: right;
 	}
 	#page-footer .bttn.light{
 		height: auto;
@@ -360,7 +360,7 @@
 		width: 50%;
 		float: left;
                 padding: 0;
-	}	
+	}
 	.page_tree{
 		margin-top: 20px;
 	}
@@ -389,13 +389,13 @@
 	#ProductFilter.showfilter .filter .sheet{
 		background: #fff;
 	}
-	#ProductFilter.showfilter .tab.last.apply{		
+	#ProductFilter.showfilter .tab.last.apply{
 		padding: 0;
-		border: none;		
+		border: none;
 	}
 	#ProductFilter.showfilter .tab.last.apply .gray{
 		display: none;
-		
+
 	}
 	#ProductFilter.showfilter .tab.last.apply .bttn.r{
 		display: block;
@@ -440,7 +440,7 @@
 		content: '';
 		width: 20px;
 		height: 20px;
-		position: absolute;		
+		position: absolute;
 		left: 68px;
 		top: 12px;
 		display: block;
@@ -455,7 +455,7 @@
 	}
 	.title.category-title{
 		float: none;
-		margin-bottom: 15px;	
+		margin-bottom: 15px;
 	}
 	.mobile-filter-btn{
 		display: block;
@@ -535,11 +535,11 @@
 	}
 	.paging .bttn.prev::after {
     border-bottom: 24px solid #fff;
-    border-right: 10px solid transparent;    
+    border-right: 10px solid transparent;
 	}
 	.paging .bttn.prev I::after {
     border-bottom: 24px solid #d6d6d6;
-    border-right: 10px solid transparent;    
+    border-right: 10px solid transparent;
 	}
 
 	.paging .next{
@@ -558,11 +558,11 @@
 	}
 	.paging .bttn.next::after {
     border-bottom: 24px solid #fff;
-    border-left: 10px solid transparent;    
+    border-left: 10px solid transparent;
 	}
 	.paging .bttn.next I::after {
     border-bottom: 24px solid #d6d6d6;
-    border-left: 10px solid transparent;    
+    border-left: 10px solid transparent;
 	}
 	.sale .status.in-stock, .sale .status.not-available, .sale .status.on-order{
 		margin-top: 0;
@@ -575,7 +575,7 @@
     background: -ms-linear-gradient(top, #fff, #eee 94%, #fafafa);
     background: linear-gradient(top, #fff, #eee 94%, #fafafa);
     border: 1px solid;
-    border-color: #e9e9e9 #d9d9d9 #c8c8c8 #d6d6d6;    
+    border-color: #e9e9e9 #d9d9d9 #c8c8c8 #d6d6d6;
     width: 48%;
     padding: 0 13px;
     text-align: left;
@@ -606,10 +606,10 @@
 	}
 	nav.sort .sort_title{
 		display: inline-block;
-		vertical-align: top;		
+		vertical-align: top;
 	}
 	nav.sort ul{
-		display: inline-block;		
+		display: inline-block;
 		width: 140px;
 		text-align: left;
 	}
@@ -621,7 +621,7 @@
 		pointer-events: auto;
 	}
 	nav.sort ul li{
-		display: block;		
+		display: block;
 	}
 	nav.sort ul li:not(:first-of-type){
 		display: none;
@@ -680,10 +680,10 @@
 	#product .gallery{
 		float: none;
 		height: auto;
-		clear: both;		
+		clear: both;
 	}
 	#product .gallery img{
-		display: inline-block;		
+		display: inline-block;
 	}
 	#product .row{
 		margin-bottom: 50px;
@@ -731,10 +731,10 @@
 	#product .ui-tabs-panel .help{
 		margin-right: 0;
 		padding-left: 0;
-		float: none;		
-		display: block;	
+		float: none;
+		display: block;
 		margin-top: 30px;
-		width: 100%;					
+		width: 100%;
 	}
 	#products-sticky-wrapper{
 		float: none!important;
@@ -748,26 +748,26 @@
 	#products.w40p.r{
 		float: none;
 		width: 100%;
-		clear: both;		
+		clear: both;
 	}
 	#Account .row{
 		margin-left: 0;
 	}
 	#content .product + .wrapper{
-    overflow: hidden;    
+    overflow: hidden;
 	}
 	form.w60p{
 		width: 100%;
 	}
 	.w60p{
 		width: 100%;
-		float: none;		
+		float: none;
 	}
 	.cart-table .cart-table-head{
 		margin-bottom: 11px;
 	}
 	#content .order-history .wrapper{
-		overflow: hidden;		
+		overflow: hidden;
 	}
 	DIV.order-history .column{
 		width: 50%;
@@ -811,10 +811,10 @@
 	.Cart .action.dec{
 		line-height: 33px;
 	}
-        
+
 	.Cart .btns .delete.action{
 		position: relative;
-		overflow: hidden;						
+		overflow: hidden;
 	}
 	.Cart .btns .delete.action:before{
 		content: 'x';
@@ -840,10 +840,10 @@
 		height: 44px;
 		padding-top: 5px !important;
 	}
-	
+
 	.Cart .summary .bttn.next:before,
 	.Cart .summary .prev:before	{
-		border-top-width: 21px;		
+		border-top-width: 21px;
 	}
 	.Cart .summary .bttn.next:after,
 	.Cart .summary .bttn.prev:after{
@@ -862,7 +862,7 @@
 	.representatives .city{
 		float: left;
 		width: 50%;
-		margin-bottom: 20px;		
+		margin-bottom: 20px;
 	}
 	.representatives .city .wrapper{
 		min-height: 155px;
@@ -872,7 +872,7 @@
 	}
 	#contacts .contact_sections_title{
 		clear: both;
-		
+
 	}
 	#about .benifits{
 		width: 100% !important;
@@ -886,7 +886,7 @@
 	#about .ui-tabs-panel + h1{
 		padding-top: 0;
 		clear: both;
-		
+
 	}
 	#delivery .is-sticky .tabs{
 		margin-top: -20px!important;
@@ -910,7 +910,7 @@
 		width: 100%;
 	}
 	#Order fieldset .wrapper{
-		padding: 0 30px 30px;		
+		padding: 0 30px 30px;
 	}
 	#Order fieldset.block.gray{
 		background: #fff;
@@ -935,13 +935,13 @@
 	}
 	#Order .bttn.green{
 		height: 45px;
-		margin-right: 15px;		
+		margin-right: 15px;
 	}
 	#Order .bttn.prev::after {
-    border-bottom: 22px solid #fff;    
+    border-bottom: 22px solid #fff;
 	}
 	#Order .bttn.prev::before {
-    border-top: 22px solid #fff;   
+    border-top: 22px solid #fff;
 	}
 	#Order + #products-sticky-wrapper #products.cart .bttn{
 		height: 46px;
@@ -1006,7 +1006,7 @@
 	 	width: 100%;
 	 	-webkit-transition: all 0.4s;
 	 	-o-transition: all 0.4s;
-	 	transition: all 0.4s;	 
+	 	transition: all 0.4s;
 	}
 	.holder {
     width: 100%;
@@ -1019,7 +1019,7 @@
 		margin-bottom: 20px;
 		padding-right: 0;
 		overflow: hidden;
-		
+
 	}
 	#content .wrapper{
 		overflow: visible;
@@ -1028,7 +1028,7 @@
 		min-width: 100%;
 	}
 	#top{
-		height: 75px;		
+		height: 75px;
 	}
 	#top nav{
 		margin-top: 0;
@@ -1044,24 +1044,24 @@
 	}
 	#top .holder{
 		padding: 15px;
-		padding-top: 28px;	
-		
+		padding-top: 28px;
+
 	}
 	#top .mob-top-btn{
 		display: block;
-		width: 65px;	
+		width: 65px;
 	}
 	#top .mobile-collapsed.in{
-		margin-left: 0;	
-		overflow: scroll;			
+		margin-left: 0;
+		overflow: scroll;
 	}
 	#top .mobile-collapsed .auth{
-		display: block;		
+		display: block;
 	}
 	#top .mobile-collapsed .mobile-top-menu{
 		float: none;
 		display: block;
-		clear: both;	
+		clear: both;
 	}
 	#top .mobile-collapsed .mobile-top-menu li a{
 		text-indent: 0;
@@ -1073,28 +1073,28 @@
 		padding-bottom: 10px;
 	}
 	#top NAV A.cart{
-		background-image: url('../icons/top_icon_mobile_basket.png');			
+		background-image: url('../icons/top_icon_mobile_basket.png');
 	}
 	#top NAV A.favorite{
-		background-image: url('../icons/top_icon_mobile_favorite.png');			
+		background-image: url('../icons/top_icon_mobile_favorite.png');
 	}
 	#top NAV A.status {
-		background-image: url('../icons/top_icon_mobile_status.png');			
+		background-image: url('../icons/top_icon_mobile_status.png');
 	}
 	#top .claim{
-		display: none;		
-	}	
+		display: none;
+	}
 	#top .employee-statistics{
-		display: none;		
+		display: none;
 	}
 	#top .employee-cabinet{
-		display: none;		
+		display: none;
 	}
 	#header .location{
-		display: none;		
+		display: none;
 	}
 	#header .menu{
-		display: none;		
+		display: none;
 	}
 	#header .logo-area{
 		margin-right: 30px;
@@ -1112,27 +1112,27 @@
 		display: none;
 	}*/
 	#services{
-		display: none;		
+		display: none;
 	}
 	#nav > a{
-		display: none;		
+		display: none;
 	}
 	#tree-trigger{
 		display: none;
 	}
 	#tree{
 		display: block;
-		margin-bottom: 20px ;	
-	}	
+		margin-bottom: 20px ;
+	}
 	#tree .tree-title{
 		border-radius: 8px;
 		padding: 15px;
 		font-size: 18px;
 		line-height: 1em;
 		position: relative;
-		cursor: pointer;		
+		cursor: pointer;
 	}
-	#tree > UL {    
+	#tree > UL {
     border: 1px solid #dcdcde;
     border-top: 0;
     padding-top: 10px;
@@ -1171,10 +1171,10 @@
 		box-shadow: none;
 	}
 	#tree .product{
-		display: none;		
+		display: none;
 	}
 	#tree .subtree UL LI:not(.top){
-		display: none;		
+		display: none;
 	}
 	#tree .subtree ul.third-menu-open li{
 		display: block;
@@ -1213,10 +1213,10 @@
 		width: auto;
 		padding: 0;
 		margin-left: 25px;
-		margin-right: 25px;		
+		margin-right: 25px;
 	}
 	#tree .subtree ul li.all a {
-		color: #5fad12;		
+		color: #5fad12;
 	}
 	#tree > UL > LI  A{
 		font-size: 14px;
@@ -1250,7 +1250,7 @@
 		padding-right: 50%;
 		position: relative;
 		padding-right: 25px;
-				
+
 	}
 	#tree > UL > LI.opened > a:after{
 		content: '';
@@ -1277,7 +1277,7 @@
 		right: 10px;
 	}	*/
 	#category #slideshow{
-		display: none;		
+		display: none;
 	}
 	#slideshow {
 		height: auto;
@@ -1320,7 +1320,7 @@
 		background: #5fad12 !important;
 	}
 	#slideshow .tab div{
-		display: none;		
+		display: none;
 	}
 	#slideshow .cursor{
 		display: none;
@@ -1330,14 +1330,14 @@
 		left: 0 !important;
 		background: transparent;
 		text-align: center;
-		height: auto;				
+		height: auto;
 	}
 	#slideshow .sheet > A{
-		border-bottom: none;		
+		border-bottom: none;
 	}
 	.benifits.mobile-benefits{
 		display: block;
-		overflow: visible;		
+		overflow: visible;
 	}
 	.benifits:not(.mobile-benefits){
 		display: none;
@@ -1349,8 +1349,8 @@
 		margin-bottom: 24px;
 		display: block;
 		clear: both;
-		font-size: 12px;	
-	}	
+		font-size: 12px;
+	}
 	.benifits .benifit h4{
 		font-size: 13px;
 		display: inline;
@@ -1379,7 +1379,7 @@
 		padding-right: 0;
 		min-height: 120px;
 		margin-bottom: 20px;
-		clear: both;		
+		clear: both;
 	}
 	#specials .product:after{
 		content: ' ';
@@ -1387,20 +1387,20 @@
 		clear: both;
 
 	}
-	#specials .image{
+	#specials .product .image{
 		width: 33.333334%;
 		padding-right: 15px;
 		float: left;
-		height: auto;		
-	}	
-	#specials .image img{
+		height: auto;
+	}
+	#specials .product .image img{
 		width: 100%;
 	}
 	#specials h4{
 		margin-bottom: 25px;
 		margin-left: 33.333%;
 	}
-	#specials .price{
+	#specials .product .price{
 		margin-left: 33.333%;
 	}
 	#specials .discount{
@@ -1416,7 +1416,7 @@
 		padding-right: 0;
 		min-height: 148px;
 		margin-bottom: 20px;
-		clear: both;		
+		clear: both;
 	}
 	#populars H5{
 		margin-bottom: 30px;
@@ -1425,8 +1425,8 @@
 		width: 33.333334%;
 		padding-right: 15px;
 		float: left;
-		height: auto;		
-	}	
+		height: auto;
+	}
 	#populars .image img{
 		max-width: 100%;
 	}
@@ -1442,7 +1442,7 @@
 		font-size: 14px;
 		padding-top: 3px;
 		clear: both;
-		margin-top: 26px;		
+		margin-top: 26px;
 	}
 	#page #top-sticky-wrapper{
 		min-height: 70px;
@@ -1480,7 +1480,7 @@
 	#header .logo-area{
 		float: none;
 		width: 100%;
-		text-align: center;		
+		text-align: center;
 	}
 	#header .logo-area .logo{
 		margin-bottom: 5px;
@@ -1492,13 +1492,13 @@
 	}
 	#header .search > DIV{
 		border: 1px solid #efefef;
-	}	
+	}
 	#header .search INPUT{
-		box-shadow: none;		
+		box-shadow: none;
 		border: 1px solid #efefef;
 	}
 	#header .skypeicq{
-		display: none;		
+		display: none;
 	}
 	#lastview + .content.stx p{
 		font-size: 12px !important;
@@ -1514,9 +1514,9 @@
 	}
 	#page-footer .logo-area P{
 		line-height: 18px;
-	}	
-	#page-footer .holder{		
-		overflow: hidden;		
+	}
+	#page-footer .holder{
+		overflow: hidden;
 	}
 	#page-footer .menu{
 		padding-left: 0;
@@ -1541,10 +1541,10 @@
 		font-weight: bold;
 		text-decoration: none;
 		border-bottom: 0;
-		
+
 	}
 	#page-footer .location{
-		display: none;		
+		display: none;
 	}
 	#page-footer .location DL{
 		padding-left: 0;
@@ -1557,17 +1557,17 @@
 		width: 50%;
 	}
 	#page-footer .contacts{
-		float: none;		
+		float: none;
 		bottom: 0;
 		left: 0;
 		width: 100%;
-		padding-top: 20px;		
+		padding-top: 20px;
 	}
 	#page-footer .contacts_mobile{
-		display: block;		
+		display: block;
 	}
 	#page-footer .contacts:not(.contacts_mobile){
-		display: none;		
+		display: none;
 	}
 	#page-footer .contacts.contacts_mobile .location{
 		display: block;
@@ -1578,10 +1578,10 @@
 		margin-left: 0;
 		padding-top: 20px;
 		display: none;
-		
+
 	}
 	#page-footer .claim{
-		float: right;		
+		float: right;
 	}
 	#page-footer .bttn.light{
 		height: auto;
@@ -1601,7 +1601,7 @@
 		padding-top: 18px;
 	}
 	#slideshow-sticky-wrapper{
-		display: none;		
+		display: none;
 	}
 	#category .wrapper{
 		width: 100%;
@@ -1631,15 +1631,15 @@
 	}
 	#category .product .image{
 		height: 70px;
-		overflow: hidden;		
+		overflow: hidden;
 	}
 	#category .product .image img{
 		max-height: 100%;
 		width: auto;
-		
+
 	}
 	#category .product STRONG.price{
-		float: none;		
+		float: none;
 	}
 	#category .product .sale .bttn.get-a-quote{
 		height: 55px;
@@ -1651,19 +1651,19 @@
 		padding-left: 0;
 	}
 	.sale .sale-btns{
-		text-align: center;		
+		text-align: center;
 	}
 	#category .product .sale .bttn{
 		width: 47%;
 		height: auto;
 		padding-top: 5px;
-		padding-bottom: 5px;		
+		padding-bottom: 5px;
 	}
 	#category .product .sale .bttn:first-of-type{
 		margin-right: 2%;
 	}
 	#category .product .title SMALL{
-		display: inline-block;		
+		display: inline-block;
 	}
 	#category .product .sale .price-wrapper{
 		min-height: 55px;
@@ -1675,7 +1675,7 @@
 		float: none;
 		width: 100%;
 		clear: both;
-		height: auto;		
+		height: auto;
 	}
 	#catalog .category .image{
 		width: 25%;
@@ -1707,7 +1707,7 @@
 		float: none;
 		width: 100%;
 	}
-        
+
         #history table td,
         #history table th {
             padding: 3px 3px;
@@ -1720,7 +1720,7 @@
 	.w40p{
 		width: 100%;
 		float: none;
-		
+
 	}
 	.w40p.r{
 		float: none;
@@ -1730,13 +1730,13 @@
 	}
 	#related{
 		width: 100%;
-	}	
+	}
 	#related .product{
 		float: none;
 		width: 100%;
-		padding-right: 0;		
+		padding-right: 0;
 		margin-bottom: 20px;
-		clear: both;		
+		clear: both;
 	}
 	#related .product h6{
 		margin-bottom: 30px;
@@ -1745,18 +1745,18 @@
 		width: 33.333334%;
 		padding-right: 15px;
 		float: left;
-		height: auto;		
-	}	
+		height: auto;
+	}
 	#related .image img{
 		max-width: 100%;
-		height: auto;		
+		height: auto;
 	}
 	#related .product h4{
 		margin-bottom: 20px;
 	}
 	.paging{
-		text-align: center;	
-		font-size: 16px;	
+		text-align: center;
+		font-size: 16px;
 	}
 	.paging .prev{
 		padding: 0;
@@ -1778,7 +1778,7 @@
 		background: url(../icons/pager_mobile_arrow.png) right center;
 		border: none;
 		text-indent: -9999px;
-		float: right;		
+		float: right;
 	}
 	.paging .next:hover{
 		background: url(../icons/pager_mobile_arrow.png) right center;
@@ -1860,7 +1860,7 @@
 		margin-bottom: 18px;
 	}
 	#product .gallery img{
-		display: inline-block;		
+		display: inline-block;
 	}
 	#product .row{
 		margin-left: 0;
@@ -1904,7 +1904,7 @@
 	#product .ui-tabs-panel .help{
 		margin-right: 0;
 		padding-left: 0;
-		float: none;		
+		float: none;
 	}
 	#product table.details td.name div{
 		min-width: auto;
@@ -1920,7 +1920,7 @@
 	}
 	#related .price{
 		font-size: 18px;
-	}	
+	}
 	.ui-tabs .tabs LI{
 		margin-right: 11px;
 	}
@@ -1940,11 +1940,11 @@
 	}
 	#lastview + .content.stx{
 		display: none;
-		
+
 	}
 	div#scroller{
 		display: none!important;
-		
+
 	}
 	#favorite .cart-table .delete .action{
 		background: none !important;
@@ -1999,7 +1999,7 @@
 	}
 	.cart-table .coll-md-6{
 		float: none;
-		width: 100%;		
+		width: 100%;
 	}
 	.cart-table .coll-md-3{
 		clear: left;
@@ -2009,7 +2009,7 @@
 		width: auto;
 	}
 	.cart-table .coll-md-1{
-		width: auto;		
+		width: auto;
 	}
 	.cart-table .image{
 		margin-bottom: 10px;
@@ -2045,13 +2045,13 @@
 		line-height: 1;
 		margin-top: 7px;
 	}
-        
+
 	.Cart .btns .favorite.action{
 		display: none;
 	}
 	.Cart .summary{
 		padding-top: 150px;
-		position: relative;		
+		position: relative;
 	}
 	.cart-table .price{
 		padding-top: 5px;
@@ -2069,7 +2069,7 @@
 		line-height: 32px;
 	}
 	.Cart .summary .cupon{
-		position: absolute;		
+		position: absolute;
 		top: 30px;
 		width: 100%;
 		margin: 0;
@@ -2084,7 +2084,7 @@
 	.Cart .summary .order .next{
 		padding-right: 25px;
 		position: relative;
-		display: block;		
+		display: block;
 	}
 	.Cart .summary .prev{
 		position: relative;
@@ -2099,10 +2099,10 @@
 		height: 44px;
 		padding-top: 5px !important;
 	}
-	
+
 	.Cart .summary .bttn.next:before,
 	.Cart .summary .prev:before	{
-		border-top-width: 21px;		
+		border-top-width: 21px;
 	}
 	.Cart .summary .bttn.next:after,
 	.Cart .summary .bttn.prev:after{
@@ -2114,18 +2114,18 @@
 	.Cart .summary .cupon .bttn{
 		font-size: 14px;
 	}
-	.Cart .summary .order .next span, .Cart .summary .prev span{		
+	.Cart .summary .order .next span, .Cart .summary .prev span{
 		visibility: visible;
 		text-indent: 0px;
 		display: block !important;
-		text-align: center;		
+		text-align: center;
 		position: absolute;
 		left: 0px;
 		top: 4px;
 		width: 100%;
 	}
 	.Cart .summary .order P{
-		width: auto;		
+		width: auto;
 	}
 	.cart-table .quantity{
 		padding-top: 0;
@@ -2137,7 +2137,7 @@
 	}
 	#Order{
 		width: 100%;
-		float: none;		
+		float: none;
 	}
 	#Order .row{
 		margin-left: 0;
@@ -2162,7 +2162,7 @@
 	#Order .order_txt_info{
 		padding: 25px 14px;
 		position: relative;
-		
+
 	}
 	#Order .order_txt_info p{
 		margin-bottom: 5px;
@@ -2181,7 +2181,7 @@
 		top: 25px;
 	}
 	#Order fieldset .wrapper{
-		padding: 0 14px 25px;		
+		padding: 0 14px 25px;
 	}
 	#Order fieldset.block.gray{
 		background: #fff;
@@ -2203,13 +2203,13 @@
 		padding-bottom: 0;
 	}
 	#Product_Application #nameHelp, #Order #lfsHelp{
-		display: none;		
+		display: none;
 	}
-	#Order .bttn.prev span.hide, #Order .bttn.r span.hide{		
+	#Order .bttn.prev span.hide, #Order .bttn.r span.hide{
 		visibility: visible;
 		text-indent: 0px;
 		display: block !important;
-		text-align: center;		
+		text-align: center;
 		position: absolute;
 		left: 0px;
 		top: 4px;
@@ -2224,14 +2224,14 @@
 		height: auto !important;
 	}
 	#products.cart .product div:not(.mobile-quantity-info){
-		display: none;		
+		display: none;
 	}
 	#products.cart .product .mobile-quantity-info{
 		display: block;
 		padding-right: 0;
 		margin-right: 0;
 		width: auto;
-		margin-top: 10px;		
+		margin-top: 10px;
 	}
 	#products.cart .product .mobile-quantity-info p{
 		display: inline;
@@ -2244,7 +2244,7 @@
 		white-space: normal;
 	}
 	#products.cart .all{
-		float: none;		
+		float: none;
 	}
 	form .col.w150{
 		width: 100%;
@@ -2263,7 +2263,7 @@
 		margin-right: 0!important;
 	}
 	#category #ProductFilter{
-		display: none;		
+		display: none;
 	}
 	#lastview h3{
 		margin-bottom: 30px;
@@ -2274,7 +2274,7 @@
 	}
 	.title.category-title{
 		float: none;
-		margin-bottom: 15px;	
+		margin-bottom: 15px;
 	}
 	.mobile-filter-btn{
 		display: block;
@@ -2289,7 +2289,7 @@
 		text-align: center;
 		height: 50px;
 		padding-top: 5px;
-		position: relative;	
+		position: relative;
 	}
 	.mobile-filter-btn .bttn .hide{
 		display: block !important;
@@ -2300,7 +2300,7 @@
 		position: absolute;
 		left: 0;
 		top: 5px;
-		text-align: center;		
+		text-align: center;
 	}
 	#category .wrapper{
 		float: none;
@@ -2314,7 +2314,7 @@
     background: -ms-linear-gradient(top, #fff, #eee 94%, #fafafa);
     background: linear-gradient(top, #fff, #eee 94%, #fafafa);
     border: 1px solid;
-    border-color: #e9e9e9 #d9d9d9 #c8c8c8 #d6d6d6;    
+    border-color: #e9e9e9 #d9d9d9 #c8c8c8 #d6d6d6;
     width: 48%;
     padding: 0 0 0 5px;
     text-align: center;
@@ -2323,7 +2323,7 @@
     line-height: 35px;
     position: relative;
     border-radius: 4px;
-    min-height: 50px;    
+    min-height: 50px;
     padding-top: 5px;
     color: #333333;
 	}
@@ -2346,13 +2346,13 @@
 	nav.sort .sort_title{
 		display: inline-block;
 		vertical-align: top;
-		visibility: visible;		
+		visibility: visible;
 	}
 	nav.sort .sort_title:not(.hide){
 		display: none;
 	}
 	nav.sort ul{
-		display: inline-block;		
+		display: inline-block;
 		text-align: left;
 	}
 	nav.sort ul li > a{
@@ -2365,10 +2365,10 @@
 		pointer-events: auto;
 	}
 	nav.sort ul li{
-		display: block;		
+		display: block;
 	}
 	nav.sort ul li:not(:first-of-type){
-		display: none;		
+		display: none;
 	}
 	nav.sort.choose-filt ul li:not(:first-of-type){
 		display: block;
@@ -2385,13 +2385,13 @@
 	.representatives .city{
 		width: 100%;
 		display: block;
-		float: none;		
+		float: none;
 	}
 	#contacts .location dl, #contacts .location dl.email, #contacts .location dl.smaller{
 		width: 100%;
 		float: none;
 		margin-bottom: 10px;
-		
+
 	}
 	#category #nav{
 		margin-bottom: 0;
@@ -2406,7 +2406,7 @@
 		display: none;
 	}
 	#category .product .sale .bttn.cheaper{
-		display: none;		
+		display: none;
 	}
 	#category .status-mobile-screens{
 		display: block;
@@ -2448,11 +2448,11 @@
 	}
 	DIV.order-history .row{
 		display: block;
-		
+
 	}
 	DIV.order-history .product{
 		width: 100%;
-		display: block;		
+		display: block;
 	}
 	.paging .page{
 		font-size: 18px;
@@ -2480,7 +2480,7 @@
 	    border-bottom: none !important;
 	}
 	.paging .bttn.prev::before, .paging .bttn.prev::after, .paging .bttn.next::before, .paging .bttn.next::after{
-		display: none;		
+		display: none;
 	}
 	#header::after{
 		z-index: 1;
@@ -2507,13 +2507,13 @@
 	#ProductFilter.showfilter .filter .sheet{
 		background: #fff;
 	}
-	#ProductFilter.showfilter .tab.last.apply{		
+	#ProductFilter.showfilter .tab.last.apply{
 		padding: 0;
-		border: none;		
+		border: none;
 	}
 	#ProductFilter.showfilter .tab.last.apply .gray{
 		display: none;
-		
+
 	}
 	#ProductFilter.showfilter .tab.last.apply .bttn.r{
 		display: block;
@@ -2558,7 +2558,7 @@
 		content: '';
 		width: 20px;
 		height: 20px;
-		position: absolute;		
+		position: absolute;
 		left: 68px;
 		top: 12px;
 		display: block;
@@ -2587,7 +2587,7 @@
 		width: 1170px;
 		padding-left: 15px;
 		padding-right: 15px;
-	}    
+	}
     #tree {
         width: 263px;
     }
@@ -2607,7 +2607,7 @@
 	#category #nav{
 		width: 263px;
 		padding-right: 0;
-		margin-right: 30px;		
+		margin-right: 30px;
 	}
 	.coll-md-5{
 		width: 41.66666667%;
@@ -2631,7 +2631,7 @@
 		width: 250px;
 	}
 	.product + .wrapper{
-    overflow: hidden;    
+    overflow: hidden;
 	}
 	#page-footer .contacts{
 		width: 256px;
@@ -2645,7 +2645,7 @@
 	#specials h4{
 		margin-bottom: 2px;
 	}
-	#specials .price .old::after{
+	#specials .product .price .old::after{
 		background: #f00;
 	}
 	#page-footer .socials{
@@ -2677,7 +2677,7 @@
 
 
 /*
-@media screen and (min-width: 1300px) {	
+@media screen and (min-width: 1300px) {
 	#page-footer .holder {
 		width: 708px;
 	}
@@ -2693,7 +2693,7 @@
 	#related .product {
 		padding-right: 25px;
 	}
-	
+
 	#catalog .category {
 		width: 210px;
 	}
