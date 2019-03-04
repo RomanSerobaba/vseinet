@@ -10,7 +10,7 @@ class PersonNameValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if (null !== $value) {
-            if (preg_match('~[^а-яА-Яa-zA-Z-\s]~isu', $value, $matches)) {
+            if (preg_match('~[^а-яА-ЯёЁa-zA-Z-\s]~isu', $value, $matches)) {
                 $this->context->buildViolation($constraint->message)->addViolation();
             }
         }
