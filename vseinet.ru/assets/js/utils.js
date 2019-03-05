@@ -45,7 +45,7 @@ sp.clearSelection = function() {
     if (document.selection && document.selection.empty) {
         document.selection.empty();
     } else if (window.getSelection) {
-        window.getSelection().removeAllRanges();    
+        window.getSelection().removeAllRanges();
     }
 };
 
@@ -65,11 +65,30 @@ $.fn.textWidth = function() {
     return width;
 };
 
+sp.dialog = function(width) {
+    return $('<div class="loading"></div>').appendTo('body').dialog({
+        close: function() {
+            $(this).remove();
+        },
+        closeText: 'Закрыть',
+        draggable: false,
+        modal: true,
+        minWidth: width || 600,
+        position: {
+            using: function(pos) {
+                pos.top = 45 + $(window).scrollTop();
+                $(this).css(pos);
+            }
+        },
+        resizable: false
+    });
+};
+
 $(function() {
     sp.mobile = navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
     if (!sp.mobile) {
         $('#top').sticky();
-    } 
+    }
 });
 
 

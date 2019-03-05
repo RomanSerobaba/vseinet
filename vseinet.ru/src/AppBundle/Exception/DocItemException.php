@@ -42,4 +42,12 @@ class DocItemException extends BadRequestHttpException
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getAsArray()
+    {
+        return [$this->getKey() => $this->getMessage()];
+    }
 }

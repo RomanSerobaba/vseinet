@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Command;
 
@@ -6,10 +6,11 @@ use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Person;
+use AppBundle\Entity\GeoCity;
 
-class UpdateCommandHandler extends MessageHandler
+class AccountEditCommandHandler extends MessageHandler
 {
-    public function handle(UpdateCommand $command)
+    public function handle(AccountEditCommand $command)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -17,7 +18,15 @@ class UpdateCommandHandler extends MessageHandler
         if (!$user instanceof User) {
             throw new NotFoundHttpException();
         }
-        $user->setGeoCityId($command->city->getId());
+        if ($command->geoCityId) {
+            $geoCity = $em->getRepository(GeoCity::class)->find($command->geoCityId);
+        } else {
+            $geoCity = $em->getRepository(GeoCity::class)->findOneByName($command->geoCityName);
+        }
+        if (!$geoCity instanceof GeoCity || $geoCity->getName() != $command->geoCityName) {
+            throw new NotFoundHttpException();
+        }
+        $user->setGeoCityId($geoCity->getId());
         $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
         $em->persist($user);
 
@@ -30,7 +39,7 @@ class UpdateCommandHandler extends MessageHandler
         $person->setSecondname($command->secondname);
         $person->setGender($command->gender);
         $person->setBirthday($command->birthday);
-        
+
         $em->persist($person);
         $em->flush();
     }

@@ -47,14 +47,10 @@ $.widget('sp.form', {
                     clearTimeout(timer);
                     timer = setTimeout(function() {
                         var input = e.target;
-                        if (input.id) {
-                            if (input.getAttribute('novalidate')) {
-                                that._validate(true);
-                            } else {
-                                that._add(input, true);
-                                if (that.element.is(':visible')) {
-                                    that._validate();
-                                }
+                        if (input.id && !input.getAttribute('novalidate') && false !== that.options.validate) {
+                            that._add(input, true);
+                            if (that.element.is(':visible')) {
+                                that._validate();
                             }
                         }
                     }, this.options.delay);

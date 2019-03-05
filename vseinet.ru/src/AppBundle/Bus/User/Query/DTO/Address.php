@@ -19,42 +19,62 @@ class Address
     /**
      * @Assert\Type(type="string")
      */
-    public $regionName;
+    public $geoRegionName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoRegionId;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $regionUnit;
-
-    /**
-     * @Assert\Type(type="string") 
-     */
-    public $areaName;
+    public $geoRegionUnit;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $areaUnit;
+    public $geoAreaName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoAreaId;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $geoAreaUnit;
 
     /**
      * @Assert\type(type="string")
      */
-    public $cityName;
+    public $geoCityName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $cityUnit;
+    public $geoCityUnit;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $streetName;
+    public $geoStreetName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoStreetId;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $streetUnit;
+    public $geoStreetUnit;
 
     /**
      * @Assert\Type(type="string")
@@ -106,23 +126,21 @@ class Address
      */
     public $isMain;
 
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $structuredAddress;
-
-
     public function __construct(
         $id,
         $postalCode,
-        $regionName,
-        $regionUnit,
-        $areaName,
-        $areaUnit,
-        $cityName,
-        $cityUnit,
-        $streetName,
-        $streetUnit,
+        $geoRegionName,
+        $geoRegionId,
+        $geoRegionUnit,
+        $geoAreaName,
+        $geoAreaId,
+        $geoAreaUnit,
+        $geoCityName,
+        $geoCityId,
+        $geoCityUnit,
+        $geoStreetName,
+        $geoStreetId,
+        $geoStreetUnit,
         $house,
         $building,
         $apartment,
@@ -136,14 +154,18 @@ class Address
     ) {
         $this->id = $id;
         $this->postalCode = $postalCode;
-        $this->regionName = $regionName;
-        $this->regionUnit = $regionUnit;
-        $this->areaName = $areaName;
-        $this->areaUnit = $areaUnit;
-        $this->cityName = $cityName;
-        $this->cityUnit = $cityUnit;
-        $this->streetName = $streetName;
-        $this->streetUnit = $streetUnit;
+        $this->geoRegionName = $geoRegionName;
+        $this->geoRegionId = $geoRegionId;
+        $this->geoRegionUnit = $geoRegionUnit;
+        $this->geoAreaName = $geoAreaName;
+        $this->geoAreaId = $geoAreaId;
+        $this->geoAreaUnit = $geoAreaUnit;
+        $this->geoCityName = $geoCityName;
+        $this->geoCityId = $geoCityId;
+        $this->geoCityUnit = $geoCityUnit;
+        $this->geoStreetName = $geoStreetName;
+        $this->geoStreetId = $geoStreetId;
+        $this->geoStreetUnit = $geoStreetUnit;
         $this->house = $house;
         $this->building = $building;
         $this->apartment = $apartment;
@@ -153,20 +175,23 @@ class Address
         $this->coordinates = $coordinates;
         $this->address = $address;
         $this->comment = $comment;
-        $this->isMain = $isMain; 
+        $this->isMain = $isMain;
 
         $components = [];
         if ($postalCode) {
             $components[] = $postalCode;
         }
-        if ($regionName) {
-            $components[] = $regionName.' '.$regionUnit;
+        if ($geoRegionName) {
+            $components[] = $geoRegionName.' '.$geoRegionUnit;
         }
-        if ($cityName) {
-            $components[] = $cityName.' '.$cityUnit;
+        if ($geoCityName) {
+            $components[] = $geoCityName.' '.$geoCityUnit;
         }
-        if ($streetName) {
-            $components[] = $streetName.' '.$streetUnit;
+        if ($geoAreaName) {
+            $components[] = $geoAreaName.' '.$geoAreaUnit;
+        }
+        if ($geoStreetName) {
+            $components[] = $geoStreetName.' '.$geoStreetUnit;
         }
         if ($house) {
             $components[] = 'д '.$house;
@@ -181,7 +206,7 @@ class Address
             $components[] = 'оф '.$office;
         }
         if (!empty($components)) {
-            $this->structuredAddress = implode(', ', $components);
+            $this->address = implode(', ', array_map(function ($component) { return trim($component); }, $components));
         }
     }
 }

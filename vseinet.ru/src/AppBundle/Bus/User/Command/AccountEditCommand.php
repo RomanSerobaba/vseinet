@@ -6,7 +6,7 @@ use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
 
-class UpdateCommand extends Message
+class AccountEditCommand extends Message
 {
     /**
      * @Assert\NotBlank(message="Введите Вашу фамилию")
@@ -32,18 +32,28 @@ class UpdateCommand extends Message
     public $gender;
 
     /**
-     * @Assert\Type(type="DateTime")
+     * @Assert\DateTime
      */
     public $birthday;
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш город")
-     * @Assert\Type(type="AppBundle\Entity\GeoCity")
+     * @Assert\Type(type="string")
      */
-    public $city;
-    
+    public $geoCityName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
+
     /**
      * @Assert\Type(type="boolean")
      */
     public $isMarketingSubscribed;
+
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = (int) $geoCityId ?: null;
+    }
 }

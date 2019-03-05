@@ -1,4 +1,92 @@
 $(function() {
+    var cache = {};
+    $.fn.geoCity = function(options) {
+        options = $.extend({
+            appendTo: 'body',
+            select: $.noop,
+            selectorId: null
+        }, options || {});
+
+        return this.each(function() {
+            var input = $(this).autocomplete({
+                appendTo: options.appendTo,
+                minLength: 2,
+                select: function(e, ui) {
+                    if (options.selectorId) {
+                        $(options.selectorId).val(ui.item.id);
+                    }
+                    options.select(e, ui);
+                },
+                source: function(request, response) {
+                    var term = $.ui.autocomplete.escapeRegex(request.term);
+                    if (term in cache) {
+                        response(cache[term]);
+                        return false;
+                    }
+                    sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
+                        var regexp = new RegExp('(' + term + ')', 'ig');
+                        cache[term] = $.map(data.geoCities, function(item) {
+                            item.value = item.name;
+                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
+                            return item;
+                        });
+                        response(cache[term]);
+                    });
+                }
+            });
+            input.data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+            };
+        });
+    };
+});
+
+$(function() {
+    var cache = {};
+    $.fn.geoStreet = function(options) {
+        options = $.extend({
+            appendTo: 'body',
+            select: $.noop,
+            selectorId: null,
+            selectorGeoCityId: '[name*=geoCityId]'
+        }, options || {});
+
+        return this.each(function() {
+            var inputGeoCityId = $(options.selectorGeoCityId);
+            var input = $(this).autocomplete({
+                appendTo: options.appendTo,
+                minLength: 2,
+                select: function(e, ui) {
+                    if (options.selectorId) {
+                        $(options.selectorId).val(ui.item.id);
+                    }
+                    options.select(e, ui);
+                },
+                source: function(request, response) {
+                    var term = $.ui.autocomplete.escapeRegex(request.term);
+                    if (term in cache) {
+                        response(cache[term]);
+                        return false;
+                    }
+                    sp.post(Routing.generate('search_geo_street'), { q: request.term, geoCityId: inputGeoCityId.val() }).done(function(data) {
+                        var regexp = new RegExp('(' + term + ')', 'ig');
+                        cache[term] = $.map(data.geoStreets, function(item) {
+                            item.value = item.name;
+                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>');
+                            return item;
+                        });
+                        response(cache[term]);
+                    });
+                }
+            });
+            input.data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+            };
+        });
+    };
+});
+
+$(function() {
     $('[data-id=City]').ajaxcontent({
         url: Routing.generate('geo_cities'),
         dialog: {

@@ -55,57 +55,26 @@ class UserController extends Controller
      */
     public function editAction(Request $request)
     {
-        $command = new Command\UpdateCommand();
         if ($request->isMethod('GET')) {
             $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
-            $command->init((array) $info);
-            if ($info->cityId) {
-                $command->city = $this->getDoctrine()->getRepository(GeoCity::class)->find($info->cityId);
-            }
+            $command = new Command\AccountEditCommand((array) $info);
+        } else {
+            $command = new Command\AccountEditCommand();
         }
-        $form = $this->createForm(Form\EditType::class, $command);
+        $form = $this->createForm(Form\AccountEditType::class, $command);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('command_bus')->handle($command);
-
-                    $notice = 'Ваш профиль успешно обновлен';
-
-                    if ($request->isXmlHttpRequest()) {
-                        $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
-
-                        return $this->json([
-                            'html' => $this->renderView('User/account_info.html.twig', [
-                                'info' => $info,
-                            ]),
-                            'notice' => $notice,
-                        ]);
-                    }
-
-                    $this->get('session')->getFlashBag()->add('notice', $notice);
+                    $this->get('session')->getFlashBag()->add('notice', 'Ваш профиль успешно обновлен');
 
                     return $this->redirectToRoute('user_account');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
             }
-
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'errors' => $this->getFormErrors($form),
-                ]);
-            }
-        }
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('User/edit_form_ajax.html.twig', [
-                    'form' => $form->createView(),
-                ]),
-            ]);
         }
 
         return $this->render('User/edit_form.html.twig', [
@@ -116,24 +85,25 @@ class UserController extends Controller
 
     /**
      * @VIA\Route(
-     *     name="user_contact_add",
-     *     path="/user/contact/add/",
+     *     name="user_contact_edit",
+     *     path="/user/contact/{id}/",
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"}
      * )
      * @VIA\Route(
-     *     name="user_contact_edit",
-     *     path="/user/contact/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     name="user_contact_add",
+     *     path="/user/contact/add/",
      *     methods={"GET", "POST"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function addContactAction(int $id = 0, Request $request)
     {
-        $command = new Command\AddContactCommand(['id' => $id]);
         if ($id && $request->isMethod('GET')) {
             $contact = $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]));
-            $command->init((array) $contact);
+            $command = new Command\AddContactCommand((array) $contact);
+        } else {
+            $command = new Command\AddContactCommand(['id' => $id]);
         }
         $form = $this->createForm(Form\AddContactType::class, $command);
 
@@ -141,12 +111,12 @@ class UserController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($command);
+                    $contact = $this->get('command_bus')->handle($command);
 
                     $notice = $id ? 'Контакт успешно обновлен' : 'Контакт успешно добавлен';
 
                     if ($request->isXmlHttpRequest()) {
-                        $contact = $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $command->id]));
+                        $contact = $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $contact->getId()]));
 
                         return $this->json([
                             'html' => $this->renderView('User/contact.html.twig', [
@@ -159,9 +129,8 @@ class UserController extends Controller
                     $this->get('session')->getFlashBag()->add('notice', $notice);
 
                     return $this->redirectToRoute('user_account');
-
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
 
@@ -175,6 +144,7 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'html' => $this->renderView('User/contact_form_ajax.html.twig', [
+                    'command' => $command,
                     'form' => $form->createView(),
                 ]),
             ]);
@@ -191,7 +161,7 @@ class UserController extends Controller
      * @VIA\Get(
      *     name="user_contact_delete",
      *     path="/user/contact/{id}/delete/",
-     *     requirements={"id" = "\d+"}
+     *     requirements={"id": "\d+"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
@@ -207,29 +177,41 @@ class UserController extends Controller
             ]);
         }
 
+        $this->get('session')->getFlashBag()->add('notice', $notice);
+
         return $this->redirectToRoute('user_account');
     }
 
     /**
      * @VIA\Route(
-     *     name="user_address_add",
-     *     path="/user/address/add/",
+     *     name="user_address_edit",
+     *     path="/user/address/{id}/",
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"}
      * )
      * @VIA\Route(
-     *     name="user_address_edit",
-     *     path="/user/address/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     name="user_address_add",
+     *     path="/user/address/add/",
      *     methods={"GET", "POST"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function addAddressAction(int $id = 0, Request $request)
     {
-        $command = new Command\AddAddressCommand(['id' => $id]);
-        if ($id && $request->isMethod('GET')) {
-            $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]));
-            $command->init((array) $address);
+        if ($request->isMethod('GET')) {
+            if ($id) {
+                $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]));
+                $command = new Command\AddAddressCommand((array) $address);
+            } else {
+                if ($geoCityId = $this->getUser()->getGeoCityId()) {
+                    $geoCity = $this->getDoctrine()->getManager()->getRepository(GeoCity::class)->find($geoCityId);
+                } else {
+                    $geoCity = $this->getGeoCity();
+                }
+                $command = new Command\AddAddressCommand(['geoCityId' => $geoCity->getId(), 'geoCityName' => $geoCity->getName()]);
+            }
+        } else {
+            $command = new Command\AddAddressCommand(['id' => $id]);
         }
         $form = $this->createForm(Form\AddAddressType::class, $command);
 
@@ -237,29 +219,26 @@ class UserController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle($command);
+                    $address = $this->get('command_bus')->handle($command);
+
+                    $notice = $id ? 'Адрес доставки успешно изменен' : 'Адрес доставки успешно добавлен';
 
                     if ($request->isXmlHttpRequest()) {
-                        $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $command->id]));
+                        $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $address->getId()]));
 
                         return $this->json([
                             'html' => $this->renderView('User/address.html.twig', [
                                 'address' => $address,
                             ]),
+                            'notice' => $notice,
                         ]);
                     }
 
-                    $flashBag = $this->get('session')->getFlashBag();
-                    if ($command->id) {
-                        $flashBag->add('notice', 'Адрес доставки успешно изменен');
-                    } else {
-                        $flashBag->add('notice', 'Адрес доставки успешно добавлен');
-                    }
+                    $this->get('session')->getFlashBag()->add('notice', $notice);
 
                     return $this->redirectToRoute('user_account');
-
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
 
@@ -273,6 +252,7 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'html' => $this->renderView('User/address_form_ajax.html.twig', [
+                    'command' => $command,
                     'form' => $form->createView(),
                 ]),
             ]);
@@ -289,7 +269,7 @@ class UserController extends Controller
      * @VIA\Get(
      *     name="user_address_delete",
      *     path="/user/address/{id}/delete/",
-     *     requirements={"id" = "\d+"}
+     *     requirements={"id": "\d+"}
      * )
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */

@@ -1,5 +1,5 @@
 <div class="block">
-    <div class="wrapper">
+    <div class="wrapper" id="user-contacts">
         <h2>Контактные данные</h2>
         <table class="account-table">
             <thead>
@@ -15,6 +15,6 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('user_contact_add') }}" class="contact-add">Добавить контакт</a>
+        <a href="{{ path('user_contact_add') }}" class="contact-add contact-edit">Добавить контакт</a>
     </div>
 </div>

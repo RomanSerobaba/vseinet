@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Annotation as VIA;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use AppBundle\Bus\Security\Command;
 use AppBundle\Bus\Security\Form;
 
@@ -74,7 +74,6 @@ class SecurityController extends Controller
                     $this->addFlash('notice', 'Регистрация прошла успешно');
 
                     return $this->redirectToRoute('index');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -107,7 +106,6 @@ class SecurityController extends Controller
                     $this->get('command_bus')->handle($command);
 
                     return $this->redirectToRoute('check_token');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -146,7 +144,6 @@ class SecurityController extends Controller
                     $this->get('command_bus')->handle($command);
 
                     return $this->redirectToRoute('restore_password');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -179,7 +176,6 @@ class SecurityController extends Controller
                     $this->get('command_bus')->handle($command);
 
                     return $this->redirectToRoute('user_account');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -210,37 +206,13 @@ class SecurityController extends Controller
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('command_bus')->handle($command);
-
-                    $notice = 'Новый пароль успешно сохранен';
-
-                    if ($request->isXmlHttpRequest()) {
-                        return $this->json([
-                            'notice' => $notice,
-                        ]);
-                    }
-
-                    $this->addFlash('notice', $notice);
+                    $this->addFlash('notice', 'Новый пароль успешно сохранен');
 
                     return $this->redirectToRoute('user_account');
-
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
-
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'errors' => $this->getFormErrors($form),
-                ]);
-            }
-        }
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json([
-                'html' => $this->renderView('Security/change_password_form.html.twig', [
-                    'form' => $form->createView(),
-                ]),
-            ]);
         }
 
         return $this->render('Security/change_password.html.twig', [

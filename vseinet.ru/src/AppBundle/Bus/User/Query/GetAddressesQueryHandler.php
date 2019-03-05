@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Query;
 
@@ -14,12 +14,16 @@ class GetAddressesQueryHandler extends MessageHandler
                     a.id,
                     a.postalCode,
                     gr.name,
+                    gr.id,
                     gr.unit,
                     ga.name,
+                    ga.id,
                     ga.unit,
                     gc.name,
+                    gc.id,
                     gc.unit,
                     gs.name,
+                    gs.id,
                     gs.unit,
                     a.house,
                     a.building,
@@ -34,7 +38,7 @@ class GetAddressesQueryHandler extends MessageHandler
                 )
             FROM AppBundle:GeoAddressToPerson AS ga2p
             INNER JOIN AppBundle:GeoAddress AS a WITH a.id = ga2p.geoAddressId
-            LEFT OUTER JOIN AppBundle:GeoRegion gr WITH gr.id = a.geoRegionId 
+            LEFT OUTER JOIN AppBundle:GeoRegion gr WITH gr.id = a.geoRegionId
             LEFT OUTER JOIN AppBundle:GeoArea AS ga WITH ga.id = a.geoAreaId
             LEFT OUTER JOIN AppBundle:GeoCity AS gc WITH gc.id = a.geoCityId
             LEFT OUTER JOIN AppBundle:GeoStreet AS gs WITH gs.id = a.geoStreetId
