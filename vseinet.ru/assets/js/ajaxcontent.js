@@ -25,7 +25,7 @@ $.widget('sp.ajaxcontent', {
         this._on(target, {
             'click': function(e) {
                 e.preventDefault();
-                this.load(this.options.url || target.data('url') || target.prop('href'), this.options.data.call(e.target));
+                this.load(this.options.url || e.target.dataset.url || e.target.href, this.options.data.call(e.target));
             }
         });
     },

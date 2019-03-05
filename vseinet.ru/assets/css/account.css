@@ -1,7 +1,7 @@
 .account-info DL {
     margin-bottom: 13px;
     overflow: hidden;
-} 
+}
 .account-info DT {
     float: left;
     width: 120px;
@@ -38,7 +38,7 @@
 }
 .account-table .contact-delete,
 .account-table .address-delete {
-    background: url('../images/delete.gif');
+    background: url('../images/delete.png');
 }
 
 #user-edit-form .gender {

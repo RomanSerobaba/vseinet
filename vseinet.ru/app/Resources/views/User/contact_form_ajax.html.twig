@@ -10,27 +10,27 @@
 
 {% if command.id %}
     <div class="row h">
-        {{ form_widget(form.typeCode) }}    
+        {{ form_widget(form.typeCode) }}
         {{ form_label(form.typeCodeName, 'Тип*:') }}
-        {{ form_widget(form.typeCodeName, { attr: { class: 'txt', readonly: true }}) }}    
+        {{ form_widget(form.typeCodeName, { attr: { class: 'txt', readonly: true }}) }}
     </div>
 {% else %}
-    <div class="row h{% if errors.typeCode is defined %} error{% endif %}">
+    <div class="row h{% if errors.add_contact_typeCode is defined %} error{% endif %}">
         {{ form_label(form.typeCode, 'Тип*:') }}
         {{ form_widget(form.typeCode, { attr: { class: 'txt' }}) }}
         <span class="status"></span>
-        {% if errors.typeCode is defined %}
-            <div class="error">{{ errors.typeCode.0 }}</div>
+        {% if errors.add_contact_typeCode is defined %}
+            <div class="error">{{ errors.add_contact_typeCode.0 }}</div>
         {% endif %}
     </div>
 {% endif %}
 
-<div class="row h{% if errors.value is defined %} error{% endif %}">
+<div class="row h{% if errors.add_contact_value is defined %} error{% endif %}">
     {{ form_label(form.value, 'Контакт*:') }}
     {{ form_widget(form.value, { attr: { class: 'txt' }})  }}
     <span class="status"></span>
-    {% if errors.value is defined %}
-        <div class="error">{{ errors.value.0 }}</div>
+    {% if errors.add_contact_value is defined %}
+        <div class="error">{{ errors.add_contact_value.0 }}</div>
     {% endif %}
 </div>
 
@@ -47,7 +47,7 @@
 </div>
 
 <div class="row h">
-    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
+    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }}
     {{ form_widget(form._token) }}
 </div>
 

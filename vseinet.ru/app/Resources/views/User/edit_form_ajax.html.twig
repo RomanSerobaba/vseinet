@@ -11,58 +11,58 @@
     </div>
 {% endif %}
 
-<div class="row h{% if errors.lastname is defined %} error{% endif %}">
+<div class="row h{% if errors.account_edit_lastname is defined %} error{% endif %}">
     {{ form_label(form.lastname, 'Фамилия*:') }}
     {{ form_widget(form.lastname, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
-    {% if errors.lastname is defined %}
-        <div class="error">{{ errors.lastname.0 }}</div>
+    {% if errors.account_edit_lastname is defined %}
+        <div class="error">{{ errors.account_edit_lastname.0 }}</div>
     {% endif %}
-</div>    
+</div>
 
-<div class="row h{% if errors.firstname is defined %} error{% endif %}">
+<div class="row h{% if errors.account_edit_firstname is defined %} error{% endif %}">
     {{ form_label(form.firstname, 'Имя*:') }}
     {{ form_widget(form.firstname, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
-    {% if errors.firstname is defined %}
-        <div class="error">{{ errors.firstname.0 }}</div>
+    {% if errors.account_edit_firstname is defined %}
+        <div class="error">{{ errors.account_edit_firstname.0 }}</div>
     {% endif %}
 </div>
 
-<div class="row h{% if errors.secondname is defined %} error{% endif %}">
+<div class="row h{% if errors.account_edit_secondname is defined %} error{% endif %}">
     {{ form_label(form.secondname, 'Отчество:') }}
     {{ form_widget(form.secondname, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
-    {% if errors.secondname is defined %}
-        <div class="error">{{ errors.secondname.0 }}</div>
+    {% if errors.account_edit_secondname is defined %}
+        <div class="error">{{ errors.account_edit_secondname.0 }}</div>
     {% endif %}
 </div>
 
-<div class="row h{% if errors.gender is defined %} error{% endif %}">
+<div class="row h{% if errors.account_edit_gender is defined %} error{% endif %}">
     {{ form_label(form.gender, 'Пол*:') }}
     <div class="gender">
         {{ form_widget(form.gender) }}
         <span class="status"></span>
     </div>
-    {% if errors.gender is defined %}
-        <div class="error">{{ errors.gender.0 }}</div>
+    {% if errors.account_edit_gender is defined %}
+        <div class="error">{{ errors.account_edit_gender.0 }}</div>
     {% endif %}
 </div>
 
-<div class="row h{% if errors.birthday is defined %} error{% endif %}">
+<div class="row h{% if errors.account_edit_birthday is defined %} error{% endif %}">
     {{ form_label(form.birthday, 'Дата рождения:') }}
     {{ form_widget(form.birthday, { attr: { class: 'txt datepicker', autocomplete: 'off' }}) }}
     <span class="status"></span>
-    {% if errors.birthday is defined %}
-        <div class="error">{{ errors.birthday.0 }}</div>
+    {% if errors.account_edit_birthday is defined %}
+        <div class="error">{{ errors.account_edit_birthday.0 }}</div>
     {% endif %}
 </div>
 
-<div class="row h{% if errors.city is defined %} error{% endif %}">
-    {{ form_label(form.city, 'Населенный пункт*:') }}
-    {{ form_widget(form.city, { attr: { class: 'txt' }}) }}
-    {% if errors.city is defined %}
-        <div class="error">{{ errors.city.0 }}</div>
+<div class="row h{% if errors.account_edit_geoCityName is defined %} error{% endif %}">
+    {{ form_label(form.geoCityName, 'Населенный пункт*:') }}
+    {{ form_widget(form.geoCityName, { attr: { class: 'txt' }}) }}
+    {% if errors.account_edit_geoCityName is defined %}
+        <div class="error">{{ errors.account_edit_geoCityName.0 }}</div>
     {% endif %}
 </div>
 
@@ -74,7 +74,8 @@
 </div>
 
 <div class="row h">
-    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }} 
+    {{ form_widget(form.submit, { label: 'Сохранить', attr: { class: 'bttn green' }}) }}
+    {{ form_widget(form.geoCityId) }}
     {{ form_widget(form._token) }}
 </div>
 

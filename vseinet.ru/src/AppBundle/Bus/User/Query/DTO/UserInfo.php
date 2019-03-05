@@ -1,13 +1,12 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Query\DTO;
 
-use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
 use AppBundle\Enum\PersonGender;
 
-class UserInfo 
+class UserInfo
 {
     /**
      * @Assert\Type(type="integer")
@@ -42,12 +41,12 @@ class UserInfo
     /**
      * @Assert\Type(type="integer")
      */
-    public $cityId;
+    public $geoCityId;
 
     /**
-     * @Assert\Type(type='string')
+     * @Assert\Type(type=string)
      */
-    public $cityName;
+    public $geoCityName;
 
     /**
      * @Assert\Type(type="boolean")
@@ -59,8 +58,7 @@ class UserInfo
      */
     public $genderName;
 
-
-    public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $cityId, $cityName, $isMarketingSubscribed)
+    public function __construct($id, $lastname, $firstname, $secondname, $gender, $birthday, $geoCityId, $geoCityName, $isMarketingSubscribed)
     {
         $this->id = $id;
         $this->lastname = $lastname;
@@ -68,8 +66,8 @@ class UserInfo
         $this->secondname = $secondname;
         $this->gender = $gender;
         $this->birthday = $birthday;
-        $this->cityId = $cityId;
-        $this->cityName = $cityName;
+        $this->geoCityId = $geoCityId;
+        $this->geoCityName = $geoCityName;
         $this->isMarketingSubscribed = $isMarketingSubscribed;
         $this->genderName = $gender ? PersonGender::getName($gender) : '';
     }

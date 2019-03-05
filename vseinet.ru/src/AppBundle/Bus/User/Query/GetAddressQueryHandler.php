@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Query;
 
@@ -9,18 +9,22 @@ class GetAddressQueryHandler extends MessageHandler
 {
     public function handle(GetAddressQuery $query)
     {
-         $q = $this->getDoctrine()->getManager()->createQuery("
+        $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\User\Query\DTO\Address (
                     a.id,
                     a.postalCode,
                     gr.name,
+                    gr.id,
                     gr.unit,
                     ga.name,
+                    ga.id,
                     ga.unit,
                     gc.name,
+                    gc.id,
                     gc.unit,
                     gs.name,
+                    gs.id,
                     gs.unit,
                     a.house,
                     a.building,
@@ -35,7 +39,7 @@ class GetAddressQueryHandler extends MessageHandler
                 )
             FROM AppBundle:GeoAddressToPerson AS ga2p
             INNER JOIN AppBundle:GeoAddress AS a WITH a.id = ga2p.geoAddressId
-            LEFT OUTER JOIN AppBundle:GeoRegion gr WITH gr.id = a.geoRegionId 
+            LEFT OUTER JOIN AppBundle:GeoRegion gr WITH gr.id = a.geoRegionId
             LEFT OUTER JOIN AppBundle:GeoArea AS ga WITH ga.id = a.geoAreaId
             LEFT OUTER JOIN AppBundle:GeoCity AS gc WITH gc.id = a.geoCityId
             LEFT OUTER JOIN AppBundle:GeoStreet AS gs WITH gs.id = a.geoStreetId

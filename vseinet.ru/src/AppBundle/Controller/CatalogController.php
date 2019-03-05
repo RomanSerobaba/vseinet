@@ -18,9 +18,14 @@ class CatalogController extends Controller
 {
     /**
      * @VIA\Route(
+     *     name="catalog",
+     *     path="/catalog/",
+     *     methods={"GET", "POST"}
+     * )
+     * @VIA\Route(
      *     name="catalog_category",
      *     path="/catalog/{id}/",
-     *     requirements={"id": "\d*"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
@@ -29,7 +34,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category_with_brand",
      *     path="/catalog/{id}/{brandName}/",
-     *     requirements={"id": "\d*", "brandName": "[^\/]*"},
+     *     requirements={"id": "\d+", "brandName": "[^\/]*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
@@ -39,7 +44,6 @@ class CatalogController extends Controller
      */
     public function showCategoryPageAction(int $id = 0, $brandName = null, Request $request)
     {
-        // $brand = $brandName ? $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName])) : null;
         if ($brandName) {
             $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
             $request->query->set('b', $brand->id);
