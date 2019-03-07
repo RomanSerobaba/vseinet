@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Annotation as VIA;
@@ -72,7 +72,7 @@ class UserController extends Controller
 
                     return $this->redirectToRoute('user_account');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }

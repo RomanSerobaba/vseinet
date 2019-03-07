@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Main\Query;
 use AppBundle\Bus\Main\Command;
@@ -84,7 +84,7 @@ class MainController extends Controller
                         'notice' => 'Ваш запрос отправлен',
                     ]);
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
 
@@ -151,7 +151,7 @@ class MainController extends Controller
 
                     return $this->redirectToRoute('index');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessage());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }
@@ -188,7 +188,7 @@ class MainController extends Controller
 
                     return $this->redirectToRoute('index');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessage());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }

@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use AppBundle\Entity\CheaperRequest;
 
 class CheaperRequestCommandHandler extends MessageHandler
@@ -11,9 +11,7 @@ class CheaperRequestCommandHandler extends MessageHandler
     public function handle(CheaperRequestCommand $command)
     {
         if (!$this->urlIsValid($command)) {
-            throw new ValidationException([
-                'competitorLink' => 'С указанного сайта заявки не принимаются',
-            ]);
+            throw new ValidationException('competitorLink', 'С указанного сайта заявки не принимаются');
         }
 
         $em = $this->getDoctrine()->getManager();
