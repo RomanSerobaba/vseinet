@@ -132,36 +132,15 @@ $(function() {
                 });
             });
 
-            var cacheGeoCities = {};
-            var txt = this.find('.txt').autocomplete({
+            this.find('.txt').geoCity({
                 appendTo: '#City.popup',
-                minLength: 2,
-                select: function(event, ui) {
+                select: function(e, ui) {
                     title.addClass('loading');
                     sp.post(Routing.generate('select_geo_city'), { id: ui.item.id }).then(function() {
                         window.location.reload();
                     });
-                },
-                source: function(request, response) {
-                    var term = $.ui.autocomplete.escapeRegex(request.term);
-                    if (term in cacheGeoCities) {
-                        response(cacheGeoCities[term]);
-                        return false;
-                    }
-                    sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
-                        var regexp = new RegExp('(' + term + ')', 'ig');
-                        cacheGeoCities[term] = $.map(data.geoCities, function(item) {
-                            item.value = item.name;
-                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
-                            return item;
-                        });
-                        response(cacheGeoCities[term]);
-                    });
                 }
-            })
-            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
-                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
-            };
+            });
         }
     });
 });
