@@ -12,12 +12,12 @@ class GetQueryHandler extends MessageHandler
         $user = $this->getUser();
 
         if (null !== $user) {
-            $q = $em->createQuery("
+            $q = $em->createQuery('
                 SELECT
                     f.baseProductId
                 FROM AppBundle:Favorite f
                 WHERE f.userId = :userId
-            ");
+            ');
             $q->setParameter('userId', $user->getId());
             $ids = $q->getResult('ListHydrator');
         } else {
@@ -33,19 +33,19 @@ class GetQueryHandler extends MessageHandler
                 NEW AppBundle\Bus\Favorite\Query\DTO\Product (
                     bp.id,
                     bp.name,
-                    COALESCE(p.price, p2.price),
+                    COALESCE(p.price, p0.price),
                     bpi.basename
                 )
             FROM AppBundle:BaseProduct AS bp
-            INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
-            INNER JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id
+            LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+            INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0
             LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-            WHERE bp.id IN (:ids) AND p2.geoCityId = 0
+            WHERE bp.id IN (:ids)
             ORDER BY bp.name
         ");
         $q->setParameter('ids', $ids);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
 
-        return $q->getArrayResult();
+        return $q->getResult();
     }
 }
