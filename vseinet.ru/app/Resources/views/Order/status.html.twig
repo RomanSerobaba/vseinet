@@ -1,4 +1,4 @@
-<p>Статус заказа по номеру: <b>{{ order.id }}</b></p>
+<p>Статус заказа по номеру: <b>{{ order.number }}</b></p>
 {% for item in order.items %}
     <div class="position">
         {{ item.productName }} &ndash; <strong>{{ item.statusCodeName }}</strong>

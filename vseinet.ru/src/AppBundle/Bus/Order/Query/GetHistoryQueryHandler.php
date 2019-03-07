@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Order\Query;
 
@@ -9,7 +9,7 @@ use AppBundle\Entity\FinancialCounteragent;
 class GetHistoryQueryHandler extends MessageHandler
 {
     public function handle(GetHistoryQuery $query)
-    {   
+    {
         $em = $this->getDoctrine()->getManager();
         $counteragent = $em->getRepository(FinancialCounteragent::class)->findOneBy(['userId' => $this->getUser()->getId()]);
         if (!$counteragent instanceof FinancialCounteragent) {
@@ -23,7 +23,7 @@ class GetHistoryQueryHandler extends MessageHandler
                 'page' => $query->page,
                 'limit' => $query->limit,
             ];
-            $history = $api->get('/api/v1/orders/?'.http_build_query($parameters));
+            $history = $api->get('/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
             return null;
         }
