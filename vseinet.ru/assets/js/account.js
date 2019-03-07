@@ -45,17 +45,7 @@ $(function() {
     var addresses = $('#user-addresses').on('click', '.address-edit', function(e) {
         e.preventDefault();
         var target = $(this);
-        var dialog = $('<div class="loading"></div>').appendTo('body').dialog({
-            closeText: 'Закрыть',
-            modal: true,
-            minWidth: 600,
-            position: {
-                using: function(pos) {
-                    pos.top = 45 + $(window).scrollTop();
-                    $(this).css(pos);
-                }
-            }
-        });
+        var dialog = sp.dialog();
         sp.get(target.prop('href')).then(function(response) {
             dialog.append(response.html).removeClass('loading');
             var form = dialog.find('form').on('submit', function(e) {
