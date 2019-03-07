@@ -31,7 +31,7 @@ class AddRevisionCommandHandler extends MessageHandler
             'baseProductId' => $command->baseProductId,
             'geoCityId' => [0, $geoCityId],
         ], [
-            'geoCity' => 'DESC',
+            'geoCityId' => 'DESC',
         ]);
         if (!$product instanceof Product) {
             throw new NotFoundHttpException(sprintf('Товар %d не найден', $command->baseProductId));
