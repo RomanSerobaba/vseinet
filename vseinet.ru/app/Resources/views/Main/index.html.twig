@@ -29,7 +29,7 @@
     <nav id="nav">
         {{ render(controller('AppBundle:Main:getMenu')) }}
     </nav>
-    
+
     <div class="wrapper">
         {{ render(controller('AppBundle:Main:getBannerMain')) }}
         <div class="benifits">
@@ -79,6 +79,8 @@
             <p>1 млн. товаров на сайте, 100 тыс. в наличии.</p>
         </a>
     </div>
-    {{ render(controller('AppBundle:Main:getBlockLastview')) }}
+    <div class="main">
+        {{ render(controller('AppBundle:Main:getBlockLastview')) }}
+    </div>
     {% include 'Main/seo.html.twig' %}
 {% endblock %}
