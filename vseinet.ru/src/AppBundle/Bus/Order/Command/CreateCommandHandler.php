@@ -5,9 +5,6 @@ namespace AppBundle\Bus\Order\Command;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\OrderType;
 use AppBundle\Enum\OrderTypeCode;
-use AppBundle\Entity\GeoPoint;
-use AppBundle\Entity\DiscountCode;
-use AppBundle\Entity\FinancialCounteragent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CreateCommandHandler extends MessageHandler
@@ -50,7 +47,7 @@ class CreateCommandHandler extends MessageHandler
             throw new BadRequestHttpException('Указан не существующий тип заказа');
         }
 
-        $params =[
+        $params = [
             'typeCode' => $typeCode,
             'client' => $command->client,
             'address' => $command->address,
@@ -73,7 +70,7 @@ class CreateCommandHandler extends MessageHandler
         ];
 
         try {
-            $id = $api->post('/api/v1/orders/', [], $params);
+            $id = $api->post('/v1/orders/', [], $params);
         } catch (BadRequestHttpException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
