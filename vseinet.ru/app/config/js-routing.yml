@@ -16,4 +16,5 @@ fos_js_routing:
         - 'error_report'
         - 'order_status'
         - 'cart_set_quantity'
+        - 'product_get_price'
         - 'admin_*'

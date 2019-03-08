@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Controller;
 
@@ -9,6 +9,7 @@ use AppBundle\Annotation as VIA;
 use AppBundle\Entity\BaseProduct;
 use AdminBundle\Bus\Product\Command;
 use AdminBundle\Bus\Product\Form;
+use AdminBundle\Bus\Product\Query;
 
 /**
  * @Security("is_granted('ROLE_EMPLOYEE')")
@@ -30,7 +31,7 @@ class ProductController extends Controller
         ];
         $this->get('user.api.client')->patch($url, [], $body);
 
-        return $this->json([]); 
+        return $this->json([]);
     }
 
     /**
@@ -59,7 +60,6 @@ class ProductController extends Controller
                     $this->get('command_bus')->handle($command);
 
                     return $this->json([]);
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -76,5 +76,70 @@ class ProductController extends Controller
                 'command' => $command,
             ]),
         ]);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="product_set_price",
+     *     path="/products/{id}/price/",
+     *     methods={"GET", "POST"},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function setPriceAction(int $id, Request $request)
+    {
+        $command = new Command\SetPriceCommand(['id' => $id]);
+        $form = $this->createForm(Form\SetPriceFormType::class, $command);
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle($command);
+
+                    return $this->json([]);
+                } catch (ValidationException $e) {
+                    $this->AddFormErrors($e->getAsArray());
+                }
+            }
+
+            return $this->json([
+                'errors' => $this->getFormErrors($form),
+            ]);
+        }
+
+        return $this->json([
+            'html' => $this->renderView('@Admin/Product/set_price_form.html.twig', [
+                'form' => $form->createView(),
+                'command' => $command,
+            ]),
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="product_reset_price",
+     *     path="/products/{id}/reset/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function resetPriceAction(int $id)
+    {
+        $this->get('command_bus')->handle(new Command\ResetPriceCommand(['id' => $id]));
+
+        return $this->json([]);
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="product_get_price",
+     *     path="/products/{id}/get/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function getAction(int $id)
+    {
+        $product = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
+
+        return $this->json(['product' => $product]);
     }
 }
