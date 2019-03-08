@@ -8,7 +8,7 @@ $(function() {
         if (data) {
             source = JSON.parse(data);
             if ('undefined' == typeof source.expired || (+new Date()) > source.expired) {
-                localStorage.removeItem('product-merge'); 
+                localStorage.removeItem('product-merge');
             }
             else {
                 var $product = document.querySelector('#product-' + source.id);
@@ -23,7 +23,7 @@ $(function() {
             var recipient = {
                 id: $product.dataset.id,
                 sku: $product.querySelector('.title .sku').textContent.trim(),
-                name: $product.querySelector('.title a, .title h1').textContent.trim()   
+                name: $product.querySelector('.title a, .title h1').textContent.trim()
             };
             if (source) {
                 if (source.id == recipient.id) {
@@ -48,7 +48,7 @@ $(function() {
                             $product.classList.remove('loading');
                             localStorage.removeItem('product-merge');
                             localStorage.removeItem('product-merge-done', source.id);
-                            source = null;  
+                            source = null;
                         });
                     }
                 }
@@ -120,8 +120,8 @@ $(function() {
                         }
                     });
                 });
-            }           
-        }); 
+            }
+        });
     });
 
     // info pane
@@ -144,7 +144,7 @@ $(function() {
                 sp.get(Routing.generate('admin_reserves'), { baseProductId: panel.data('id') }).then(function(response) {
                     reserves.html(response.html).removeClass('loading');
                 });
-            } 
+            }
 
             var revisions = pane.find('.competitor-revisions');
             if (revisions.is('.loading')) {
@@ -161,9 +161,9 @@ $(function() {
     // supplier remains
     container.on('click', '.admin-panel .supplier-unlink', function(e) {
         e.preventDefault();
-        sp.post(this.href, { 
-            baseProductId: this.closest('.admin-panel').dataset.id, 
-            supplierProductId: this.dataset.id 
+        sp.post(this.href, {
+            baseProductId: this.closest('.admin-panel').dataset.id,
+            supplierProductId: this.dataset.id
         }).then(function(response) {
             e.target.style.display = 'none';
             e.target.nextElementSibling.style.display = 'inline-block';
@@ -171,9 +171,9 @@ $(function() {
     });
     container.on('click', '.admin-panel .supplier-restore', function(e) {
         e.preventDefault();
-        sp.post(this.href, { 
-            baseProductId: this.closest('.admin-panel').dataset.id, 
-            supplierProductId: this.dataset.id 
+        sp.post(this.href, {
+            baseProductId: this.closest('.admin-panel').dataset.id,
+            supplierProductId: this.dataset.id
         }).then(function(response) {
             e.target.style.display = 'none';
             e.target.previousElementSibling.style.display = 'inline-block';
@@ -181,8 +181,8 @@ $(function() {
     });
     container.on('click', '.admin-panel .supplier-set-not-available', function(e) {
         e.preventDefault();
-        sp.post(this.href, { 
-            supplierProductId: this.dataset.id 
+        sp.post(this.href, {
+            supplierProductId: this.dataset.id
         }).then(function(response) {
             e.target.closest('.supplier-product').querySelector('.supplier-availability').style.color = 'red';
             e.target.remove();
@@ -241,4 +241,42 @@ $(function() {
             e.target.remove();
         });
     });
+
+    // prices
+    container.on('click', '.set-price', function(e) {
+        e.preventDefault();
+        var a = $(this);
+        sp.openAjaxDialog(a, {
+            dialog: {
+                minWidth: 600,
+                title: 'Установить ручную цену'
+            },
+            load: function() {
+                var dialog = this;
+                var form = dialog.find('form').submit(function(e) {
+                    e.preventDefault();
+                    sp.post(form.prop('action'), form.serializeArray()).then(function() {
+                        dialog.dialog('close');
+                        container.find('.price-wrapper').addClass('loading');
+                        setTimeout(getProduct, 4);
+                    });
+                });
+            }
+        });
+    });
+    container.on('click', '.reset-price', function(e) {
+        e.preventDefault();
+        container.find('.price-wrapper').addClass('loading');
+        var a = $(this);
+        sp.post(a.prop('href')).then(function() {
+            setTimeout(getProduct, 4);
+        });
+    });
+    function getProduct() {
+        sp.get(Routing.generate('product_get_price', { id: +container.data('id') })).then(function(response) {
+            container.find('.price-value').html(response.product.price.formatPrice());
+            container.find('.reset-price').css('display', response.product.isManualPrice ? 'inline-block' : 'none');
+            container.find('.price-wrapper').removeClass('loading');
+        });
+    }
 });

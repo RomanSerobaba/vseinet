@@ -16,8 +16,25 @@
             itemscope
             itemtype="http://schema.org/Offer"
         >
-            <span>{{ product.price|price_format }}</span>
+            {% if app.userIsEmployee %}
+                <a
+                    href="{{ path('product_set_price', { id: product.id }) }}"
+                    class="icon set-price"
+                    title="Установить ручную цену"
+                >
+                </a>
+            {% endif %}
+            <span class="price-value">{{ product.price|price_format }}</span>
             <span class="RUR">Р</span>
+            {% if app.userIsEmployee %}
+                <a
+                    href="{{ path('product_reset_price', { id: product.id }) }}"
+                    class="icon reset-price"
+                    {% if not product.manualPrice %}style="display:none"{% endif %}
+                    title="Сбросить ручную цену"
+                >
+                </a>
+            {% endif %}
             <meta itemprop="price" content="{{ product.price|price_format({ ts: '' }) }}" />
             <meta itemprop="priceCurrency" content="RUB" />
             <meta

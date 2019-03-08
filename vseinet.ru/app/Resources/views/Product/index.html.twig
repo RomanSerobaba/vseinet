@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block meta %}
-    {% if not product.isCanonical %}
-        <link rel="canonical" href="{{ path('catalog_product', { id: product.id }) }}">
+    {% if not product.canonicalId != product.id %}
+        <link rel="canonical" href="{{ path('catalog_product', { id: product.canonicalId }) }}">
     {% endif %}
 {% endblock %}
 
@@ -33,20 +33,20 @@
             {% endif %}
         </div>
         <div class="title">
-            <h1 itemprop="name">{{ product.name }}</h1> 
+            <h1 itemprop="name">{{ product.name }}</h1>
             <small>Код товара: <b itemprop="sku" class="sku">{{ product.id }}</b></small>
         </div>
-        <div id="product">
+        <div id="product" data-id="{{ product.id }}">
             <div class="row clearfix">
                 <div class="coll-md-5 coll-sm-6">
                     <div class="image">
                         {% set image = images[0]|default(null) %}
                         <img
-                            {% if image %}itemprop="image"{% endif %} 
+                            {% if image %}itemprop="image"{% endif %}
                             src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_LG')) }}"
-                            title="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
-                            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
-                            data-index="0" 
+                            title="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            data-index="0"
                         />
                         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
                             <strong class="discount_big">-{{ product.price|discount_percent }}%</strong>
@@ -55,11 +55,11 @@
                     {% if 1 < images|length %}
                         <div class="gallery">
                             {% for index, image in images %}
-                                <img 
-                                    src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" 
-                                    alt="Фото № {{ index }}" 
+                                <img
+                                    src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                                    alt="Фото № {{ index }}"
                                     data-index="{{ index }}"
-                                    {% if 0 == index %}class="current"{% endif %} 
+                                    {% if 0 == index %}class="current"{% endif %}
                                 />
                             {% endfor %}
                         </div>
