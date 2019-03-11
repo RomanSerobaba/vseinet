@@ -113,15 +113,6 @@ class BaseProduct
     private $supplierAvailabilityCode;
 
     /**
-     * @deprecated
-     *
-     * @var int
-     *
-     * @ORM\Column(name="free_reserve", type="integer")
-     */
-    private $freeReserve;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="rating", type="integer")
@@ -141,6 +132,20 @@ class BaseProduct
      * @ORM\Column(name="old_id", type="integer")
      */
     private $oldId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="vat", type="integer")
+     */
+    private $vat;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="price_retail_min", type="integer")
+     */
+    private $priceRetailMin;
 
     /**
      * Get id.
@@ -389,7 +394,7 @@ class BaseProduct
      */
     public function getSupplierId()
     {
-        return $this->supplierPrice;
+        return $this->supplierId;
     }
 
     /**
@@ -465,32 +470,6 @@ class BaseProduct
     }
 
     /**
-     * @deprecated
-     * Set freeReserve
-     *
-     * @param string $freeReserve
-     *
-     * @return SupplierProduct
-     */
-    public function setFreeReserve($freeReserve)
-    {
-        $this->freeReserve = $freeReserve;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     * Get freeReserve
-     *
-     * @return string
-     */
-    public function getFreeReserve()
-    {
-        return $this->freeReserve;
-    }
-
-    /**
      * Set rating.
      *
      * @param int $rating
@@ -560,5 +539,53 @@ class BaseProduct
     public function getOldId()
     {
         return $this->oldId;
+    }
+
+    /**
+     * Set vat.
+     *
+     * @param int $vat
+     *
+     * @return BaseProduct
+     */
+    public function setVat($vat)
+    {
+        $this->vat = $vat;
+
+        return $this;
+    }
+
+    /**
+     * Get vat.
+     *
+     * @return int
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * Set priceRetailMin.
+     *
+     * @param int $priceRetailMin
+     *
+     * @return BaseProduct
+     */
+    public function setPriceRetailMin($priceRetailMin)
+    {
+        $this->priceRetailMin = $priceRetailMin;
+
+        return $this;
+    }
+
+    /**
+     * Get priceRetailMin.
+     *
+     * @return int
+     */
+    public function getPriceRetailMin()
+    {
+        return $this->priceRetailMin;
     }
 }
