@@ -14,9 +14,9 @@ class GetProductsQueryHandler extends MessageHandler
                     bp.id,
                     bp.name,
                     bpi.basename,
-                    COALESCE(p.productAvailabilityCode, p2.productAvailabilityCode),
-                    COALESCE(p.price, p2.price),
-                    COALESCE(p.priceType, p2.priceType),
+                    COALESCE(p.productAvailabilityCode, p0.productAvailabilityCode),
+                    COALESCE(p.price, p0.price),
+                    COALESCE(p.priceType, p0.priceType),
                     bpd.shortDescription,
                     bp.minQuantity,
                     bp.updatedAt
@@ -24,12 +24,12 @@ class GetProductsQueryHandler extends MessageHandler
             FROM AppBundle:BaseProduct bp
             INNER JOIN AppBundle:BaseProductData bpd WITH bpd.baseProductId = bp.id
             LEFT JOIN AppBundle:Product p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
-            INNER JOIN AppBundle:Product p2 WITH p2.baseProductId = bp.id
-            LEFT OUTER JOIN AppBundle:BaseProductImage bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND p2.geoCityId = 0
+            INNER JOIN AppBundle:Product p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0
+            LEFT OUTER JOIN AppBundle:BaseProductImage bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
             WHERE bp.id IN (:ids)
         ");
         $q->setParameter('ids', $query->ids);
-        $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+        $q->setParameter('geoCityId', $this->getGeoCity()->getId());
         $products = $q->getResult('IndexByHydrator');
 
         $sorted = [];

@@ -442,7 +442,7 @@ class QueryBuilder extends ContainerAware
      */
     public function getCriteriaIsAlive(): string
     {
-        return 'is_forbidden = 0';
+        return 'is_forbidden = 0 AND killbill = 0';
     }
 
     /**
