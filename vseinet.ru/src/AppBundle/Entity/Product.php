@@ -5,29 +5,13 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Product
+ * Product.
  *
  * @ORM\Table(name="product")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
  */
 class Product
 {
-
-    const PRODUCT_AVAILABILITY_CODE_OUT_OF_STOCK = 'out_of_stock';
-    const PRODUCT_AVAILABILITY_CODE_ON_DEMAND = 'on_demand';
-    const PRODUCT_AVAILABILITY_CODE_IN_TRANSIT = 'in_transit';
-    const PRODUCT_AVAILABILITY_CODE_AVAILABLE = 'available';
-
-    const PRICE_TYPE_STANDARD = 'standard';
-    const PRICE_TYPE_PRICELIST = 'pricelist';
-    const PRICE_TYPE_COMPARED = 'compared';
-    const PRICE_TYPE_RECOMMENDED = 'recommended';
-    const PRICE_TYPE_MANUAL = 'manual';
-    const PRICE_TYPE_ULTIMATE = 'ultimate';
-    const PRICE_TYPE_TEMPORARY = 'temporary';
-    const PRICE_TYPE_SELLOUT = 'sellout';
-    const PRICE_TYPE_ORDERED = 'ordered';
-
     /**
      * @var int
      *
@@ -98,37 +82,9 @@ class Product
     /**
      * @var int
      *
-     * @ORM\Column(name="manual_price_operated_by", type="integer", nullable=true)
-     */
-    private $manualPriceOperatedBy;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="manual_price_operated_at", type="datetime", nullable=true)
-     */
-    private $manualPriceOperatedAt;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="ultimate_price", type="integer", nullable=true)
      */
     private $ultimatePrice;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="ultimate_price_operated_by", type="integer", nullable=true)
-     */
-    private $ultimatePriceOperatedBy;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="ultimate_price_operated_at", type="datetime", nullable=true)
-     */
-    private $ultimatePriceOperatedAt;
 
     /**
      * @var int
@@ -145,39 +101,16 @@ class Product
     private $temporaryPrice;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="temporary_price_operated_at", type="datetime", nullable=true)
-     */
-    private $temporaryPriceOperatedAt;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="temporary_price_operated_by", type="integer", nullable=true)
-     */
-    private $temporaryPriceOperatedBy;
-
-    /**
-     * @deprecated
-     * @var int
-     *
-     * @ORM\Column(name="rating", type="integer")
-     */
-    private $rating;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="profit", type="integer")
      */
     private $profit;
 
-
     /**
-     * Set baseProductId
+     * Set baseProductId.
      *
-     * @param integer $baseProductId
+     * @param int $baseProductId
      *
      * @return Product
      */
@@ -189,7 +122,7 @@ class Product
     }
 
     /**
-     * Get baseProductId
+     * Get baseProductId.
      *
      * @return int
      */
@@ -199,9 +132,9 @@ class Product
     }
 
     /**
-     * Set geoCityId
+     * Set geoCityId.
      *
-     * @param integer $geoCityId
+     * @param int $geoCityId
      *
      * @return Product
      */
@@ -213,7 +146,7 @@ class Product
     }
 
     /**
-     * Get geoCityId
+     * Get geoCityId.
      *
      * @return int
      */
@@ -223,7 +156,7 @@ class Product
     }
 
     /**
-     * Set productAvailabilityCode
+     * Set productAvailabilityCode.
      *
      * @param string $productAvailabilityCode
      *
@@ -237,7 +170,7 @@ class Product
     }
 
     /**
-     * Get productAvailabilityCode
+     * Get productAvailabilityCode.
      *
      * @return string
      */
@@ -247,9 +180,9 @@ class Product
     }
 
     /**
-     * Set price
+     * Set price.
      *
-     * @param integer $price
+     * @param int $price
      *
      * @return Product
      */
@@ -261,7 +194,7 @@ class Product
     }
 
     /**
-     * Get price
+     * Get price.
      *
      * @return int
      */
@@ -271,7 +204,7 @@ class Product
     }
 
     /**
-     * Set priceType
+     * Set priceType.
      *
      * @param string $priceType
      *
@@ -285,7 +218,7 @@ class Product
     }
 
     /**
-     * Get priceType
+     * Get priceType.
      *
      * @return string
      */
@@ -295,7 +228,7 @@ class Product
     }
 
     /**
-     * Set priceTime
+     * Set priceTime.
      *
      * @param \DateTime $priceTime
      *
@@ -309,7 +242,7 @@ class Product
     }
 
     /**
-     * Get priceTime
+     * Get priceTime.
      *
      * @return \DateTime
      */
@@ -319,9 +252,9 @@ class Product
     }
 
     /**
-     * Set discountAmount
+     * Set discountAmount.
      *
-     * @param integer $discountAmount
+     * @param int $discountAmount
      *
      * @return Product
      */
@@ -333,7 +266,7 @@ class Product
     }
 
     /**
-     * Get discountAmount
+     * Get discountAmount.
      *
      * @return int
      */
@@ -343,7 +276,7 @@ class Product
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -357,7 +290,7 @@ class Product
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -367,9 +300,9 @@ class Product
     }
 
     /**
-     * Set manualPrice
+     * Set manualPrice.
      *
-     * @param integer $manualPrice
+     * @param int $manualPrice
      *
      * @return Product
      */
@@ -381,7 +314,7 @@ class Product
     }
 
     /**
-     * Get manualPrice
+     * Get manualPrice.
      *
      * @return int
      */
@@ -391,57 +324,9 @@ class Product
     }
 
     /**
-     * Set manualPriceOperatedBy
+     * Set ultimatePrice.
      *
-     * @param integer $manualPriceOperatedBy
-     *
-     * @return Product
-     */
-    public function setManualPriceOperatedBy($manualPriceOperatedBy)
-    {
-        $this->manualPriceOperatedBy = $manualPriceOperatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get manualPriceOperatedBy
-     *
-     * @return int
-     */
-    public function getManualPriceOperatedBy()
-    {
-        return $this->manualPriceOperatedBy;
-    }
-
-    /**
-     * Set manualPriceOperatedAt
-     *
-     * @param \DateTime $manualPriceOperatedAt
-     *
-     * @return Product
-     */
-    public function setManualPriceOperatedAt($manualPriceOperatedAt)
-    {
-        $this->manualPriceOperatedAt = $manualPriceOperatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get manualPriceOperatedAt
-     *
-     * @return \DateTime
-     */
-    public function getManualPriceOperatedAt()
-    {
-        return $this->manualPriceOperatedAt;
-    }
-
-    /**
-     * Set ultimatePrice
-     *
-     * @param integer $ultimatePrice
+     * @param int $ultimatePrice
      *
      * @return Product
      */
@@ -453,7 +338,7 @@ class Product
     }
 
     /**
-     * Get ultimatePrice
+     * Get ultimatePrice.
      *
      * @return int
      */
@@ -463,57 +348,9 @@ class Product
     }
 
     /**
-     * Set ultimatePriceOperatedBy
+     * Set competitorPrice.
      *
-     * @param integer $ultimatePriceOperatedBy
-     *
-     * @return Product
-     */
-    public function setUltimatePriceOperatedBy($ultimatePriceOperatedBy)
-    {
-        $this->ultimatePriceOperatedBy = $ultimatePriceOperatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get ultimatePriceOperatedBy
-     *
-     * @return int
-     */
-    public function getUltimatePriceOperatedBy()
-    {
-        return $this->ultimatePriceOperatedBy;
-    }
-
-    /**
-     * Set ultimatePriceOperatedAt
-     *
-     * @param \DateTime $ultimatePriceOperatedAt
-     *
-     * @return Product
-     */
-    public function setUltimatePriceOperatedAt($ultimatePriceOperatedAt)
-    {
-        $this->ultimatePriceOperatedAt = $ultimatePriceOperatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get ultimatePriceOperatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUltimatePriceOperatedAt()
-    {
-        return $this->ultimatePriceOperatedAt;
-    }
-
-    /**
-     * Set competitorPrice
-     *
-     * @param integer $competitorPrice
+     * @param int $competitorPrice
      *
      * @return Product
      */
@@ -525,7 +362,7 @@ class Product
     }
 
     /**
-     * Get competitorPrice
+     * Get competitorPrice.
      *
      * @return int
      */
@@ -535,9 +372,9 @@ class Product
     }
 
     /**
-     * Set temporaryPrice
+     * Set temporaryPrice.
      *
-     * @param integer $temporaryPrice
+     * @param int $temporaryPrice
      *
      * @return Product
      */
@@ -549,7 +386,7 @@ class Product
     }
 
     /**
-     * Get temporaryPrice
+     * Get temporaryPrice.
      *
      * @return int
      */
@@ -559,83 +396,9 @@ class Product
     }
 
     /**
-     * Set temporaryPriceOperatedAt
+     * Set profit.
      *
-     * @param \DateTime $temporaryPriceOperatedAt
-     *
-     * @return Product
-     */
-    public function setTemporaryPriceOperatedAt($temporaryPriceOperatedAt)
-    {
-        $this->temporaryPriceOperatedAt = $temporaryPriceOperatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get temporaryPriceOperatedAt
-     *
-     * @return \DateTime
-     */
-    public function getTemporaryPriceOperatedAt()
-    {
-        return $this->temporaryPriceOperatedAt;
-    }
-
-    /**
-     * Set temporaryPriceOperatedBy
-     *
-     * @param integer $temporaryPriceOperatedBy
-     *
-     * @return Product
-     */
-    public function setTemporaryPriceOperatedBy($temporaryPriceOperatedBy)
-    {
-        $this->temporaryPriceOperatedBy = $temporaryPriceOperatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get temporaryPriceOperatedBy
-     *
-     * @return int
-     */
-    public function getTemporaryPriceOperatedBy()
-    {
-        return $this->temporaryPriceOperatedBy;
-    }
-
-    /**
-     * @deprecated
-     * Set rating
-     *
-     * @param integer $rating
-     *
-     * @return Product
-     */
-    public function setRating($rating)
-    {
-        $this->rating = $rating;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     * Get rating
-     *
-     * @return int
-     */
-    public function getRating()
-    {
-        return $this->rating;
-    }
-
-    /**
-     * Set profit
-     *
-     * @param integer $profit
+     * @param int $profit
      *
      * @return Product
      */
@@ -647,7 +410,7 @@ class Product
     }
 
     /**
-     * Get profit
+     * Get profit.
      *
      * @return int
      */
