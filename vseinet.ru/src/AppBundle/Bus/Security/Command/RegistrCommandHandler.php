@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Security\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Doctrine\ORM\NoResultException;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use AppBundle\Enum\ContactTypeCode;
 use AppBundle\Entity\Contact;
 use AppBundle\Entity\Person;
@@ -28,52 +28,42 @@ class RegistrCommandHandler extends MessageHandler
                 $command->mobile = substr($command->mobile, 1);
             }
             if (10 !== strlen($commnad->mobile) || '9' !== $command->mobile[0]) {
-                throw new ValidationException([
-                    'mobile' => 'Неверный формат мобильного телефона',
-                ]);
+                throw new ValidationException('mobile', 'Неверный формат мобильного телефона');
             }
-            $q = $em->createQuery("
+            $q = $em->createQuery('
                 SELECT c
                 FROM AppBundle:Contact AS c
-                WHERE c.contactTypeCode = :type AND c.value = :value 
-            ");
+                WHERE c.contactTypeCode = :type AND c.value = :value
+            ');
             $q->setParameter('type', ContactTypeCode::MOBILE);
             $q->setParameter('value', $command->mobile);
             try {
                 $q->getSingleResult();
-                throw new ValidationException([
-                    'mobile' => 'Пользователь с указанным телефоном уже существует',
-                ]);
+                throw new ValidationException('mobile', 'Пользователь с указанным телефоном уже существует');
             } catch (NoResultException $e) {
             }
         }
 
-        $q = $em->createQuery("
+        $q = $em->createQuery('
             SELECT c
             FROM AppBundle:Contact AS c
-            WHERE c.contactTypeCode = :type AND c.value = :value    
-        ");
+            WHERE c.contactTypeCode = :type AND c.value = :value
+        ');
         $q->setParameter('type', ContactTypeCode::EMAIL);
         $q->setParameter('value', $command->email);
         try {
             $q->getSingleResult();
-            throw new ValidationException([
-                'email' => 'Пользователь с указанным E-mail  уже существует',
-            ]);
+            throw new ValidationException('email', 'Пользователь с указанным E-mail  уже существует');
         } catch (NoResultException $e) {
         }
 
         if ($command->password !== $command->passwordConfirm) {
-            throw new ValidationException([
-                'passwordConfirm' => 'Пароли не совпадают',
-            ]);
+            throw new ValidationException('passwordConfirm', 'Пароли не совпадают');
         }
 
         $city = $em->getRepository(GeoCity::class)->findOneBy(['name' => $command->city]);
         if (!$city instanceof GeoCity) {
-            throw new ValidationException([
-                'city' => 'Город не найден',
-            ]);
+            throw new ValidationException('city', 'Город не найден');
         }
 
         $person = new Person();
@@ -112,7 +102,7 @@ class RegistrCommandHandler extends MessageHandler
         $u2sr->setUserId($user->getId());
         $u2sr->setSubroleId($subrole->getId());
         $em->persist($u2sr);
- 
+
         $contact = new Contact();
         $contact->setPersonId($person->getId());
         $contact->setValue($command->mobile);
@@ -142,10 +132,9 @@ class RegistrCommandHandler extends MessageHandler
                     $contact->setIsMain(false);
                     $em->persist($contact);
                 }
-                
             }
         }
-        
+
         $em->flush();
     }
 }

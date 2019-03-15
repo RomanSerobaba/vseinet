@@ -4,18 +4,17 @@ namespace AppBundle\Bus\User\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\ContactTypeCode;
-use AppBundle\Repository\ContactTypeRepository;
 
 class SearchQueryHandler extends MessageHandler
 {
     public function handle(SearchQuery $query)
     {
         if ('phone' == $query->field) {
-            $where = "mobile.value LIKE :phone";
+            $where = 'mobile.value LIKE :phone';
             $parameters = ['phone' => $query->q.'%'];
         } else {
             $where = "(LOWER(p.lastname) LIKE LOWER(:lastname) OR LOWER(CONCAT_WS(' ', p.lastname, p.firstname, p.secondname)) LIKE LOWER(:fullname))";
-            $parameters = ['lastname' => $query->q.'%', 'fullname' => '%'.$query->q.'%',];
+            $parameters = ['lastname' => $query->q.'%', 'fullname' => '%'.$query->q.'%'];
         }
 
         $q = $this->getDoctrine()->getManager()->createQuery("
@@ -23,12 +22,12 @@ class SearchQueryHandler extends MessageHandler
                 NEW AppBundle\Bus\User\Query\DTO\FoundUser (
                     u.id,
                     CONCAT_WS(' ', p.lastname, p.firstname, p.secondname),
-                    (
+                    FIRST(
                         SELECT mobile.value
                         FROM AppBundle:Contact AS mobile
                         WHERE p.id = mobile.personId AND mobile.contactTypeCode = :contactTypeCode_MOBILE AND mobile.isMain = TRUE
                     ),
-                    (
+                    FIRST(
                         SELECT email.value
                         FROM AppBundle:Contact AS email
                         WHERE p.id = email.personId AND email.contactTypeCode = :contactTypeCode_EMAIL AND email.isMain = TRUE
@@ -56,10 +55,10 @@ class SearchQueryHandler extends MessageHandler
 
         if (count($users) < $query->limit) {
             if ('phone' == $query->field) {
-                $where = "cu.phone LIKE :phone";
+                $where = 'cu.phone LIKE :phone';
                 $parameters = ['phone' => $query->q.'%'];
             } else {
-                $where = "LOWER(cu.fullname) LIKE LOWER(:fullname)";
+                $where = 'LOWER(cu.fullname) LIKE LOWER(:fullname)';
                 $parameters = ['fullname' => '%'.$query->q.'%'];
             }
 

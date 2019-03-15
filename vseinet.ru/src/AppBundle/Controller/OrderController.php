@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
@@ -53,7 +53,7 @@ class OrderController extends Controller
                         ]);
                     }
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
 
@@ -200,7 +200,7 @@ class OrderController extends Controller
 
                     return $this->redirectToRoute('order_created_page', ['id' => $command->id]);
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 } catch (ApiClientException $e) {
                     $paramErrors = $e->getParamErrors();
 

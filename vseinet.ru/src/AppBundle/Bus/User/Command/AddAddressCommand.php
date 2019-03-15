@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Command;
 
@@ -13,10 +13,26 @@ class AddAddressCommand extends Message
     public $id;
 
     /**
-     * @Assert\NotBlank(message="Введите адрес")
+     * @Assert\NotBlank(message="Выберите город")
      * @Assert\Type(type="string")
      */
-    public $address;
+    public $geoCityName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
+
+    /**
+     * @Assert\NotBlank(message="Выберите улицу")
+     * @Assert\Type(type="string")
+     */
+    public $geoStreetName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoStreetId;
 
     /**
      * @Assert\NotBlank(message="Введите номер дома")
@@ -55,18 +71,13 @@ class AddAddressCommand extends Message
      */
     public $isMain;
 
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $variant;
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = (int) $geoCityId ?: null;
+    }
 
-    /**
-     * @Assert\Type(type="array")
-     */
-    public $variants;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $structuredAddress;
+    public function setGeoStreetId($geoStreetId)
+    {
+        $this->geoStreetId = (int) $geoStreetId ?: null;
+    }
 }

@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BaseProduct
+ * BaseProduct.
  *
  * @ORM\Table(name="base_product")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BaseProductRepository")
@@ -113,14 +113,6 @@ class BaseProduct
     private $supplierAvailabilityCode;
 
     /**
-     * @deprecated
-     * @var int
-     *
-     * @ORM\Column(name="free_reserve", type="integer")
-     */
-    private $freeReserve;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="rating", type="integer")
@@ -130,9 +122,9 @@ class BaseProduct
     /**
      * @var int
      *
-     * @ORM\Column(name="cannonical_id", type="integer")
+     * @ORM\Column(name="canonical_id", type="integer")
      */
-    private $cannonicalId;
+    private $canonicalId;
 
     /**
      * @var int
@@ -142,7 +134,21 @@ class BaseProduct
     private $oldId;
 
     /**
-     * Get id
+     * @var int
+     *
+     * @ORM\Column(name="vat", type="integer")
+     */
+    private $vat;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="price_retail_min", type="integer")
+     */
+    private $priceRetailMin;
+
+    /**
+     * Get id.
      *
      * @return int
      */
@@ -152,7 +158,7 @@ class BaseProduct
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -166,7 +172,7 @@ class BaseProduct
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -176,9 +182,9 @@ class BaseProduct
     }
 
     /**
-     * Set categoryId
+     * Set categoryId.
      *
-     * @param integer $categoryId
+     * @param int $categoryId
      *
      * @return BaseProduct
      */
@@ -190,7 +196,7 @@ class BaseProduct
     }
 
     /**
-     * Get categoryId
+     * Get categoryId.
      *
      * @return int
      */
@@ -200,9 +206,9 @@ class BaseProduct
     }
 
     /**
-     * Set sectionId
+     * Set sectionId.
      *
-     * @param integer $sectionId
+     * @param int $sectionId
      *
      * @return BaseProduct
      */
@@ -214,7 +220,7 @@ class BaseProduct
     }
 
     /**
-     * Get sectionId
+     * Get sectionId.
      *
      * @return int
      */
@@ -224,9 +230,9 @@ class BaseProduct
     }
 
     /**
-     * Set brandId
+     * Set brandId.
      *
-     * @param integer $brandId
+     * @param int $brandId
      *
      * @return BaseProduct
      */
@@ -238,7 +244,7 @@ class BaseProduct
     }
 
     /**
-     * Get brandId
+     * Get brandId.
      *
      * @return int
      */
@@ -248,9 +254,9 @@ class BaseProduct
     }
 
     /**
-     * Set colorCompositeId
+     * Set colorCompositeId.
      *
-     * @param integer $colorCompositeId
+     * @param int $colorCompositeId
      *
      * @return BaseProduct
      */
@@ -262,7 +268,7 @@ class BaseProduct
     }
 
     /**
-     * Get colorCompositeId
+     * Get colorCompositeId.
      *
      * @return int
      */
@@ -272,7 +278,7 @@ class BaseProduct
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -286,7 +292,7 @@ class BaseProduct
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -296,7 +302,7 @@ class BaseProduct
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -310,7 +316,7 @@ class BaseProduct
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -320,9 +326,9 @@ class BaseProduct
     }
 
     /**
-     * Set minQuantity
+     * Set minQuantity.
      *
-     * @param integer $minQuantity
+     * @param int $minQuantity
      *
      * @return BaseProduct
      */
@@ -334,7 +340,7 @@ class BaseProduct
     }
 
     /**
-     * Get minQuantity
+     * Get minQuantity.
      *
      * @return int
      */
@@ -344,9 +350,9 @@ class BaseProduct
     }
 
     /**
-     * Set estimate
+     * Set estimate.
      *
-     * @param integer $estimate
+     * @param int $estimate
      *
      * @return BaseProduct
      */
@@ -358,7 +364,7 @@ class BaseProduct
     }
 
     /**
-     * Get estimate
+     * Get estimate.
      *
      * @return int
      */
@@ -368,9 +374,9 @@ class BaseProduct
     }
 
     /**
-     * Set supplierId
+     * Set supplierId.
      *
-     * @param integer $supplierId
+     * @param int $supplierId
      *
      * @return BaseProduct
      */
@@ -382,19 +388,19 @@ class BaseProduct
     }
 
     /**
-     * Get supplierId
+     * Get supplierId.
      *
      * @return int
      */
     public function getSupplierId()
     {
-        return $this->supplierPrice;
+        return $this->supplierId;
     }
 
     /**
-     * Set supplierPrice
+     * Set supplierPrice.
      *
-     * @param integer $supplierPrice
+     * @param int $supplierPrice
      *
      * @return BaseProduct
      */
@@ -406,7 +412,7 @@ class BaseProduct
     }
 
     /**
-     * Get supplierPrice
+     * Get supplierPrice.
      *
      * @return int
      */
@@ -416,9 +422,9 @@ class BaseProduct
     }
 
     /**
-     * Set isHidden
+     * Set isHidden.
      *
-     * @param boolean $isHidden
+     * @param bool $isHidden
      *
      * @return BaseProduct
      */
@@ -430,7 +436,7 @@ class BaseProduct
     }
 
     /**
-     * Get isHidden
+     * Get isHidden.
      *
      * @return bool
      */
@@ -440,7 +446,7 @@ class BaseProduct
     }
 
     /**
-     * Set supplierAvailabilityCode
+     * Set supplierAvailabilityCode.
      *
      * @param string $supplierAvailabilityCode
      *
@@ -454,7 +460,7 @@ class BaseProduct
     }
 
     /**
-     * Get supplierAvailabilityCode
+     * Get supplierAvailabilityCode.
      *
      * @return string
      */
@@ -464,35 +470,9 @@ class BaseProduct
     }
 
     /**
-     * @deprecated
-     * Set freeReserve
+     * Set rating.
      *
-     * @param string $freeReserve
-     *
-     * @return SupplierProduct
-     */
-    public function setFreeReserve($freeReserve)
-    {
-        $this->freeReserve = $freeReserve;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     * Get freeReserve
-     *
-     * @return string
-     */
-    public function getFreeReserve()
-    {
-        return $this->freeReserve;
-    }
-
-    /**
-     * Set rating
-     *
-     * @param integer $rating
+     * @param int $rating
      *
      * @return BaseProduct
      */
@@ -504,7 +484,7 @@ class BaseProduct
     }
 
     /**
-     * Get rating
+     * Get rating.
      *
      * @return int
      */
@@ -514,33 +494,33 @@ class BaseProduct
     }
 
     /**
-     * Set cannonicalId
+     * Set canonicalId.
      *
-     * @param integer $cannonicalId
+     * @param int $canonicalId
      *
      * @return BaseProduct
      */
-    public function setCannonicalId($cannonicalId)
+    public function setCanonicalId($canonicalId)
     {
-        $this->cannonicalId = $cannonicalId;
+        $this->canonicalId = $canonicalId;
 
         return $this;
     }
 
     /**
-     * Get cannonicalId
+     * Get canonicalId.
      *
      * @return int
      */
-    public function getCannonicalId()
+    public function getCanonicalId()
     {
-        return $this->cannonicalId;
+        return $this->canonicalId;
     }
 
     /**
-     * Set oldId
+     * Set oldId.
      *
-     * @param integer $oldId
+     * @param int $oldId
      *
      * @return BaseProduct
      */
@@ -552,7 +532,7 @@ class BaseProduct
     }
 
     /**
-     * Get oldId
+     * Get oldId.
      *
      * @return int
      */
@@ -560,5 +540,52 @@ class BaseProduct
     {
         return $this->oldId;
     }
-}
 
+    /**
+     * Set vat.
+     *
+     * @param int $vat
+     *
+     * @return BaseProduct
+     */
+    public function setVat($vat)
+    {
+        $this->vat = $vat;
+
+        return $this;
+    }
+
+    /**
+     * Get vat.
+     *
+     * @return int
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * Set priceRetailMin.
+     *
+     * @param int $priceRetailMin
+     *
+     * @return BaseProduct
+     */
+    public function setPriceRetailMin($priceRetailMin)
+    {
+        $this->priceRetailMin = $priceRetailMin;
+
+        return $this;
+    }
+
+    /**
+     * Get priceRetailMin.
+     *
+     * @return int
+     */
+    public function getPriceRetailMin()
+    {
+        return $this->priceRetailMin;
+    }
+}

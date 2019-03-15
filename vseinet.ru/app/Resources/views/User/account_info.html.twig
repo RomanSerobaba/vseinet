@@ -18,9 +18,9 @@
                 <dt>Пол:</dt>
                 <dd>{{ account.info.genderName }}</dd>
             {% endif %}
-            {% if account.info.cityName %}
+            {% if account.info.geoCityName %}
                 <dt>Город:</dt>
-                <dd>{{ account.info.cityName }}</dd>
+                <dd>{{ account.info.geoCityName }}</dd>
             {% endif %}
         </dl>
         <a href="{{ path('user_edit') }}" class="info-edit">Редактировать</a>

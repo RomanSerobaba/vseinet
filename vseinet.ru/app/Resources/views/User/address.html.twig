@@ -1,10 +1,6 @@
-<tr>
+<tr data-id="{{ address.id }}"{% if address.isMain %} class="main"{% endif %}>
     <td>
-        {% if address.structuredAddress is not empty %}
-            {{ address.structuredAddress }}
-        {% else %}
-            {{ address.address }}   
-        {% endif %}
+        {{ address.address }}
     </td>
     <td>
         {{ address.floor }}
@@ -15,13 +11,13 @@
         {% endif %}
     </td>
     <td>
-        <a 
-            href="{{ path('user_address_edit', { id: address.id }) }}" 
+        <a
+            href="{{ path('user_address_edit', { id: address.id }) }}"
             title="Редактировать"
             class="icon address-edit"
         ></a>
-        <a 
-            href="{{ path('user_address_delete', { id: address.id }) }}" 
+        <a
+            href="{{ path('user_address_delete', { id: address.id }) }}"
             title="Удалить"
             class="icon address-delete"
         ></a>

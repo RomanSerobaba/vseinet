@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\Competitor;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductToCompetitor;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 
 class AddRevisionCommandHandler extends MessageHandler
 {
@@ -16,10 +16,7 @@ class AddRevisionCommandHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         if (null === $command->link && null === $command->competitorPrice) {
-            throw new ValidationException([
-                'link' => 'Укажите ссылку или цену',
-                'competitorPrice' => 'Укажите ссылку или цену',
-            ]);
+            throw new ValidationException('link', 'Укажите ссылку или цену');
         }
 
         $competitor = $em->getRepository(Competitor::class)->find($command->competitorId);
@@ -34,7 +31,7 @@ class AddRevisionCommandHandler extends MessageHandler
             'baseProductId' => $command->baseProductId,
             'geoCityId' => [0, $geoCityId],
         ], [
-            'geoCity' => 'DESC',
+            'geoCityId' => 'DESC',
         ]);
         if (!$product instanceof Product) {
             throw new NotFoundHttpException(sprintf('Товар %d не найден', $command->baseProductId));

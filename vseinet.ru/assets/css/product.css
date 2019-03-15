@@ -4,16 +4,16 @@
     float: left;
     margin: 0 0 25px;
 }
-#product .image {    
+#product .image {
     cursor: -moz-zoom-in;
     cursor: -webkit-zoom-in;
-    cursor: zoom-in, pointer;    
+    cursor: zoom-in, pointer;
     height: 280px;
     margin: 0 0 37px;
     position: relative;
     text-align: center;
-    width: 360px; 
-    float: left; 
+    width: 360px;
+    float: left;
 }
 #product .gallery {
     float: right;
@@ -130,13 +130,13 @@
 }
 #product .sale {
     background: #f5f5f5 center 52px no-repeat;
-    border-radius: 6px 6px 2px 2px;    
+    border-radius: 6px 6px 2px 2px;
     margin: 0;
     text-align: center;
     width: 100%;
 }
 #product .sale .sale-btns{
-    text-align: center;    
+    text-align: center;
 }
 #product .sale .old_price {
     font-size: 18px;
@@ -201,12 +201,25 @@
 #product .sale.in-cart .bttn.green {
     border-radius: 0 0 2px 2px;
 }
+#product .icon {
+    border: none;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+#product .set-price {
+    background: url('../images/edit_small.png');
+    margin-right: 6px;
+}
+#product .reset-price {
+    background: url('../images/delete.png');
+}
 
 #product .delivery {
     border: 1px solid #dcdcde;
     border-radius: 6px;
-    position: relative; 
-    padding-bottom: 20px;   
+    position: relative;
+    padding-bottom: 20px;
 }
 #product .delivery DL {
     border-bottom: 1px solid #dcdcde;
@@ -301,12 +314,12 @@
     color: #2d8ae7;
     font-size: 14px;
     margin-bottom: 5px;
-    display: block;    
+    display: block;
 }
 #product .delivery + .help UL {
     font-size: 13px;
     font-weight: 700;
-    
+
 }
 #product .delivery + .help UL li{
     margin-bottom: 3px;
@@ -369,5 +382,5 @@
 }
 .product + .wrapper{
     overflow: hidden;
-    
+
 }

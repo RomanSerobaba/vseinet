@@ -5,10 +5,10 @@ namespace AppBundle\Bus\User\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\{ EmailType, TextType, HiddenType };
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use AppBundle\Form\Type\PhoneType;
 use AppBundle\Bus\User\Query\DTO\UserData;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class UserDataType extends AbstractType
 {
@@ -17,13 +17,11 @@ class UserDataType extends AbstractType
         $builder
             ->add('position', TextType::class, ['required' => false])
             ->add('fullname', TextType::class, ['required' => false])
-            ->add('phone', PhoneType::class, [
-                'required' => false])
-            ->add('additionalPhone', TextType::class, [
-                'required' => false])
+            ->add('phone', PhoneType::class, ['required' => false])
+            ->add('additionalPhone', TextType::class, ['required' => false])
             ->add('email', TextType::class, ['required' => false])
-            ->add('userId', HiddenType::class, ['required' => false])
-            ->add('comuserId', HiddenType::class, ['required' => false])
+            ->add('userId', HiddenType::class)
+            ->add('comuserId', HiddenType::class)
         ;
     }
 
