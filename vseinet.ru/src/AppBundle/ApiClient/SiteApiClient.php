@@ -47,7 +47,7 @@ class SiteApiClient extends BaseApiClient
     {
         $auth = $this->session->get('site.api.auth');
         if (null === $auth || $auth['expiresAt'] < new \DateTime()) {
-            $auth = $this->doRequest('POST', '/authorize/', [], ['publicId' => $this->publicId, 'secret' => $this->secret]);
+            $auth = $this->doRequest('POST', '/api/authorize/', [], ['publicId' => $this->publicId, 'secret' => $this->secret]);
             $auth['expiresAt'] = new \DateTime(sprintf('+%d seconds', $auth['expiresIn'] - 10));
 
             $this->session->set('site.api.auth', $auth);
