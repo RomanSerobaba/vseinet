@@ -70,7 +70,7 @@ class CreateCommandHandler extends MessageHandler
         ];
 
         try {
-            $id = $api->post('/v1/orders/', [], $params);
+            $id = $api->post('/api/v1/orders/', [], $params);
         } catch (BadRequestHttpException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
