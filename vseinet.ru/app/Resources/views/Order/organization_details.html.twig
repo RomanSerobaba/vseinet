@@ -15,7 +15,9 @@
             </div>
         </div>
         <div class="row h">
-            {{ form_label(form.organizationDetails.tin, 'ИНН:') }}
+            <label for="{{ form.organizationDetails.tin.vars.id }}">
+                ИНН: <b>*</b>
+            </label>
             {{ form_widget(form.organizationDetails.tin, { attr: { class: 'txt', maxlength: 12 }}) }}
             <span class="status"></span>
             {% if errors.organizationDetails.tin is defined %}
@@ -31,7 +33,9 @@
             {% endif %}
         </div>
         <div class="row h">
-            {{ form_label(form.organizationDetails.name, 'Наименование организации:') }}
+            <label for="{{ form.organizationDetails.name.vars.id }}">
+                Наименование организации: <b>*</b>
+            </label>
             {{ form_widget(form.organizationDetails.name, { attr: { class: 'txt' }}) }}
             <span class="status"></span>
             {% if errors.organizationDetails.name is defined %}

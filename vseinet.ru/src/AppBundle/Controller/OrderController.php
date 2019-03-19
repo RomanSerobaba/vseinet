@@ -181,7 +181,7 @@ class OrderController extends Controller
             if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
                 try {
                     $this->get('command_bus')->handle($command);
-                    // $this->forward('AppBundle:Cart:clear');
+                    $this->forward('AppBundle:Cart:clear');
                     $this->get('session')->remove('discountCode');
                     $this->get('session')->remove('form.orderCreation');
 

@@ -26,7 +26,7 @@
     {% endif %}
     <div class="filter">
         {# price #}
-        {% if features.price.min is not null and features.price.max is not null %}
+        {% if features.price is not null and features.price.min is not null and features.price.max is not null %}
             <div class="tab first price expanded">
                 <span class="filter-titles">Цена</span>
             </div>
