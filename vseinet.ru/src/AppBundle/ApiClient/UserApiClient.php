@@ -47,7 +47,7 @@ class UserApiClient extends BaseApiClient
 
             $headers = ['Content-Type' => 'application/json'];
 
-            $request = $this->factory->createRequest('GET', $this->apiHost.'/user/request/', $headers);
+            $request = $this->factory->createRequest('GET', $this->apiHost.'/api/user/request/', $headers);
             $response = $this->client->sendRequest($request);
             if (Response::HTTP_OK !== $response->getStatusCode()) {
                 throw new BadRequestHttpException($response->getReasonPhrase(), null, $response->getStatusCode());
@@ -64,7 +64,7 @@ class UserApiClient extends BaseApiClient
             $credentials = $this->session->get('credentials', []);
             $body = json_encode($credentials + ['clientId' => 1]);
 
-            $request = $cookies->withCookieHeader($this->factory->createRequest('POST', $this->apiHost.'/user/login/', $headers, $body));
+            $request = $cookies->withCookieHeader($this->factory->createRequest('POST', $this->apiHost.'/api/user/login/', $headers, $body));
             $response = $this->client->sendRequest($request);
             if (Response::HTTP_OK !== $response->getStatusCode()) {
                 throw new BadRequestHttpException($response->getReasonPhrase(), null, $response->getStatusCode());
