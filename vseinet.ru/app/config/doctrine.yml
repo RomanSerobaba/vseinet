@@ -56,7 +56,7 @@ doctrine:
                     category_tpl: string
                     goods_decision_type: string
                     notification_log_type: string
-        types: 
+        types:
             point: AppBundle\Doctrine\DBAL\Types\PointType
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
@@ -103,8 +103,3 @@ doctrine:
                         round:          AppBundle\Doctrine\ORM\Query\AST\RoundFunction
                         random:         AppBundle\Doctrine\ORM\Query\AST\RandomFunction
                         first:          AppBundle\Doctrine\ORM\Query\AST\FirstFunction
-
-                        
-doctrine_orm_bridge:
-    entity_manager: default
-    connection: default

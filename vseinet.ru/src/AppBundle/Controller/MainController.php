@@ -13,7 +13,6 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Competitor;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class MainController extends Controller
 {
@@ -51,7 +50,7 @@ class MainController extends Controller
      * @VIA\Route(
      *     name="cheaper_request",
      *     path="/cheaper/request/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -69,7 +68,7 @@ class MainController extends Controller
         $command->competitors = $em->getRepository(Competitor::class)->getActive();
 
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
             $command->geoCityId = $this->getGeoCity()->getId();
         }
         $form = $this->createForm(Form\CheaperRequestFormType::class, $command);
@@ -84,7 +83,6 @@ class MainController extends Controller
                     return $this->json([
                         'notice' => 'Ваш запрос отправлен',
                     ]);
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessages());
                 }
@@ -108,7 +106,7 @@ class MainController extends Controller
      * @VIA\Get(
      *     name="credit_calculators",
      *     path="/credit/calculators/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     condition="request.isXmlHttpRequest()"
      * )
      */
@@ -138,7 +136,7 @@ class MainController extends Controller
         $command = new Command\ComplaintCommand();
 
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
         }
         $form = $this->createForm(Form\ComplaintFormType::class, $command);
 
@@ -152,7 +150,6 @@ class MainController extends Controller
                     $this->addFlash('notice', 'Спасибо за Ваше сообщение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');
 
                     return $this->redirectToRoute('index');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessage());
                 }
@@ -176,7 +173,7 @@ class MainController extends Controller
     {
         $command = new Command\ClientSuggestionCommand();
         if ($request->isMethod('GET')) {
-            $this->get('query_bus')->handle(new GetUserDataQuery(), $command->userData);
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
         }
         $form = $this->createForm(Form\ClientSuggestionFormType::class, $command);
 
@@ -190,7 +187,6 @@ class MainController extends Controller
                     $this->addFlash('notice', 'Спасибо за Ваше предложение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');
 
                     return $this->redirectToRoute('index');
-
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getMessage());
                 }
@@ -203,15 +199,14 @@ class MainController extends Controller
         ]);
     }
 
-
     /**
      * @internal
      */
     public function getMenuAction()
     {
-        $this->get('query_bus')->handle(new Query\GetMenuQuery(), $menu);
+        $menu = $this->get('query_bus')->handle(new Query\GetMenuQuery());
         foreach ($menu as &$item) {
-            $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $item->id, 'count' => 1]), $products);
+            $products = $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $item->id, 'count' => 1]));
             if (!empty($products)) {
                 $item->product = reset($products);
             }
@@ -227,7 +222,7 @@ class MainController extends Controller
      */
     public function getBannerMainAction()
     {
-        $this->get('query_bus')->handle(new Query\GetBannerMainQuery(), $data);
+        $data = $this->get('query_bus')->handle(new Query\GetBannerMainQuery());
 
         return $this->render('Main/banner_main.html.twig', $data);
     }
@@ -235,12 +230,13 @@ class MainController extends Controller
     /**
      * @internal
      */
-    public function getBlockSpecialsAction(int $categoryId = 0)
+    public function getBlockSpecialsAction(int $categoryId = 0, $title = null)
     {
-        $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $categoryId, 'count' => 6]), $products);
+        $products = $this->get('query_bus')->handle(new Query\GetBlockSpecialsQuery(['categoryId' => $categoryId, 'count' => 6]));
 
         return $this->render('Main/block_specials.html.twig', [
             'products' => $products,
+            'title' => $title ?? 'Тотальная распродажа',
         ]);
     }
 
@@ -249,7 +245,7 @@ class MainController extends Controller
      */
     public function getBlockPopularsAction()
     {
-        $this->get('query_bus')->handle(new Query\GetBlockPopularsQuery(['count' => 4]), $products);
+        $products = $this->get('query_bus')->handle(new Query\GetBlockPopularsQuery(['count' => 4]));
 
         return $this->render('Main/block_populars.html.twig', [
             'products' => $products,
@@ -261,22 +257,10 @@ class MainController extends Controller
      */
     public function getBlockLastviewAction()
     {
-        $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 4]), $products);
+        $products = $this->get('query_bus')->handle(new Query\GetBlockLastviewQuery(['count' => 6]));
 
         return $this->render('Main/block_lastview.html.twig', [
             'products' => $products,
         ]);
-    }
-
-    /**
-     * @VIA\Get(
-     *     name="system_info",
-     *     path="/sysinfo/"
-     * )
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
-    public function sysinfoAction(Request $request)
-    {
-        echo phpinfo();
     }
 }

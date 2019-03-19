@@ -1,7 +1,5 @@
-/.web-server-pid
 /app/config/parameters.yml
 /app/config/bus-services.yml
-/build/
 /phpunit.xml
 /var/*
 !/var/cache
@@ -18,13 +16,5 @@
 /web/*
 /.idea 
 /nbproject
-/bin/node_modules/*
-!/var/tempstore/
-/var/tempstore/*
-!/var/barCodesCache/
-/var/barCodesCache/*
 /node_modules/*
-/bin/sphinx/*
-/composer.lock
-/yarn.lock
-/front/*
+/../.php_cs.cache

@@ -21,53 +21,51 @@ class BuildBusServicesConfigCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dir = $this->getContainer()->get('kernel')->getProjectDir();   
-        
-        $finder = new Finder();
-        $finder->name('*Handler.php')->sortByName()->in($dir.DIRECTORY_SEPARATOR.'src');
+        $dir = $this->getContainer()->get('kernel')->getProjectDir();
 
-        $config = ['services:'];
+        $finder = new Finder();
+        $finder->name('*CommandHandler.php')->name('*QueryHandler.php')->sortByName()->in($dir.DIRECTORY_SEPARATOR.'src');
+
+        $config[] = 'services:';
         $section = '';
         foreach ($finder as $fi) {
-            if (3 != substr_count($fi->getRelativePath(), DIRECTORY_SEPARATOR)) {
+            if ('MessageHandler' === $fi->getBasename('.php')) {
                 continue;
             }
 
             if ($section != $fi->getRelativePath()) {
                 $section = $fi->getRelativePath();
-                $type = str_replace([sprintf('%1$sBus%1$s', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR], ':', $section);
-                $config[] = "";
-                $config[] = "    # {$type}";
+                $config[] = '';
+                $config[] = sprintf('    # %s', str_replace(DIRECTORY_SEPARATOR, ':', $section));
             }
-    
-            $message = str_replace([DIRECTORY_SEPARATOR, 'Handler.php'], ['\\', ''], $fi->getRelativePathname());
-            $handler = $message.'Handler';
-            $name = str_replace(['\\Bus\\', '\\Command\\', '\\Query\\'], '_', $message);
 
-            $config[] = "    {$name}:";
-            $config[] = "        class: {$handler}";
-            $config[] = "        public: true";
-            $config[] = "        calls:";
-            $config[] = "            - [ setContainer, [ '@service_container' ] ]";
-            $config[] = "        tags:";
+            $message = str_replace([DIRECTORY_SEPARATOR, 'Handler.php'], ["\\", ''], $fi->getRelativePathname());
+            $handler = $message.'Handler';
+
+            $config[] = sprintf('    %s:', str_replace("\\", '_', $message));
+            $config[] = sprintf('        class: %s', $handler);
+            $config[] =         '        public: true';
+            $config[] =         '        calls:';
+            $config[] =         '            - [ setContainer, [ \'@service_container\' ] ]';
+            $config[] =         '        tags:';
 
             switch (substr($message, -1)) {
                 case 'd': // Command
-                    $config[] = "            - { name: command_handler, handles: {$message} }";
+                    $config[] = sprintf('            - { name: tactician.handler, command: %s }', $message);
                     break;
 
                 case 'y': // Query
-                    $config[] = "            - { name: query_handler, handles: {$message} }";
+                    $config[] = sprintf('            - { name: tactician.handler, command: %s, bus: query }', $message);
                     break;
 
                 default:
-                    throw new LogicException(sprintf('Class name of handler "%s" is not valid.', $handler));                    
+                    throw new LogicException(sprintf('Class name of handler "%s" is not valid.', $handler));
             }
-            $config[] = "";
+            $config[] = '';
         }
 
         $filesystem = new Filesystem();
-        $filesystem->dumpFile($dir.sprintf('%1$sapp%1$sconfig%1$sbus-services.yml', DIRECTORY_SEPARATOR), implode("\n", $config)); 
+        $filesystem->dumpFile($dir.sprintf('%1$sapp%1$sconfig%1$sbus-services.yml', DIRECTORY_SEPARATOR), implode("\n", $config));
 
         $output->writeln('<info>Config bus-services.yml is created.</info>');
     }

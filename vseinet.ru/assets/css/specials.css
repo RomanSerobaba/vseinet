@@ -7,16 +7,16 @@
 	#specials .products {
             overflow: hidden;
         }
-        
+
 	#specials .product {
-		float: left;		
+		float: left;
 		position: relative;
 		width: 33.33333333%;
 		min-height: 330px;
 		padding-right: 65px;
 		margin-bottom: 20px;
 	}
-	#specials .image {
+	#specials .product .image {
 		border: none;
 		display: table-cell;
 		height: 200px;
@@ -24,6 +24,9 @@
 		vertical-align: middle;
 		width: 100%;
 	}
+		#specials .product .image IMG {
+			width: auto;
+		}
 	#specials H4 {
 		margin: 2px 0 12px;
 	}
@@ -31,21 +34,22 @@
 		left: 12px;
 		top: 20px;
 	}
-	#specials .price {
+	#specials .product .price {
 		line-height: 28px;
 	}
-		#specials .price .old,
-		#specials .price .new {
+		#specials .product .price .old,
+		#specials .product .price .new {
 			float: left;
 			margin-right: 8px;
 		}
-		#specials .price .old {
+		#specials .product .price .old {
 			color: #666;
 	       	font-size: 13px;
+	       	padding: 0;
 	       	position: relative;
 	       	text-decoration: none;
 		}
-			#specials .price .old:after {
+			#specials .product .price .old:after {
 				background: #666;
 				content: ' ';
 				height: 1px;
@@ -53,8 +57,9 @@
 				position: absolute;
 				top: 50%;
 				width: 100%;
+				transform: none;
 			}
-		#specials .price .new {
+		#specials .product .price .new {
 			/*background: #f30;*/
 			border-radius: 3px;
 			color: #333;

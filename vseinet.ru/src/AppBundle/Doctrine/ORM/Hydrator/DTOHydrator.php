@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace AppBundle\Doctrine\ORM\Hydrator;
 
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
@@ -8,8 +8,8 @@ use AppBundle\Doctrine\ORM\Query\DTORSM;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
 
-class DTOHydrator extends AbstractHydrator 
-{     
+class DTOHydrator extends AbstractHydrator
+{
     const AVAILABLE_TYPES = ['string', 'integer', 'float', 'boolean', 'date', 'datetime'];
 
     /**
@@ -25,15 +25,19 @@ class DTOHydrator extends AbstractHydrator
     /**
      * @inheritdoc
      */
-    protected function hydrateAllData()     
-    {         
-        $result = [];   
+    protected function hydrateAllData()
+    {
+        $result = [];
 
         while ($row = $this->_stmt->fetch(\PDO::FETCH_ASSOC)) {
             $this->hydrateRowData($row, $result);
             if ($this->_rsm->getMode() === DTORSM::OBJECT_SINGLE) {
                 return $result[0];
             }
+        }
+
+        if (empty($result) && $this->_rsm->getMode() === DTORSM::OBJECT_SINGLE) {
+            return null;
         }
 
         return $result;
@@ -74,18 +78,18 @@ class DTOHydrator extends AbstractHydrator
                 $property = reset($this->mapKeys)['property'];
                 $result[$dto->$property] = $dto;
                 break;
-        } 
+        }
     }
 
     /**
      * Fetching value.
-     * 
+     *
      * @param string|mixin $value;
      * @param string $type
      * @param string|null $subtype
-     * 
+     *
      * @throws \UnexpectedValueException
-     * 
+     *
      * @return mixin
      */
     protected function fetchValue($value, $type, $subtype)
@@ -102,8 +106,8 @@ class DTOHydrator extends AbstractHydrator
 
         if ('float' === $type) {
             $value = filter_var($value, FILTER_VALIDATE_FLOAT);
-            
-            return false === $value ? null : $value;    
+
+            return false === $value ? null : $value;
         }
 
         if ('boolean' === $type) {
@@ -112,11 +116,11 @@ class DTOHydrator extends AbstractHydrator
             }
             // from psql
             if ('t' === $value) {
-                return true; 
+                return true;
             }
             // from psql
             if ('f' === $value) {
-                return false; 
+                return false;
             }
 
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
@@ -143,13 +147,13 @@ class DTOHydrator extends AbstractHydrator
 
             return $array;
         }
-        
+
         throw new \UnexpectedValueException(sprintf('Can not hydrate value "%s".', $value));
     }
 
     /**
      * Mapping keys row to DTO properties
-     * 
+     *
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
      */
@@ -173,7 +177,7 @@ class DTOHydrator extends AbstractHydrator
             $annotations = $reader->getPropertyAnnotations($property);
             foreach ($annotations as $annotation) {
                 if ($annotation instanceof Assert\Type) {
-                    if (in_array($annotation->type, self::AVAILABLE_TYPES)) { 
+                    if (in_array($annotation->type, self::AVAILABLE_TYPES)) {
                         $this->mapKeys[$snakeKeys[$indexKey]]['type'] = $annotation->type;
                         $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = null;
                         continue;

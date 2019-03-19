@@ -14,13 +14,13 @@ class FavoriteController extends Controller
 {
     /**
      * @VIA\Get(
-     *     name="favorite", 
+     *     name="favorite",
      *     path="/favorite/"
      * )
      */
     public function getAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(), $favorites);
+        $favorites = $this->get('query_bus')->handle(new Query\GetQuery());
 
         if ($request->isXMLHttpRequest()) {
             return $this->json([
@@ -37,36 +37,36 @@ class FavoriteController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="favorite_add", 
-     *     path="/favorite/add/{id}/", 
+     *     name="favorite_add",
+     *     path="/favorite/add/{id}/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
     public function addAction(int $id, Request $request)
     {
         $this->get('command_bus')->handle(new Command\AddCommand(['id' => $id]));
-        
+
         if ($request->isXMLHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $favorites);
-            
+            $favorites = $this->get('query_bus')->handle(new Query\GetInfoQuery());
+
             return $this->json([
                 'favorites' => $favorites,
             ]);
         }
-        
+
         return $this->redirect($request->headers->get('referer'));
     }
 
     /**
      * @VIA\Get(
-     *     name="favorite_del", 
-     *     path="/favorite/del/{id}/", 
+     *     name="favorite_del",
+     *     path="/favorite/del/{id}/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -75,8 +75,8 @@ class FavoriteController extends Controller
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
 
         if ($request->isXMLHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $favorites);
-            
+            $favorites = $this->get('query_bus')->handle(new Query\GetInfoQuery());
+
             return $this->json([
                 'favorites' => $favorites,
             ]);
@@ -87,7 +87,7 @@ class FavoriteController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="favorite_clear", 
+     *     name="favorite_clear",
      *     path="/favorite/clear/"
      * )
      */
@@ -104,11 +104,11 @@ class FavoriteController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="favorite_to_cart", 
-     *     path="/favorite/{id}/cart/", 
+     *     name="favorite_to_cart",
+     *     path="/favorite/{id}/cart/",
      *     requirements={"id" = "\d+"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer") 
+     *         @VIA\Parameter(name="id", type="integer")
      *     }
      * )
      */
@@ -118,12 +118,12 @@ class FavoriteController extends Controller
         $this->get('command_bus')->handle(new AddCartCommand(['id' => $id]));
 
         if ($request->isXMLHttpRequest()) {
-            $this->get('query_bus')->handle(new Query\GetInfoQuery(), $favorites);    
-            $this->get('query_bus')->handle(new GetCartInfoQuery(), $cart);    
+            $favorites = $this->get('query_bus')->handle(new Query\GetInfoQuery());
+            $cart = $this->get('query_bus')->handle(new GetCartInfoQuery());
 
             return $this->json([
                 'favorites' => $favorites,
-                'cart' => $cart, 
+                'cart' => $cart,
             ]);
         }
 
@@ -131,15 +131,15 @@ class FavoriteController extends Controller
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getInfoAction(Request $request)
     {
         if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
+            throw new NotFoundHttpException();
         }
-        
-        $this->get('query_bus')->handle(new Query\GetInfoQuery(), $favorites);
+
+        $favorites = $this->get('query_bus')->handle(new Query\GetInfoQuery());
 
         return $this->render('Favorite/info.html.twig', [
             'favorites' => $favorites,

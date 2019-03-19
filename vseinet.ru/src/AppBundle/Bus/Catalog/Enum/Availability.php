@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Enum;
 
@@ -9,7 +9,7 @@ class Availability
     const ACTIVE = 3;
     const FOR_ALL_TIME = 4;
 
-    public static function getOptions(bool $isEmployee): array
+    public static function getChoices(bool $isEmployee): array
     {
         $options =  [
             self::ACTIVE => 'все',

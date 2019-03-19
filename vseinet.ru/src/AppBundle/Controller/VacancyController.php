@@ -15,7 +15,7 @@ class VacancyController extends Controller
      */
     public function indexAction()
     {
-        $this->get('query_bus')->handle(new GetPageQuery(['slug' => 'vacancy']), $page);
+        $page = $this->get('query_bus')->handle(new GetPageQuery(['slug' => 'vacancy']));
 
         return $this->render('Vacancy/index.html.twig', [
             'page' => $page,
@@ -27,7 +27,7 @@ class VacancyController extends Controller
      */
     public function getAction(int $id, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]), $vacancy);
+        $vacancy = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
 
         if ($request->isXMLHttpRequest()) {
             return $this->json([
@@ -43,15 +43,15 @@ class VacancyController extends Controller
     }
 
     /**
-     * @internal 
+     * @internal
      */
     public function getListAction()
     {
         if (!$this->get('request_stack')->getParentRequest() instanceof Request) {
-            throw new NotFoundHttpException(); 
+            throw new NotFoundHttpException();
         }
 
-        $this->get('query_bus')->handle(new Query\GetListQuery(), $list);
+        $list = $this->get('query_bus')->handle(new Query\GetListQuery());
 
         return $this->render('Vacancy/list.html.twig', [
             'list' => $list,

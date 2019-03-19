@@ -72,11 +72,12 @@ $(function() {
                 total.html(html + (t ? ' Показать' : '')).css('top', top).show().prop('disabled', !t);
                 titleTotal.html(t.declension('товар;товара;товаров'));
                 timer = setTimeout(function() {
-                    loadPage(data.url);
+                    loadPage(data.filterUrl);
                     total.hide();
                 }, 1000);
             });
-        }
+        },
+        delay: 750
     });
     var total = filter.find('.total'), top;
     var titleTotal = $('#products-total');
@@ -122,10 +123,10 @@ $(function() {
         price: filter.find('.price.range'),
         categories: filter.find('.categories label'),
         brands: filter.find('.brands label'),
-        sections: filter.find('.sections label'), 
+        sections: filter.find('.sections label'),
         details: {}
     };
-    {% for detail in filter.details %}
+    {% for detail in features.details %}
         elements.details[{{ detail.id }}] = {
             {% if 'boolean' == detail.typeCode %}
                 type: 'boolean',

@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Command;
 
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class IncreaseRating extends Message
+class IncreaseRatingCommand extends Message
 {
     /**
      * @Assert\NotBlank

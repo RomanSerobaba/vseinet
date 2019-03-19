@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Enum;
 
@@ -12,4 +12,13 @@ class DetailType
     const CODE_DIMENSIONS = 'dimensions';
     const CODE_SIZE = 'size';
     const CODE_RANGE = 'range';
+
+    public static function getFilterTypeCodes()
+    {
+        return [
+            self::CODE_ENUM,
+            self::CODE_BOOLEAN,
+            self::CODE_NUMBER,
+        ];
+    }
 }

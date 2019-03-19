@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query\DTO;
 
@@ -24,13 +24,13 @@ class Detail
     /**
      * @Assert\type(type="string")
      */
-    public $valueName;
+    public $value;
 
 
-    public function __construct($id, $name, $valueId, $valueName) {
+    public function __construct($id, $name, $valueId, $value) {
         $this->id = $id;
         $this->name = $name;
         $this->valueId = $valueId;
-        $this->valueName = $valueName;
+        $this->value = $value;
     }
 }

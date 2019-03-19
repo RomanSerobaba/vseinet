@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Controller;
 
@@ -28,7 +28,7 @@ class CategoryController extends Controller
      */
     public function getAllAction()
     {
-        $this->get('query_bus')->handle(new Query\GetAllQuery(), $categories);
+        $categories = $this->get('query_bus')->handle(new Query\GetAllQuery());
 
         return $this->json([
             'categories' => $categories,
@@ -50,7 +50,7 @@ class CategoryController extends Controller
      */
     public function searchAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()), $categories);
+        $categories = $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()));
 
         return $this->json([
             'categories' => $categories,

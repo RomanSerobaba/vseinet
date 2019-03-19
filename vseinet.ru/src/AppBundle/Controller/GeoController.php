@@ -19,9 +19,9 @@ class GeoController extends Controller
      */
     public function citiesAction()
     {
-        $this->get('query_bus')->handle(new Query\GetRegionsQuery(), $geoRegions);
+        $geoRegions = $this->get('query_bus')->handle(new Query\GetRegionsQuery());
         $geoRegionId = $this->getGeoCity()->getGeoRegionId();
-        $this->get('query_bus')->handle(new Query\GetCitiesQuery(['geoRegionId' => $geoRegionId]), $data);
+        $data = $this->get('query_bus')->handle(new Query\GetCitiesQuery(['geoRegionId' => $geoRegionId]));
 
         return $this->json([
             'html' => $this->renderView('Geo/cities.html.twig', $data + [
@@ -39,7 +39,7 @@ class GeoController extends Controller
      */
     public function searchAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\SearchCityQuery($request->request->all()), $geoCities);
+        $geoCities = $this->get('query_bus')->handle(new Query\SearchCityQuery($request->request->all()));
 
         return $this->json([
             'geoCities' => $geoCities,
@@ -55,7 +55,7 @@ class GeoController extends Controller
      */
     public function searchStreetAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\SearchStreetQuery($request->request->all()), $geoStreets);
+        $geoStreets = $this->get('query_bus')->handle(new Query\SearchStreetQuery($request->request->all()));
 
         return $this->json([
             'geoStreets' => $geoStreets,
@@ -74,7 +74,7 @@ class GeoController extends Controller
      */
     public function selectGeoRegionAction(Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetCitiesQuery($request->request->all()), $data);
+        $data = $this->get('query_bus')->handle(new Query\GetCitiesQuery($request->request->all()));
 
         return $this->json([
             'html' => $this->renderView('Geo/cities_block.html.twig', $data),
@@ -108,7 +108,7 @@ class GeoController extends Controller
      */
     public function getContactsAction()
     {
-        $this->get('query_bus')->handle(new Query\GetContactsQuery(), $contacts);
+        $contacts = $this->get('query_bus')->handle(new Query\GetContactsQuery());
 
         return $this->render('Geo/contacts.html.twig', [
             'contacts' => $contacts,
@@ -124,7 +124,7 @@ class GeoController extends Controller
      */
     public function getContactAction(int $geoPointId, Request $request)
     {
-        $this->get('query_bus')->handle(new Query\GetRepresentativeQuery(['geoPointId' => $geoPointId]), $representative);
+        $representative = $this->get('query_bus')->handle(new Query\GetRepresentativeQuery(['geoPointId' => $geoPointId]));
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([

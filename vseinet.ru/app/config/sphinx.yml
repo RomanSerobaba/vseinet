@@ -1,9 +1,4 @@
-parameters:
-    sphinx.conf.path: '%kernel.project_dir%/bin/sphinx/pgsql/dev.conf'
-    sphinx.indexer.path: '%kernel.project_dir%/bin/sphinx/pgsql/indexer.js'
-
-services:
-    sphinxql:
-        class: AppBundle\SphinxQL\SphinxQL
-        public: true
-        arguments: [ '%sphinxql_host%', '%sphinxql_port%' ]
+javer_sphinx:
+  host: '%sphinxql_host%'
+  port: '%sphinxql_port%'
+  data_dir: '%kernel.cache_dir%/sphinx'

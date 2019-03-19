@@ -14,7 +14,7 @@ class ContentPageController extends Controller
 {
     /**
      * @VIA\Get(
-     *     name="content_page", 
+     *     name="content_page",
      *     path="/{slug}/",
      *     requirements={"slug" = "payment|garanty|credit|promo|partnership|help"},
      *     parameters={
@@ -29,36 +29,36 @@ class ContentPageController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="about_page", 
+     *     name="about_page",
      *     path="/about/"
      * )
      */
     public function aboutAction()
     {
-        $this->get('query_bus')->handle(new GetVacanciesQuery(), $vacancies);
+        $vacancies = $this->get('query_bus')->handle(new GetVacanciesQuery());
 
         return $this->show('about', ['vacancies' => $vacancies]);
     }
 
     /**
      * @VIA\Get(
-     *     name="delivery_page", 
+     *     name="delivery_page",
      *     path="/delivery/"
      * )
      */
     public function deliveryAction()
     {
-        $this->get('query_bus')->handle(new GetCategoryDeliveryTaxesQuery(), $deliveryTaxes);
-        $this->get('query_bus')->handle(new GetRepresentativeDeleiveryTaxesQuery(), $representatives);
+        $deliveryTaxes = $this->get('query_bus')->handle(new GetCategoryDeliveryTaxesQuery());
+        $representatives = $this->get('query_bus')->handle(new GetRepresentativeDeleiveryTaxesQuery());
 
         return $this->show('delivery', ['deliveryTaxes' => $deliveryTaxes, 'representatives' => $representatives]);
     }
 
     protected function show($slug, array $data = [])
     {
-        $this->get('query_bus')->handle(new GetQuery(['slug' => $slug]), $page);
-        $template = empty($data) ? 'page' : $slug; 
+        $page = $this->get('query_bus')->handle(new GetQuery(['slug' => $slug]));
+        $template = empty($data) ? 'page' : $slug;
 
-        return $this->render("ContentPage/{$template}.html.twig", $data + ['page' => $page]);  
+        return $this->render("ContentPage/{$template}.html.twig", $data + ['page' => $page]);
     }
 }
