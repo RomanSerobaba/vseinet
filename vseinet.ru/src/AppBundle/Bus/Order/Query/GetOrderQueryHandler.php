@@ -15,7 +15,7 @@ class GetOrderQueryHandler extends MessageHandler
             $parameters = [
                 'did' => $query->id,
             ];
-            $result = $api->get('/v1/orders/?'.http_build_query($parameters));
+            $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
             return null;
         }
@@ -25,7 +25,7 @@ class GetOrderQueryHandler extends MessageHandler
         }
 
         try {
-            $items = $api->get('/v1/orderItems/?orderIds[]='.$query->id);
+            $items = $api->get('/api/v1/orderItems/?orderIds[]='.$query->id);
         } catch (BadRequestHttpException $e) {
             return null;
         }
