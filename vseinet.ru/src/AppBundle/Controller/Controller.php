@@ -19,8 +19,9 @@ class Controller extends BaseController
     {
         if ('' === $name) {
             return $form;
-        } elseif (False !== strpos($name, '.')) {
+        } elseif (false !== strpos($name, '.')) {
             $chunks = explode('.', $name, 2);
+
             return $this->getDeepestChild($form->get($chunks[0]), $chunks[1]);
         } else {
             return $form->get($name);

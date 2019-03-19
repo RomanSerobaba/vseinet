@@ -12,8 +12,8 @@ class ValidationException extends BadRequestHttpException
     protected $parameter;
 
     /**
-     * @param string $parameter
-     * @param string $message
+     * @param string          $parameter
+     * @param string          $message
      * @param \Exception|null $previous
      */
     public function __construct(string $parameter, string $message, \Exception $previous = null)
@@ -36,10 +36,18 @@ class ValidationException extends BadRequestHttpException
      *
      * @return self
      */
-    public function setParameter(string $parameter) : self
+    public function setParameter(string $parameter): self
     {
         $this->parameter = $parameter;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAsArray()
+    {
+        return [$this->getParameter() => $this->getMessage()];
     }
 }

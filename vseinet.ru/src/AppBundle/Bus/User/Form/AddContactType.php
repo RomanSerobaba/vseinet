@@ -1,11 +1,17 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\{ CheckboxType, ChoiceType, HiddenType, SubmitType, TextType };
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AppBundle\Enum\ContactTypeCode;
+use AppBundle\Bus\User\Command\AddContactCommand;
 
 class AddContactType extends AbstractType
 {
@@ -19,6 +25,7 @@ class AddContactType extends AbstractType
         } else {
             $builder
                 ->add('typeCode', ChoiceType::class, ['choices' => array_flip(ContactTypeCode::getChoices())])
+                ->add('typeCodeName', HiddenType::class)
             ;
         }
         $builder
@@ -27,5 +34,12 @@ class AddContactType extends AbstractType
             ->add('isMain', CheckboxType::class, ['required' => false])
             ->add('submit', SubmitType::class)
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => AddContactCommand::class,
+        ]);
     }
 }

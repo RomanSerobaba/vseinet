@@ -16,6 +16,11 @@ class Order
     /**
      * @Assert\Type(type="integer")
      */
+    public $number;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $financialCounteragentId;
 
     /**
@@ -92,10 +97,10 @@ class Order
      */
     public $items;
 
-
     public function __construct(array $order)
     {
         $this->id = $order['id'];
+        $this->number = $order['number'] ?? 0;
         $this->financialCounteragentId = $order['financialCounteragentId'] ?? null;
         $this->createdAt = $order['createdAt'];
         $this->amount = 0;
@@ -105,7 +110,7 @@ class Order
         $this->deliveryTypeName = $order['deliveryType'] ?? null;
         $this->username = $order['financialCounteragentName'] ?? null;
         $this->addresseename = $order['personName'] ?? null;
-        $this->typeCode = $order['orderTypeCode'];
+        $this->typeCode = $order['orderTypeCode'] ?? null;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['type'], $contact['value']);
         }
@@ -125,9 +130,9 @@ class Order
             if (!isset($statuses[$item['statusCode']])) {
                 $statuses[$item['statusCode']] = 0;
             }
-            $statuses[$item['statusCode']] += 1;
+            ++$statuses[$item['statusCode']];
         }
-        uasort($statuses, function($count1, $count2) { return $count1 > $count2 ? 1 : -1; });
+        uasort($statuses, function ($count1, $count2) { return $count1 > $count2 ? 1 : -1; });
         $this->statusCode = key($statuses);
         $this->statusCodeName = OrderItemStatus::getName($this->statusCode);
     }

@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Security\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use AppBundle\Entity\UserToken;
 
 class CheckTokenCommandHandler extends MessageHandler
@@ -14,11 +14,9 @@ class CheckTokenCommandHandler extends MessageHandler
 
         $token = $em->getRepository(UserToken::class)->findOneBy($command->toArray());
         if (!$token instanceof UserToken || $token->getExpiredAt() < new \DateTime()) {
-            throw new ValidationException([
-                'code' => 'Неверный код подтверждения',
-            ]);
+            throw new ValidationException('code', 'Неверный код подтверждения');
         }
-        
+
         $em->remove($token);
         $em->flush();
     }

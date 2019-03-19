@@ -5,7 +5,7 @@
 	overflow: hidden;
 	width: 100%;
 }
-	#related .product {
+	.main #related .product {
     	float: left;
     	padding-right: 40px;
     	width: 16.6%;
@@ -16,7 +16,7 @@
 		#related .image {
 			border: none !important;
 		}
-		#related .image img {
+		.main #related .image img {
 			width: 100px;
 			height: 100px;
 		}

@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Geo\Command;
 use AppBundle\Bus\Geo\Query;
@@ -20,8 +19,7 @@ class GeoController extends Controller
     public function citiesAction()
     {
         $geoRegions = $this->get('query_bus')->handle(new Query\GetRegionsQuery());
-        $geoRegionId = $this->getGeoCity()->getGeoRegionId();
-        $data = $this->get('query_bus')->handle(new Query\GetCitiesQuery(['geoRegionId' => $geoRegionId]));
+        $data = $this->get('query_bus')->handle(new Query\GetCitiesQuery(['geoRegionId' => $this->getGeoCity()->getGeoRegionId()]));
 
         return $this->json([
             'html' => $this->renderView('Geo/cities.html.twig', $data + [
@@ -119,7 +117,7 @@ class GeoController extends Controller
      * @VIA\Get(
      *     name="contacts_representative",
      *     path="/contacts/{geoPointId}/",
-     *     requirements={"geoPointId" = "\d+"}
+     *     requirements={"geoPointId": "\d+"}
      * )
      */
     public function getContactAction(int $geoPointId, Request $request)

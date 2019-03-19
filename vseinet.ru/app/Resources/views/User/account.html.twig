@@ -8,7 +8,12 @@
     <div id="user-account">
         {% include 'User/account_menu.html.twig' with { active: 'account' } %}
         <h1>{{ app.user.person.fullname }}</h1>
-        {% include 'User/account_ajax.html.twig' %}
+        <div class="w60p">
+            {% include 'User/account_ajax.html.twig' %}
+        </div>
+        <div id="products" class="block w40p r">
+            {{ render(controller('AppBundle:Main:getBlockLastview')) }}
+        </div>
     </div>
 {% endblock %}
 

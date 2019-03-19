@@ -1,9 +1,10 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as VIC;
+use AppBundle\Enum\ProductPriceType;
 
 class Product
 {
@@ -78,9 +79,9 @@ class Product
     public $estimate;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="integer")
      */
-    public $isCanonical = true;
+    public $canonicalId;
 
     /**
      * @Assert\Type(type="integer")
@@ -97,22 +98,22 @@ class Product
      */
     public $details;
 
-
     public function __construct(
-        $id, 
-        $name, 
+        $id,
+        $name,
         $exname,
-        $categoryId, 
+        $categoryId,
         $brandId,
-        $availability, 
-        $price, 
-        $priceType, 
+        $availability,
+        $price,
+        $priceType,
         $minQuantity,
         $model,
         $manufacturerLink,
         $manualLink,
         $description,
-        $estimate
+        $estimate,
+        $canonicalId
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -128,5 +129,11 @@ class Product
         $this->manualLink = $manualLink;
         $this->description = $description;
         $this->estimate = $estimate;
+        $this->canonicalId = $canonicalId;
+    }
+
+    public function isManualPrice()
+    {
+        return in_array($this->priceType, [ProductPriceType::MANUAL, ProductPriceType::ULTIMATE, ProductPriceType::TEMPORARY]);
     }
 }

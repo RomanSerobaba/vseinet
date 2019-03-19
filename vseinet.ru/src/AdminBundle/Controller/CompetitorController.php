@@ -6,10 +6,10 @@ use AppBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Bus\Exception\ValidationException;
+use AppBundle\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
 use AppBundle\Entity\Competitor;
-use AppBundle\Entity\Product;
+use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\ProductToCompetitor;
 use AdminBundle\Bus\Competitor\Query;
 use AdminBundle\Bus\Competitor\Command;
@@ -42,7 +42,7 @@ class CompetitorController extends Controller
      * @VIA\Route(
      *     name="admin_competitor_revision_edit",
      *     path="/competitor/revisions/{id}/edit/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -63,16 +63,12 @@ class CompetitorController extends Controller
                 if (empty($command->link)) {
                     $command->competitorPrice = $revision->getCompetitorPrice();
                 }
-            }
-            else {
-                $product = $em->getRepository(Product::class)->findOneBy([
-                    'baseProductId' => $request->query->get('baseProductId'),
-                    'geoCityId' => $this->getGeoCity()->getId(),
-                ]);
-                if (!$product instanceof Product) {
+            } else {
+                $product = $em->getRepository(BaseProduct::class)->find($request->query->get('baseProductId'));
+                if (!$product instanceof BaseProduct) {
                     throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $request->query->get('baseProductId')));
                 }
-                $command->baseProductId = $product->getBaseProductId();
+                $command->baseProductId = $product->getId();
             }
         }
         $form = $this->createForm(Form\AddRevisionFormType::class, $command);
@@ -85,7 +81,7 @@ class CompetitorController extends Controller
 
                     return $this->getRevisions($command->baseProductId);
                 } catch (ValidationException $e) {
-                    $this->AddFormErrors($e->getMessages());
+                    $this->AddFormErrors($e->getAsArray());
                 }
             }
 
@@ -106,7 +102,7 @@ class CompetitorController extends Controller
      * @VIA\Post(
      *     name="admin_competitor_revision_delete",
      *     path="/competitorRevisions/{id}/delete/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     condition="request.isXmlHttpRequest()"
      * )
      */
@@ -121,7 +117,7 @@ class CompetitorController extends Controller
      * @VIA\Post(
      *     name="admin_competitor_revision_request",
      *     path="/competitorRevisions/{id}/request/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     condition="request.isXmlHttpRequest()"
      * )
      */
