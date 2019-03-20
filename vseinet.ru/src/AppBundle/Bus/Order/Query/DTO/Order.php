@@ -119,6 +119,7 @@ class Order
         $statuses = [];
         foreach ($order['items'] as $item) {
             $this->items[] = new OrderItem($item);
+
             switch ($item['statusCode']) {
                 case OrderItemStatus::ANNULLED:
                 case OrderItemStatus::CANCELED:
@@ -127,6 +128,7 @@ class Order
                 default:
                     $this->amount += $item['quantity'] * ($item['retailPrice'] ?? 0);
             }
+
             if (!isset($statuses[$item['statusCode']])) {
                 $statuses[$item['statusCode']] = 0;
             }
