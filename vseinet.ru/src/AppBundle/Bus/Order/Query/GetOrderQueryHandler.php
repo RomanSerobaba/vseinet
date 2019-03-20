@@ -28,10 +28,10 @@ class GetOrderQueryHandler extends MessageHandler
 
         foreach ($result['orderItems'] as $item) {
             foreach ($item['statuses'] as $status) {
-                $order['items'][] = array_merge($item, ['statusCode' => $status['code']]);
+                $order['items'][] = array_merge($item, ['statusCode' => $status['name']]);
             }
         }
-var_dump($order);die();
+
         return new DTO\Order($order);
     }
 }
