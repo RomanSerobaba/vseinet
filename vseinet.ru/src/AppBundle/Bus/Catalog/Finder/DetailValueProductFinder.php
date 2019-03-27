@@ -2,14 +2,14 @@
 
 namespace AppBundle\Bus\Catalog\Finder;
 
-use AppBundle\Bus\Catalog\Query\DTO\Detail;
+use AppBundle\Bus\Catalog\Query\DTO\DetailValue;
 
-class DetailProductFinder extends AbstractProductFinder
+class DetailValueProductFinder extends AbstractProductFinder
 {
     /**
-     * @var Detail
+     * @var DetailValue
      */
-    protected $detail;
+    protected $value;
 
     /**
      * @param iterable $values
@@ -17,9 +17,9 @@ class DetailProductFinder extends AbstractProductFinder
      *
      * @return self
      */
-    public function setFilterData(iterable $values, Detail $detail): self
+    public function setFilterData(iterable $values, DetailValue $value): self
     {
-        $this->detail = $detail;
+        $this->value = $value;
         $filter = $this->getFilter()->parse($values);
 
         return $this;
@@ -33,8 +33,7 @@ class DetailProductFinder extends AbstractProductFinder
         $qb = $this->getQueryBuilder();
 
         $qb->facet('FACET category_id FACET brand_id');
-        $qb->select("LENGTH(details.{$this->detail->id}) AS has_detail");
-        $qb->criteria('has_detail = 1');
+        $qb->criteria("details.{$this->value->detailId} = {$this->value->id}");
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -69,8 +68,7 @@ class DetailProductFinder extends AbstractProductFinder
 
         $qb->facet('FACET category_id', $qb->getCriteriaCategories());
         $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
-        $qb->select("LENGTH(details.{$this->detail->id}) AS has_detail");
-        $qb->criteria('has_detail = 1');
+        $qb->criteria("details.{$this->value->detailId} = {$this->value->id}");
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -105,8 +103,7 @@ class DetailProductFinder extends AbstractProductFinder
 
         $qb->criteria($qb->getCriteriaCategories());
         $qb->criteria($qb->getCriteriaBrands());
-        $qb->select("LENGTH(details.{$this->detail->id}) AS has_detail");
-        $qb->criteria('has_detail = 1');
+        $qb->criteria("details.{$this->value->detailId} = {$this->value->id}");
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);

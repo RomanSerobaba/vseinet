@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5614fd5d9adef3aea10cde77ce2c5e1",
+    "content-hash": "c1b48afefa9e893584add76b2af8ccfc",
     "packages": [
         {
             "name": "cache/adapter-bundle",
@@ -656,6 +656,74 @@
                 "tag"
             ],
             "time": "2017-07-16T22:21:23+00:00"
+        },
+        {
+            "name": "cache/void-adapter",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-cache/void-adapter.git",
+                "reference": "a0554f661cf9f1498a2afe72d077f3c35d797161"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-cache/void-adapter/zipball/a0554f661cf9f1498a2afe72d077f3c35d797161",
+                "reference": "a0554f661cf9f1498a2afe72d077f3c35d797161",
+                "shasum": ""
+            },
+            "require": {
+                "cache/adapter-common": "^1.0",
+                "cache/hierarchical-cache": "^1.0",
+                "php": "^5.6 || ^7.0",
+                "psr/cache": "^1.0",
+                "psr/simple-cache": "^1.0"
+            },
+            "provide": {
+                "psr/cache-implementation": "^1.0"
+            },
+            "require-dev": {
+                "cache/integration-tests": "^0.16",
+                "phpunit/phpunit": "^5.7.21"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cache\\Adapter\\Void\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Scherer",
+                    "email": "aequasi@gmail.com",
+                    "homepage": "https://github.com/aequasi"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                }
+            ],
+            "description": "A PSR-6 cache implementation using Void. This implementation supports tags",
+            "homepage": "http://www.php-cache.com/en/latest/",
+            "keywords": [
+                "cache",
+                "psr-6",
+                "tag",
+                "void"
+            ],
+            "time": "2017-07-16T21:09:25+00:00"
         },
         {
             "name": "clue/stream-filter",

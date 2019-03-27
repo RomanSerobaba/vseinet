@@ -16,8 +16,7 @@ class DetailValue
      */
     public $name;
 
-
-    public function __construct($id, $name)
+    public function __construct($id, $detailId, $name)
     {
         $this->id = $id;
         $this->name = $name;
