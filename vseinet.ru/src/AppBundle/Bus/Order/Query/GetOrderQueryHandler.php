@@ -15,7 +15,7 @@ class GetOrderQueryHandler extends MessageHandler
             $parameters = [
                 'did' => $query->id,
             ];
-            $result = $api->get('/v1/orders/?'.http_build_query($parameters));
+            $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
             return null;
         }
@@ -24,14 +24,13 @@ class GetOrderQueryHandler extends MessageHandler
             return null;
         }
 
-        try {
-            $items = $api->get('/v1/orderItems/?orderIds[]='.$query->id);
-        } catch (BadRequestHttpException $e) {
-            return null;
-        }
+        $order = reset($result['orders']);
 
-        $order = reset($result['items']);
-        $order['items'] = $items;
+        foreach ($result['orderItems'] as $item) {
+            foreach ($item['statuses'] as $status) {
+                $order['items'][] = array_merge($item, ['statusCode' => $status['code']]);
+            }
+        }
 
         return new DTO\Order($order);
     }

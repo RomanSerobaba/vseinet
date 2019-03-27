@@ -24,6 +24,7 @@ class GetStatusQueryHandler extends MessageHandler
         }
 
         $api = $this->get('site.api.client');
+
         try {
             $items = $api->get('/v1/orderItems/?orderIds[]='.$order->getDId());
         } catch (BadRequestHttpException $e) {

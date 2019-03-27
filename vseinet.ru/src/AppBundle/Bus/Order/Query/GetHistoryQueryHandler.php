@@ -23,7 +23,7 @@ class GetHistoryQueryHandler extends MessageHandler
                 'page' => $query->page,
                 'limit' => $query->limit,
             ];
-            $history = $api->get('/v1/orders/?'.http_build_query($parameters));
+            $history = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
             return null;
         }
