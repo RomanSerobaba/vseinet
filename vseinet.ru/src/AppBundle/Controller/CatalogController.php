@@ -221,7 +221,7 @@ class CatalogController extends Controller
         $detail = $this->get('query_bus')->handle(new Query\GetDetailQuery(['id' => $id]));
 
         $finder = $this->get('catalog.detail_product.finder');
-        $finder->setFilterData($this->request->query->all(), $detail);
+        $finder->setFilterData($request->query->all(), $detail);
 
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
@@ -238,6 +238,38 @@ class CatalogController extends Controller
         }
 
         return $this->show('detail', $finder, $request, ['detail' => $detail], ['id' => $id]);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="catalog_detail_value",
+     *     path="/detailValue/{id}/",
+     *     requirements={"id": "\d+"},
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function showDetailValuePageAction(int $id, Request $request)
+    {
+        $value = $this->get('query_bus')->handle(new Query\GetDetailValueQuery(['id' => $id]));
+
+        $finder = $this->get('catalog.detail_value_product.finder');
+        $finder->setFilterData($request->query->all(), $value);
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build(['id' => $id]));
+
+            if ($request->isXmlHttpRequest()) {
+                return [
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ];
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show('detail_value', $finder, $request, ['value' => $value], ['id' => $id]);
     }
 
     /**
