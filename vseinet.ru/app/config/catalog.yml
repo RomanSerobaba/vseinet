@@ -29,6 +29,12 @@ services:
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
+    catalog.detail_value_product.finder:
+        class: 'AppBundle\Bus\Catalog\Finder\DetailValueProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
     catalog.supplier_product.finder:
         class: 'AppBundle\Bus\Catalog\Finder\SupplierProductFinder'
         public: true

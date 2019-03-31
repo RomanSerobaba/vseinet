@@ -1,7 +1,7 @@
 {% extends "layout.html.twig" %}
 
 {% block pageTitle %}
-    Поиск по значению характеристики "{{ detail.name }}" = "{{ detail.valueName }}"
+    Поиск по характеристике "{{ detail.name }}"
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
             <a href="{{ path('catalog_category', { id: 0 }) }}">Каталог</a>
         </div>
         <div class="title category-title">
-            <h1>Характеристика "{{ detail.name }}" - "{{ detail.valueName }}"</h1>
+            <h1>Характеристика "{{ detail.name }}"</h1>
             <small id="products-total">{{ facets.total|number_format() }} {{ facets.total|declension('товар;товара;товаров') }}</small>
         </div>
         <nav class="sort" id="sorting">
