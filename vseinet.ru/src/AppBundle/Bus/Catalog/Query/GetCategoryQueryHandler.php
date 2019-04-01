@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query;
 
@@ -13,15 +13,15 @@ class GetCategoryQueryHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Catalog\Query\DTO\Category (
                     c.id,
                     c.name,
                     c.aliasForId,
                     c.countProducts,
                     CASE WHEN EXISTS (
-                        SELECT 1 
-                        FROM AppBundle:Category cc 
+                        SELECT 1
+                        FROM AppBundle:Category cc
                         WHERE cc.pid = c.id OR cc.pid = c.aliasForId
                     ) THEN false ELSE true END,
                     cs.title,
@@ -30,33 +30,34 @@ class GetCategoryQueryHandler extends MessageHandler
                     cs.pageDescription,
                     c.isTplEnabled
                 )
-            FROM AppBundle:Category c 
-            LEFT OUTER JOIN AppBundle:CategorySeo cs WITH cs.categoryId = c.id 
+            FROM AppBundle:Category c
+            LEFT OUTER JOIN AppBundle:CategorySeo cs WITH cs.categoryId = c.id
             WHERE c.id = :id AND cs.brandId IS NULL
         ");
         $q->setParameter('id', $query->id);
-        $category = $q->getSingleResult();
-        if (!$category instanceof DTO\Category) {
+        try {
+            $category = $q->getSingleResult();
+        } catch (\Exception $e) {
             throw new NotFoundHttpException();
-        } 
+        }
 
         if (0 < $category->id) {
             $q = $em->createQuery("
-                SELECT 
+                SELECT
                     NEW AppBundle\Bus\Catalog\Query\DTO\Breadcrumb (
                         c.id,
-                        c.name 
+                        c.name
                     ),
                     cp.plevel HIDDEN
-                FROM AppBundle:Category c 
-                INNER JOIN AppBundle:CategoryPath cp WITH cp.pid = c.id 
+                FROM AppBundle:Category c
+                INNER JOIN AppBundle:CategoryPath cp WITH cp.pid = c.id
                 WHERE cp.id = :id AND cp.id != cp.pid AND c.id > 0
                 ORDER BY cp.plevel
             ");
             $q->setParameter('id', $category->id);
             $category->breadcrumbs = $q->getArrayResult();
         }
-        
+
         if (null !== $query->brand) {
             $seo = $em->getRepository(CategorySeo::class)->findOneBy([
                 'categoryId' => $category->id,
@@ -68,7 +69,7 @@ class GetCategoryQueryHandler extends MessageHandler
                 $category->pageTitle = $seo->getPageTitle();
                 $category->pageDescription = $seo->getPageDescription();
             }
-        } 
+        }
 
         return $category;
     }
