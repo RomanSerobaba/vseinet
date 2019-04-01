@@ -18,7 +18,7 @@ class BICValidator extends ConstraintValidator
             return;
         }
 
-        $isValid = preg_match('/^(\d{2})(\d{4})(\d{3})$/', $str_replace(' ', '', $value), $m);
+        $isValid = preg_match('/^(\d{2})(\d{4})(\d{3})$/', str_replace(' ', '', $value), $m);
 
         if ($isValid) {
             $isValid = 4 == $m[1] && ((0 <= $m[3] && $m[3] <= 2) || 50 <= $m[3]);
