@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class BIC extends Constraint
 {
-    $message = 'Неверный БИК.';
+    public $message = 'Неверный БИК.';
 }

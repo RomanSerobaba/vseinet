@@ -54,7 +54,7 @@ $(function() {
                     $('body, html ').animate( { scrollTop: destination - 10}, 500 );
                 }
             },
-            onSuccess: function(data) { console.log(data);
+            onSuccess: function(data) {
                 // if (data.isInnerOrder) {
                 //     window.location = Routing.generate('authority', { targetUrl: '/admin/orders/?id=' + data.id });
                 // } else {
