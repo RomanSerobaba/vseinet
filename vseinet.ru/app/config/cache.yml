@@ -1,7 +1,4 @@
 cache_adapter:
     providers:
         memcached:
-            factory: 'cache.factory.memcached'
-            options:
-                host: '%memcached_host%'
-                port: '%memcached_port%'
+            factory: 'cache.factory.void'
