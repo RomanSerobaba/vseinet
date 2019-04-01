@@ -1,5 +1,6 @@
 /app/config/parameters.yml
 /app/config/bus-services.yml
+/app/config/cache.yml
 /phpunit.xml
 /var/*
 !/var/cache
@@ -14,7 +15,7 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/*
-/.idea 
+/.idea
 /nbproject
 /node_modules/*
 /../.php_cs.cache
