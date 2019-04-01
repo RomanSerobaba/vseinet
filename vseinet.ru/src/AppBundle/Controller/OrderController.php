@@ -159,7 +159,7 @@ class OrderController extends Controller
             }
         }
 
-        $this->get('validation_bus')->handle($command);
+        // $this->get('validation_bus')->handle($command);
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetSummaryQuery([
