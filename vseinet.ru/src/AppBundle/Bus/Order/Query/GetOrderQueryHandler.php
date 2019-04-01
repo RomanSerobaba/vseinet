@@ -13,7 +13,7 @@ class GetOrderQueryHandler extends MessageHandler
 
         try {
             $parameters = [
-                'did' => $query->id,
+                'id' => $query->id,
             ];
             $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
