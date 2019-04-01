@@ -1,4 +1,0 @@
-cache_adapter:
-    providers:
-        memcached:
-            factory: 'cache.factory.void'
