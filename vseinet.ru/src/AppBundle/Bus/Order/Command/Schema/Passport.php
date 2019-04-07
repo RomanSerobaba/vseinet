@@ -26,4 +26,11 @@ class Passport extends Message
      * @Assert\Type(type="string")
      */
     public $issuedBy;
+
+    public function setIssuedAt($issuedAt)
+    {
+        if (empty($issuedAt)) {
+            $this->issuedAt = null;
+        }
+    }
 }
