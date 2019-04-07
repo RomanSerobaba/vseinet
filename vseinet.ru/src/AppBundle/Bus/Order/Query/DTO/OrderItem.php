@@ -60,6 +60,11 @@ class OrderItem
      */
     public $requiredPrepayment;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $baseSrc;
+
 
     public function __construct(array $item)
     {
