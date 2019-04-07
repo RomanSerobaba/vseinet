@@ -26,13 +26,4 @@ class Passport extends Message
      * @Assert\Type(type="string")
      */
     public $issuedBy;
-
-    public function setIssuedAt($issuedAt)
-    {var_dump($issuedAt);
-        if (!empty($issuedAt) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', $issuedAt)) {
-            $this->issuedAt = new \Datetime(date('Y-m-d', strtotime($issuedAt)));
-        } elseif (empty($issuedAt)) {
-            $this->issuedAt = null;
-        }
-    }
 }
