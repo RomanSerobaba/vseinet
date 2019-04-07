@@ -73,5 +73,6 @@ class OrderItem
         $this->deliveryDate = $item['deliveryDate'] ?? null;
         $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
         $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
+        $this->baseSrc = $item['imageBasename'];
     }
 }
