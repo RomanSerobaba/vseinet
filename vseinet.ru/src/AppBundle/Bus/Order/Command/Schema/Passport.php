@@ -28,7 +28,7 @@ class Passport extends Message
     public $issuedBy;
 
     public function setIssuedAt($issuedAt)
-    {
+    {var_dump($issuedAt);
         $this->issuedAt = empty($issuedAt) ? null : $issuedAt;
     }
 }
