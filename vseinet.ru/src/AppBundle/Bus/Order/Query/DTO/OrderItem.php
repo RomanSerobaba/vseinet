@@ -67,7 +67,7 @@ class OrderItem
         $this->statusCode = $item['statusCode'];
         $this->statusCodeName = OrderItemStatus::getName($item['statusCode']);
         $this->tracker = OrderItemStatus::getTracker($item['statusCode']);
-        $this->productName = $item['productName'];
+        $this->productName = $item['baseProductName'];
         $this->baseProductId = $item['baseProductId'];
         $this->retailPrice = $item['retailPrice'] ?? 0;
         $this->deliveryDate = $item['deliveryDate'] ?? null;
