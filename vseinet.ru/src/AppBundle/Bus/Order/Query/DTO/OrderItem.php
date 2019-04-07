@@ -60,6 +60,11 @@ class OrderItem
      */
     public $requiredPrepayment;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $baseSrc;
+
 
     public function __construct(array $item)
     {
@@ -73,5 +78,6 @@ class OrderItem
         $this->deliveryDate = $item['deliveryDate'] ?? null;
         $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
         $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
+        $this->baseSrc = $item['imageBasename'];
     }
 }

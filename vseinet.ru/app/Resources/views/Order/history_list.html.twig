@@ -82,7 +82,7 @@
                 {% endif %}
                 <div class="product{% if loop.index % 3 %} border{% endif %}">
                     <a href="{{ path('catalog_product', { id: item.baseProductId }) }}" class="image">
-                        <img src="{#$position|image:60#}" alt="">
+                        <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="">
                     </a>
                     <p>
                         <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">
