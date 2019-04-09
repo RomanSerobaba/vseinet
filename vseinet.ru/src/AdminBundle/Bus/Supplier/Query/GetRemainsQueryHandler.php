@@ -26,19 +26,19 @@ class GetRemainsQueryHandler extends MessageHandler
                 NULL AS article,
                 NULL AS code,
                 bp.name,
-                COALESCE(p.product_availability_code, p2.product_availability_code) AS product_availability_code,
-                COALESCE(p.price, p2.price) AS price,
-                COALESCE(p.price_time, p2.price_time) AS price_time,
+                :available::product_availability_code AS product_availability_code,
+                ROUND(SUM(grrc.delta * si.purchase_price) / SUM(grrc.delta)) AS price,
+                NULL AS price_time,
                 NULL AS transfered_by,
                 NULL AS transfered_at
             FROM base_product AS bp
-            LEFT OUTER JOIN product AS p ON p.base_product_id = bp.id AND p.geo_city_id = :geo_city_id AND p.product_availability_code = :available
-            INNER JOIN product AS p2 ON p2.base_product_id = bp.id
-            WHERE bp.id = :base_product_id AND p2.product_availability_code = :available AND p2.geo_city_id = 0
+            INNER JOIN goods_reserve_register_current AS grrc ON grrc.base_product_id = bp.id
+            INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
+            WHERE bp.id = :base_product_id
+            GROUP BY bp.name
         ', new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
-        $q->setParameter('geo_city_id', $this->getGeoCity()->getId());
         $remains = $q->getResult('DTOHydrator');
 
         $q = $em->createNativeQuery("
@@ -60,7 +60,7 @@ class GetRemainsQueryHandler extends MessageHandler
             LEFT OUTER JOIN \"user\" AS u ON u.id = oe.user_id
             LEFT OUTER JOIN person AS p ON p.id = u.person_id
             WHERE sp.base_product_id = :base_product_id
-            ORDER BY sp.product_availability_code DESC, sp.code ASC
+            ORDER BY sp.product_availability_code DESC, sp.updated_at DESC
         ", new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $remains = array_merge($remains, $q->getResult('DTOHydrator'));
