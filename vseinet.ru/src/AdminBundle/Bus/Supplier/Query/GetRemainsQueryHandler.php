@@ -19,7 +19,7 @@ class GetRemainsQueryHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->baseProductId));
         }
 
-        $q = $em->createNativeQuery("
+        $q = $em->createNativeQuery('
             SELECT
                 NULL AS id,
                 NULL AS supplier_code,
@@ -35,7 +35,7 @@ class GetRemainsQueryHandler extends MessageHandler
             LEFT OUTER JOIN product AS p ON p.base_product_id = bp.id AND p.geo_city_id = :geo_city_id AND p.product_availability_code = :available
             INNER JOIN product AS p2 ON p2.base_product_id = bp.id
             WHERE bp.id = :base_product_id AND p2.product_availability_code = :available AND p2.geo_city_id = 0
-        ", new DTORSM(DTO\Remain::class));
+        ', new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
         $q->setParameter('geo_city_id', $this->getGeoCity()->getId());
@@ -60,6 +60,7 @@ class GetRemainsQueryHandler extends MessageHandler
             LEFT OUTER JOIN \"user\" AS u ON u.id = oe.user_id
             LEFT OUTER JOIN person AS p ON p.id = u.person_id
             WHERE sp.base_product_id = :base_product_id
+            ORDER BY sp.product_availability_code DESC, sp.code ASC
         ", new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $remains = array_merge($remains, $q->getResult('DTOHydrator'));

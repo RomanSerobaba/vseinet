@@ -16,6 +16,7 @@ $(function() {
                         $(options.selectorId).val(ui.item.id);
                     }
                     options.select(e, ui);
+                    input.trigger('change');
                 },
                 source: function(request, response) {
                     var term = $.ui.autocomplete.escapeRegex(request.term);
