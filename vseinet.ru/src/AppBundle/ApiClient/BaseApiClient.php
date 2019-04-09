@@ -4,7 +4,6 @@ namespace AppBundle\ApiClient;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Http\Message\MessageFactory;
 use Http\Client\Common\PluginClient;
 use AppBundle\Bus\Message\Message;
@@ -29,15 +28,14 @@ abstract class BaseApiClient
     /**
      * @var string
      */
-    var $env;
+    public $env;
 
     public function __construct(
         string $apiHost,
         MessageFactory $factory,
         PluginClient $client,
         string $env
-    )
-    {
+    ) {
         $this->apiHost = $apiHost;
         $this->factory = $factory;
         $this->client = $client;
@@ -114,7 +112,7 @@ abstract class BaseApiClient
         $request = $this->factory->createRequest($method, $this->apiHost.$uri, $headers, $body);
         $response = $this->client->sendRequest($request);
         if (Response::HTTP_UNAUTHORIZED === $response->getStatusCode()) {
-            throw new UnauthorizedHttpException();
+            throw new UnauthorizedHttpException('WWW-Authenticate: Bearer realm="use Bearer token"');
         }
 
         $debugTokenLink = $response->getHeaders()['X-Debug-Token-Link'] ?? [];

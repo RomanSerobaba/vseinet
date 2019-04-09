@@ -19,7 +19,7 @@ class GetHistoryQueryHandler extends MessageHandler
         $api = $this->get('user.api.client');
         try {
             $parameters = [
-                'clientId' => $counteragent->getId(),
+                'financialCounteragentId' => $counteragent->getId(),
                 'page' => $query->page,
                 'limit' => $query->limit,
             ];
