@@ -12,11 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityManagerInterface;
-use AppBundle\Bus\Order\Form\ClientType;
 use AppBundle\Bus\User\Form\IsHumanType;
-use AppBundle\Bus\Order\Form\OrganizationDetailsType;
-use AppBundle\Bus\Order\Form\AddressType;
-use AppBundle\Bus\Order\Form\PassportType;
 use AppBundle\Bus\Order\Command\CreateCommand;
 use AppBundle\Enum\OrderType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -25,10 +21,7 @@ use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\ContactTypeCode;
 use AppBundle\Service\GeoCityIdentity;
 use AppBundle\Entity\GeoCity;
-use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Entity\GeoAddressToPerson;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use AppBundle\Bus\Order\Command\Schema\Client;
 use AppBundle\Enum\UserRole;
 use AppBundle\Enum\RepresentativeTypeCode;
 
@@ -54,7 +47,6 @@ class CreateFormType extends AbstractType
      */
     protected $container;
 
-
     public function __construct(EntityManagerInterface $em, TokenStorageInterface $security, GeoCityIdentity $geoCityIdentity, ContainerInterface $container)
     {
         $this->em = $em;
@@ -74,7 +66,7 @@ class CreateFormType extends AbstractType
             $points = $this->getEmployeePoints();
 
             if (empty($points)) {
-                $types = array_filter($types, function($val){
+                $types = array_filter($types, function ($val) {
                     return !in_array($val, [OrderType::CONSUMABLES, OrderType::EQUIPMENT, OrderType::RESUPPLY]);
                 });
             }
@@ -110,7 +102,7 @@ class CreateFormType extends AbstractType
         }
 
         $builder
-            ->add('typeCode', ChoiceType::class, ['required' => false, 'choices' => $types,])
+            ->add('typeCode', ChoiceType::class, ['required' => false, 'choices' => $types])
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class);
     }
@@ -119,6 +111,7 @@ class CreateFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CreateCommand::class,
+            'allow_extra_fields' => true,
         ]);
     }
 
@@ -134,14 +127,14 @@ class CreateFormType extends AbstractType
             return [];
         }
 
-        $clause = "";
+        $clause = '';
         $parameters = [];
 
         if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN])) {
-            $clause .= " AND p.id IN (:ids)";
+            $clause .= ' AND p.id IN (:ids)';
             $parameters['ids'] = $points;
         } else {
-            $clause .= " AND r.hasWarehouse = TRUE AND r.type IN (:representativeTypeCode_OUR, :representativeTypeCode_PARTNER, :representativeTypeCode_TORG)";
+            $clause .= ' AND r.hasWarehouse = TRUE AND r.type IN (:representativeTypeCode_OUR, :representativeTypeCode_PARTNER, :representativeTypeCode_TORG)';
             $parameters['representativeTypeCode_OUR'] = RepresentativeTypeCode::OUR;
             $parameters['representativeTypeCode_PARTNER'] = RepresentativeTypeCode::PARTNER;
             $parameters['representativeTypeCode_TORG'] = RepresentativeTypeCode::TORG;
@@ -170,7 +163,8 @@ class CreateFormType extends AbstractType
         return $q->getResult('IndexByHydrator');
     }
 
-    private function addPointDataFields(FormBuilderInterface $builder, array &$options, $points) {
+    private function addPointDataFields(FormBuilderInterface $builder, array &$options, $points)
+    {
         $point = reset($points);
 
         if (!empty($options['data']->geoPointId) && !empty($points[$options['data']->geoPointId])) {
@@ -188,21 +182,22 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addClientDataFields(FormBuilderInterface $builder, array &$options) {
+    private function addClientDataFields(FormBuilderInterface $builder, array &$options)
+    {
         $user = $this->security->getToken()->getUser();
         $clientDTO = $options['data']->client;
 
         if (!empty($options['data']->isNotificationNeeded) && null !== $options['data']->isNotificationNeeded) {
             $isNotificationNeeded = $options['data']->isNotificationNeeded;
         } else {
-            $isNotificationNeeded = TRUE;
+            $isNotificationNeeded = true;
         }
 
         if (is_object($user) && !$user->isEmployee() && empty($clientDTO)) {
             $clientDTO = new \AppBundle\Bus\Order\Command\Schema\Client();
             $clientDTO->userId = $user->getId();
             $clientDTO->fullname = $user->person->getFullname();
-            $q = $this->em->createQuery("
+            $q = $this->em->createQuery('
                 SELECT
                     c,
                     CASE WHEN c.isMain = true THEN 1 ELSE 2 END AS HIDDEN ORD1,
@@ -210,7 +205,7 @@ class CreateFormType extends AbstractType
                 FROM AppBundle:Contact AS c
                 WHERE c.personId = :personId AND c.contactTypeCode IN (:mobile, :phone)
                 ORDER BY ORD1 ASC, ORD2 ASC
-            ");
+            ');
             $q->setParameter('personId', $user->getPersonId());
             $q->setParameter('mobile', ContactTypeCode::MOBILE);
             $q->setParameter('phone', ContactTypeCode::PHONE);
@@ -228,14 +223,14 @@ class CreateFormType extends AbstractType
                 }
             }
 
-            $q = $this->em->createQuery("
+            $q = $this->em->createQuery('
                 SELECT
                     c,
                     CASE WHEN c.isMain = true THEN 1 ELSE 2 END AS HIDDEN ORD
                 FROM AppBundle:Contact AS c
                 WHERE c.personId = :personId AND c.contactTypeCode IN (:email)
                 ORDER BY ORD ASC
-            ");
+            ');
             $q->setParameter('personId', $user->getPersonId());
             $q->setParameter('email', ContactTypeCode::EMAIL);
             $email = $q->getOneOrNullResult();
@@ -247,8 +242,8 @@ class CreateFormType extends AbstractType
             $options['data']->client = $clientDTO;
         }
 
-        if (NULL === $options['data']->isMarketingSubscribed && (!is_object($user) || $user->getIsMarketingSubscribed())) {
-            $isMarketingSubscribed = TRUE;
+        if (null === $options['data']->isMarketingSubscribed && (!is_object($user) || $user->getIsMarketingSubscribed())) {
+            $isMarketingSubscribed = true;
         } else {
             $isMarketingSubscribed = $options['data']->isMarketingSubscribed;
         }
@@ -261,10 +256,11 @@ class CreateFormType extends AbstractType
                     'required' => false,
                 ])
             ->add('client', ClientType::class)
-            ->add('isNotificationNeeded', CheckBoxType::class, ['required' => false, 'data' => $isNotificationNeeded,]);
+            ->add('isNotificationNeeded', CheckBoxType::class, ['required' => false, 'data' => $isNotificationNeeded]);
     }
 
-    private function addPaymentTypesFields(FormBuilderInterface $builder, array &$options) {
+    private function addPaymentTypesFields(FormBuilderInterface $builder, array &$options)
+    {
         $user = $this->security->getToken()->getUser();
         $q = $this->em->createQuery("
             SELECT
@@ -283,25 +279,25 @@ class CreateFormType extends AbstractType
         $paymentTypes = $q->getResult('IndexByHydrator');
 
         if (!is_object($user) || !$user->isEmployee()) {
-            $paymentTypes = array_filter($paymentTypes, function($val){
+            $paymentTypes = array_filter($paymentTypes, function ($val) {
                 return !$val->isInternal;
             });
         }
 
         if (OrderType::RETAIL == $options['data']->typeCode) {
-            $paymentTypes = array_filter($paymentTypes, function($val) use ($options) {
+            $paymentTypes = array_filter($paymentTypes, function ($val) use ($options) {
                 return PaymentTypeCode::TERMINAL != $val->code || in_array($options['data']->geoCityId, [950, 174]);
             });
         }
 
-        if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST,])) {
-            $paymentTypes = array_filter($paymentTypes, function($val){
+        if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST])) {
+            $paymentTypes = array_filter($paymentTypes, function ($val) {
                 return $val->isRemote;
             });
         }
 
         if (OrderType::LEGAL == $options['data']->typeCode) {
-            $paymentTypes = array_filter($paymentTypes, function($val){
+            $paymentTypes = array_filter($paymentTypes, function ($val) {
                 return in_array($val->code, [PaymentTypeCode::CASHLESS, PaymentTypeCode::CASH]);
             });
             $paymentTypeParams['data'] = PaymentTypeCode::CASHLESS;
@@ -310,8 +306,8 @@ class CreateFormType extends AbstractType
         }
 
         // if (false !== array_search(PaymentTypeCode::CREDIT, $paymentTypes)) {
-            $builder
-                ->add('creditDownPayment', TextType::class, ['required' => false,]);
+        $builder
+                ->add('creditDownPayment', TextType::class, ['required' => false]);
         // }
 
         $paymentType = reset($paymentTypes);
@@ -332,7 +328,8 @@ class CreateFormType extends AbstractType
             ]);
     }
 
-    private function addAddressDataFields(FormBuilderInterface $builder, array &$options) {
+    private function addAddressDataFields(FormBuilderInterface $builder, array &$options)
+    {
         $user = $this->security->getToken()->getUser();
         $addressDTO = $options['data']->address;
 
@@ -360,7 +357,7 @@ class CreateFormType extends AbstractType
             $addressDTO = $q->getOneOrNullResult();
 
             if (!empty($addressDTO) && $geoCityId != $addressDTO->geoCityId) {
-                $addressDTO = NULL;
+                $addressDTO = null;
             }
 
             $options['data']->address = $addressDTO;
@@ -370,7 +367,8 @@ class CreateFormType extends AbstractType
             ->add('address', AddressType::class, ['data' => $addressDTO]);
     }
 
-    private function addDeliveryTypesFields(FormBuilderInterface $builder, array &$options) {
+    private function addDeliveryTypesFields(FormBuilderInterface $builder, array &$options)
+    {
         $user = $this->security->getToken()->getUser();
         $allDeliveryTypes = DeliveryTypeCode::getChoices();
         $deliveryTypes = [];
@@ -426,12 +424,12 @@ class CreateFormType extends AbstractType
         }
 
         if (count($points) > 0) {
-            array_walk($points, function($value) use (&$hasDelivery) {
+            array_walk($points, function ($value) use (&$hasDelivery) {
                 if ($value->hasDelivery) {
                     $hasDelivery = true;
                 }
             });
-            $points = array_filter($points, function($val){
+            $points = array_filter($points, function ($val) {
                 return $val->hasRetail;
             });
 
@@ -459,7 +457,7 @@ class CreateFormType extends AbstractType
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
                 $this->addAddressDataFields($builder, $options);
                 $builder
-                    ->add('needLifting', CheckBoxType::class, ['required' => false,]);
+                    ->add('needLifting', CheckBoxType::class, ['required' => false]);
             }
         } else {
             $q = $this->em->createQuery("
@@ -528,7 +526,8 @@ class CreateFormType extends AbstractType
                 ]);
     }
 
-    private function addAdditionalDataFields(FormBuilderInterface $builder, array &$options) {
+    private function addAdditionalDataFields(FormBuilderInterface $builder, array &$options)
+    {
         $user = $this->security->getToken()->getUser();
         $isCallNeeded = null;
 
@@ -543,20 +542,21 @@ class CreateFormType extends AbstractType
         $options['data']->isCallNeeded = $isCallNeeded;
         $builder
             ->add('isCallNeeded', ChoiceType::class, [
-                'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true,],
+                'choices' => ['Не требуется, со сроками доставки ознакомлен' => false, 'Требуется (у меня остались вопросы)' => true],
                 'data' => $isCallNeeded,
                 'required' => false,
             ])
-            ->add('callNeedComment', TextType::class, ['required' => false,])
-            ->add('comment', TextareaType::class, ['required' => false,]);
+            ->add('callNeedComment', TextType::class, ['required' => false])
+            ->add('comment', TextareaType::class, ['required' => false]);
     }
 
-    private function addOrganizationDetailsFields(FormBuilderInterface $builder, array &$options) {
+    private function addOrganizationDetailsFields(FormBuilderInterface $builder, array &$options)
+    {
         $builder
             ->add('organizationDetails', OrganizationDetailsType::class)
             ->add('withVat', ChoiceType::class, [
                 'required' => false,
-                'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true,],
+                'choices' => ['Приобрести товар без НДС' => false, 'Приобрести товар с НДС' => true],
             ]);
     }
 }

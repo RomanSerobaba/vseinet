@@ -5,9 +5,9 @@
             <label>Город получения:</label>
                 <div>
                 {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value %}
-                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete', readonly: true }}) }}
+                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete', novalidate: true, readonly: true }}) }}
                 {% else %}
-                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete' }}) }}
+                    {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete', novalidate: true }}) }}
                 {% endif %}
                 </div>
             {% if cart.hasStroika %}
@@ -23,7 +23,7 @@
         <div class="row v">
             <label for="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} />
+                <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %} novalidate="novalidate" />
             </label>
         </div>
 
