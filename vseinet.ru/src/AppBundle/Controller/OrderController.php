@@ -281,4 +281,20 @@ class OrderController extends Controller
             'data' => $bank,
         ]);
     }
+
+    /**
+     * @VIA\Get(
+     *     name="get_counteragent",
+     *     path="/counteragent/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function getCounteragentAction(Request $request)
+    {
+        $counteragent = $this->get('query_bus')->handle(new Query\GetCounteragentQuery($request->query->all()));
+
+        return $this->json([
+            'data' => $counteragent,
+        ]);
+    }
 }

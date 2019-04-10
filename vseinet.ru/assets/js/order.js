@@ -224,52 +224,6 @@ $(function() {
         }
     }
 
-    function attachCityAutocomplete()
-    {
-        // var cacheGeoCities = {};
-        // var txt = $('[name="create_form[geoCityName]"].autocomplete');
-
-        // if (txt.length > 0) {
-        //     txt.autocomplete({
-        //         create: function() {
-        //             $(this).data('ui-autocomplete').widget().menu({
-        //                 focus: function(event, ui) {
-        //                     ui.item.addClass('ui-state-focus');
-        //                 },
-        //                 blur: function() {
-        //                     $(this).find('.ui-state-focus').removeClass('ui-state-focus');
-        //                 }
-        //             });
-        //         },
-        //         minLength: 2,
-        //         select: function(event, ui) {
-        //             console.log('select', event, ui);
-        //             $('[name="create_form[geoCityId]"]').val(ui.item.id);
-        //             $('[name="create_form[geoCityName"]').trigger('change');
-        //         },
-        //         source: function(request, response) {
-        //             var term = $.ui.autocomplete.escapeRegex(request.term);
-        //             if (term in cacheGeoCities) {
-        //                 response(cacheGeoCities[term]);
-        //                 return false;
-        //             }
-        //             sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
-        //                 var regexp = new RegExp('(' + term + ')', 'ig');
-        //                 cacheGeoCities[term] = $.map(data.geoCities, function(item) {
-        //                     item.value = item.name;
-        //                     item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
-        //                     return item;
-        //                 });
-        //                 response(cacheGeoCities[term]);
-        //             });
-        //         }
-        //     })
-        //     txt.data('ui-autocomplete')._renderItem = function(ul, item) {
-        //         return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
-        //     };
-        // }
-    }
-
     function attachStreetAutocomplete()
     {
         var cacheGeoStreets = {};
@@ -306,54 +260,6 @@ $(function() {
                             return item;
                         });
                         response(cacheGeoStreets[term]);
-                    });
-                }
-            })
-            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
-                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
-            };
-        }
-    }
-
-    function attachBankAutocomplete()
-    {
-        var cacheBanks = {};
-
-        var txt = $('[name="create_form[organizationDetails][bic]"].autocomplete');
-
-        if (txt.length > 0) {
-            var txt = $('[name="create_form[organizationDetails][bic]"].autocomplete').autocomplete({
-                create: function() {
-                    $(this).data('ui-autocomplete').widget().menu({
-                        focus: function(event, ui) {
-                            ui.item.addClass('ui-state-focus');
-                        },
-                        blur: function() {
-                            $(this).find('.ui-state-focus').removeClass('ui-state-focus');
-                        }
-                    });
-                },
-                minLength: 2,
-                select: function(event, ui) {
-                    event.preventDefault();
-                    $('[name="create_form[organizationDetails][bankId]"]').val(ui.item.id);
-                    $('[name="create_form[organizationDetails][bankName]"]').val(ui.item.name);
-                    $('[name="create_form[organizationDetails][bic]"]').val(ui.item.bic);
-                },
-                source: function(request, response) {
-                    var term = $.ui.autocomplete.escapeRegex(request.term);
-                    if (term in cacheBanks) {
-                        response(cacheBanks[term]);
-                        return false;
-                    }
-                    sp.post(Routing.generate('search_bank'), { q: request.term }).done(function(data) {
-                        var regexp = new RegExp('(' + term + ')', 'ig');
-                        cacheBanks[term] = $.map(data.banks, function(item) {
-                            item.value = item.name;
-                            item.label = item.name.replace(regexp, '<b>$1</b>');
-                            return item;
-                        });
-                        response(cacheBanks[term]);
                     });
                 }
             })
@@ -401,6 +307,45 @@ $(function() {
                 }
             });
         }, 50);
+    }).on('change', '[name="create_form[organizationDetails][tin]"]', function(e){
+        if ('' !== $(this).val()) {
+            $.ajax({
+                url: Routing.generate('get_counteragent'),
+                method: 'GET',
+                dataType: 'json',
+                data: { 'tin': $(this).val() },
+                complete: function (jqXHR, status) {
+                    var response = jqXHR.responseJSON;
+
+                    if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
+                            $('[name="create_form[organizationDetails][kpp]"]').val('');
+                            $('[name="create_form[organizationDetails][name]"]').val('');
+                            $('[name="create_form[organizationDetails][legalAddress]"]').val('');
+                            $('[name="create_form[organizationDetails][settlementAccount]"]').val('');
+                            $('[name="create_form[organizationDetails][bic]"]').val('');
+                            $('[name="create_form[organizationDetails][bankName]"]').val('');
+                            $('[name="create_form[organizationDetails][bankId]"]').val('');
+                            return false;
+                    }
+
+                    $('[name="create_form[organizationDetails][kpp]"]').val(response.data.kpp);
+                    $('[name="create_form[organizationDetails][name]"]').val(response.data.name);
+                    $('[name="create_form[organizationDetails][legalAddress]"]').val(response.data.legalAddress);
+                    $('[name="create_form[organizationDetails][settlementAccount]"]').val(response.data.settlementAccount);
+                    $('[name="create_form[organizationDetails][bic]"]').val(response.data.bic);
+                    $('[name="create_form[organizationDetails][bankName]"]').val(response.data.bankName);
+                    $('[name="create_form[organizationDetails][bankId]"]').val(response.data.bankId);
+                }
+            });
+        } else {
+            $('[name="create_form[organizationDetails][kpp]"]').val('');
+            $('[name="create_form[organizationDetails][name]"]').val('');
+            $('[name="create_form[organizationDetails][legalAddress]"]').val('');
+            $('[name="create_form[organizationDetails][settlementAccount]"]').val('');
+            $('[name="create_form[organizationDetails][bic]"]').val('');
+            $('[name="create_form[organizationDetails][bankName]"]').val('');
+            $('[name="create_form[organizationDetails][bankId]"]').val('');
+        }
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
         if ('' !== $(this).val()) {
             $.ajax({
@@ -435,7 +380,9 @@ $(function() {
     refreshFormEvents();
     attachMasks();
     attachUserAutocomplete();
-    attachCityAutocomplete();
+    $('[name="create_form[geoCityName]"]').geoCity({
+        selectorId: '[name*=geoCityId]'
+    });
     attachStreetAutocomplete();
     attachDatePicker();
 });
