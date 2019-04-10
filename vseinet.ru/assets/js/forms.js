@@ -47,9 +47,9 @@ $.widget('sp.form', {
                     clearTimeout(timer);
                     timer = setTimeout(function() {
                         var input = e.target;
-                        if (input.id && !input.getAttribute('novalidate') && false !== that.options.validate) {
+                        if (input.id) {
                             that._add(input, true);
-                            if (that.element.is(':visible')) {
+                            if (that.element.is(':visible') && !input.getAttribute('novalidate') && false !== that.options.validate) {
                                 that._validate();
                             }
                         }
