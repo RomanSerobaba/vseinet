@@ -60,6 +60,11 @@ class OrderItem
      */
     public $requiredPrepayment;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $baseSrc;
+
 
     public function __construct(array $item)
     {
@@ -67,11 +72,12 @@ class OrderItem
         $this->statusCode = $item['statusCode'];
         $this->statusCodeName = OrderItemStatus::getName($item['statusCode']);
         $this->tracker = OrderItemStatus::getTracker($item['statusCode']);
-        $this->productName = $item['productName'];
+        $this->productName = $item['baseProductName'];
         $this->baseProductId = $item['baseProductId'];
         $this->retailPrice = $item['retailPrice'] ?? 0;
         $this->deliveryDate = $item['deliveryDate'] ?? null;
         $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
         $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
+        $this->baseSrc = $item['imageBasename'] ?? null;
     }
 }

@@ -24,7 +24,7 @@ class SupplierController extends Controller
      *     condition="request.isXmlHttpRequest()"
      * )
      */
-    public function remiansAction(Request $request)
+    public function remainsAction(Request $request)
     {
         $remains = $this->get('query_bus')->handle(new Query\GetRemainsQuery($request->query->all()));
 

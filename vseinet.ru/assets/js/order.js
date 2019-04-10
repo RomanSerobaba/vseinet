@@ -226,48 +226,48 @@ $(function() {
 
     function attachCityAutocomplete()
     {
-        var cacheGeoCities = {};
-        var txt = $('[name="create_form[geoCityName]"].autocomplete');
+        // var cacheGeoCities = {};
+        // var txt = $('[name="create_form[geoCityName]"].autocomplete');
 
-        if (txt.length > 0) {
-            txt.autocomplete({
-                create: function() {
-                    $(this).data('ui-autocomplete').widget().menu({
-                        focus: function(event, ui) {
-                            ui.item.addClass('ui-state-focus');
-                        },
-                        blur: function() {
-                            $(this).find('.ui-state-focus').removeClass('ui-state-focus');
-                        }
-                    });
-                },
-                minLength: 2,
-                select: function(event, ui) {
-                    $('[name="create_form[geoCityId]"]')
-                        .val(ui.item.id)
-                        .trigger('change');
-                },
-                source: function(request, response) {
-                    var term = $.ui.autocomplete.escapeRegex(request.term);
-                    if (term in cacheGeoCities) {
-                        response(cacheGeoCities[term]);
-                        return false;
-                    }
-                    sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
-                        var regexp = new RegExp('(' + term + ')', 'ig');
-                        cacheGeoCities[term] = $.map(data.geoCities, function(item) {
-                            item.value = item.name;
-                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
-                            return item;
-                        });
-                        response(cacheGeoCities[term]);
-                    });
-                }
-            })
-            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
-                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
-            };
-        }
+        // if (txt.length > 0) {
+        //     txt.autocomplete({
+        //         create: function() {
+        //             $(this).data('ui-autocomplete').widget().menu({
+        //                 focus: function(event, ui) {
+        //                     ui.item.addClass('ui-state-focus');
+        //                 },
+        //                 blur: function() {
+        //                     $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+        //                 }
+        //             });
+        //         },
+        //         minLength: 2,
+        //         select: function(event, ui) {
+        //             console.log('select', event, ui);
+        //             $('[name="create_form[geoCityId]"]').val(ui.item.id);
+        //             $('[name="create_form[geoCityName"]').trigger('change');
+        //         },
+        //         source: function(request, response) {
+        //             var term = $.ui.autocomplete.escapeRegex(request.term);
+        //             if (term in cacheGeoCities) {
+        //                 response(cacheGeoCities[term]);
+        //                 return false;
+        //             }
+        //             sp.post(Routing.generate('search_geo_city'), { q: request.term }).done(function(data) {
+        //                 var regexp = new RegExp('(' + term + ')', 'ig');
+        //                 cacheGeoCities[term] = $.map(data.geoCities, function(item) {
+        //                     item.value = item.name;
+        //                     item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>') + ' <small>(' +  item.regionName + ')</small>';
+        //                     return item;
+        //                 });
+        //                 response(cacheGeoCities[term]);
+        //             });
+        //         }
+        //     })
+        //     txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+        //         return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+        //     };
+        // }
     }
 
     function attachStreetAutocomplete()
@@ -364,37 +364,42 @@ $(function() {
     }
 
     var wrapper = $('#content');
+    var reloadTimer = null;
 
-    wrapper.on('change', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"],[name="create_form[geoCityId]"]', function(e){
-        $.ajax({
-            url: window.location.href + '?refreshOnly=1',
-            method: 'POST',
-            dataType: 'json',
-            data: $('[name="create_form"]').serializeArray(),
-            complete: function (jqXHR, status) {
-                var response = jqXHR.responseJSON;
+    wrapper.on('change', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"],[name="create_form[geoCityName]"]', function(e){
+        console.log('change', e)
+        clearTimeout(reloadTimer);
+        reloadTimer = setTimeout(function() {
+            $.ajax({
+                url: window.location.href + '?refreshOnly=1',
+                method: 'POST',
+                dataType: 'json',
+                data: $('[name="create_form"]').serializeArray(),
+                complete: function (jqXHR, status) {
+                    var response = jqXHR.responseJSON;
 
-                if (response === undefined || response.hasOwnProperty('errors') || response.hasOwnProperty('error')) {
-                    // if (response.hasOwnProperty('error') && response.error.hasOwnProperty('error_code') && response.error.error_code == 17) {
-                    //     window.open(response.error.redirect_uri);
-                    // } else {
-                    //     $('form#order-creation-form').prepend('<div id=\'sn-login-error\' class=\'row error\'>Произошла ошибка. Попробуйте войти позднее.</div>');
-                    //     console.warn(jqXHR);
-                        return false;
-                    // }
+                    if (response === undefined || response.hasOwnProperty('errors') || response.hasOwnProperty('error')) {
+                        // if (response.hasOwnProperty('error') && response.error.hasOwnProperty('error_code') && response.error.error_code == 17) {
+                        //     window.open(response.error.redirect_uri);
+                        // } else {
+                        //     $('form#order-creation-form').prepend('<div id=\'sn-login-error\' class=\'row error\'>Произошла ошибка. Попробуйте войти позднее.</div>');
+                        //     console.warn(jqXHR);
+                            return false;
+                        // }
+                    }
+
+                    if (response.hasOwnProperty('html')) {
+                        $('#create_form_wrapper').html(response.html);
+                        refreshFormEvents();
+                        attachMasks();
+                        attachUserAutocomplete();
+                        attachCityAutocomplete();
+                        attachStreetAutocomplete();
+                        attachDatePicker();
+                    }
                 }
-
-                if (response.hasOwnProperty('html')) {
-                    $('#create_form_wrapper').html(response.html);
-                    refreshFormEvents();
-                    attachMasks();
-                    attachUserAutocomplete();
-                    attachCityAutocomplete();
-                    attachStreetAutocomplete();
-                    attachDatePicker();
-                }
-            }
-        });
+            });
+        }, 50);
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
         if ('' !== $(this).val()) {
             $.ajax({
