@@ -31,7 +31,13 @@ class OrganizationDetailsType extends AbstractType
             'constraints' => [
                 new Assert\Callback(function($data, $context){
                     if (!empty($data->settlementAccount) && empty($data->bankId)) {
-                        $context->buildViolation('Необходимо указать БИК для расчетного счета')
+                        if (empty($data->bic)) {
+                            $errorText = 'Необходимо указать БИК для расчетного счета';
+                        } else {
+                            $errorText = 'Вы указали некорректный БИК';
+                        }
+
+                        $context->buildViolation($errorText)
                             ->atPath('bic')
                             ->addViolation();
                         }
