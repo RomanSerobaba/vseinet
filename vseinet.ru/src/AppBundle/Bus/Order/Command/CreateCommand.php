@@ -141,8 +141,9 @@ class CreateCommand extends Message
 
         if (!empty($address)) {
             $this->setSchema($addressSchema, $address);
-            $this->address = $addressSchema;
         }
+
+        $this->address = $addressSchema;
     }
 
     public function setClient($client)
@@ -150,10 +151,10 @@ class CreateCommand extends Message
         $clientSchema = new Client();
 
         if (!empty($client)) {
-            $clientSchema = new Client();
             $this->setSchema($clientSchema, $client);
-            $this->client = $clientSchema;
         }
+
+        $this->client = $clientSchema;
     }
 
     public function setPassport($passport)
@@ -163,8 +164,9 @@ class CreateCommand extends Message
 
             if (!empty($passport)) {
                 $this->setSchema($passportSchema, $passport);
-                $this->passport = $passportSchema;
             }
+
+            $this->passport = $passportSchema;
         } else {
             $this->passport = $passport;
         }
@@ -176,8 +178,9 @@ class CreateCommand extends Message
 
         if (!empty($organizationDetails)) {
             $this->setSchema($organizationDetailsSchema, $organizationDetails);
-            $this->organizationDetails = $organizationDetailsSchema;
         }
+
+        $this->organizationDetails = $organizationDetailsSchema;
     }
 
     public function setWithVat($withVat)
