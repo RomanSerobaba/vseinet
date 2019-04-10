@@ -347,7 +347,7 @@ $(function() {
             $('[name="create_form[organizationDetails][bankId]"]').val('');
         }
 
-        $('[name="create_form"').trigger('change');
+        $('[name="create_form"]').trigger('change');
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
         if ('' !== $(this).val()) {
             $.ajax({
