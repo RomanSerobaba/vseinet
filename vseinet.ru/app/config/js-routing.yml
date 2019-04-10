@@ -13,6 +13,7 @@ fos_js_routing:
         - 'search_geo_city'
         - 'search_geo_street'
         - 'get_bank'
+        - 'get_counteragent'
         - 'error_report'
         - 'order_status'
         - 'cart_set_quantity'
