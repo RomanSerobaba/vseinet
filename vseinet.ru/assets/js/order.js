@@ -365,6 +365,7 @@ $(function() {
                     if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
                             $('[name="create_form[organizationDetails][bankName]"]').val('');
                             $('[name="create_form[organizationDetails][bankId]"]').val('');
+                            $('[name="create_form"]').trigger('change');
                             return false;
                     }
 
