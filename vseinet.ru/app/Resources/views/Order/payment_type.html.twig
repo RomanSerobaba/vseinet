@@ -15,7 +15,7 @@
             {% endif %}
         </div>
         {% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value and cart.summary > credit_threshold %}
-        <div class="row h subrow">
+        <div class="row h subrow" id="credit_down_payment"{% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') != form.paymentTypeCode.vars.value %} style="display:none"{% endif %}>
             {{ form_label(form.creditDownPayment, 'Первоначальный взнос:') }}
             {{ form_widget(form.creditDownPayment, { attr: { class: 'txt' }}) }}
         </div>

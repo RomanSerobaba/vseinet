@@ -367,7 +367,6 @@ $(function() {
     var reloadTimer = null;
 
     wrapper.on('change', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"],[name="create_form[geoCityName]"]', function(e){
-        console.log('change', e)
         clearTimeout(reloadTimer);
         reloadTimer = setTimeout(function() {
             $.ajax({
@@ -428,6 +427,7 @@ $(function() {
         $('[name="create_form[callNeedComment]"]').parent('.row')[1 == $(this).val() ? 'show' : 'hide']();
     }).on('change', '[name="create_form[paymentTypeCode]"]', function(e){
         $('#client_contact_info')['retail' !== $('[name="create_form[typeCode]"]:checked').val() || 'credit' === $('[name="create_form[paymentTypeCode]"]:checked').val() || 'installment' === $('[name="create_form[paymentTypeCode]"]:checked').val() ? 'show' : 'hide']();
+        $('#credit_down_payment')['credit' === $('[name="create_form[paymentTypeCode]"]:checked').val() ? 'show' : 'hide']();
     });
 
     refreshFormEvents();
