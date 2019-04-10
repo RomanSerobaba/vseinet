@@ -18,7 +18,7 @@
             <label for="{{ form.organizationDetails.tin.vars.id }}">
                 ИНН: <b>*</b>
             </label>
-            {{ form_widget(form.organizationDetails.tin, { attr: { class: 'txt', maxlength: 12, novalidate: true }}) }}
+            {{ form_widget(form.organizationDetails.tin, { attr: { class: 'txt', maxlength: 12 }}) }}
             <span class="status"></span>
             {% if errors.organizationDetails.tin is defined %}
                 <div class="error">{{ errors.organizationDetails.tin.0 }}</div>
@@ -60,7 +60,7 @@
         </div>
         <div class="row h">
             {{ form_label(form.organizationDetails.bic, 'БИК:') }}
-            {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt autocomplete', maxlength: 9 }}) }}
+            {{ form_widget(form.organizationDetails.bic, { attr: { class: 'txt autocomplete', maxlength: 9, novalidate: true }}) }}
             <span class="status"></span>
             {% if errors.organizationDetails.bic is defined %}
                 <div class="error">{{ errors.organizationDetails.bic.0 }}</div>
