@@ -31,7 +31,7 @@
             {% for subchoice in form.geoPointId.vars.choices %}
             <div class="row subrow">
                 <label for="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}">
-                    {% if subchoice.label is empty %}
+                    {% if subchoice.data.address is not empty %}
                         <a href="/contacts/{{ subchoice.value }}/">{{ subchoice.data.address }}</a>
                     {% else %}
                         {{ subchoice.label }}
