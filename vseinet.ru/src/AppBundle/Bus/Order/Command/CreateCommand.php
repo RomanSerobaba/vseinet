@@ -137,35 +137,33 @@ class CreateCommand extends Message
 
     public function setAddress($address)
     {
+        $addressSchema = new Address();
+
         if (!empty($address)) {
-            $addressSchema = new Address();
             $this->setSchema($addressSchema, $address);
             $this->address = $addressSchema;
-        } else {
-            $this->address = null;
         }
     }
 
     public function setClient($client)
     {
+        $clientSchema = new Client();
+
         if (!empty($client)) {
             $clientSchema = new Client();
             $this->setSchema($clientSchema, $client);
             $this->client = $clientSchema;
-        } else {
-            $this->client = null;
         }
     }
 
     public function setPassport($passport)
     {
         if (!$passport instanceof Passport) {
+            $passportSchema = new Passport();
+
             if (!empty($passport)) {
-                $passportSchema = new Passport();
                 $this->setSchema($passportSchema, $passport);
                 $this->passport = $passportSchema;
-            } else {
-                $this->passport = null;
             }
         } else {
             $this->passport = $passport;
@@ -174,12 +172,11 @@ class CreateCommand extends Message
 
     public function setOrganizationDetails($organizationDetails)
     {
+        $organizationDetailsSchema = new OrganizationDetails();
+
         if (!empty($organizationDetails)) {
-            $organizationDetailsSchema = new OrganizationDetails();
             $this->setSchema($organizationDetailsSchema, $organizationDetails);
             $this->organizationDetails = $organizationDetailsSchema;
-        } else {
-            $this->organizationDetails = null;
         }
     }
 
