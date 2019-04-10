@@ -370,14 +370,14 @@ $(function() {
 
                     $('[name="create_form[organizationDetails][bankId]"]').val(response.data.id);
                     $('[name="create_form[organizationDetails][bankName]"]').val(response.data.name);
+                    $('[name="create_form"]').trigger('change');
                 }
             });
         } else {
             $('[name="create_form[organizationDetails][bankName]"]').val('');
             $('[name="create_form[organizationDetails][bankId]"]').val('');
+            $('[name="create_form"]').trigger('change');
         }
-
-        $('[name="create_form"]').trigger('change');
     }).on('change', '[name="create_form[isCallNeeded]"]', function(e){
         $('[name="create_form[callNeedComment]"]').parent('.row')[1 == $(this).val() ? 'show' : 'hide']();
     }).on('change', '[name="create_form[paymentTypeCode]"]', function(e){
