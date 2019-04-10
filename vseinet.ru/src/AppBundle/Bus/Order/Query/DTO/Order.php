@@ -112,7 +112,7 @@ class Order
         $this->addresseename = $order['personName'] ?? null;
         $this->typeCode = $order['orderTypeCode'] ?? null;
         foreach ($order['contacts'] ?? [] as $contact) {
-            $this->contacts[] = new Contact(0, $contact['type'], $contact['value']);
+            $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }
         $this->cityName = $order['cityName'] ?? null;
         $this->address = $order['deliveryAddress'] ?? null;
