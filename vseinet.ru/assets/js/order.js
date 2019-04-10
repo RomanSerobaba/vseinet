@@ -417,8 +417,8 @@ $(function() {
                             return false;
                     }
 
-                    $('[name="create_form[organizationDetails][bankName]"]').val(response.data.name);
                     $('[name="create_form[organizationDetails][bankId]"]').val(response.data.id);
+                    $('[name="create_form[organizationDetails][bankName]"]').val(response.data.name);
                 }
             });
         } else {
