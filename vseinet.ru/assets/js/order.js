@@ -392,7 +392,9 @@ $(function() {
                         refreshFormEvents();
                         attachMasks();
                         attachUserAutocomplete();
-                        attachCityAutocomplete();
+                        $('[name="create_form[geoCityName]"]').geoCity({
+                            selectorId: '[name*=geoCityId]'
+                        });
                         attachStreetAutocomplete();
                         attachDatePicker();
                     }
