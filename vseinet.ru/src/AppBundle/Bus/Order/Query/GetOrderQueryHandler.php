@@ -32,6 +32,14 @@ class GetOrderQueryHandler extends MessageHandler
             }
         }
 
+        if (!empty($result['persons'])) {
+            foreach ($result['persons'] as $person) {
+                if ($person['id'] == $order['personId']) {
+                    $order['personName'] = $person['fullname'];
+                }
+            }
+        }
+
         return new DTO\Order($order);
     }
 }
