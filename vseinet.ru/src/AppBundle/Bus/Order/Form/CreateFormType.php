@@ -356,7 +356,7 @@ class CreateFormType extends AbstractType
             $q->setParameter('personId', $user->getPersonId());
             $addressDTO = $q->getOneOrNullResult();
 
-            if (!empty($addressDTO) && $geoCityId != $addressDTO->geoCityId) {
+            if (!empty($addressDTO) && $options['data']->geoCityId != $addressDTO->geoCityId) {
                 $addressDTO = null;
             }
 

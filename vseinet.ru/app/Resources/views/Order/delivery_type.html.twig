@@ -31,10 +31,13 @@
             {% for subchoice in form.geoPointId.vars.choices %}
             <div class="row subrow">
                 <label for="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}">
-                    {{ subchoice.label }}
+                    {% if subchoice.label is empty %}
+                        <a href="/contacts/{{ subchoice.value }}/">{{ subchoice.data.address }}</a>
+                    {% else %}
+                        {{ subchoice.label }}
+                    {% endif %}
                     <input type="radio" id="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}" name="{{ form.geoPointId.vars.full_name }}" value="{{ subchoice.value }}"{% if (subchoice.value == form.geoPointId.vars.value)  %} checked="checked"{% endif %} />
                 </label>
-                <div class="notice2"><a href="/contacts/{{ subchoice.value }}/">{{ subchoice.data.address }}</a></div>
             </div>
             {% endfor %}
         {% endif %}
