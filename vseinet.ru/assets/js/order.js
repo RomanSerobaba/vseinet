@@ -273,6 +273,12 @@ $(function() {
     var reloadTimer = null;
 
     wrapper.on('change', '[name="create_form[typeCode]"],[name="create_form[deliveryTypeCode]"],[name="create_form[geoCityName]"]', function(e){
+        if ('legal' === $('[name="create_form[typeCode]"]:checked').val()) {
+            $('[name="create_form[paymentTypeCode]"][value="cashless"]').prop('checked', true);
+        } else if ('natural' === $('[name="create_form[typeCode]"]:checked').val() && $('[name="create_form[paymentTypeCode]"][value="cash"]').length > 0) {
+            $('[name="create_form[paymentTypeCode]"][value="cash"]').prop('checked', true);
+        }
+
         clearTimeout(reloadTimer);
         reloadTimer = setTimeout(function() {
             $.ajax({
@@ -346,8 +352,6 @@ $(function() {
             $('[name="create_form[organizationDetails][bankName]"]').val('');
             $('[name="create_form[organizationDetails][bankId]"]').val('');
         }
-
-        $('[name="create_form"]').trigger('change');
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
         if ('' !== $(this).val()) {
             $.ajax({
@@ -372,6 +376,8 @@ $(function() {
             $('[name="create_form[organizationDetails][bankName]"]').val('');
             $('[name="create_form[organizationDetails][bankId]"]').val('');
         }
+
+        $('[name="create_form"]').trigger('change');
     }).on('change', '[name="create_form[isCallNeeded]"]', function(e){
         $('[name="create_form[callNeedComment]"]').parent('.row')[1 == $(this).val() ? 'show' : 'hide']();
     }).on('change', '[name="create_form[paymentTypeCode]"]', function(e){
