@@ -42,7 +42,7 @@ class GeoCityIdentity extends ContainerAware
                     return $geoCityId;
                 }
                 $q = $em->createQuery("
-                    SELECT ga.geoCityId, CASE WHEN ga.isMain IS TRUE THEN 1 ELSE 2 END AS HIDDEN ORD
+                    SELECT ga.geoCityId, CASE WHEN ga.isMain = TRUE THEN 1 ELSE 2 END AS HIDDEN ORD
                     FROM AppBundle:GeoAddress AS ga
                     INNER JOIN AppBundle::GeoAddressToPerson AS ga2p WITH ga2p.geoAddressId = ga.id
                     WHERE ga2p.personId = :personId AND ga.geoCityId IS NOT NULL
