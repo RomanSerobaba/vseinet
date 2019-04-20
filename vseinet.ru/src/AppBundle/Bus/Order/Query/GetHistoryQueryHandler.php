@@ -23,9 +23,37 @@ class GetHistoryQueryHandler extends MessageHandler
                 'page' => $query->page,
                 'limit' => $query->limit,
             ];
-            $history = $api->get('/api/v1/orders/?'.http_build_query($parameters));
+            $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
             return null;
+        }
+
+        if (0 === $result['total']) {
+            return null;
+        }
+
+        $history = [
+            'total' => $result['total'],
+            'orders' => [],
+        ];
+
+        foreach ($result['orders'] as $order) {
+            foreach ($result['orderItems'] as $item) {
+                foreach ($item['statuses'] as $status) {
+                    $order['items'][] = array_merge($item, ['statusCode' => $status['code']]);
+                }
+            }
+
+            if (!empty($result['persons'])) {
+                foreach ($result['persons'] as $person) {
+                    if ($person['id'] == $order['personId']) {
+                        $order['personName'] = $person['fullname'];
+                        $order['contacts'] = $person['contacts'];
+                    }
+                }
+            }
+
+            $history['orders'][] = new DTO\Order($order);
         }
 
         return new DTO\History($history);
