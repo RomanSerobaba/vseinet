@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Enum;
 
@@ -19,7 +19,7 @@ class ContactTypeCode
             self::EMAIL => 'Email',
             self::SKYPE => 'Skype',
             self::ICQ => 'ICQ',
-            self::CUSTOM => '',
+            self::CUSTOM => 'Другое',
         ];
     }
 
