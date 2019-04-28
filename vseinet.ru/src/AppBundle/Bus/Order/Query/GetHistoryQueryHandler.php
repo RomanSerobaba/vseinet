@@ -32,15 +32,14 @@ class GetHistoryQueryHandler extends MessageHandler
             return null;
         }
 
-        $history = [
-            'total' => $result['total'],
-            'orders' => [],
-        ];
+        $history = ['items' => [], 'total' => $result['total']];
 
         foreach ($result['orders'] as $order) {
             foreach ($result['orderItems'] as $item) {
-                foreach ($item['statuses'] as $status) {
-                    $order['items'][] = array_merge($item, ['statusCode' => $status['code']]);
+                if ($order['id'] == $item['orderId']) {
+                    foreach ($item['statuses'] as $status) {
+                        $order['items'][] = array_merge($item, ['statusCode' => $status['code']]);
+                    }
                 }
             }
 
@@ -53,7 +52,7 @@ class GetHistoryQueryHandler extends MessageHandler
                 }
             }
 
-            $history['orders'][] = new DTO\Order($order);
+            $history['items'][] = $order;
         }
 
         return new DTO\History($history);

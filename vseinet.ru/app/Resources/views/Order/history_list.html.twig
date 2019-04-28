@@ -4,11 +4,11 @@
             <h2>
                 Заказ №
                 {% if app.userIsEmployee %}
-                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders?id=' ~ order.id }) }}">
-                        {{ order.id }}
+                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">
+                        {{ order.number }}
                     </a>
                 {% else %}
-                    {{ order.id }}
+                    {{ order.number }}
                 {% endif %}
                 <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
             </h2>
