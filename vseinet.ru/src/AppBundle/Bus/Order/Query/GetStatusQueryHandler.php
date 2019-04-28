@@ -15,10 +15,13 @@ class GetStatusQueryHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         $order = $em->getRepository(OrderDoc::class)->findOneByNumber($query->number);
+
         if (!$order instanceof OrderDoc) {
             throw new ValidationException('number', 'Заказ не найден');
         }
+
         $client = $em->getRepository(ClientOrder::class)->find($order->getDid());
+
         if (!$client instanceof ClientOrder) {
             throw new ValidationException('number', 'Заказ не найден');
         }
@@ -26,9 +29,17 @@ class GetStatusQueryHandler extends MessageHandler
         $api = $this->get('site.api.client');
 
         try {
-            $items = $api->get('/v1/orderItems/?orderIds[]='.$order->getDId());
+            $result = $api->get('/api/v1/orders/?id='.$order->getDId());
         } catch (BadRequestHttpException $e) {
             throw new ValidationException('number', $e->getMessage());
+        }
+
+        $items = [];
+
+        foreach ($result['orderItems'] as $item) {
+            foreach ($item['statuses'] as $status) {
+                $items[] = array_merge($item, ['statusCode' => $status['code']]);
+            }
         }
 
         return new DTO\Order([
