@@ -22,11 +22,7 @@ class SearchQueryHandler extends MessageHandler
                 NEW AppBundle\Bus\User\Query\DTO\FoundUser (
                     u.id,
                     CONCAT_WS(' ', p.lastname, p.firstname, p.secondname),
-                    FIRST(
-                        SELECT mobile.value
-                        FROM AppBundle:Contact AS mobile
-                        WHERE p.id = mobile.personId AND mobile.contactTypeCode = :contactTypeCode_MOBILE AND mobile.isMain = TRUE
-                    ),
+                    mobile.value,
                     FIRST(
                         SELECT email.value
                         FROM AppBundle:Contact AS email
@@ -43,6 +39,7 @@ class SearchQueryHandler extends MessageHandler
             FROM AppBundle:User AS u
             JOIN AppBundle:Person AS p WITH p.id = u.personId
             LEFT JOIN AppBundle:EmploymentHistory AS eh WITH eh.orgEmployeeUserId = u.id AND eh.hiredAt IS NOT NULL AND eh.firedAt IS NULL
+            LEFT JOIN AppBundle:Contact AS mobile WITH p.id = mobile.personId AND mobile.contactTypeCode = :contactTypeCode_MOBILE AND mobile.isMain = TRUE
             WHERE {$where}
         ");
         $q->setParameters($parameters + [
