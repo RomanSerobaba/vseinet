@@ -60,7 +60,7 @@ services:
     exception.listener:
         class: AppBundle\EventListener\ExceptionListener
         public: true
-        arguments: ["%kernel.environment%"]
+        arguments: [ "%kernel.environment%", '@httplug.message_factory', '@httplug.client.guzzle', '%slack_channel_errors_url%' ]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
