@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Security\Command;
 
@@ -6,6 +6,7 @@ use AppBundle\Bus\Message\Message;
 use AppBundle\Annotation as VIA;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
+use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Validator\Constraints\MobilePhone;
 
 class RegistrCommand extends Message
@@ -29,7 +30,7 @@ class RegistrCommand extends Message
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш пол")
-     * @VIA\Enum("AppBundle\Enum\PersonGender")
+     * @VIC\Enum("AppBundle\Enum\PersonGender")
      */
     public $gender;
 
