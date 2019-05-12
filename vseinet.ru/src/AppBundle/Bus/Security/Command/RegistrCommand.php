@@ -29,7 +29,7 @@ class RegistrCommand extends Message
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш пол")
-     * @Assert\Enum("AppBundle\Enum\PersonGender")
+     * @VIA\Enum("AppBundle\Enum\PersonGender")
      */
     public $gender;
 
