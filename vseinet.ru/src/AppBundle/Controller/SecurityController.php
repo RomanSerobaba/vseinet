@@ -75,7 +75,7 @@ class SecurityController extends Controller
 
                     return $this->redirectToRoute('index');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }
@@ -107,7 +107,7 @@ class SecurityController extends Controller
 
                     return $this->redirectToRoute('check_token');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }
@@ -145,7 +145,7 @@ class SecurityController extends Controller
 
                     return $this->redirectToRoute('restore_password');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }
@@ -177,7 +177,7 @@ class SecurityController extends Controller
 
                     return $this->redirectToRoute('user_account');
                 } catch (ValidationException $e) {
-                    $this->addFormErrors($form, $e->getMessages());
+                    $this->addFormErrors($form, $e->getAsArray());
                 }
             }
         }
