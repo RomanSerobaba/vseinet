@@ -32,7 +32,7 @@ class Cart
     public $amountWithDiscount = 0;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type(type="AppBundle\Entity\DiscountCode")
      */
     public $discountCode;
 
