@@ -41,3 +41,4 @@ parameters:
     api.host: 'https://dev.vseinet.ru'
     api.public_id: '10_2dn1xykyvjwgs4ok00wk888sgc0sg8skww0kwkswsswgk0kso8'
     api.secret: '24v1kfg5asu88g4k88wc408gc8g0osccokwcc8sc0kkc8cwkgo'
+    slack_channel_errors_url: 'https://hooks.slack.com/services/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'
