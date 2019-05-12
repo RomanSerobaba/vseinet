@@ -56,7 +56,7 @@ class Cart
     public $products;
 
 
-    public function __construct(array $products, string $discountCode, int $discountCodeId = NULL, int $geoPointId = NULL)
+    public function __construct(array $products, \AppBundle\Entity\DiscountCode $discountCode, int $discountCodeId = NULL, int $geoPointId = NULL)
     {
         foreach ($products as $key => $product) {
             $this->total += $product->quantity;
