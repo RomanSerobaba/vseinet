@@ -5,6 +5,9 @@ namespace AppBundle\Bus\Product\Query;
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @deprecated
+ */
 class GetLocalAvailabilityQuery extends Message
 {
     /**

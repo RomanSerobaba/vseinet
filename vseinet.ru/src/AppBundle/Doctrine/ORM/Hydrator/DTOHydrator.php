@@ -1,16 +1,17 @@
 <?php
+
 namespace AppBundle\Doctrine\ORM\Hydrator;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Inflector\Inflector;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\Enum;
 
 class DTOHydrator extends AbstractHydrator
 {
-    const AVAILABLE_TYPES = ['string', 'integer', 'float', 'boolean', 'date', 'datetime'];
+    public const AVAILABLE_TYPES = ['string', 'integer', 'float', 'boolean'];
 
     /**
      * @var array
@@ -23,7 +24,7 @@ class DTOHydrator extends AbstractHydrator
     protected $reflector;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function hydrateAllData()
     {
@@ -31,12 +32,12 @@ class DTOHydrator extends AbstractHydrator
 
         while ($row = $this->_stmt->fetch(\PDO::FETCH_ASSOC)) {
             $this->hydrateRowData($row, $result);
-            if ($this->_rsm->getMode() === DTORSM::OBJECT_SINGLE) {
+            if (DTORSM::OBJECT_SINGLE === $this->_rsm->getMode()) {
                 return $result[0];
             }
         }
 
-        if (empty($result) && $this->_rsm->getMode() === DTORSM::OBJECT_SINGLE) {
+        if (empty($result) && DTORSM::OBJECT_SINGLE === $this->_rsm->getMode()) {
             return null;
         }
 
@@ -44,7 +45,7 @@ class DTOHydrator extends AbstractHydrator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function hydrateRowData(array $row, array &$result)
     {
@@ -84,18 +85,18 @@ class DTOHydrator extends AbstractHydrator
     /**
      * Fetching value.
      *
-     * @param string|mixin $value;
-     * @param string $type
-     * @param string|null $subtype
+     * @param string|mixed $value
+     * @param string       $type
+     * @param string|null  $subtype
      *
-     * @throws \UnexpectedValueException
+     * @return bool|\DateTime|mixed|string|null
      *
-     * @return mixin
+     * @throws \Exception
      */
     protected function fetchValue($value, $type, $subtype)
     {
         if ('string' === $type) {
-            return $value;
+            return null === $value ? null : "$value";
         }
 
         if ('integer' === $type) {
@@ -140,8 +141,8 @@ class DTOHydrator extends AbstractHydrator
         if ('array' === $type) {
             $array = json_decode($value, true);
             if (null !== $subtype) {
-                foreach ($array as $index => $value) {
-                    $array[$index] = $this->fetchValue($value, $subtype, null);
+                foreach ($array as $index => $val) {
+                    $array[$index] = $this->fetchValue($val, $subtype, null);
                 }
             }
 
@@ -152,19 +153,23 @@ class DTOHydrator extends AbstractHydrator
     }
 
     /**
-     * Mapping keys row to DTO properties
+     * Mapping keys row to DTO properties.
      *
-     * @throws \InvalidArgumentException
-     * @throws \UnexpectedValueException
+     * @param array $row
+     *
+     * @throws AnnotationException
+     * @throws \ReflectionException
      */
-    protected function map($row)
+    protected function map($row): void
     {
         if (!$this->_rsm instanceof DTORSM) {
             throw new \InvalidArgumentException('ResultSetMapping must instance of DTORSM');
         }
 
         $snakeKeys = array_keys($row);
-        $camelKeys = array_map(function($key) { return Inflector::camelize($key); }, $snakeKeys);
+        $camelKeys = array_map(function ($key) {
+            return Inflector::camelize($key);
+        }, $snakeKeys);
 
         $reader = new AnnotationReader();
         $this->reflector = new \ReflectionClass($this->_rsm->getDTO());
@@ -173,30 +178,53 @@ class DTOHydrator extends AbstractHydrator
             if (false === $indexKey) {
                 continue;
             }
-            $this->mapKeys[$snakeKeys[$indexKey]]['property'] = $property->getName();
+            $this->mapKeys[$snakeKeys[$indexKey]] = [
+                'property' => $property->getName(),
+                'type' => 'string',
+                'subtype' => null,
+            ];
             $annotations = $reader->getPropertyAnnotations($property);
             foreach ($annotations as $annotation) {
+                if ($annotation instanceof Assert\Date) {
+                    $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'date';
+                    continue;
+                }
+                if ($annotation instanceof Assert\DateTime) {
+                    $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'datetime';
+                    continue;
+                }
                 if ($annotation instanceof Assert\Type) {
                     if (in_array($annotation->type, self::AVAILABLE_TYPES)) {
                         $this->mapKeys[$snakeKeys[$indexKey]]['type'] = $annotation->type;
-                        $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = null;
-                        continue;
-                    }
-                    if (0 === strpos($annotation->type, 'array')) {
-                        $subtype = str_replace(['array', '<', '>'], '', $annotation->type);
-                        if (in_array($subtype, self::AVAILABLE_TYPES)) {
-                            $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'array';
-                            $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = $subtype;
-                        }
                     }
                     continue;
                 }
-                if ($annotation instanceof Enum) {
-                    $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'string';
-                    $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = null;
+                if ($annotation instanceof Assert\All) {
+                    foreach ($annotation->constraints as $constraint) {
+                        if ($annotation instanceof Assert\Date) {
+                            $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'array';
+                            $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = 'date';
+                            continue;
+                        }
+                        if ($annotation instanceof Assert\DateTime) {
+                            $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'array';
+                            $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = 'datetime';
+                            continue;
+                        }
+                        if ($annotation instanceof Assert\Type) {
+                            if (in_array($annotation->type, self::AVAILABLE_TYPES)) {
+                                $this->mapKeys[$snakeKeys[$indexKey]]['type'] = 'array';
+                                $this->mapKeys[$snakeKeys[$indexKey]]['subtype'] = $annotation->type;
+                            }
+                            continue;
+                        }
+                    }
                 }
             }
         }
+
+        // var_dump($snakeKeys, $camelKeys, $this->mapKeys);exit;
+
         if (count($snakeKeys) !== count($this->mapKeys)) {
             $lostKeys = array_diff($snakeKeys, array_keys($this->mapKeys));
 

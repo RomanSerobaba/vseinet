@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Supplier
+ * Supplier.
  *
  * @ORM\Table(name="supplier")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SupplierRepository")
@@ -35,9 +35,15 @@ class Supplier
      */
     private $isActive;
 
+    /**
+     * @var \Date|null
+     *
+     * @ORM\Column(name="order_delivery_date", type="date", nullable=true)
+     */
+    private $orderDeliveryDate;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -47,7 +53,7 @@ class Supplier
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
      *
@@ -61,7 +67,7 @@ class Supplier
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */
@@ -71,7 +77,7 @@ class Supplier
     }
 
     /**
-     * Set isActive
+     * Set isActive.
      *
      * @param bool $isActive
      *
@@ -85,12 +91,36 @@ class Supplier
     }
 
     /**
-     * Get isActive
+     * Get isActive.
      *
      * @return bool
      */
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set orderDeliveryDate.
+     *
+     * @param \Date|null $orderDeliveryDate
+     *
+     * @return Supplier
+     */
+    public function setOrderDeliveryDate($orderDeliveryDate = null)
+    {
+        $this->orderDeliveryDate = $orderDeliveryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get orderDeliveryDate.
+     *
+     * @return \Date|null
+     */
+    public function getOrderDeliveryDate()
+    {
+        return $this->orderDeliveryDate;
     }
 }

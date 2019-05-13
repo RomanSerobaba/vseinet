@@ -7,6 +7,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Enum\GoodsConditionCode;
 
+/**
+ * @deprecated
+ */
 class GetLocalAvailabilityQueryHandler extends MessageHandler
 {
     public function handle(GetLocalAvailabilityQuery $query)
@@ -14,15 +17,15 @@ class GetLocalAvailabilityQueryHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         $baseProduct = $em->getRepository(BaseProduct::class)->find($query->baseProductId);
-        if (!$baseProduct instanceof BaseProduct){
+        if (!$baseProduct instanceof BaseProduct) {
             throw new NotFoundHttpException();
         }
 
         if (!$this->getUserIsEmployee()) {
             // для клиентов наличие только по текущему городу
-            $criteria = " AND gp.geoCityId = ".$this->getGeoCity()->getRealId();
+            $criteria = ' AND gp.geoCityId = '.$this->getGeoCity()->getRealId();
         } else {
-            $criteria = "";
+            $criteria = '';
         }
 
         $q = $em->createQuery("
