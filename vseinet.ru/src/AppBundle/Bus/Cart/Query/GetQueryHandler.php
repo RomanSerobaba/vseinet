@@ -21,7 +21,7 @@ class GetQueryHandler extends MessageHandler
         $params = [];
 
         if (!empty($query->geoPointId)) {
-            $geoPoint = $em->getRepository(GeoPoint::class)->find($query->geoPointId);
+            $geoPoint = $em->getRepository(GeoPoint::class)->find($geoPointId);
 
             if ($geoPoint instanceof GeoPoint && (empty($query->geoCityId) || $query->geoCityId == $geoPoint->getGeoCityId())) {
                 $geoPointId = $geoPoint->getId();
@@ -50,16 +50,17 @@ class GetQueryHandler extends MessageHandler
             $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
         }
 
-        $discountCode = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $query->discountCode]);
+        $discountCodeObj = $em->getRepository(DiscountCode::class)->findOneBy(['code' => $query->discountCode]);
         $discountCodeId = Null;
         $stroikaCategoriesIds = [6654,6684,6699,7001,7492,7494,7496,7497,7501,7502,7507,7509,7569,7570,7571,7577,7578,7581,7582,7583,7584,7587,7588,7589,7590,7591,7593,7595,7596,7597,7598,7599,7600,7603,7606,7613,7615,7617,7618,7619,7623,7657,7658,7660,7697,13491,17999,5082851,5082367,34246,34478,34971,43238,43273,5078029,5078758,5078393,5078153,5078440,5088210,5078746,5078320,5078410,5078564,5078576,5078621,5078624,5079817,5081115,5081521,5081583,5081733,5083009,5084019,5084250,5085206,5085208,5085213,5085781];
 
-        if ($discountCode instanceof DiscountCode && (empty($discountCode->getTillDate()) || $discountCode->getTillDate() >= date('Y-m-d H:i:s'))) {
+        if ($discountCodeObj instanceof DiscountCode && (empty($discountCodeObj->getTillDate()) || $discountCodeObj->getTillDate() >= date('Y-m-d H:i:s'))) {
             $this->get('session')->set('discountCode', $query->discountCode);
-            $discountCodeId = $discountCode->getId();
+            $discountCodeId = $discountCodeObj->getId();
+            $discountCode = $discountCodeObj->getCode();
         } else {
             $this->get('session')->remove('discountCode');
-            $discountCode = null;
+            $discountCode = '';
         }
 
         if (null !== $user) {
