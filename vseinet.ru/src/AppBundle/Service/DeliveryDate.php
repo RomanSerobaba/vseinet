@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Service;
 
@@ -6,14 +6,11 @@ use AppBundle\Container\ContainerAware;
 use AppBundle\Entity\GeoPointRoute;
 use Cron\CronExpression;
 
-/**
- * @development
- */
 class DeliveryDate extends ContainerAware
 {
     protected $routes;
 
-    public function getDate(int $startingPointId, int $arrivalPointId): \DateTime 
+    public function getDate(int $startingPointId, int $arrivalPointId): \DateTime
     {
         $this->getRoutes();
         $path = $this->find($startingPointId, $arrivalPointId);
@@ -21,10 +18,10 @@ class DeliveryDate extends ContainerAware
         foreach ($path as $route) {
             $cron = CronExpression::factory($route->getSchedule());
             $date = $cron->getNextRunDate($date);
-        print_r($date);
+            print_r($date);
         }
-        print_r($path); exit;
-
+        print_r($path);
+        exit;
     }
 
     protected function getRoutes()
@@ -32,7 +29,7 @@ class DeliveryDate extends ContainerAware
         if (null === $this->routes) {
             $routes = $this->getDoctrine()->getManager()->getRepository(GeoPointRoute::class)->findAll();
             foreach ($routes as $route) {
-                $this->routes[$route->getStartingPointId()][$route->getArrivalPointId()] = $route; 
+                $this->routes[$route->getStartingPointId()][$route->getArrivalPointId()] = $route;
             }
         }
 

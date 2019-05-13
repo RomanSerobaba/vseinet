@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query\DTO;
 
@@ -26,12 +26,11 @@ class GeoPoint
      */
     public $quantity;
 
-
     public function __construct($id, $code, $name, $quantity)
     {
         $this->id = $id;
         $this->code = $code;
         $this->name = $name;
-        $this->quantity = $quantity;      
+        $this->quantity = $quantity;
     }
 }
