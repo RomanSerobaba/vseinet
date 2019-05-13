@@ -38,11 +38,11 @@ class GetDeliveryDateQueryHandler extends MessageHandler
             SELECT t.*
             FROM (
                 SELECT
-                    CASE WHEN gp.geo_city_id = :geo_city_id THEN true ELSE false END AS is_available,
+                    CASE WHEN gp.geo_city_id = :geo_city_id AND grrc.order_item_id IS NULL THEN true ELSE false END AS is_available,
                     gr.geo_point_id,
                     dgr.geo_point_id AS destination_geo_point_id,
                     CASE WHEN grrc.destination_geo_room_id IS NOT NULL THEN
-                        CASE WHEN dgp.geo_city_id = :geo_city_id THEN
+                        CASE WHEN od.geo_city_id = :geo_city_id OR dgr.geo_city_id = :geo_city_id AND grrc.order_item_id IS NULL THEN
                             CASE WHEN grrc.goods_release_id IS NOT NULL THEN 'movement' ELSE 'transit' END
                         ELSE
                             CASE WHEN grrc.goods_release_id IS NOT NULL THEN 'other-movement' ELSE 'other-transit' END
@@ -56,6 +56,8 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 LEFT OUTER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
                 LEFT OUTER JOIN geo_room AS dgr ON dgr.id = grrc.destination_geo_room_id
                 LEFT OUTER JOIN geo_point AS dgp ON dgp.id = dgr.geo_point_id
+                LEFT OUTER JOIN order_item AS oi ON oi.id = grrc.order_item_id
+                LEFT OUTER JOIN order_doc AS od ON od.did = oi.order_did
                 WHERE grrc.base_product_id = :base_product_id AND grrc.goods_condition_code = 'free'::goods_condition_code
                     AND grrc.goods_pallet_id IS NULL
 
@@ -186,7 +188,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         ", new DTORSM(DTO\GeoPoint::class, DTORSM::OBJECT_SINGLE));
         $q->setParameter('geo_city_id', $geoCity->getId());
         $currentGeoPoint = $q->getResult('DTOHydrator');
-        if (!$currentGeoPointId instanceof DTO\GeoPoint) {
+        if (!$currentGeoPoint instanceof DTO\GeoPoint) {
             throw new NotFoundHttpException(sprintf('В %s не найдена центральная точка', $geoCity->getName()));
         }
 
@@ -195,21 +197,21 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         if (!empty($movement)) {
             foreach ($movement as $reserve) {
                 $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId);
-                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPointId));
+                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id));
             }
         }
         $transit = array_filter($reserves, function($reserve) { return $reserve->transitType == 'other-transit'; });
         if (!empty($transit)) {
             foreach ($transit as $reserve) {
                 $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId);
-                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPointId));
+                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id));
             }
         }
         $pallet = array_filter($reserves, function($reserve) { return $reserve->transitType == 'other-pallet'; });
         if (!empty($pallet)) {
             foreach ($pallet as $reserve) {
                 $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId);
-                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPointId));
+                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id));
             }
         }
 
@@ -220,7 +222,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
     {
         $routes = $this->getRoutes();
         if (isset($routes[$startingPointId][$arrivalPointId])) {
-            return $this->getCron($routes[$startingPointId][$arrivalPointId]])->getNextRunDate();
+            return $this->getCron($routes[$startingPointId][$arrivalPointId])->getNextRunDate();
         }
 
         $date = new \DateTime(); // now
