@@ -50,7 +50,9 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     ELSE 'other-free' END AS transit_type,
                     NULL AS goods_pallet_id,
                     grrc.goods_release_id,
-                    grrc.delta AS quantity
+                    grrc.delta AS quantity,
+                    sd.arriving_date,
+                    sd.destination_room_id AS arriving_geo_room_id
                 FROM goods_reserve_register_current AS grrc
                 LEFT OUTER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
                 LEFT OUTER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
@@ -58,6 +60,8 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 LEFT OUTER JOIN geo_point AS dgp ON dgp.id = dgr.geo_point_id
                 LEFT OUTER JOIN order_item AS oi ON oi.id = grrc.order_item_id
                 LEFT OUTER JOIN order_doc AS od ON od.did = oi.order_did
+                LEFT OUTER JOIN supply_item AS si ON si.id = grrc.supply_item_id
+                LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did
                 WHERE grrc.base_product_id = :base_product_id AND grrc.goods_condition_code = 'free'::goods_condition_code
                     AND grrc.goods_pallet_id IS NULL
 
@@ -71,6 +75,8 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     grrc.goods_pallet_id,
                     NULL AS goods_release_id,
                     grrc.delta AS quantity
+                    NULL AS arriving_date,
+                    NULL AS arriving_geo_room_id
                 FROM goods_reserve_register_current AS grrc
                 INNER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
                 INNER JOIN order_item AS oi ON oi.id = grrc.order_item_id
