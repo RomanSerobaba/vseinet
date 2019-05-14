@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query;
 
@@ -12,16 +12,4 @@ class GetDeliveryDateQuery extends Message
      * @Assert\Type(type="integer")
      */
     public $baseProductId;
-
-    /**
-     * @Assert\NotBlank
-     * @Assert\Type(type="integer")
-     */
-    public $fromPointId;
-
-    /**
-     * @Assert\NotBlank
-     * @Assert\Type(type="integer")
-     */
-    public $toPointId;
 }
