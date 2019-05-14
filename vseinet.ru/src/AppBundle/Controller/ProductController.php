@@ -7,9 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use AppBundle\Annotation as VIA;
-use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Bus\Product\Query;
-use AppBundle\Bus\Product\Command;
 use AppBundle\Bus\Category\Query\GetBreadcrumbsQuery;
 use AppBundle\Bus\Brand\Query\GetByIdQuery as GetBrandByIdQuery;
 use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
@@ -24,7 +22,7 @@ class ProductController extends Controller
      * @VIA\Get(
      *     name="catalog_product",
      *     path="/product/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
      *     }
@@ -32,7 +30,7 @@ class ProductController extends Controller
      * @VIA\Get(
      *     name="catalog_product_with_category",
      *     path="/product/{id}/{categoryId}/",
-     *     requirements={"id" = "\d+", "categoryId" = "\d+"},
+     *     requirements={"id": "\d+", "categoryId": "\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
      *         @VIA\Parameter(name="categoryId", type="integer")
@@ -51,7 +49,7 @@ class ProductController extends Controller
         if ($product->brandId) {
             $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => $product->brandId]));
         } else {
-            $brand =  null;
+            $brand = null;
         }
 
         $images = $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]));
@@ -62,7 +60,12 @@ class ProductController extends Controller
         $favorites = $this->get('query_bus')->handle(new GetFavoriteInfoQuery());
         $product->inFavorites = in_array($product->id, $favorites->ids);
 
+        /**
+         * @deprecated
+         */
         $points = $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $product->id]));
+
+        $deliveryDate = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductId' => $product->id]));
 
         $details = $this->get('query_bus')->handle(new Query\GetDetailsQuery(['baseProductId' => $product->id]));
 
@@ -73,7 +76,7 @@ class ProductController extends Controller
                     continue;
                 }
                 $product->details[] = $detail;
-                $count += 1;
+                ++$count;
                 if (5 === $count) {
                     break;
                 }
@@ -90,7 +93,8 @@ class ProductController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'brand' => $brand,
             'images' => $images,
-            'points' => $points,
+            'points' => $points, // @deprecated
+            'deliveryDate' => $deliveryDate,
             'details' => $details,
         ], $response);
     }
@@ -99,7 +103,7 @@ class ProductController extends Controller
      * @VIA\Get(
      *     name="catalog_product_gallery",
      *     path="/product/gallary/{id}/",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"id": "\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
      *         @VIA\Parameter(name="index", type="integer")

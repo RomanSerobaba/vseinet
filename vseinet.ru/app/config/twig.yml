@@ -41,6 +41,11 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    twig.extension.date_format:
+        class: 'AppBundle\Twig\Extension\DateFormatExtension'
+        tags:
+            - { name: 'twig.extension' }
+
     app.twig.globals:
         class: 'AppBundle\Twig\GlobalVariables'
         arguments: [ '@service_container' ]

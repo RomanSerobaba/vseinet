@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query\DTO;
 
@@ -26,12 +26,17 @@ class GeoPoint
      */
     public $quantity;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $address;
 
-    public function __construct($id, $code, $name, $quantity)
+    public function __construct($id, $code, $name, $quantity, $address = '')
     {
         $this->id = $id;
         $this->code = $code;
         $this->name = $name;
-        $this->quantity = $quantity;      
+        $this->quantity = $quantity;
+        $this->address = $address;
     }
 }
