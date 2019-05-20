@@ -13,7 +13,7 @@ class GetQueryHandler extends MessageHandler
 
         $q = $em->createQuery("
             SELECT
-                NEW AppBundle\Bus\Product\Query\DTO\Product (
+                NEW AppBundle\Bus\Product\Query\DTO\BaseProduct (
                     bp.id,
                     bp.name,
                     bpd.exname,
@@ -39,11 +39,11 @@ class GetQueryHandler extends MessageHandler
         ");
         $q->setParameter('id', $query->id);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
-        $product = $q->getOneOrNullResult();
-        if (!$product instanceof DTO\Product) {
-            throw new NotFoundHttpException();
+        $baseProduct = $q->getOneOrNullResult();
+        if (!$baseProduct instanceof DTO\BaseProduct) {
+            throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->id));
         }
 
-        return $product;
+        return $baseProduct;
     }
 }

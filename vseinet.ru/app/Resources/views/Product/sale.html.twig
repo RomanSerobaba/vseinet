@@ -1,14 +1,14 @@
-{% set isAvailable = constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
-{% set isInTransit = constant('AppBundle\\Enum\\ProductAvailabilityCode::IN_TRANSIT') == product.availability %}
-{% set isOnDemand = constant('AppBundle\\Enum\\ProductAvailabilityCode::ON_DEMAND') == product.availability %}
+{% set isAvailable = constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %}
+{% set isInTransit = constant('AppBundle\\Enum\\ProductAvailabilityCode::IN_TRANSIT') == baseProduct.availability %}
+{% set isOnDemand = constant('AppBundle\\Enum\\ProductAvailabilityCode::ON_DEMAND') == baseProduct.availability %}
 <div class="price-wrapper client">
     {% if isAvailable %}
         <del class="old_price">
-            {{ product.price|discount_price|price_format }}
+            {{ baseProduct.price|discount_price|price_format }}
             <span class="RUR">Р</span>
         </del>
     {% endif %}
-    {% if product.price %}
+    {% if baseProduct.price %}
         <strong
             class="price"
             {% if isAvailable %}style="padding:10px 0 3px;"{% endif %}
@@ -18,24 +18,24 @@
         >
             {% if app.userIsEmployee %}
                 <a
-                    href="{{ path('product_set_price', { id: product.id }) }}"
+                    href="{{ path('product_set_price', { id: baseProduct.id }) }}"
                     class="icon set-price"
                     title="Установить ручную цену"
                 >
                 </a>
             {% endif %}
-            <span class="price-value">{{ product.price|price_format }}</span>
+            <span class="price-value">{{ baseProduct.price|price_format }}</span>
             <span class="RUR">Р</span>
             {% if app.userIsEmployee %}
                 <a
-                    href="{{ path('product_reset_price', { id: product.id }) }}"
+                    href="{{ path('product_reset_price', { id: baseProduct.id }) }}"
                     class="icon reset-price"
-                    {% if not product.manualPrice %}style="display:none"{% endif %}
+                    {% if not baseProduct.manualPrice %}style="display:none"{% endif %}
                     title="Сбросить ручную цену"
                 >
                 </a>
             {% endif %}
-            <meta itemprop="price" content="{{ product.price|price_format({ ts: '' }) }}" />
+            <meta itemprop="price" content="{{ baseProduct.price|price_format({ ts: '' }) }}" />
             <meta itemprop="priceCurrency" content="RUB" />
             <meta
                 itemprop="availability"
@@ -52,49 +52,49 @@
     {% endif %}
     <div
         {% if isAvailable %}
-            style="padding: 15px 0 {% if product.minQuantity > 1 %}0{% else %}25px{% endif %} 60px"
-        {% elseif product.minQuantity > 1 %}
+            style="padding: 15px 0 {% if baseProduct.minQuantity > 1 %}0{% else %}25px{% endif %} 60px"
+        {% elseif baseProduct.minQuantity > 1 %}
             style="padding-bottom:0"
         {% endif %}
         class="rating"
-        data-rating="{{ product.estimate }}"
-        {% if product.estimate %}
+        data-rating="{{ baseProduct.estimate }}"
+        {% if baseProduct.estimate %}
             itemprop="aggregateRating"
             itemscope
             itemtype="http://schema.org/AggregateRating"
         {% endif %}
     >
         <span>Рейтинг:</span>
-        {% if product.estimate %}
-            <meta itemprop="ratingValue" content="{{ product.estimate }}" />
+        {% if baseProduct.estimate %}
+            <meta itemprop="ratingValue" content="{{ baseProduct.estimate }}" />
             <meta itemprop="bestRating" content="5" />
-            {#<meta itemprop="reviewCount" content="{{ product.countRreviews }}" />#}
+            {#<meta itemprop="reviewCount" content="{{ baseProduct.countRreviews }}" />#}
         {% endif %}
     </div>
-    {% if product.minQuantity > 1 %}
+    {% if baseProduct.minQuantity > 1 %}
         <div style="color: rgb(242, 108, 79); margin: {% if isAvailable %}4px 0{% else %}10px 0{% endif %};">
-            Мин. количество для заказа: {{ product.minQuantity }}
+            Мин. количество для заказа: {{ baseProduct.minQuantity }}
         </div>
     {% endif %}
 </div>
 <div class="sale-btns-wrapper">
     <div class="sale-btns to-cart">
         <a
-            href="{{ path('cart_add', { id: product.id }) }}"
+            href="{{ path('cart_add', { id: baseProduct.id }) }}"
             {#onclick="yaCounter13639594.reachGoal('cartadd');return true;"#}
             class="bttn cart-add{% if isAvailable or isInTransit or isOnDemand %} green{% else %} greengray{% endif %}"
             rel="nofollow"
         >
             {% if isAvailable or isInTransit or isOnDemand %}Добавить в корзину{% else %}Сообщить о поступлении{% endif %}
         </a>
-        {% if 300000 < product.price %}
+        {% if 300000 < baseProduct.price %}
             <a
-                href="{{ path('cart_add', { id: product.id }) }}"
-                data-url="{{ path('credit_calculators', { id: product.id }) }}"
+                href="{{ path('cart_add', { id: baseProduct.id }) }}"
+                data-url="{{ path('credit_calculators', { id: baseProduct.id }) }}"
                 class="bttn blue credit"
                 rel="nofollow"
             >
-                {% set credit = product.price*1.2582/24 %}
+                {% set credit = baseProduct.price*1.2582/24 %}
                 Кредит от {{ credit|round(-2)|price_format }}
                 <span class="RUR">Р</span> в мес.
             </a>
@@ -109,7 +109,7 @@
         {% endif %}
         {% if isAvailable or isOnDemand %}
             <a
-                href="{{ path('cheaper_request', { id: product.id }) }}"
+                href="{{ path('cheaper_request', { id: baseProduct.id }) }}"
                 class="bttn orange cheaper-request"
                 rel="nofollow">
                 Нашли дешевле?

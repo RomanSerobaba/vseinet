@@ -7,11 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FreeReserve
 {
     /**
-     * @Assert\Type(type="boolean")
-     */
-    public $isAvailable;
-
-    /**
      * @Assert\Type(type="integer")
      */
     public $geoPointId;

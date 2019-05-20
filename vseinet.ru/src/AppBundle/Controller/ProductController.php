@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -15,6 +15,7 @@ use AppBundle\Bus\Favorite\Query\GetInfoQuery as GetFavoriteInfoQuery;
 use AppBundle\Bus\Main\Command\AddLastviewProductCommand;
 use AppBundle\Enum\DetailType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Enum\ProductAvailabilityCode;
 
 class ProductController extends Controller
 {
@@ -39,43 +40,33 @@ class ProductController extends Controller
      */
     public function indexAction(int $id, int $categoryId = null, Request $request)
     {
-        $product = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
+        $baseProduct = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
 
         if (null === $categoryId) {
-            $categoryId = $product->categoryId;
+            $categoryId = $baseProduct->categoryId;
         }
         $breadcrumbs = $this->get('query_bus')->handle(new GetBreadcrumbsQuery(['categoryId' => $categoryId]));
 
-        if ($product->brandId) {
-            $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => $product->brandId]));
-        } else {
-            $brand = null;
+        if ($baseProduct->brandId) {
+            $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => $baseProduct->brandId]));
         }
 
-        $images = $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]));
+        $images = $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $baseProduct->id]));
 
         $cart = $this->get('query_bus')->handle(new GetCartInfoQuery());
-        $product->quantityInCart = $cart->products[$product->id]->quantity ?? 0;
+        $baseProduct->quantityInCart = $cart->products[$baseProduct->id]->quantity ?? 0;
 
         $favorites = $this->get('query_bus')->handle(new GetFavoriteInfoQuery());
-        $product->inFavorites = in_array($product->id, $favorites->ids);
+        $baseProduct->inFavorites = in_array($baseProduct->id, $favorites->ids);
 
-        /**
-         * @deprecated
-         */
-        $points = $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $product->id]));
-
-        $deliveryDate = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductId' => $product->id]));
-
-        $details = $this->get('query_bus')->handle(new Query\GetDetailsQuery(['baseProductId' => $product->id]));
-
+        $details = $this->get('query_bus')->handle(new Query\GetDetailsQuery(['baseProductId' => $baseProduct->id]));
         if (!empty($details)) {
             $count = 0;
             foreach ($details as $detail) {
-                if (DetailType::CODE_ENUM === $detail->typeCode) {
+                if (DetailType::CODE_MEMO === $detail->typeCode) {
                     continue;
                 }
-                $product->details[] = $detail;
+                $baseProduct->details[] = $detail;
                 ++$count;
                 if (5 === $count) {
                     break;
@@ -83,19 +74,26 @@ class ProductController extends Controller
             }
         }
 
-        $this->get('command_bus')->handle(new AddLastviewProductCommand(['baseProductId' => $product->id]));
+        if (ProductAvailabilityCode::AVAILABLE === $baseProduct->availability || $this->getUserIsEmployee()) {
+            $geoPoints = $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $baseProduct->id]));
+        }
+        if (ProductAvailabilityCode::ON_DEMAND === $baseProduct->availability) {
+            $delivery = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductId' => $baseProduct->id]));
+        }
+
+        $this->get('command_bus')->handle(new AddLastviewProductCommand(['baseProductId' => $baseProduct->id]));
         $cookie = new Cookie('products_lastview', $request->cookies->get('products_lastview'), time() + 3600 * 24 * 7);
         $response = new Response();
         $response->headers->setCookie($cookie);
 
         return $this->render('Product/index.html.twig', [
-            'product' => $product,
+            'baseProduct' => $baseProduct,
             'breadcrumbs' => $breadcrumbs,
-            'brand' => $brand,
+            'brand' => $brand ?? null,
             'images' => $images,
-            'points' => $points, // @deprecated
-            'deliveryDate' => $deliveryDate,
             'details' => $details,
+            'geoPoints' => $geoPoints ?? null,
+            'delivery' => $delivery ?? null,
         ], $response);
     }
 

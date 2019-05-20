@@ -1,5 +1,5 @@
 <div class="column details">
-    {% if brand or product.model or product.details is defined %}
+    {% if brand or baseProduct.model or baseProduct.details is defined %}
         {% if details is defined %}
             <h3>Краткие характеристики</h3>
         {% else %}
@@ -18,14 +18,14 @@
             </dl>
         {% endif %}
     {% endif %}
-    {% if product.model %}
+    {% if baseProduct.model %}
         <dl>
             <dt><span>Модель</span></dt>
-            <dd>{{ product.model }}</dd>
+            <dd>{{ baseProduct.model }}</dd>
         </dl>
     {% endif %}
-    {% if product.details is defined %}
-        {% for detail in product.details %}
+    {% if baseProduct.details is defined %}
+        {% for detail in baseProduct.details %}
             <dl>
                 <dt><span>{{ detail.name }}{% if detail.unit %}, {{ detail.unit }}{% endif %}</span></dt>
                 <dd>
@@ -36,10 +36,10 @@
                     {% endif %}
                 </dd>
             </dl>
-            {% if loop.last and details|length > product.details|length %}
+            {% if loop.last and details|length > baseProduct.details|length %}
                 <p class="all-details"><a href="#tab-details" class="ajax">все характеристики</a></p>
             {% endif %}
-        {% endfor %}            
+        {% endfor %}
     {% endif %}
     <h3 class="garanty_title">Гарантия</h3>
     <div class="content">
@@ -57,24 +57,24 @@
 ' %}
 
 <div class="column description">
-    {% if not product.description is empty %}
+    {% if not baseProduct.description is empty %}
         <h3>Описание</h3>
         <div class="content" itemprop="description">
-            {{ product.description|raw }}
+            {{ baseProduct.description|raw }}
         </div>
     {% endif %}
-    {% if product.manufacturerLink or product.manualLink %}
+    {% if baseProduct.manufacturerLink or baseProduct.manualLink %}
         <h3>Информация на сайте производителя</h3>
         <div class="content">
-            {% if product.manufacturerLink %}
-                <p><a href="{{ product.manufacturerLink }}" rel="nofollow" target="_blank">Описание товара на сайте производителя</a></p>
+            {% if baseProduct.manufacturerLink %}
+                <p><a href="{{ baseProduct.manufacturerLink }}" rel="nofollow" target="_blank">Описание товара на сайте производителя</a></p>
             {% endif %}
-            {% if product.manualLink %}
-                <p><a href="{{ product.manualLink }}" rel="nofollow" target="_blank">Инструкция по эксплуатации</a></p>
+            {% if baseProduct.manualLink %}
+                <p><a href="{{ baseProduct.manualLink }}" rel="nofollow" target="_blank">Инструкция по эксплуатации</a></p>
             {% endif %}
         </div>
     {% endif %}
-    {% if product.description is empty %}
+    {% if baseProduct.description is empty %}
         {{ offerta|raw }}
     {% endif %}
 </div>
@@ -87,8 +87,8 @@
         <li>{{ app.representative.phone3 }}</li>
     </ul>#}
 </div>
-{% if not product.description is empty %}
+{% if not baseProduct.description is empty %}
     <div class="offerta">
-        {{ offerta|raw }}        
+        {{ offerta|raw }}
     </div>
 {% endif %}
