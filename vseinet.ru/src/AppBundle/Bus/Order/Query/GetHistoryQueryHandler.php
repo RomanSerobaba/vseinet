@@ -13,7 +13,7 @@ class GetHistoryQueryHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
         $counteragent = $em->getRepository(FinancialCounteragent::class)->findOneBy(['userId' => $this->getUser()->getId()]);
         if (!$counteragent instanceof FinancialCounteragent) {
-            return null;
+            return new DTO\History(['items' => [], 'total' => 0]);
         }
 
         $api = $this->get('user.api.client');
@@ -25,17 +25,18 @@ class GetHistoryQueryHandler extends MessageHandler
             ];
             $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
         } catch (BadRequestHttpException $e) {
-            return null;
+            return new DTO\History(['items' => [], 'total' => 0]);
         }
 
         if (0 === $result['total']) {
-            return null;
+            return new DTO\History(['items' => [], 'total' => 0]);
         }
 
         $history = ['items' => [], 'total' => $result['total']];
 
         foreach ($result['orders'] as $order) {
             foreach ($result['orderItems'] as $item) {
+                // $item['productAvailability'] = $this->get('query_bus')->handle(new GetProductAvailability(['baseProductId' => $item['productAvailability']]));
                 if ($order['id'] == $item['orderId']) {
                     foreach ($item['statuses'] as $status) {
                         $order['items'][] = array_merge($item, ['statusCode' => $status['code']]);

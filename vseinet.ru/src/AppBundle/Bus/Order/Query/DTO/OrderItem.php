@@ -65,6 +65,10 @@ class OrderItem
      */
     public $baseSrc;
 
+    /**
+     * @Assert\Type("AppBundle\Bus\Order\Query\DTO\ProductAvailability")
+     */
+    public $productAvailability;
 
     public function __construct(array $item)
     {
