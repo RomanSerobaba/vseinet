@@ -18,7 +18,7 @@ $(function() {
                 e.preventDefault();
                 sp.post(Routing.generate('order_status'), form.serializeArray()).then(function(response) {
                     if (response.errors) {
-                        row.addClass('error').append('<div>' + response.errors.number[0] + '</div>');
+                        row.addClass('error').append('<div class="error">' + response.errors.get_status_form_number[0] + '</div>');
                     } else {
                         row.removeClass('error').find('error').remove();
                         request.hide().next().show().find('.row:first').html(response.html);
