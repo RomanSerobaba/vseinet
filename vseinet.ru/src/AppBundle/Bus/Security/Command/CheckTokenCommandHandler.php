@@ -12,10 +12,18 @@ class CheckTokenCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $token = $em->getRepository(UserToken::class)->findOneBy($command->toArray());
+        if ($command->code) {
+            $criteria = ['code' => $command->code];
+        } else {
+            $criteria = ['hash' => $command->hash];
+        }
+
+        $token = $em->getRepository(UserToken::class)->findOneBy($criteria);
         if (!$token instanceof UserToken || $token->getExpiredAt() < new \DateTime()) {
             throw new ValidationException('code', 'Неверный код подтверждения');
         }
+
+        $this->get('session')->set('restore password userId', $token->getUserId());
 
         $em->remove($token);
         $em->flush();

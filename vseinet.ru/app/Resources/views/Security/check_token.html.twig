@@ -9,13 +9,13 @@
     <div class="block gray w40p">
         <div class="wrapper">
 
-            {{ form_start(form, { action: path('check_token'), attr: { id: 'check-form' }}) }}
+            {{ form_start(form, { action: path('check_token'), attr: { id: 'check-form', novalidate: 'novalidate' }}) }}
 
-            <div class="row{% if errors.code is defined %} error{% endif %}">
+            <div class="row{% if errors.check_token_code is defined %} error{% endif %}">
                 {{ form_label(form.code, 'Код подтвержения:') }}
                 {{ form_widget(form.code, { attr: { class: 'txt' }}) }}
-                {% if errors.code is defined %}
-                    <div class="error">{{ errors.code.0 }}</div>
+                {% if errors.check_token_code is defined %}
+                    <div class="error">{{ errors.check_token_code.0 }}</div>
                 {% endif %}
             </div>
 
@@ -24,12 +24,12 @@
             </div>
 
             <div class="row">
-                {{ form_widget(form.submit, { label: 'Восстановить пароль', attr: { class: 'bttn blue r' }}) }}  
+                {{ form_widget(form.submit, { label: 'Восстановить пароль', attr: { class: 'bttn blue r' }}) }}
                 {{ form_widget(form._token) }}
-            </div> 
+            </div>
 
             {{ form_end(form) }}
-            
+
         </div>
     </div>
 {% endblock %}
