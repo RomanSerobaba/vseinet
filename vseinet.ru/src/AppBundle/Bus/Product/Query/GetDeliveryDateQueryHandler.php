@@ -144,17 +144,6 @@ class GetDeliveryDateQueryHandler extends MessageHandler
             return $delivery;
         }
 
-        // Свободные остатки на других точках
-        $free = array_filter($reserves, function ($reserve) { return 'other-free' == $reserve->transitType; });
-        if (!empty($free)) {
-            foreach ($free as $reserve) {
-                $delivery->setDate($this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId ?? $reserve->arrivingGeoPointId));
-            }
-        }
-        if (null !== $delivery->date) {
-            return $delivery;
-        }
-
         // Центральная точка города
         $q = $em->createNativeQuery('
             SELECT
@@ -170,6 +159,24 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         $currentGeoPoint = $q->getResult('DTOHydrator');
         if (!$currentGeoPoint instanceof DTO\GeoPoint) {
             throw new NotFoundHttpException(sprintf('В городе %s не найдена центральная точка', $geoCity->getName()));
+        }
+
+        // Свободные остатки на других точках
+        $free = array_filter($reserves, function ($reserve) { return 'other-free' == $reserve->transitType; });
+        if (!empty($free)) {
+            foreach ($free as $reserve) {
+                if (null !== $reserve->arrivingGeoPointId) {
+                    $date = $this->getDateByRoute($reserve->geoPointId, $reserve->arrivingGeoPointId);
+                    $middleGeoPointId = $reserve->arrivingGeoPointId;
+                } else {
+                    $date = new \DateTime();
+                    $middleGeoPointId = $reserve->geoPointId;
+                }
+                $delivery->setDate($this->getDateByRoute($middleGeoPointId, $currentGeoPoint->id, $date));
+            }
+        }
+        if (null !== $delivery->date) {
+            return $delivery;
         }
 
         // В пути на другую точку с другой точки
