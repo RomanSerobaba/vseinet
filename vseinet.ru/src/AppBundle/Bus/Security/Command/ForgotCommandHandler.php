@@ -25,6 +25,7 @@ class ForgotCommandHandler extends MessageHandler
             $contact = $em->getRepository(Contact::class)->findOneBy([
                 'contactTypeCode' => ContactTypeCode::MOBILE,
                 'value' => $phone,
+                'isMain' => true,
             ]);
             if (!$contact instanceof Contact) {
                 throw new ValidationException('username', 'Пользователь с указанным телефоном не найден');
@@ -33,6 +34,7 @@ class ForgotCommandHandler extends MessageHandler
             $contact = $em->getRepository(Contact::class)->findOneBy([
                 'contactTypeCode' => ContactTypeCode::EMAIL,
                 'value' => $command->username,
+                'isMain' => true,
             ]);
             if (!$contact instanceof Contact) {
                 throw new ValidationException('username', 'Пользователь с указанным email не найден');

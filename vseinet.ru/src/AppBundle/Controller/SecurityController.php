@@ -92,7 +92,6 @@ class SecurityController extends Controller
      *     path="/forgot/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_ANONIMOUS')")
      */
     public function forgotAction(Request $request)
     {
@@ -124,7 +123,6 @@ class SecurityController extends Controller
      *     path="/check/token/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_ANONIMOUS')")
      */
     public function checkAction(Request $request)
     {
@@ -162,7 +160,6 @@ class SecurityController extends Controller
      *     path="/restore/password/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function restoreAction(Request $request)
     {

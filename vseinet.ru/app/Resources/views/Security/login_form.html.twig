@@ -1,4 +1,4 @@
-{{ form_start(form, { action: path('login'), attr: { title: 'Вход на сайт', id: 'login-form' }}) }}
+{{ form_start(form, { action: path('login'), attr: { title: 'Вход на сайт', id: 'login-form', novalidate: 'novalidate' }}) }}
 
 <div class="row">
     {{ form_label(form._username, 'Телефон* / Эл. почта:') }}
@@ -9,7 +9,7 @@
 <div class="row">
     {{ form_label(form._password, 'Пароль:') }}
     {{ form_widget(form._password, { attr: { class: 'txt', value: '' }}) }}
-</div> 
+</div>
 
 <div class="row v">
     {{ form_widget(form._remember_me, { attr: { style: 'float:left;margin:3px 5px 0 0' } }) }}
@@ -22,8 +22,8 @@
 </div>
 
 <div class="row">
-    {{ form_widget(form.submit, { label: 'Войти', attr: { class: 'bttn blue r' }}) }}  
-</div> 
+    {{ form_widget(form.submit, { label: 'Войти', attr: { class: 'bttn blue r' }}) }}
+</div>
 
 {#<div class="row center socials">
     <p>Вход через социальные сети</p>
