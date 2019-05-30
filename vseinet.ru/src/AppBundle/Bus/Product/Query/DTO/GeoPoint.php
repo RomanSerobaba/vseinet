@@ -7,33 +7,39 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GeoPoint
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type("integer")
      */
     public $id;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("integer")
+     */
+    public $geoCityId;
+
+    /**
+     * @Assert\Type("string")
      */
     public $code;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $name;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type("integer")
      */
     public $quantity;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $address;
 
-    public function __construct($id, $code, $name, $quantity, $address = '')
+    public function __construct($id, $geoCityId, $code, $name, $quantity = 0, $address = '')
     {
         $this->id = $id;
+        $this->geoCiryId = $geoCityId;
         $this->code = $code;
         $this->name = $name;
         $this->quantity = $quantity;

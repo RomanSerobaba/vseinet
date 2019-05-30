@@ -1,25 +1,25 @@
 {% extends "layout.html.twig" %}
 
 {% block pageTitle %}
-    Купить {{ product.name }} в Пензе, цена / Интернет-магазин "Vseinet.ru"
+    Купить {{ baseProduct.name }} в Пензе, цена / Интернет-магазин "Vseinet.ru"
 {% endblock %}
 
 {% block pageDescription %}
-    Купить недорого {{ product.name|slice(0, 70) }} в интернет-магазине vseinet.ru. Рассрочка и кредит.
+    Купить недорого {{ baseProduct.name|slice(0, 70) }} в интернет-магазине vseinet.ru. Рассрочка и кредит.
 {% endblock %}
 
 {% block keywords %}
-    {{ product.name }}
+    {{ baseProduct.name }}
 {% endblock %}
 
 {% block meta %}
-    {% if not product.canonicalId != product.id %}
-        <link rel="canonical" href="{{ path('catalog_product', { id: product.canonicalId }) }}">
+    {% if not baseProduct.canonicalId != baseProduct.id %}
+        <link rel="canonical" href="{{ path('catalog_product', { id: baseProduct.canonicalId }) }}">
     {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div itemscope itemtype="http://schema.org/Product" class="product" data-id="{{ product.id }}" id="product-{{ product.id }}">
+    <div itemscope itemtype="http://schema.org/Product" class="product" data-id="{{ baseProduct.id }}" id="product-{{ baseProduct.id }}">
         <div class="breadcrumbs">
             {% for link in breadcrumbs %}
                 <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a>
@@ -29,14 +29,14 @@
             {% endfor %}
             {% if brand %}
                 <span></span>
-                <a href="{{ path('catalog_category_with_brand', { id: product.categoryId, brandName: brand.name }) }}">{{ brand.name }}</a>
+                <a href="{{ path('catalog_category_with_brand', { id: baseProduct.categoryId, brandName: brand.name }) }}">{{ brand.name }}</a>
             {% endif %}
         </div>
         <div class="title">
-            <h1 itemprop="name">{{ product.name }}</h1>
-            <small>Код товара: <b itemprop="sku" class="sku">{{ product.id }}</b></small>
+            <h1 itemprop="name">{{ baseProduct.name }}</h1>
+            <small>Код товара: <b itemprop="sku" class="sku">{{ baseProduct.id }}</b></small>
         </div>
-        <div id="product" data-id="{{ product.id }}">
+        <div id="product" data-id="{{ baseProduct.id }}">
             <div class="row clearfix">
                 <div class="coll-md-5 coll-sm-6">
                     <div class="image">
@@ -44,12 +44,12 @@
                         <img
                             {% if image %}itemprop="image"{% endif %}
                             src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_LG')) }}"
-                            title="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
-                            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            title="{{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            alt="{{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"
                             data-index="0"
                         />
-                        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
-                            <strong class="discount_big">-{{ product.price|discount_percent }}%</strong>
+                        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %}
+                            <strong class="discount_big">-{{ baseProduct.price|discount_percent }}%</strong>
                         {% endif %}
                     </div>
                     {% if 1 < images|length %}
@@ -66,7 +66,7 @@
                     {% endif %}
                 </div>
                 <div class="coll-md-3 coll-sm-6">
-                    <div class="sale{% if product.quantityInCart %} in-cart{% else %} to-cart{% endif %}{% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %} sale-discount{% endif %}" id="sale{{ product.id }}">
+                    <div class="sale{% if baseProduct.quantityInCart %} in-cart{% else %} to-cart{% endif %}{% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %} sale-discount{% endif %}" id="sale{{ baseProduct.id }}">
                         {% include 'Product/sale.html.twig' %}
                     </div>
                 </div>
@@ -75,12 +75,12 @@
                 </div>
                 <div class="coll-md-1">
                     <div class="socials">
-                        {% if product.inFavorites %}
-                            <a href="{{ path('favorite_del', { id: product.id }) }}" class="bm active" data-favorite="{{ product.id }}">
+                        {% if baseProduct.inFavorites %}
+                            <a href="{{ path('favorite_del', { id: baseProduct.id }) }}" class="bm active" data-favorite="{{ baseProduct.id }}">
                                 в избранном
                             </a>
                         {% else %}
-                            <a href="{{ path('favorite_add', { id: product.id }) }}" class="bm" data-favorite="{{ product.id }}">
+                            <a href="{{ path('favorite_add', { id: baseProduct.id }) }}" class="bm" data-favorite="{{ baseProduct.id }}">
                                 в избранное
                             </a>
                         {% endif %}
@@ -88,12 +88,12 @@
                     </div>
                 </div>
             </div>
-            {% include '@Admin/Product/admin_panel.html.twig' with { product: product } only %}
-            {% if points|length %}
+            {% include '@Admin/Product/admin_panel.html.twig' with { product: baseProduct } only %}
+            {% if app.userIsEmployee and geoPoints is not null %}
                 <ul>
-                    {% for point in points %}
+                    {% for geoPoint in geoPoints %}
                         <li>
-                            {{ point.code }}, {{ point.name }}: {{ point.quantity }} шт.
+                            {{ geoPoint.code }}, {{ geoPoint.name }}: {{ geoPoint.quantity }} шт.
                         </li>
                     {% endfor %}
                 </ul>
@@ -167,7 +167,7 @@ $(function() {
             },
             dialog: {
                 minWidth: 994,
-                title: '{{ product.name }}'
+                title: '{{ baseProduct.name }}'
             },
             method: 'get',
             load: function() {
@@ -196,7 +196,7 @@ $(function() {
                     });
                 }
             },
-            url: "{{ url('catalog_product_gallery', { id: product.id }) }}"
+            url: "{{ url('catalog_product_gallery', { id: baseProduct.id }) }}"
         });
         product.find('.gallery img').click(function(){
             product.find('.gallery img').removeClass('current');
@@ -208,9 +208,9 @@ $(function() {
         var YaShareInstance = new Ya.share({
             element: 'YaShare',
             l10n: 'ru',
-            link: "{{ url('catalog_product', { id: product.id }) }}",
-            title: "{{ product.name|e('js') }}",
-            description: "{{ product.description|autocut|e('js') }}",
+            link: "{{ url('catalog_product', { id: baseProduct.id }) }}",
+            title: "{{ baseProduct.name|e('js') }}",
+            description: "{{ baseProduct.description|autocut|e('js') }}",
             {% if images|length %}
             image: "{{ images[0]|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}",
             {% endif %}

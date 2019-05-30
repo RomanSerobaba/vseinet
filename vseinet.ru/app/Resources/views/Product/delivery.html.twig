@@ -10,27 +10,27 @@
                 {{ app.geoCity.name }}
             </a>
         </dd>
-        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == deliveryDate.availability %}
+        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %}
             <dt>Магазин:</dt>
             <dd class="address">
-                {% for point in deliveryDate.geoPoints %}
+                {% for geoPoint in geoPoints if geoPoint.geoCityId == app.geoCity.id %}
                     {% if loop.first %}
-                        <a href="javascript:void(0)" class="ajax gray">{{ point.address }}</a>
+                        <a href="javascript:void(0)" class="ajax gray">{{ geoPoint.address }}</a>
                     {% else %}
-                        <span>{{ point.address }}</span>
+                        <span>{{ geoPoint.address }}</span>
                     {% endif %}
                 {% endfor %}
                 &nbsp;
             </dd>
-        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == deliveryDate.availability %}
+        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == baseProduct.availability %}
             <dt content="out_of_stock" class="status not-available">Нет в продаже</dt>
             <dd>&nbsp;</dd>
-        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == deliveryDate.availability %}
+        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == baseProduct.availability %}
             <dt class="status on-order">Ожидается</dt>
             <dd>&nbsp;</dd>
         {% else %}
             <dt content="preorder" class="status on-order">На заказ:</dt>
-            <dd><span>&nbsp;{{ deliveryDate.date|date_format('%e %B') }}</span></dd>
+            <dd><span>&nbsp;{{ delivery.date|date_format('%e %B') }}</span></dd>
         {% endif %}
     </dl>
 
