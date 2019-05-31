@@ -5,7 +5,6 @@ namespace AppBundle\Bus\Security\Command;
 use AppBundle\Bus\Message\Message;
 use AppBundle\Annotation as VIA;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\Enum;
 use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Validator\Constraints\MobilePhone;
 
@@ -43,7 +42,12 @@ class RegistrCommand extends Message
      * @Assert\NotBlank(message="Укажите город")
      * @Assert\Type(type="string")
      */
-    public $city;
+    public $geoCityName;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
 
     /**
      * @Assert\Type(type="string")
@@ -87,4 +91,9 @@ class RegistrCommand extends Message
      * @Assert\Type(type="boolean")
      */
     public $isHuman;
+
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = (int) $geoCityId ?: null;
+    }
 }

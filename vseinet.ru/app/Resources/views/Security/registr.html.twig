@@ -69,11 +69,11 @@
                 {% endif %}
             </div>
 
-            <div class="row h{% if errors.registr_city is defined %} error{% endif %}">
-                {{ form_label(form.city, 'Город*:') }}
-                {{ form_widget(form.city, { attr: { class: 'txt' }}) }}
-                {% if errors.registr_city is defined %}
-                    <div class="error">{{ errors.registr_city.0 }}</div>
+            <div class="row h{% if errors.registr_geoCityName is defined %} error{% endif %}">
+                {{ form_label(form.geoCityName, 'Город*:') }}
+                {{ form_widget(form.geoCityName, { attr: { class: 'txt' }}) }}
+                {% if errors.registr_geoCityName is defined %}
+                    <div class="error">{{ errors.registr_geoCityName.0 }}</div>
                 {% endif %}
             </div>
 
@@ -145,6 +145,7 @@
 
             <div class="row h">
                 {{ form_widget(form.submit, { label: 'Зарегистрироваться', attr: { class: 'bttn green' }}) }}
+                {{ form_widget(form.geoCityId) }}
                 {{ form_widget(form._token) }}
             </div>
 
