@@ -61,11 +61,12 @@ class MainController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $command->product = $em->getRepository(BaseProduct::class)->find($id);
-        if (!$command->product instanceof BaseProduct) {
+        $baseProduct = $em->getRepository(BaseProduct::class)->find($id);
+        if (!$baseProduct instanceof BaseProduct) {
             throw new NotFoundHttpException();
         }
-        $command->competitors = $em->getRepository(Competitor::class)->getActive();
+        $command->baseProductId = $baseProduct->getId();
+        $competitors = $em->getRepository(Competitor::class)->getActive();
 
         if ($request->isMethod('GET')) {
             $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
@@ -96,8 +97,8 @@ class MainController extends Controller
         return $this->json([
             'html' => $this->renderView('Main/cheaper_request_form.html.twig', [
                 'form' => $form->createView(),
-                'product' => $command->product,
-                'competitors' => $command->competitors,
+                'product' => $baseProduct,
+                'competitors' => $competitors,
             ]),
         ]);
     }

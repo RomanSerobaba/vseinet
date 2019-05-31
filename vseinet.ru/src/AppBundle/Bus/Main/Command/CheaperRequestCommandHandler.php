@@ -5,6 +5,7 @@ namespace AppBundle\Bus\Main\Command;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Exception\ValidationException;
 use AppBundle\Entity\CheaperRequest;
+use AppBundle\Entity\Competitor;
 
 class CheaperRequestCommandHandler extends MessageHandler
 {
@@ -17,7 +18,7 @@ class CheaperRequestCommandHandler extends MessageHandler
         $em = $this->getDoctrine()->getManager();
 
         $request = new CheaperRequest();
-        $request->setBaseProductId($command->product->getId());
+        $request->setBaseProductId($command->baseProductId);
 
         if (null !== $command->userData->userId) {
             $request->setUserId($command->userData->userId);
@@ -44,12 +45,14 @@ class CheaperRequestCommandHandler extends MessageHandler
             $urlFragments['host'] = $urlFragments['path'];
         }
 
-        foreach ($command->competitors as $competitor) {
+        $competitors = $this->getDoctrine()->getManager()->getRepository(Competitor::class)->getActive();
+        foreach ($competitors as $competitor) {
             $competitorUrlFragments = parse_url($competitor->getLink());
             if (empty($competitorUrlFragments['host'])) {
                 continue;
             }
-            if ($urlFragments['host'] == $competitorUrlFragments['host']) {
+            $host = implode('.', array_slice(explode('.', $competitorUrlFragments['host']), -2, 2));
+            if (strtolower($urlFragments['host']) == strtolower($host)) {
                 return true;
             }
         }

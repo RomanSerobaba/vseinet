@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Command;
 
@@ -8,9 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CheaperRequestCommand extends Message
 {
     /**
-     * @Assert\Type(type="AppBundle\Entity\BaseProduct")
+     * @Assert\Type(type="integer")
      */
-    public $product;
+    public $baseProductId;
 
     /**
      * @Assert\NotBlank(message="Выберите населенный пункт")
@@ -40,11 +40,4 @@ class CheaperRequestCommand extends Message
      * @Assert\Type(type="string")
      */
     public $comment;
-
-    /**
-     * @Assert\All({
-     *     @Assert\Type(type="AppBundle\Entity\Competitor")
-     * })
-     */
-    public $competitors;
 }
