@@ -211,37 +211,46 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         return $delivery;
     }
 
-    protected function getDateByRoute(int $startingPointId, int $arrivalPointId, ?DateTime $startDate = null): \DateTime
+    protected function getDateByRoute(int $startingGeoPointId, int $arrivalGeoPointId, ?\DateTime $startingDate = null): \DateTime
     {
-        $date = $startDate ?? new \DateTime();
-
+        $date = $startingDate ?? new \DateTime();
         $routes = $this->getAllRoutes();
-        if (isset($routes[$startingPointId][$arrivalPointId])) {
-            return $this->getCron($routes[$startingPointId][$arrivalPointId])->getNextRunDate($date);
+
+        if (!isset($routes[$startingGeoPointId])) {
+            return null;
         }
 
-        $queue = array_keys($routes[$fromPointId = $startingPointId]);
+        if (isset($routes[$startingGeoPointId][$arrivalGeoPointId])) {
+            return $this->getCron($routes[$startingGeoPointId][$arrivalGeoPointId])->getNextRunDate($date);
+        }
+
+        $queue = array_keys($routes[$fromGeoPointId = $startingGeoPointId]);
         $visited = [];
 
-        while (length($queue)) {
-            $nextPointId = array_shift($queue);
+        while (count($queue)) {
+            $nextGeoPointId = array_shift($queue);
 
-            if (!isset($visited[$nextPointId])) {
-                $date = $this->getCron($routes[$fromPointId][$nextPointId])->getNextRunDate($date);
+            if (!isset($visited[$nextGeoPointId])) {
+                if (isset($routes[$fromGeoPointId][$nextGeoPointId])) {
+                    $date = $this->getCron($routes[$fromGeoPointId][$nextGeoPointId])->getNextRunDate($date);
 
-                if ($nextPointId === $arrivalPointId) {
-                    return $date;
+                    if ($nextGeoPointId === $arrivalGeoPointId) {
+                        return $date;
+                    }
+
+                    if (isset($routes[$nextGeoPointId])) {
+                        $queue = array_merge($queue, array_keys($routes[$nextGeoPointId]));
+                    }
+                    $fromGeoPointId = $nextGeoPointId;
+                } else {
+                    $fromGeoPointId = $startingGeoPointId;
                 }
 
-                if (isset($routes[$nextPointId])) {
-                    $queue = array_merge($queue, array_keys($routes[$nextPointId]));
-                }
-
-                $visited[] = $fromPointId = $nextPointId;
+                $visited[] = $nextGeoPointId;
             }
         }
 
-        throw new \RuntimeException(sprintf('Маршрута из точки %d в точку %d не существует', $startingPointId, $arrivalPointId));
+        return null;
     }
 
     protected function getCron(string $expression): CronExpression

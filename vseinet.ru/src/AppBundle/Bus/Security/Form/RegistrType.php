@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -23,7 +24,8 @@ class RegistrType extends AbstractType
             ->add('secondname', TextType::class, ['required' => false])
             ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => array_flip(PersonGender::getChoices())])
             ->add('birthday', TextType::class, ['required' => false])
-            ->add('city', TextType::class)
+            ->add('geoCityName', TextType::class)
+            ->add('geoCityId', HiddenType::class)
             ->add('mobile', TextType::class, ['required' => false])
             ->add('phones', TextareaType::class, ['required' => false])
             ->add('email', EmailType::class)

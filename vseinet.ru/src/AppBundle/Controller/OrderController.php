@@ -12,6 +12,7 @@ use AppBundle\Bus\Order\Command;
 use AppBundle\Bus\Order\Query;
 use AppBundle\Bus\Order\Form;
 use AppBundle\Enum\OrderItemStatus;
+use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\ApiClient\ApiClientException;
@@ -117,6 +118,21 @@ class OrderController extends Controller
             'history' => $history,
             'paging' => $paging,
         ]);
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="order_creation_credit",
+     *     path="/order/credit/{id}/",
+     *     requirements={"id": "\d+"}
+     * )
+     */
+    public function creationCreditAction(int $id)
+    {
+        $this->forward('AppBundle:Cart:add', ['id' => $id]);
+        $this->get('session')->set('form.orderCreation', ['paymentTypeCode' => PaymentTypeCode::CREDIT]);
+
+        return $this->redirectToRoute('order_creation_page');
     }
 
     /**

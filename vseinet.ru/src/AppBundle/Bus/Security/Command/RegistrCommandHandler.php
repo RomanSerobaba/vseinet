@@ -61,9 +61,9 @@ class RegistrCommandHandler extends MessageHandler
             throw new ValidationException('passwordConfirm', 'Пароли не совпадают');
         }
 
-        $city = $em->getRepository(GeoCity::class)->findOneBy(['name' => $command->city]);
-        if (!$city instanceof GeoCity) {
-            throw new ValidationException('city', 'Город не найден');
+        $geoCity = $em->getRepository(GeoCity::class)->find($command->geoCityId);
+        if (!$geoCity instanceof GeoCity) {
+            throw new ValidationException('geoCityName', sprintf('Город %s не найден', $command->getCityName));
         }
 
         $person = new Person();
@@ -81,7 +81,7 @@ class RegistrCommandHandler extends MessageHandler
         $em->flush();
 
         $user = new User();
-        $user->setCityId($city->getId());
+        $user->setCityId($geoCity->getId());
         $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
         $user->setPersonId($person->getId());
         $user->setRegisteredAt(new \DateTime());
@@ -107,7 +107,7 @@ class RegistrCommandHandler extends MessageHandler
         $contact->setPersonId($person->getId());
         $contact->setValue($command->mobile);
         $contact->setContactTypeCode(ContactTypeCode::MOBILE);
-        $contact->setCityId($city->getId());
+        $contact->setCityId($geoCity->getId());
         $contact->setIsMain(true);
         $em->persist($contact);
 
@@ -115,7 +115,7 @@ class RegistrCommandHandler extends MessageHandler
         $contact->setPersonId($person->getId());
         $contact->setValue($command->email);
         $contact->setContactTypeCode(ContactTypeCode::EMAIL);
-        $contact->setCityId($city->getId());
+        $contact->setCityId($geoCity->getId());
         $contact->setIsMain(true);
         $em->persist($contact);
 
@@ -128,7 +128,7 @@ class RegistrCommandHandler extends MessageHandler
                     $contact->setPersonId($person->getId());
                     $contact->setValue($phone);
                     $contact->setContactTypeCode(ContactTypeCode::PHONE);
-                    $contact->setCityId($city->getId());
+                    $contact->setCityId($geoCity->getId());
                     $contact->setIsMain(false);
                     $em->persist($contact);
                 }

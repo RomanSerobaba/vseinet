@@ -3,11 +3,13 @@
         Ф.И.О. <b>*</b>
     </label>
     {{ form_widget(form.userData.fullname, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : ''), placeholder: 'Фамилия Имя Отчество' }})  }}
-    <span id="lfsHelp" onclick="$('#{{ form.userData.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
+    <span id="lfsHelpUser" onclick="$('#{{ form.userData.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
     <span class="status"></span>
     {% if errors.userData.fullname is defined %}
         <div class="error">{{ errors.userData.fullname.0 }}</div>
     {% endif %}
+</div>
+<div>
     {{ form_widget(form.userData.userId) }}
     {{ form_widget(form.userData.comuserId) }}
 </div>

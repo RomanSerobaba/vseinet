@@ -5,16 +5,17 @@ namespace AppBundle\Bus\User\Query\DTO;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\MobilePhone;
 use AppBundle\Validator\Constraints\PersonName;
+use AppBundle\Bus\Message\Message;
 
-class UserData
+class UserData extends Message
 {
     /**
-     * @assert\Type(type="integer", message="Идентификатор пользователя должен быть числом")
+     * @assert\Type(type="numeric", message="Идентификатор пользователя должен быть числом")
      */
     public $userId;
 
     /**
-     * @Assert\Type(type="integer", message="Идентификатор незарегистрированного пользователя должен быть числом")
+     * @Assert\Type(type="numeric", message="Идентификатор незарегистрированного пользователя должен быть числом")
      */
     public $comuserId;
 
@@ -66,5 +67,4 @@ class UserData
      * })
      */
     public $contactIds;
-
 }
