@@ -3,7 +3,7 @@
 namespace AppBundle\Bus\Cart\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Annotation AS VIA;
+use AppBundle\Annotation as VIA;
 
 class CartSummary
 {
@@ -113,8 +113,7 @@ class CartSummary
      */
     public $products;
 
-
-    public function __construct(array $products, string $discountCode, int $discountCodeId = NULL, int $deliveryCharges = NULL, int $liftingFloor, int $transportCompanyDeliveryCharges = NULL, $postDeliveryCharges = NULL, float $paymentTypeComissionPercent = NULL, string $paymentTypeCode = NULL, string $paymentTypeName = NULL)
+    public function __construct(array $products, string $discountCode, int $discountCodeId = null, int $deliveryCharges = null, int $liftingFloor, int $transportCompanyDeliveryCharges = null, $postDeliveryCharges = null, float $paymentTypeComissionPercent = null, string $paymentTypeCode = null, string $paymentTypeName = null)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
@@ -139,7 +138,7 @@ class CartSummary
         $this->discountCodeId = $discountCodeId;
         $this->paymentTypeComissionPercent = $paymentTypeComissionPercent;
         $this->summary = $this->amountWithDiscount + $this->deliveryTaxAmount + $this->liftingCharges + $this->deliveryCharges + $this->transportCompanyDeliveryCharges + $this->deliveryToRepresentativeTaxAmount;
-        $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100);
+        $this->paymentTypeComissionAmount = round($this->summary * $paymentTypeComissionPercent / 100, -2);
         $this->summary += $this->paymentTypeComissionAmount;
     }
 }
