@@ -79,14 +79,24 @@
 </div>
 <div class="sale-btns-wrapper">
     <div class="sale-btns to-cart">
-        <a
-            href="{{ path('cart_add', { id: baseProduct.id }) }}"
-            {#onclick="yaCounter13639594.reachGoal('cartadd');return true;"#}
-            class="bttn cart-add{% if isAvailable or isInTransit or isOnDemand %} green{% else %} greengray{% endif %}"
-            rel="nofollow"
-        >
-            {% if isAvailable or isInTransit or isOnDemand %}Добавить в корзину{% else %}Сообщить о поступлении{% endif %}
-        </a>
+        {% if (app.user and app.user.isEmployee) or isAvailable or isInTransit or isOnDemand %}
+            <a
+                href="{{ path('cart_add', { id: baseProduct.id }) }}"
+                {#onclick="yaCounter13639594.reachGoal('cartadd');return true;"#}
+                class="bttn cart-add green"
+                rel="nofollow"
+            >
+                Добавить в корзину
+            </a>
+        {% else %}
+            <a
+                href="{{ path('order_receipts_of_product', { id: baseProduct.id }) }}"
+                class="bttn receipts-of-product greengray"
+                rel="nofollow"
+            >
+                Сообщить о поступлении
+            </a>
+        {% endif %}
         {% if 300000 < baseProduct.price %}
             <a
                 href="{{ path('cart_add', { id: baseProduct.id }) }}"

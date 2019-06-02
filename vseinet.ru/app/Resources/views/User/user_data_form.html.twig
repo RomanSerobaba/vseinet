@@ -18,7 +18,7 @@
     <label for="{{ form.userData.phone.vars.id }}">
         Телефон <b>*</b>
     </label>
-    {{ form_widget(form.userData.phone, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
+    {{ form_widget(form.userData.phone, { attr: { class: 'txt phone' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
     <span class="status"></span>
     {% if errors.userData.phone is defined %}
         <div class="error">{{ errors.userName.phone.0 }}</div>
