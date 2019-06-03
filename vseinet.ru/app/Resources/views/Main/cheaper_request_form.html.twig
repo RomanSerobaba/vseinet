@@ -16,15 +16,15 @@
     <p style="font-style:italic">Внимание! Поля, отмеченные <label><b>*</b></label>, являются обязательными для заполнения.</p>
 </div>
 
-{{ form_start(form, { action: path('cheaper_request', { id: product.id }), attr: { id: 'cheaper-request-form' }}) }}
+{{ form_start(form, { action: path('cheaper_request', { id: product.id }), attr: { id: 'cheaper-request-form', novalidate: true }}) }}
 
 <fieldset>
-    
+
     <div class="row h">
         <label>Наименование</label>
         <p style="font-size:14px;padding-top:5px">{{ product.name }}</p>
     </div>
-    
+
     <div class="row h{% if errors.competitorPrice is defined %} error{% endif %}">
         {{ form_label(form.competitorPrice, 'Цена конкурента*') }}
         {{ form_widget(form.competitorPrice, { attr: { class: 'txt' }}) }}
@@ -55,7 +55,7 @@
     </div>
 
     {% include 'User/user_data_form.html.twig' with { form: form } only %}
-    
+
     <div class="row h">
         {{ form_label(form.comment, 'Комментарий') }}
         {{ form_widget(form.comment, { attr: { class: 'txt' }}) }}
@@ -64,7 +64,7 @@
     {% include 'User/is_human_form.html.twig' with { form: form } only %}
 
     <div class="row h">
-        {{ form_widget(form.submit, { label: 'Отправить запрос', attr: { class: 'bttn orange r' }}) }} 
+        {{ form_widget(form.submit, { label: 'Отправить запрос', attr: { class: 'bttn orange r' }}) }}
         {{ form_widget(form._token) }}
     </div>
 

@@ -7,7 +7,7 @@
 {% block content %}
 <h1>Книга предложений</h1>
 
-{{ form_start(form, { action: path('suggestion'), attr: { id: 'suggestion-form', class: 'w60p' }}) }}
+{{ form_start(form, { action: path('suggestion'), attr: { id: 'suggestion-form', class: 'w60p', novalidate: true }}) }}
 
 <fieldset class="block">
     <div class="wrapper">
@@ -18,12 +18,12 @@
 <fieldset class="block gray">
     <div class="wrapper">
         <h2>Ваше предложение</h2>
-        <div class="row h{% if errors.text is defined %} error{% endif %}">
+        <div class="row h{% if errors.client_suggestion_form_text is defined %} error{% endif %}">
             {{ form_label(form.text, 'Текст:*') }}
             {{ form_widget(form.text, { attr: { rows: 8, class: 'txt' }}) }}
             <span class="status"></span>
-            {% if errors.text is defined %}
-                <div class="error">{{ errors.text.0 }}</div>
+            {% if errors.client_suggestion_form_text is defined %}
+                <div class="error">{{ errors.client_suggestion_form_text.0 }}</div>
             {% endif %}
         </div>
     </div>

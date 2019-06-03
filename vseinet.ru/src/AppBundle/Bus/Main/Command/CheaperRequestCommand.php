@@ -8,36 +8,36 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CheaperRequestCommand extends Message
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type("integer")
      */
     public $baseProductId;
 
     /**
      * @Assert\NotBlank(message="Выберите населенный пункт")
-     * @Assert\Type(type="integer")
+     * @Assert\Type("integer")
      */
     public $geoCityId;
 
     /**
-     * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
+     * @Assert\Type("AppBundle\Bus\User\Query\DTO\UserData")
      * @Assert\Valid
      */
     public $userData;
 
     /**
      * @Assert\NotBlank(message="Укажите цену товара у конкурента")
-     * @Assert\Type(type="numeric")
+     * @Assert\Type("integer")
      */
     public $competitorPrice;
 
     /**
      * @Assert\NotBlank(message="Укажите сслыку на карточку товара на сайте конкурента")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $competitorLink;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $comment;
 }

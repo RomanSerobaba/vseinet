@@ -1,4 +1,4 @@
-{{ form_start(form, { action: path('user_edit'), attr: { id: 'user-edit-form' }}) }}
+{{ form_start(form, { action: path('user_edit'), attr: { id: 'user-edit-form', novalidate: true }}) }}
 
 {% set count = errors|length %}
 {% if count %}

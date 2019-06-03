@@ -17,6 +17,7 @@ use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\ApiClient\ApiClientException;
 use AppBundle\Entity\BaseProduct;
+use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
 
 class OrderController extends Controller
@@ -140,6 +141,10 @@ class OrderController extends Controller
             throw new NotFoundHttpException(sprintf('Товар с кодом %d  не найден', $id));
         }
         $command->baseProductId = $baseProduct->getId();
+
+        if ($request->isMethod('GET')) {
+            $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
+        }
 
         $form = $this->createForm(Form\ReceiptsOfProductFormType::class, $command);
 

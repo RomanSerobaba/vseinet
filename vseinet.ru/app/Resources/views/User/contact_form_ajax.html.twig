@@ -6,7 +6,7 @@
     {% set action = path('user_contact_add') %}
 {% endif %}
 
-{{ form_start(form, { action: action, attr: { id: 'contact-form', title: title }}) }}
+{{ form_start(form, { action: action, attr: { id: 'contact-form', title: title, novalidate: true }}) }}
 
 {% if command.id %}
     <div class="row h">

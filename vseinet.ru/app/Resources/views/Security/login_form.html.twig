@@ -1,4 +1,4 @@
-{{ form_start(form, { action: path('login'), attr: { title: 'Вход на сайт', id: 'login-form', novalidate: 'novalidate' }}) }}
+{{ form_start(form, { action: path('login'), attr: { title: 'Вход на сайт', id: 'login-form', novalidate: true }}) }}
 
 <div class="row">
     {{ form_label(form._username, 'Телефон* / Эл. почта:') }}
