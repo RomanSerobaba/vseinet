@@ -42,13 +42,13 @@
 <fieldset class="block">
     <div class="wrapper">
         <h2>2. Контакты:</h2>
-        {% include 'User/user_data_form.html.twig' with { form: form, hideAdditionalPhone: true } only %}
+        {% include 'User/user_data_form.html.twig' with { form: form } only %}
         {% include 'User/is_human_form.html.twig' with { form: form } only %}
     </div>
 </fieldset>
 
 <div class="row h">
-    {{ form_widget(form.submit, { label: 'Отправить жалобу', attr: { class: 'bttn green r' }}) }} 
+    {{ form_widget(form.submit, { label: 'Отправить жалобу', attr: { class: 'bttn green r' }}) }}
     {{ form_widget(form._token) }}
 </div>
 
