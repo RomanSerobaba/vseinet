@@ -41,6 +41,8 @@ class ReceiptsOfProductCommandHandler extends MessageHandler
 
         $result = $this->get('site.api.client')->post('/api/v1/orders/', [], $params);
 
+        $expiresAt = new \DateTime(sprintf('+%d days', $command->trackingPeriod));
+
         $q = $em->createNativeQuery('
             INSERT INTO client_order_item_tracking (order_item_id, expires_at)
             SELECT oi.id, :expires_at
@@ -48,7 +50,7 @@ class ReceiptsOfProductCommandHandler extends MessageHandler
             WHERE oi.order_did = :id
         ', new ResultSetMapping());
         $q->setParameter('id', $result['id']);
-        $q->setParameter('expires_at', new \DateTime(sprintf('+%d days', $command->trackingPeriod)));
+        $q->setParameter('expires_at', $expiresAt->setTime(0, 0));
         $q->execute();
 
         return $result['id'];
