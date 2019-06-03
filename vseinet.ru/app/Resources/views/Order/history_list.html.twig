@@ -114,9 +114,11 @@
                 </div>
             {% endfor %}
             {% set countEmptyBlocks = 3 - order.items|length % 3 %}
-            {% for i in [0..countEmptyBlocks] %}
-                <div class="product"></div>
-            {% endfor %}
+            {% if countEmptyBlocks < 3 %}
+                {% for i in 0..countEmptyBlocks - 1 %}
+                    <div class="product">&nbsp;</div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 </div>

@@ -1,0 +1,25 @@
+{{ form_start(form, { action: path('order_receipts_of_product', { id: baseProduct.id }), attr: { id: 'receipts-of-product-form', 'novalidate': true }}) }}
+
+<fieldset>
+    <div class="row h">
+        <label>Наименование</label>
+        <p style="font-size:14px;padding-top:5px">{{ baseProduct.name }}</p>
+    </div>
+
+    {% include 'User/user_data_form.html.twig' with { form: form, hideAdditionalPhone: true } only %}
+
+    <div class="row h">
+        {{ form_label(form.trackingPeriod, 'Сроки отслеживания:') }}
+        {{ form_widget(form.trackingPeriod, { attr: { class: 'txt' }}) }}
+        <div class="notice">Сроки, в течение которых Вы готовы ожидать появления товара в продаже.</div>
+    </div>
+
+    {% include 'User/is_human_form.html.twig' with { form: form } only %}
+
+    <div class="row h">
+        {{ form_widget(form.submit, { label: 'Оставить заявку', attr: { class: 'bttn green r' }}) }}
+        {{ form_widget(form._token) }}
+    </div>
+</fieldset>
+
+{{ form_end(form, { render_rest: false }) }}

@@ -16,6 +16,8 @@ use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\ApiClient\ApiClientException;
+use AppBundle\Entity\BaseProduct;
+use AppBundle\Bus\User\Command\IdentifyCommand;
 
 class OrderController extends Controller
 {
@@ -117,6 +119,78 @@ class OrderController extends Controller
         return $this->render('Order/history.html.twig', (array) $query + [
             'history' => $history,
             'paging' => $paging,
+        ]);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="order_receipts_of_product",
+     *     path="/order/receiptsOfProduct/{id}/",
+     *     requirements={"id": "\d+"},
+     *     methods={"GET", "POST"},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function receiptsOfProduct(int $id, Request $request)
+    {
+        $command = new Command\ReceiptsOfProductCommand();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $baseProduct = $em->getRepository(BaseProduct::class)->find($id);
+        if (!$baseProduct instanceof BaseProduct) {
+            throw new NotFoundHttpException(sprintf('ТОвар с кодом %d  не найден', $id));
+        }
+        $command->baseProductId = $baseProduct->getId();
+
+        $form = $this->createForm(Form\ReceiptsOfProductFormType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $orderId = $this->get('command_bus')->handle($command);
+
+                    return $this->json([
+                        'notice' => $this->renderView('Order/receipts_of_product_success.html.twig', [
+                            'orderId' => $orderId,
+                            'baseProductName' => $baseProduct->getName(),
+                        ]),
+                    ]);
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getAsArray());
+                } catch (ApiClientException $e) {
+                    $paramErrors = $e->getParamErrors();
+
+                    if (!empty($paramErrors)) {
+                        $messages = array_combine(array_column($paramErrors, 'name'), array_column($paramErrors, 'message'));
+                        // hack
+                        if (isset($messages['client.phone'])) {
+                            $messages['userData.phone'] = $messages['client.phone'];
+                            unset($messages['client.phone']);
+                        }
+                        if (isset($messages['client.fullname'])) {
+                            $messages['userData.fullname'] = $messages['client.fullname'];
+                            unset($messages['client.fullname']);
+                        }
+                        $this->addFormErrors($form, $messages);
+                    } else {
+                        $this->addFormErrors($form, ['' => $e->getMessage().' '.$e->getDebugTokenLink()]);
+                    }
+                }
+            }
+
+            return $this->json([
+                'errors' => $this->getFormErrors($form),
+            ]);
+        }
+
+        return $this->json([
+            'html' => $this->renderView('Order/receipts_of_product_form.html.twig', [
+                'form' => $form->createView(),
+                'baseProduct' => $baseProduct,
+            ]),
         ]);
     }
 
