@@ -135,11 +135,9 @@ class OrderController extends Controller
     {
         $command = new Command\ReceiptsOfProductCommand();
 
-        $em = $this->getDoctrine()->getManager();
-
-        $baseProduct = $em->getRepository(BaseProduct::class)->find($id);
+        $baseProduct = $this->getDoctrine()->getManager()->getRepository(BaseProduct::class)->find($id);
         if (!$baseProduct instanceof BaseProduct) {
-            throw new NotFoundHttpException(sprintf('ТОвар с кодом %d  не найден', $id));
+            throw new NotFoundHttpException(sprintf('Товар с кодом %d  не найден', $id));
         }
         $command->baseProductId = $baseProduct->getId();
 
@@ -151,11 +149,12 @@ class OrderController extends Controller
                 try {
                     $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
                     $orderId = $this->get('command_bus')->handle($command);
+                    $order = $this->get('query_bus')->handle(new Query\GetOrderQuery(['id' => $orderId]));
 
                     return $this->json([
                         'notice' => $this->renderView('Order/receipts_of_product_success.html.twig', [
-                            'orderId' => $orderId,
-                            'baseProductName' => $baseProduct->getName(),
+                            'order' => $order,
+                            'baseProduct' => $baseProduct,
                         ]),
                     ]);
                 } catch (ValidationException $e) {
@@ -165,15 +164,6 @@ class OrderController extends Controller
 
                     if (!empty($paramErrors)) {
                         $messages = array_combine(array_column($paramErrors, 'name'), array_column($paramErrors, 'message'));
-                        // hack
-                        if (isset($messages['client.phone'])) {
-                            $messages['userData.phone'] = 'Укажите Ваш телефон';
-                            unset($messages['client.phone']);
-                        }
-                        if (isset($messages['client.fullname'])) {
-                            $messages['userData.fullname'] = $messages['client.fullname'];
-                            unset($messages['client.fullname']);
-                        }
                         $this->addFormErrors($form, $messages);
                     } else {
                         $this->addFormErrors($form, ['' => $e->getMessage().' '.$e->getDebugTokenLink()]);
