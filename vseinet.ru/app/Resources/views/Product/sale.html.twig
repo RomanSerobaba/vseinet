@@ -79,7 +79,16 @@
 </div>
 <div class="sale-btns-wrapper">
     <div class="sale-btns to-cart">
-        {% if (app.user and app.user.isEmployee) or isAvailable or isInTransit or isOnDemand %}
+        {% if app.userIsEmployee or isAvailable or isInTransit or isOnDemand %}
+            {% if app.userIsEmployee %}
+                <input
+                    type="number"
+                    class="cart-quantity"
+                    value="{{ baseProduct.minQuantity }}"
+                    data-min-quantity="{{ baseProduct.minQuantity }}"
+                    min="{{ baseProduct.minQuantity }}"
+                >
+            {% endif %}
             <a
                 href="{{ path('cart_add', { id: baseProduct.id }) }}"
                 {#onclick="yaCounter13639594.reachGoal('cartadd');return true;"#}
@@ -91,7 +100,7 @@
         {% else %}
             <a
                 href="{{ path('order_receipts_of_product', { id: baseProduct.id }) }}"
-                class="bttn receipts-of-product greengray"
+                class="bttn greengray receipts-of-product"
                 rel="nofollow"
             >
                 Сообщить о поступлении
