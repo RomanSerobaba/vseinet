@@ -56,6 +56,7 @@ class IdentifyCommandHandler extends MessageHandler
                 ]);
                 if ($user instanceof User) {
                     $this->updateUserContacts($command->userData, $user);
+                    // var_dump($command->userData);
                 }
             }
         }
@@ -76,6 +77,8 @@ class IdentifyCommandHandler extends MessageHandler
         }
 
         $em->flush();
+
+        return $command->userData;
     }
 
     protected function updateUserContacts($userData, $user)

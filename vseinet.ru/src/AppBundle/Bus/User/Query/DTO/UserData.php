@@ -10,37 +10,42 @@ use AppBundle\Bus\Message\Message;
 class UserData extends Message
 {
     /**
-     * @assert\Type(type="integer", message="Идентификатор пользователя должен быть числом")
+     * @assert\Type("integer")
      */
     public $userId;
 
     /**
-     * @Assert\Type(type="integer", message="Идентификатор незарегистрированного пользователя должен быть числом")
+     * @Assert\Type("integer")
      */
     public $comuserId;
 
     /**
      * @Assert\NotBlank(message="Укажите Ваше ФИО")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      * @PersonName
      */
     public $fullname;
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш телефон")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      * @MobilePhone
      */
     public $phone;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $additionalPhone;
 
     /**
      * @Assert\Type(type="string")
-     * @Assert\Email
+     * @Assert\Email(message="Неверный формат email")
      */
     public $email;
+
+    /**
+     * @Assert\All(@Assert\Type("integer"))
+     */
+    public $contactIds = [];
 }

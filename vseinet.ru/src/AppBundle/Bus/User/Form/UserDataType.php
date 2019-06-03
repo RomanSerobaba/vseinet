@@ -10,15 +10,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use AppBundle\Form\Type\PhoneType;
 use AppBundle\Bus\User\Query\DTO\UserData;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserDataType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $emailOptions = ['required' => $options['email_required']];
+        if ($options['email_required']) {
+            $emailOptions['constraints'] = [new NotBlank(['message' => 'Укажите Ваш email'])];
+        }
+
         $builder
             ->add('fullname', TextType::class, ['required' => true])
             ->add('phone', PhoneType::class, ['required' => true])
-            ->add('email', EmailType::class, ['required' => $options['email_required']])
+            ->add('email', EmailType::class, $emailOptions)
             ->add('userId', HiddenType::class)
             ->add('comuserId', HiddenType::class)
         ;

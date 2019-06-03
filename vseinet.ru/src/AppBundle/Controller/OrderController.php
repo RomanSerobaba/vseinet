@@ -149,15 +149,15 @@ class OrderController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    // $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
-                    // $orderId = $this->get('command_bus')->handle($command);
+                    $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $orderId = $this->get('command_bus')->handle($command);
 
-                    // return $this->json([
-                    //     'notice' => $this->renderView('Order/receipts_of_product_success.html.twig', [
-                    //         'orderId' => $orderId,
-                    //         'baseProductName' => $baseProduct->getName(),
-                    //     ]),
-                    // ]);
+                    return $this->json([
+                        'notice' => $this->renderView('Order/receipts_of_product_success.html.twig', [
+                            'orderId' => $orderId,
+                            'baseProductName' => $baseProduct->getName(),
+                        ]),
+                    ]);
                 } catch (ValidationException $e) {
                     $this->addFormErrors($form, $e->getAsArray());
                 } catch (ApiClientException $e) {
