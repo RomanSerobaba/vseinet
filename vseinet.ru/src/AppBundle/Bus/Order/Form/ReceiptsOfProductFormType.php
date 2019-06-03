@@ -22,7 +22,7 @@ class ReceiptsOfProductFormType extends AbstractType
         ];
 
         $builder
-            ->add('userData', UserDataType::class)
+            ->add('userData', UserDataType::class, ['additional_phone' => false, 'email_required' => true])
             ->add('trackingPeriod', ChoiceType::class, ['choices' => $trackingPeriods, 'required' => true])
             ->add('isHuman', IsHumanType::class)
             ->add('submit', SubmitType::class);

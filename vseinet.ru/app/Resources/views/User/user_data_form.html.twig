@@ -25,7 +25,7 @@
     {% endif %}
 </div>
 
-{% if hideAdditionalPhone is not defined %}
+{% if form.userData.additionalPhone is defined %}
     <div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
         {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
         {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
@@ -37,7 +37,9 @@
 {% endif %}
 
 <div class="row h{% if error.userData.email is defined %} error{% endif %}">
-    {{ form_label(form.userData.email, 'Email:') }}
+    <label for="{{ form.userData.email.vars.id }}">
+        Email {% if form.userData.email.vars.required %}<b>*</b>{% endif %}
+    </label>
     {{ form_widget(form.userData.email, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
     {% if errors.userData.email is defined %}

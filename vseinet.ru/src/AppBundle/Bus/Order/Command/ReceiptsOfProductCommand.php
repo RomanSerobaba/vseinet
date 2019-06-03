@@ -22,4 +22,10 @@ class ReceiptsOfProductCommand extends Message
      * @Assert\Type("integer")
      */
     public $trackingPeriod;
+
+    /**
+     * @Assert\NotBlank(message="Отметьте флажок если вы человек")
+     * @Assert\Type(type="boolean")
+     */
+    public $isHuman;
 }

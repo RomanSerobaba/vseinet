@@ -10,34 +10,24 @@ use AppBundle\Bus\Message\Message;
 class UserData extends Message
 {
     /**
-     * @assert\Type(type="numeric", message="Идентификатор пользователя должен быть числом")
+     * @assert\Type(type="integer", message="Идентификатор пользователя должен быть числом")
      */
     public $userId;
 
     /**
-     * @Assert\Type(type="numeric", message="Идентификатор незарегистрированного пользователя должен быть числом")
+     * @Assert\Type(type="integer", message="Идентификатор незарегистрированного пользователя должен быть числом")
      */
     public $comuserId;
 
     /**
-     * @Assert\Type(type="string")
-     */
-    public $position;
-
-    /**
+     * @Assert\NotBlank(message="Укажите Ваше ФИО")
      * @Assert\Type(type="string")
      * @PersonName
      */
     public $fullname;
 
     /**
-     * @Assert\All({
-     *     @Assert\Type(type="AppBundle\Entity\Contact")
-     * })
-     */
-    public $phoneList;
-
-    /**
+     * @Assert\NotBlank(message="Укажите Ваш телефон")
      * @Assert\Type(type="string")
      * @MobilePhone
      */
@@ -49,22 +39,8 @@ class UserData extends Message
     public $additionalPhone;
 
     /**
-     * @Assert\All({
-     *     @Assert\Type(type="AppBundle\Entity\Contact")
-     * })
-     */
-    public $emailList;
-
-    /**
      * @Assert\Type(type="string")
      * @Assert\Email
      */
     public $email;
-
-    /**
-     * @Assert\All({
-     *     @Assert\Type(type="integer")
-     * })
-     */
-    public $contactIds;
 }
