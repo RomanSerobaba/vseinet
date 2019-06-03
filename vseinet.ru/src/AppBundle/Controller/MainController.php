@@ -78,7 +78,7 @@ class MainController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
                     $this->get('command_bus')->handle($command);
 
                     return $this->json([
@@ -182,7 +182,7 @@ class MainController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
                     $this->get('command_bus')->handle($command);
 
                     $this->addFlash('notice', 'Спасибо за Ваше предложение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');

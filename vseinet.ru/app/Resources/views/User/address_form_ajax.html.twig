@@ -6,7 +6,7 @@
     {% set action = path('user_address_add') %}
 {% endif %}
 
-{{ form_start(form, { action: action, attr: { id: 'address-form', title: title }}) }}
+{{ form_start(form, { action: action, attr: { id: 'address-form', title: title, novalidate: true }}) }}
 
 <div class="row h{% if errors.add_address_geoCityName is defined %} error{% endif %}">
     {{ form_label(form.geoCityName, 'Город*:') }}

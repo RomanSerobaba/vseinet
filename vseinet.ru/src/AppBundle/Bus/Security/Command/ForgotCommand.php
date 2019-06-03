@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Security\Command;
 
@@ -9,13 +9,7 @@ class ForgotCommand extends Message
 {
     /**
      * @Assert\NotBlank(message="Введете Ваш номер телефона или email")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $username;
-
-    /**
-     * @Assert\NotBlank(message="Отметьте флажок если вы человек")
-     * @Assert\Type(type="boolean")
-     */
-    public $isHuman;
 }

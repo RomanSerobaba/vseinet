@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Command;
 
@@ -9,7 +9,7 @@ use AppBundle\Validator\Constraints\Enum;
 class AddContactCommand extends Message
 {
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type("integer")
      */
     public $id;
 
@@ -20,23 +20,23 @@ class AddContactCommand extends Message
     public $typeCode;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $typeCodeName;
 
     /**
      * @Assert\NotBlank(message="Введите контакт")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $value;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $comment;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type("boolean")
      */
     public $isMain;
 }

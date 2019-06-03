@@ -9,7 +9,7 @@
     <div class="block gray w40p">
         <div class="wrapper">
 
-            {{ form_start(form, { action: path('check_token'), attr: { id: 'check-form', novalidate: 'novalidate' }}) }}
+            {{ form_start(form, { action: path('check_token'), attr: { id: 'check-form', novalidate: true }}) }}
 
             <div class="row{% if errors.check_token_code is defined %} error{% endif %}">
                 {{ form_label(form.code, 'Код подтвержения:') }}

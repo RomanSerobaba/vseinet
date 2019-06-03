@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CheaperRequest
+ * CheaperRequest.
  *
  * @ORM\Table(name="cheaper_request")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CheaperRequestRepository")
@@ -70,9 +70,20 @@ class CheaperRequest
      */
     private $comment;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    private $createdAt;
+
+    public function __constructor()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -82,9 +93,9 @@ class CheaperRequest
     }
 
     /**
-     * Set baseProductId
+     * Set baseProductId.
      *
-     * @param integer $baseProductId
+     * @param int $baseProductId
      *
      * @return CheaperRequest
      */
@@ -96,7 +107,7 @@ class CheaperRequest
     }
 
     /**
-     * Get baseProductId
+     * Get baseProductId.
      *
      * @return int
      */
@@ -106,9 +117,9 @@ class CheaperRequest
     }
 
     /**
-     * Set userId
+     * Set userId.
      *
-     * @param integer $userId
+     * @param int $userId
      *
      * @return CheaperRequest
      */
@@ -120,7 +131,7 @@ class CheaperRequest
     }
 
     /**
-     * Get userId
+     * Get userId.
      *
      * @return int
      */
@@ -130,9 +141,9 @@ class CheaperRequest
     }
 
     /**
-     * Set comuserId
+     * Set comuserId.
      *
-     * @param integer $comuserId
+     * @param int $comuserId
      *
      * @return CheaperRequest
      */
@@ -144,7 +155,7 @@ class CheaperRequest
     }
 
     /**
-     * Get comuserId
+     * Get comuserId.
      *
      * @return int
      */
@@ -154,9 +165,9 @@ class CheaperRequest
     }
 
     /**
-     * Set geoCityId
+     * Set geoCityId.
      *
-     * @param integer $geoCityId
+     * @param int $geoCityId
      *
      * @return CheaperRequest
      */
@@ -168,7 +179,7 @@ class CheaperRequest
     }
 
     /**
-     * Get geoCityId
+     * Get geoCityId.
      *
      * @return int
      */
@@ -178,9 +189,9 @@ class CheaperRequest
     }
 
     /**
-     * Set competitorPrice
+     * Set competitorPrice.
      *
-     * @param integer $competitorPrice
+     * @param int $competitorPrice
      *
      * @return CheaperRequest
      */
@@ -192,7 +203,7 @@ class CheaperRequest
     }
 
     /**
-     * Get competitorPrice
+     * Get competitorPrice.
      *
      * @return int
      */
@@ -202,7 +213,7 @@ class CheaperRequest
     }
 
     /**
-     * Set competitorLink
+     * Set competitorLink.
      *
      * @param string $competitorLink
      *
@@ -216,7 +227,7 @@ class CheaperRequest
     }
 
     /**
-     * Get competitorLink
+     * Get competitorLink.
      *
      * @return string
      */
@@ -226,7 +237,7 @@ class CheaperRequest
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -240,7 +251,7 @@ class CheaperRequest
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */
@@ -248,5 +259,28 @@ class CheaperRequest
     {
         return $this->comment;
     }
-}
 
+    /**
+     * Set createdAt.
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return CheaperRequest
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt.
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+}

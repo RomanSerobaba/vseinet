@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Command;
 
@@ -16,15 +16,12 @@ class ComplaintCommandHandler extends MessageHandler
         $complaint->setManagerName($command->managerName);
         $complaint->setManagerPhone($command->managerPhone);
         $complaint->setText($command->text);
-        $complaint->setCreatedAt(new \DateTime());
         if (null !== $command->userData->userId) {
             $complaint->setUserId($command->userData->userId);
-            // @todo: save contactIds
         } else {
             $complaint->setComuserId($command->userData->comuserId);
         }
-        $complaint->setIsChecked(false);
-        
+
         $em->persist($complaint);
         $em->flush();
     }

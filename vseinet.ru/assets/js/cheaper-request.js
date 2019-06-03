@@ -18,7 +18,7 @@ $(function() {
                     if (response.errors) {
                         var id, row;
                         for (id in response.errors) {
-                            row = form.find('#cheaper_request_form_' + id).closest('.row');
+                            row = form.find('#' + id).closest('.row');
                             row.addClass('error').append('<div class="error">' + response.errors[id][0] + '</div>');
                         }
                     } else {

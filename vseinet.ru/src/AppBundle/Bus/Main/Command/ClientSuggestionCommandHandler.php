@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Command;
 
@@ -13,14 +13,12 @@ class ClientSuggestionCommandHandler extends MessageHandler
 
         $suggestion = new ClientSuggestion();
         $suggestion->setText($command->text);
-        $suggestion->setCreatedAt(new \DateTime());
         if (null !== $command->userData->userId) {
             $suggestion->setUserId($command->userData->userId);
         } else {
             $suggestion->setComuserId($command->userData->comuserId);
         }
-        $suggestion->setIsChecked(false);
-        
+
         $em->persist($suggestion);
         $em->flush();
     }

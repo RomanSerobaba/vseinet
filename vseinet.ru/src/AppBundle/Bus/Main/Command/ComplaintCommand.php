@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Command;
 
@@ -15,23 +15,23 @@ class ComplaintCommand extends Message
     public $type;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $managerName;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $managerPhone;
 
     /**
-     * @Assert\NotBlank(message="Оставте сообщение")
-     * @Assert\Type(type="string")
+     * @Assert\NotBlank(message="Оставьте сообщение")
+     * @Assert\Type("string")
      */
     public $text;
 
     /**
-     * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
+     * @Assert\Type("AppBundle\Bus\User\Query\DTO\UserData")
      * @Assert\Valid
      */
     public $userData;
