@@ -39,10 +39,13 @@ class ParamFetcherMiddleware implements Middleware
     protected function fetch($command)
     {
         $reflection = new \ReflectionClass($command);
+        $defaults = $reflection->getDefaultProperties();
         foreach ($reflection->getProperties() as $property) {
             $value = $property->getValue($command);
             if (null !== $value) {
                 $value = $this->fetchProperty($property, $value);
+            } elseif (array_key_exists($property->getName(), $defaults)) {
+                $value = $defaults[$property->getName()];
             }
             $propertyName = $property->getName();
             $propertySetter = 'set'.ucfirst($propertyName);
@@ -71,6 +74,9 @@ class ParamFetcherMiddleware implements Middleware
             if ($annotation instanceof Enum) {
                 return $this->fetchValue($value, 'enum');
             }
+            if ($annotation instanceof Assert\Choice) {
+                return $this->fetchValue($value, 'choice');
+            }
             if ($annotation instanceof Assert\Type) {
                 return $this->fetchValue($value, $annotation->type);
             }
@@ -88,6 +94,13 @@ class ParamFetcherMiddleware implements Middleware
                     if ($constraint instanceof Enum) {
                         foreach ($value as $index => $v) {
                             $value[$index] = $this->fetchValue($v, 'enum');
+                        }
+
+                        return $value;
+                    }
+                    if ($constraint instanceof Assert\Choice) {
+                        foreach ($value as $index => $v) {
+                            $value[$index] = $this->fetchValue($v, 'choice');
                         }
 
                         return $value;
