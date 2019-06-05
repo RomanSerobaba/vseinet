@@ -13,10 +13,6 @@ class HiddenIntTransformer implements DataTransformerInterface
 
     public function reverseTransform($value)
     {
-        if (null === $value || '' === $value) {
-            return null;
-        }
-
-        return intval($value);
+        return false === $int = filter_var($value, FILTER_VALIDATE_INT) ? null : $int;
     }
 }
