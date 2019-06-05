@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Twig\Extension;
 
@@ -12,7 +12,6 @@ class PhoneFormatExtension extends AbstractExtension
      * @var PhoneFormatter
      */
     protected $formatter;
-
 
     public function __construct(PhoneFormatter $formatter)
     {
@@ -31,13 +30,13 @@ class PhoneFormatExtension extends AbstractExtension
 
     /**
      * Returns formated phone.
-     * 
+     *
      * @param string $phone
-     *  
+     *
      * @return string
      */
     public function format(string $phone): string
     {
-        return $this->formatter->format($phone);
+        return $this->formatter->format($phone) ?? '';
     }
 }
