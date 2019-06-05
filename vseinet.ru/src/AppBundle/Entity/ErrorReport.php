@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ErrorReport
+ * ErrorReport.
  *
  * @ORM\Table(name="error_report")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ErrorReportRepository")
@@ -77,9 +77,13 @@ class ErrorReport
      */
     private $fixedAt;
 
+    public function __construct()
+    {
+        $this->sentedAt = new \DateTime();
+    }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -89,9 +93,9 @@ class ErrorReport
     }
 
     /**
-     * Set sentedBy
+     * Set sentedBy.
      *
-     * @param integer $sentedBy
+     * @param int $sentedBy
      *
      * @return ErrorReport
      */
@@ -103,7 +107,7 @@ class ErrorReport
     }
 
     /**
-     * Get sentedBy
+     * Get sentedBy.
      *
      * @return int
      */
@@ -113,7 +117,7 @@ class ErrorReport
     }
 
     /**
-     * Set ip
+     * Set ip.
      *
      * @param string $ip
      *
@@ -127,7 +131,7 @@ class ErrorReport
     }
 
     /**
-     * Get ip
+     * Get ip.
      *
      * @return string
      */
@@ -137,7 +141,7 @@ class ErrorReport
     }
 
     /**
-     * Set sentedAt
+     * Set sentedAt.
      *
      * @param \DateTime $sentedAt
      *
@@ -151,7 +155,7 @@ class ErrorReport
     }
 
     /**
-     * Get sentedAt
+     * Get sentedAt.
      *
      * @return \DateTime
      */
@@ -161,7 +165,7 @@ class ErrorReport
     }
 
     /**
-     * Set url
+     * Set url.
      *
      * @param string $url
      *
@@ -175,7 +179,7 @@ class ErrorReport
     }
 
     /**
-     * Get url
+     * Get url.
      *
      * @return string
      */
@@ -185,7 +189,7 @@ class ErrorReport
     }
 
     /**
-     * Set node
+     * Set node.
      *
      * @param string $node
      *
@@ -199,7 +203,7 @@ class ErrorReport
     }
 
     /**
-     * Get node
+     * Get node.
      *
      * @return string
      */
@@ -209,7 +213,7 @@ class ErrorReport
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -223,7 +227,7 @@ class ErrorReport
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -233,9 +237,9 @@ class ErrorReport
     }
 
     /**
-     * Set fixedBy
+     * Set fixedBy.
      *
-     * @param integer $fixedBy
+     * @param int $fixedBy
      *
      * @return ErrorReport
      */
@@ -247,7 +251,7 @@ class ErrorReport
     }
 
     /**
-     * Get fixedBy
+     * Get fixedBy.
      *
      * @return int
      */
@@ -257,7 +261,7 @@ class ErrorReport
     }
 
     /**
-     * Set fixedAt
+     * Set fixedAt.
      *
      * @param \DateTime $fixedAt
      *
@@ -271,7 +275,7 @@ class ErrorReport
     }
 
     /**
-     * Get fixedAt
+     * Get fixedAt.
      *
      * @return \DateTime
      */
@@ -280,4 +284,3 @@ class ErrorReport
         return $this->fixedAt;
     }
 }
-

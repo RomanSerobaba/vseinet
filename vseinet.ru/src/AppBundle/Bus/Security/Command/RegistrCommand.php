@@ -5,7 +5,6 @@ namespace AppBundle\Bus\Security\Command;
 use AppBundle\Bus\Message\Message;
 use AppBundle\Annotation as VIA;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\Enum;
 use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Validator\Constraints\MobilePhone;
 
@@ -13,18 +12,18 @@ class RegistrCommand extends Message
 {
     /**
      * @Assert\NotBlank(message="Введете Вашу фамилию")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $lastname;
 
     /**
      * @Assert\NotBlank(message="Введите Ваше имя")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $firstname;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $secondname;
 
@@ -41,50 +40,49 @@ class RegistrCommand extends Message
 
     /**
      * @Assert\NotBlank(message="Укажите город")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
-    public $city;
+    public $geoCityName;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("integer")
+     */
+    public $geoCityId;
+
+    /**
+     * @Assert\Type("string")
      * @MobilePhone
      */
     public $mobile;
 
     /**
      * @VIA\Description("Дополнительные телефонные номера")
-     * @Assert\Type(type="array")
+     * @Assert\Type("array")
      */
     public $phones;
 
     /**
      * @Assert\NotBlank(message="Введите Ваш emal")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      * @Assert\Email(message="Неверный формат email")
      */
     public $email;
 
     /**
      * @Assert\NotBlank(message="Придумайте пароль")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $password;
 
     /**
      * @Assert\NotBlank(message="Повторите пароль")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $passwordConfirm;
 
     /**
      * @VIA\Description("Уведомлять о сезонных распродажах")
-     * @Assert\Type(type="boolean")
+     * @Assert\Type("boolean")
      */
     public $isMarketingSubscribed;
-
-    /**
-     * @Assert\NotBlank(message="Отметьте флажок если вы человек")
-     * @Assert\Type(type="boolean")
-     */
-    public $isHuman;
 }

@@ -34,38 +34,54 @@
 </div>
 <div class="sale-btns-wrapper">
     <div class="sale-btns to-cart">
-        <a
-            href="{{ path('cart_add', { id: product.id }) }}"
-            {#onclick="yaCounter13639594.reachGoal('cartadd');return true;" #}
-            class="bttn {% if isAvailable or isInTransit or isOnDemand %}green{% else %}greengray{% endif %} cart-add"
-            rel="nofollow"
-        >
-            {% if isAvailable or isInTransit or isOnDemand %}
+        {% if app.userIsEmployee or isAvailable or isInTransit or isOnDemand %}
+            {% if app.userIsEmployee %}
+                <input
+                    type="number"
+                    class="cart-quantity"
+                    value="{{ product.minQuantity }}"
+                    data-min-quantity="{{ product.minQuantity }}"
+                    min="{{ product.minQuantity }}"
+                >
+            {% endif %}
+            <a
+                href="{{ path('cart_add', { id: product.id }) }}"
+                {#onclick="yaCounter13639594.reachGoal('cartadd');return true;" #}
+                class="bttn green cart-add"
+                rel="nofollow"
+            >
                 Добавить в корзину
-            {% else %}
+            </a>
+        {% else %}
+            <a
+                href="{{ path('order_receipts_of_product', { id: product.id }) }}"
+                {#onclick="yaCounter13639594.reachGoal('cartadd');return true;" #}
+                class="bttn greengray receipts-of-product"
+                rel="nofollow"
+            >
                 Сообщить<br/>о поступлении
-            {% endif %}
-        </a>
-            {% if (isAvailable or isInTransit or isOnDemand) and 300000 < product.price %}
-                {% set credit = product.price*1.2582/24 %}
-                <a
-                    href="{{ path('cart_add', { id: product.id }) }}"
-                    data-url="{{ path('credit_calculators', { id: product.id }) }}"
-                    class="bttn blue credit"
-                    rel="nofollow"
-                >
-                    Кредит от {{ credit|round(-2)|price_format }} <span class="RUR">Р</span>
-                </a>
-            {% endif %}
-            {% if (isAvailable or isInTransit or isOnDemand) and product.price and app.geoCity.geoRegionId in [44, 59] %}
-                <a
-                    class="bttn orange cheaper"
-                    href="{{ path('cheaper_request', { id: product.id }) }}"
-                    rel="nofollow"
-                >
-                    Нашли дешевле?
-                </a>
-            {% endif %}
+            </a>
+        {% endif %}
+        {% if (isAvailable or isInTransit or isOnDemand) and 300000 < product.price %}
+            {% set credit = product.price*1.2582/24 %}
+            <a
+                href="{{ path('cart_add', { id: product.id }) }}"
+                data-url="{{ path('credit_calculators', { id: product.id }) }}"
+                class="bttn blue credit"
+                rel="nofollow"
+            >
+                Кредит от {{ credit|round(-2)|price_format }} <span class="RUR">Р</span>
+            </a>
+        {% endif %}
+        {% if (isAvailable or isInTransit or isOnDemand) and product.price and app.geoCity.geoRegionId in [44, 59] %}
+            <a
+                class="bttn orange cheaper"
+                href="{{ path('cheaper_request', { id: product.id }) }}"
+                rel="nofollow"
+            >
+                Нашли дешевле?
+            </a>
+        {% endif %}
     </div>
     <div class="sale-btns in-cart">
         <a href="{{ path('cart') }}" class="bttn green">Перейти в корзину</a>

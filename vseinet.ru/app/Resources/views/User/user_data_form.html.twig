@@ -3,11 +3,13 @@
         Ф.И.О. <b>*</b>
     </label>
     {{ form_widget(form.userData.fullname, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : ''), placeholder: 'Фамилия Имя Отчество' }})  }}
-    <span id="lfsHelp" onclick="$('#{{ form.userData.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
+    <span id="lfsHelpUser" onclick="$('#{{ form.userData.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
     <span class="status"></span>
     {% if errors.userData.fullname is defined %}
         <div class="error">{{ errors.userData.fullname.0 }}</div>
     {% endif %}
+</div>
+<div>
     {{ form_widget(form.userData.userId) }}
     {{ form_widget(form.userData.comuserId) }}
 </div>
@@ -16,14 +18,14 @@
     <label for="{{ form.userData.phone.vars.id }}">
         Телефон <b>*</b>
     </label>
-    {{ form_widget(form.userData.phone, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
+    {{ form_widget(form.userData.phone, { attr: { class: 'txt phone' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
     <span class="status"></span>
     {% if errors.userData.phone is defined %}
         <div class="error">{{ errors.userName.phone.0 }}</div>
     {% endif %}
 </div>
 
-{% if hideAdditionalPhone is not defined %}
+{% if form.userData.additionalPhone is defined %}
     <div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
         {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
         {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
@@ -35,7 +37,9 @@
 {% endif %}
 
 <div class="row h{% if error.userData.email is defined %} error{% endif %}">
-    {{ form_label(form.userData.email, 'Email:') }}
+    <label for="{{ form.userData.email.vars.id }}">
+        Email {% if form.userData.email.vars.required %}<b>*</b>{% endif %}
+    </label>
     {{ form_widget(form.userData.email, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
     {% if errors.userData.email is defined %}

@@ -10,7 +10,7 @@ class ImageExtension extends AbstractExtension
 {
     protected $path;
 
-    public function __construct($path) 
+    public function __construct($path)
     {
         $this->path = $path;
     }
@@ -25,10 +25,10 @@ class ImageExtension extends AbstractExtension
         ];
     }
 
-    public function getImageSrc($image, $size)
+    public function getImageSrc($image, $size, $ext = 'jpg')
     {
         if (null !== $image && $image->baseSrc) {
-            return BaseProductImage::buildSrc($this->path, $image->baseSrc, $size);
+            return BaseProductImage::buildSrc($this->path, $image->baseSrc, $size, $ext);
         }
 
         return '/images/nophoto_'.BaseProductImage::getSize($size).'.jpg';

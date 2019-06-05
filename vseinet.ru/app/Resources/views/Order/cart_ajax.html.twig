@@ -1,5 +1,5 @@
 <div class="wrapper products">
-    <a href="/cart/" class="bttn light">Редактировать</a>
+    <a href="{{ path('cart') }}" class="bttn light">Редактировать</a>
     <h2>Ваша корзина <small>{{ cart.total }} {{ cart.total|declension('товар;товара;товаров') }}</small></h2>
     {% for product in cart.products %}
         <div class="product">
@@ -7,7 +7,7 @@
                 <p class="quantity">{{ product.quantity }} шт</p>
                 <strong class="price {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}from_pricetag{% endif %}">{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}{{ product.storePricetag|price_format }}{% else %}{{ product.price|price_format }}{% endif %} <span class="RUR">Р</span></strong>
             </div>
-            <a href="/product/{{ product.id }}/">
+            <a href="{{ path('catalog_product', { id: product.id }) }}">
                 <img src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="{{ product.name|e('html') }}. Интернет-магазин Vseinet.ru Пенза" />
                 {{ product.name|e('html') }}
             </a>

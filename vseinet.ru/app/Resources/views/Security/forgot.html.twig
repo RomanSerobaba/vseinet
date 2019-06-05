@@ -6,33 +6,27 @@
 
 {% block content %}
     <h1>Восстановление пароля</h1>
-    <div class="block gray w40p">
+    <div class="block gray w60p">
         <div class="wrapper">
 
-            {{ form_start(form, { action: path('forgot'), attr: { id: 'forgot-form', novalidate: 'novalidate' }}) }}
+            {{ form_start(form, { action: path('forgot'), attr: { id: 'forgot-form', novalidate: true }}) }}
 
-            <div class="row notice">
-                Введите номер телефона или адрес эл. почты, который вы указывали при регистрации.
+            <div class="row h">
+                <label class="inline">Введите номер телефона или адрес эл. почты, который вы указывали при регистрации.</label>
             </div>
 
-            <div class="row{% if errors.forgot_username is defined %} error{% endif %}">
+            <div class="row h {% if errors.forgot_username is defined %} error{% endif %}">
                 {{ form_label(form.username, 'Телефон* / Эл. почта:') }}
                 {{ form_widget(form.username, { attr: { class: 'txt' }}) }}
-                <div class="inline">* 10 цифр, например 9876543210</div>
+                <div class="notice">* 10 цифр, например 9876543210</div>
                 {% if errors.forgot_username is defined %}
                     <div class="error">{{ errors.forgot_username.0 }}</div>
                 {% endif %}
             </div>
 
-            <div class="row{% if errors.forgot_isHuman is defined %} error{% endif %}">
-                {{ form_widget(form.isHuman, { attr: { style: 'float:left;margin:1px 5px 0 0' }}) }}
-                {{ form_label(form.isHuman, 'Я человек!*') }}
-                {% if errors.forgot_isHuman is defined %}
-                    <div class="error">{{ errors.forgot_isHuman.0 }}</div>
-                {% endif %}
-            </div>
+            {% include 'User/is_human_form.html.twig' with { form: form, errors: errors } only %}
 
-            <div class="row">
+            <div class="row h">
                 {{ form_widget(form.submit, { label: 'Восстановить пароль', attr: { class: 'bttn blue r' }}) }}
                 {{ form_widget(form._token) }}
             </div>

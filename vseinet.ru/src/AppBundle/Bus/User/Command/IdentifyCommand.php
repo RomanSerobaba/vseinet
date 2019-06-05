@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\User\Command;
 
@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class IdentifyCommand extends Message
 {
     /**
-     * @Assert\Type(type="AppBundle\Bus\User\Query\DTO\UserData")
+     * @Assert\Type("AppBundle\Bus\User\Query\DTO\UserData")
      */
     public $userData;
 }

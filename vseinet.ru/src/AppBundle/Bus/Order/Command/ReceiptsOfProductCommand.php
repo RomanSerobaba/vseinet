@@ -1,21 +1,25 @@
 <?php
 
-namespace AppBundle\Bus\Main\Command;
+namespace AppBundle\Bus\Order\Command;
 
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ClientSuggestionCommand extends Message
+class ReceiptsOfProductCommand extends Message
 {
     /**
-     * @Assert\NotBlank(message="Оставьте сообщение")
-     * @Assert\Type("string")
+     * @Assert\Type("integer")
      */
-    public $text;
+    public $baseProductId;
 
     /**
      * @Assert\Type("AppBundle\Bus\User\Query\DTO\UserData")
      * @Assert\Valid
      */
     public $userData;
+
+    /**
+     * @Assert\Type("integer")
+     */
+    public $trackingPeriod;
 }

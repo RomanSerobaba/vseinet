@@ -1,0 +1,10 @@
+#receipts-of-product-form #lfsHelpUser {
+    position: absolute;
+    color: #A9A9A9;
+    font-size: 14px;
+    left: 261px;
+    top: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

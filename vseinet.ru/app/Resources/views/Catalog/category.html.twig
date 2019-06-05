@@ -12,14 +12,14 @@
     <section id="category">
         <div class="breadcrumbs">
             <a href="{{ path('catalog_category', { id: 0 }) }}">Каталог</a>
-            {% for link in category.breadcrumbs %} 
-                <span></span>  
-                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a> 
-            {% endfor %}  
+            {% for link in category.breadcrumbs %}
+                <span></span>
+                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a>
+            {% endfor %}
             {% if brand %}
                 <span></span>
                 <a href="{{ path('catalog_category', { id: category.id }) }}">{{ category.name }}</a>
-            {% endif %} 
+            {% endif %}
         </div>
         <div class="title category-title">
             <h1>{{ category.name }}{% if brand %} "{{ brand.name }}"{% endif %}</h1>
@@ -33,7 +33,7 @@
                 {% include 'Catalog/filter.html.twig' %}
             </nav>
             {% if category.description %}
-                <section class="content htx htx_category">{{ category.description|raw }}</section>    
+                <section class="content htx htx_category">{{ category.description|raw }}</section>
             {% endif %}
             <div class="wrapper"{%if category.description %} style="display:table-header-group"{% endif %}>
                 {% include 'Catalog/products.html.twig' %}

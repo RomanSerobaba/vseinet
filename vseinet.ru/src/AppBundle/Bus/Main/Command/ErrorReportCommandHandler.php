@@ -16,7 +16,6 @@ class ErrorReportCommandHandler extends MessageHandler
             $report->setSentedBy($user->getId());
         }
         $report->setIp($request->getClientIp());
-        $report->setSentedAt(new \DateTime());
         $report->setUrl($command->url);
         $report->setNode($command->node);
         $report->setText($command->text);

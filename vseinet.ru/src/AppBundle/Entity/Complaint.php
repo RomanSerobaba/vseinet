@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Complaint
+ * Complaint.
  *
  * @ORM\Table(name="complaint")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ComplaintRepository")
@@ -77,9 +77,14 @@ class Complaint
      */
     private $isChecked;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->isChecked = false;
+    }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -89,9 +94,9 @@ class Complaint
     }
 
     /**
-     * Set userId
+     * Set userId.
      *
-     * @param integer $userId
+     * @param int $userId
      *
      * @return Complaint
      */
@@ -103,7 +108,7 @@ class Complaint
     }
 
     /**
-     * Get userId
+     * Get userId.
      *
      * @return int
      */
@@ -113,9 +118,9 @@ class Complaint
     }
 
     /**
-     * Set comuserId
+     * Set comuserId.
      *
-     * @param integer $comuserId
+     * @param int $comuserId
      *
      * @return Complaint
      */
@@ -127,7 +132,7 @@ class Complaint
     }
 
     /**
-     * Get comuserId
+     * Get comuserId.
      *
      * @return int
      */
@@ -137,7 +142,7 @@ class Complaint
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -151,7 +156,7 @@ class Complaint
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -161,7 +166,7 @@ class Complaint
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -175,7 +180,7 @@ class Complaint
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -185,7 +190,7 @@ class Complaint
     }
 
     /**
-     * Set managerName
+     * Set managerName.
      *
      * @param string $managerName
      *
@@ -199,7 +204,7 @@ class Complaint
     }
 
     /**
-     * Get managerName
+     * Get managerName.
      *
      * @return string
      */
@@ -209,7 +214,7 @@ class Complaint
     }
 
     /**
-     * Set managerPhone
+     * Set managerPhone.
      *
      * @param string $managerPhone
      *
@@ -223,7 +228,7 @@ class Complaint
     }
 
     /**
-     * Get managerPhone
+     * Get managerPhone.
      *
      * @return string
      */
@@ -233,7 +238,7 @@ class Complaint
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -247,7 +252,7 @@ class Complaint
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -257,9 +262,9 @@ class Complaint
     }
 
     /**
-     * Set isChecked
+     * Set isChecked.
      *
-     * @param boolean $isChecked
+     * @param bool $isChecked
      *
      * @return Complaint
      */
@@ -271,7 +276,7 @@ class Complaint
     }
 
     /**
-     * Get isChecked
+     * Get isChecked.
      *
      * @return bool
      */
@@ -280,4 +285,3 @@ class Complaint
         return $this->isChecked;
     }
 }
-

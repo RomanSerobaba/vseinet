@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Security\Command;
 
@@ -8,12 +8,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CheckTokenCommand extends Message
 {
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $code;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $hash;
 }

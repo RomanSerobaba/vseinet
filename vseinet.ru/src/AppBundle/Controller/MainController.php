@@ -61,11 +61,12 @@ class MainController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $command->product = $em->getRepository(BaseProduct::class)->find($id);
-        if (!$command->product instanceof BaseProduct) {
+        $baseProduct = $em->getRepository(BaseProduct::class)->find($id);
+        if (!$baseProduct instanceof BaseProduct) {
             throw new NotFoundHttpException();
         }
-        $command->competitors = $em->getRepository(Competitor::class)->getActive();
+        $command->baseProductId = $baseProduct->getId();
+        $competitors = $em->getRepository(Competitor::class)->getActive();
 
         if ($request->isMethod('GET')) {
             $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
@@ -77,7 +78,7 @@ class MainController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
                     $this->get('command_bus')->handle($command);
 
                     return $this->json([
@@ -96,8 +97,8 @@ class MainController extends Controller
         return $this->json([
             'html' => $this->renderView('Main/cheaper_request_form.html.twig', [
                 'form' => $form->createView(),
-                'product' => $command->product,
-                'competitors' => $command->competitors,
+                'product' => $baseProduct,
+                'competitors' => $competitors,
             ]),
         ]);
     }
@@ -181,7 +182,7 @@ class MainController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
+                    $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
                     $this->get('command_bus')->handle($command);
 
                     $this->addFlash('notice', 'Спасибо за Ваше предложение, мы рассмотрим его, примем меры и при необходимости свяжемся с Вами.');

@@ -24,3 +24,4 @@ require('./js/cheaper-request.js');
 require('./js/credit-calculators.js');
 require('./js/order-status.js');
 require('./js/admin-panel.js');
+require('./js/receipts-of-product.js');

@@ -10,18 +10,18 @@ class AccountEditCommand extends Message
 {
     /**
      * @Assert\NotBlank(message="Введите Вашу фамилию")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $lastname;
 
     /**
      * @Assert\NotBlank(message="Введите Ваше имя")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $firstname;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $secondname;
 
@@ -38,22 +38,17 @@ class AccountEditCommand extends Message
 
     /**
      * @Assert\NotBlank(message="Укажите Ваш город")
-     * @Assert\Type(type="string")
+     * @Assert\Type("string")
      */
     public $geoCityName;
 
     /**
-     * @Assert\Type(type="integer")
+     * @Assert\Type("integer")
      */
     public $geoCityId;
 
     /**
-     * @Assert\Type(type="boolean")
+     * @Assert\Type("boolean")
      */
     public $isMarketingSubscribed;
-
-    public function setGeoCityId($geoCityId)
-    {
-        $this->geoCityId = (int) $geoCityId ?: null;
-    }
 }

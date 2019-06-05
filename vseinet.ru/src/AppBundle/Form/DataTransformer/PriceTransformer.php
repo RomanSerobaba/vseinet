@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Form\DataTransformer;
 
@@ -6,9 +6,9 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class PriceTransformer implements DataTransformerInterface
 {
-    public function transform($value) 
+    public function transform($value)
     {
-        if (empty($value)) {
+        if (null === $value || '' === $value) {
             return '';
         }
 
@@ -30,6 +30,10 @@ class PriceTransformer implements DataTransformerInterface
 
     public function reverseTransform($value)
     {
+        if (null === $value || '' === $value) {
+            return null;
+        }
+
         return intval(round(100 * floatval(str_replace([' ', ','], ['', '.'], $value))));
     }
 }

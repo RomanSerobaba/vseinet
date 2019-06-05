@@ -7,33 +7,33 @@
 {% block content %}
 <h1>Пожаловаться директору</h1>
 
-{{ form_start(form, { action: path('complaint'), attr: { id: 'complaint-form', class: 'w60p' }}) }}
+{{ form_start(form, { action: path('complaint'), attr: { id: 'complaint-form', class: 'w60p', novalidate: true }}) }}
 
 <fieldset class="block gray">
     <div class="wrapper">
         <h2>1. Жалоба:</h2>
-        <div class="row h{% if errors.type is defined %} error{% endif %}">
-            {{ form_label(form.type, 'Причина жалобы:*') }}
+        <div class="row h{% if errors.complaint_form_type is defined %} error{% endif %}">
+            {{ form_label(form.type, 'Причина жалобы*') }}
             {{ form_widget(form.type, { attr: { class: 'txt' }}) }}
             <span class="status"></span>
-            {% if errors.type is defined %}
-                <div class="error">{{ errors.type.0 }}</div>
+            {% if errors.complaint_form_type is defined %}
+                <div class="error">{{ errors.complaint_form_type.0 }}</div>
             {% endif %}
         </div>
         <div class="row h">
-            {{ form_label(form.managerName, 'Менеджер, с которым Вы общались:') }}
+            {{ form_label(form.managerName, 'Менеджер, с которым Вы общались') }}
             {{ form_widget(form.managerName, { attr: { class: 'txt' }}) }}
         </div>
         <div class="row h">
-            {{ form_label(form.managerPhone, 'Телефон, с которого Вам звонили:') }}
+            {{ form_label(form.managerPhone, 'Телефон, с которого Вам звонили') }}
             {{ form_widget(form.managerPhone, { attr: { class: 'txt' }}) }}
         </div>
-        <div class="row h{% if errors.text is defined %} error{% endif %}">
-            {{ form_label(form.text, 'Сообщение:*') }}
+        <div class="row h{% if errors.complaint_form_text is defined %} error{% endif %}">
+            {{ form_label(form.text, 'Сообщение*') }}
             {{ form_widget(form.text, { attr: { rows: 8, class: 'txt' }}) }}
             <span class="status"></span>
-            {% if errors.text is defined %}
-                <div class="error">{{ errors.text.0 }}</div>
+            {% if errors.complaint_form_text is defined %}
+                <div class="error">{{ errors.complaint_form_text.0 }}</div>
             {% endif %}
         </div>
     </div>
@@ -42,13 +42,13 @@
 <fieldset class="block">
     <div class="wrapper">
         <h2>2. Контакты:</h2>
-        {% include 'User/user_data_form.html.twig' with { form: form, hideAdditionalPhone: true } only %}
+        {% include 'User/user_data_form.html.twig' with { form: form } only %}
         {% include 'User/is_human_form.html.twig' with { form: form } only %}
     </div>
 </fieldset>
 
 <div class="row h">
-    {{ form_widget(form.submit, { label: 'Отправить жалобу', attr: { class: 'bttn green r' }}) }} 
+    {{ form_widget(form.submit, { label: 'Отправить жалобу', attr: { class: 'bttn green r' }}) }}
     {{ form_widget(form._token) }}
 </div>
 

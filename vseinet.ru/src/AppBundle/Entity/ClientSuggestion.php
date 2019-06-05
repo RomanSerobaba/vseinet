@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ClientSuggestion
+ * ClientSuggestion.
  *
  * @ORM\Table(name="client_suggestion")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientSuggestionRepository")
@@ -56,9 +56,14 @@ class ClientSuggestion
      */
     private $isChecked;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->isChecked = false;
+    }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -68,9 +73,9 @@ class ClientSuggestion
     }
 
     /**
-     * Set userId
+     * Set userId.
      *
-     * @param integer $userId
+     * @param int $userId
      *
      * @return Suggetion
      */
@@ -82,7 +87,7 @@ class ClientSuggestion
     }
 
     /**
-     * Get userId
+     * Get userId.
      *
      * @return int
      */
@@ -92,9 +97,9 @@ class ClientSuggestion
     }
 
     /**
-     * Set comuserId
+     * Set comuserId.
      *
-     * @param integer $comuserId
+     * @param int $comuserId
      *
      * @return Suggetion
      */
@@ -106,7 +111,7 @@ class ClientSuggestion
     }
 
     /**
-     * Get comuserId
+     * Get comuserId.
      *
      * @return int
      */
@@ -116,7 +121,7 @@ class ClientSuggestion
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -130,7 +135,7 @@ class ClientSuggestion
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -140,7 +145,7 @@ class ClientSuggestion
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -154,7 +159,7 @@ class ClientSuggestion
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -164,9 +169,9 @@ class ClientSuggestion
     }
 
     /**
-     * Set isChecked
+     * Set isChecked.
      *
-     * @param boolean $isChecked
+     * @param bool $isChecked
      *
      * @return Suggetion
      */
@@ -178,7 +183,7 @@ class ClientSuggestion
     }
 
     /**
-     * Get isChecked
+     * Get isChecked.
      *
      * @return bool
      */
@@ -187,4 +192,3 @@ class ClientSuggestion
         return $this->isChecked;
     }
 }
-
