@@ -49,7 +49,12 @@ class ExceptionListener
                 return;
             }
 
-            if (Response::HTTP_INTERNAL_SERVER_ERROR === $response->getStatusCode() && $response->headers->has('x-debug-token')) {
+            if (null === $response) {
+                $headers['Content-Type'] = 'application/json';
+                $body = json_encode([
+                    'text' => $request->getUri()."\n",
+                ]);
+            } elseif (Response::HTTP_INTERNAL_SERVER_ERROR === $response->getStatusCode() && $response->headers->has('x-debug-token')) {
                 $headers['Content-Type'] = 'application/json';
                 $body = json_encode([
                     'text' => $request->getUri()."\n".$response->headers->get('x-debug-token-link'),
