@@ -156,11 +156,11 @@ class ParamFetcherMiddleware implements Middleware
         }
 
         if ('integer' === $type) {
-            return false === $int = filter_var($value, FILTER_VALIDATE_INT) ? $value : $int;
+            return false === ($int = filter_var($value, FILTER_VALIDATE_INT)) ? $value : $int;
         }
 
         if ('float' === $type) {
-            return false === $float = filter_var($value, FILTER_VALIDATE_INT) ? $value : $float;
+            return false === ($float = filter_var($value, FILTER_VALIDATE_INT)) ? $value : $float;
         }
 
         if ('date' === $type || 'datetime' === $type) {
