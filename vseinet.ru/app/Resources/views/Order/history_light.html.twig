@@ -8,7 +8,7 @@
                 {% else %}
                     {{ order.id }}
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y') }}</span>
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
             </h2>
             <span class="info">
                 Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
