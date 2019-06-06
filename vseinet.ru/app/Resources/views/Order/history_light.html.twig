@@ -2,13 +2,13 @@
     <tr class="wrapper block gray">
         <td colspan="4">
             <h2>
-                Заказ № 
+                Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: '/admin/orders/?id=' ~ order.id }) }}">{{ order.id }}</a>
                 {% else %}
                     {{ order.id }}
-                {% endif %} 
-                <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+                {% endif %}
+                <span>от {{ order.createdAt|date_format('%d %B %Y') }}</span>
             </h2>
             <span class="info">
                 Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
@@ -37,10 +37,10 @@
                 <h6>
                     <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">
                         {{ item.productName }}
-                    </a> 
+                    </a>
                     <span style="font-size:0.9em">код товара {{ item.baseProductId }}</span>
                 </h6>
-            </td>    
+            </td>
             {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == item.statusCode ? ' canceled' : '' %}
             <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
             <td class="price{{ cssclass }}" style="white-space: nowrap">
@@ -48,12 +48,12 @@
             </td>
             <td class="status">
                 {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)}
-                    <span title="будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if}" class="{$position.status_code}">{$position.status}     
+                    <span title="будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if}" class="{$position.status_code}">{$position.status}
                         <span>*</span>
                     </span>
 
                 {else#}
-                    <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span> 
+                    <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
                 {#/if#}
             </td>
         </tr>

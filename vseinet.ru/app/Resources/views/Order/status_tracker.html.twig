@@ -18,7 +18,7 @@
             <span class="price" title="Указана сумма всех неотмененных позиций">
                 на сумму {{ order.amount|price_format }} <span class="RUR">Р</span>
             </span>
-            Заказ №{{ order.number }} от {{ order.createdAt|date('d.m.Y') }}
+            Заказ №{{ order.number }} от {{ order.createdAt|date_format('%d.%m.%Y') }}
             {# if $curr.can_payed && 7 == $curr.payment_type_id} <a data-popup="Sberbank-{$curr.id}" href="javascript:void(0)" target="_blank" style="margin-left:15px;" class="bttn green">Оплатить</a>{/if}{if 7 == $curr.payment_type_id && $curr.prepay}<span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {$curr.prepay|@price_format} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>{/if#}
         </h4>
         {% for item in order.items %}
