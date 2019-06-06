@@ -151,13 +151,16 @@ class ParamFetcherMiddleware implements Middleware
             return null;
         }
 
-        $filters = [
-            'boolean' => FILTER_VALIDATE_BOOLEAN,
-            'integer' => FILTER_VALIDATE_INT,
-            'float' => FILTER_VALIDATE_FLOAT,
-        ];
-        if (!empty($filters[$type])) {
-            return filter_var($value, $filters[$type], FILTER_NULL_ON_FAILURE) ?? $value;
+        if ('boolean' === $type) {
+            return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $value;
+        }
+
+        if ('integer' === $type) {
+            return false === ($int = filter_var($value, FILTER_VALIDATE_INT)) ? $value : $int;
+        }
+
+        if ('float' === $type) {
+            return false === ($float = filter_var($value, FILTER_VALIDATE_INT)) ? $value : $float;
         }
 
         if ('date' === $type || 'datetime' === $type) {
