@@ -337,7 +337,6 @@ class OrderController extends Controller
      */
     public function createdPageAction(int $id, Request $request)
     {
-        setlocale(LC_ALL, 'ru_RU.utf8');
         $query = new Query\GetOrderQuery(['id' => $id]);
         $order = $this->get('query_bus')->handle($query);
 
