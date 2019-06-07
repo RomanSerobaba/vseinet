@@ -20,7 +20,7 @@
         </dl>
         <dl>
             <dt>Адрес:</dt>
-            <dd>{{ app.geoCity.name }}{% if app.representative.address %}, {{ representative.address }}{% endif %}</dd>
+            <dd>{{ app.geoCity.name }}{% if app.representative.address %}, {{ app.representative.address }}{% endif %}</dd>
         </dl>
         <dl class="smaller">
             <dt>Skype:</dt>
@@ -40,7 +40,7 @@
                     Курьеры<span style="color: rgb(153, 153, 153); font-weight: normal;">, звонить по доставке; уточнить информацию по заказам можно по тел. (8412) 296-222</span>
                 {% else %}
                     Представительства (точки самовывоза)<span style="color: rgb(153, 153, 153); font-weight: normal;">, звонить по заказам и доставке</span>
-                {% endif %}                            
+                {% endif %}
             </h4>
             <div class="representatives">
                 {% for contact in contactsByGeoRegion %}
@@ -65,7 +65,7 @@
 
 {% block javascripts %}
 <script src="https://api-maps.yandex.ru/2.0/?lang=ru-RU&load=package.full&coordorder=longlat"></script>
-<script> 
+<script>
     $(function() {
         $('#content > .holder').css({width: '100%'});
         ymaps.ready(function() {
