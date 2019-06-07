@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Reserves\Query\DTO;
 
@@ -18,10 +18,10 @@ class GeoRoom
 
     /**
      * @Assert\All({
-     *     @Assert\Type(type="integer")
+     *     @Assert\Type(type="AdminBundle\Bus\Reserves\Query\DTO\Supply")
      * })
      */
-    public $supplyIds = [];
+    public $supplies = [];
 
 
     public function __construct($id, $name)

@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th>Точка</th>
-            <th>Свободных</th>  
+            <th>Свободных</th>
             <th>Своб. в пути</th>
             <th>Заказанных</th>
             <th>Заказ. в пути</th>
@@ -28,39 +28,26 @@
                         <td>{{ geoRoom.name }}</td>
                         <td colspan="6"></td>
                     </tr>
-                    {% for supplyId in geoRoom.supplyIds %}
-                        {% set supply = reserves.supplies[supplyId] %}
+                    {% for supply in geoRoom.supplies %}
                         <tr class="supply">
-                            <td>{{ supply.code }}-{{ supply.number }} от {{ supply.createdAt|date('d.m.Y') }}</td>
+                            <td><a href="/admin/supplies/{{ supply.supplyId }}">{{ supply.supplierCode }}-{{ supply.supplyNumber }} от {{ supply.supplyCreatedAt|date('d.m.Y') }}</a></td>
                             <td>
-                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::FREE') == supply.goodsConditionCode and supply.destinationGeoRoomId is null and supply.geoRoomId == geoRoom.id %}
-                                    {{ supply.delta }}
-                                {% endif %}
+                                {{ supply.freeDelta }}
                             </td>
                             <td>
-                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::FREE') == supply.goodsConditionCode and supply.destinationGeoRoomId == geoRoom.id %}
-                                    {{ supply.delta }}
-                                {% endif %}    
+                                {{ supply.freeTransitDelta }}
                             </td>
                             <td>
-                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::RESERVED') == supply.goodsConditionCode and supply.destinationGeoRoomId is null and supply.geoRoomId == geoRoom.id %}
-                                    {{ supply.delta }}
-                                {% endif %}    
+                                {{ supply.reservedDelta }}
                             </td>
                             <td>
-                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::RESERVED') == supply.goodsConditionCode and supply.destinationGeoRoomId == geoRoom.id %}
-                                    {{ supply.delta }}
-                                {% endif %} 
+                                {{ supply.reservedTransitDelta }}
                             </td>
                             <td>
-                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::ISSUED') == supply.goodsConditionCode and supply.destinationGeoRoomId is null and supply.geoRoomId == geoRoom.id %}
-                                    {{ supply.delta }}
-                                {% endif %} 
+                                {{ supply.issuedDelta }}
                             </td>
                             <td>
-                                {% if constant('AppBundle\\Enum\\GoodsConditionCode::ISSUED') == supply.goodsConditionCode and supply.destinationGeoRoomId == geoRoom.id %}
-                                    {{ supply.delta }}
-                                {% endif %} 
+                                {{ supply.issuedTransitDelta }}
                             </td>
                         </tr>
                     {% endfor %}

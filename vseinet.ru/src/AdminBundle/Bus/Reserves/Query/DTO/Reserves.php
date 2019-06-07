@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Reserves\Query\DTO;
 
@@ -26,20 +26,12 @@ class Reserves
      * })
      */
     public $geoRooms;
-    
-    /*
-     * @Assert\All({
-     *     @Assert\Type(type="AdminBundle\Bus\Reserves\Query\DTO\Supply")
-     * })
-     */
-    public $supplies;
 
 
-    public function __construct(array $geoCities = [], array $geoPoints = [], array $geoRooms = [], array $supplies = [])
+    public function __construct(array $geoCities = [], array $geoPoints = [], array $geoRooms = [])
     {
         $this->geoCities = $geoCities;
         $this->geoPoints = $geoPoints;
         $this->geoRooms = $geoRooms;
-        $this->supplies = $supplies;
     }
 }
