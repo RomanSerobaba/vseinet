@@ -12,21 +12,94 @@
         </tr>
     </thead>
     <tbody>
+        <tr class="all">
+            <td>На всех точках</td>
+            <td>
+                {{ reserves.freeDelta }}
+            </td>
+            <td>
+                {{ reserves.freeTransitDelta }}
+            </td>
+            <td>
+                {{ reserves.reservedDelta }}
+            </td>
+            <td>
+                {{ reserves.reservedTransitDelta }}
+            </td>
+            <td>
+                {{ reserves.issuedDelta }}
+            </td>
+            <td>
+                {{ reserves.issuedTransitDelta }}
+            </td>
+        </tr>
         {% for geoCity in reserves.geoCities %}
             <tr class="category">
-                <td colspan="7">{{ geoCity.name }}</td>
+                <td>{{ geoCity.name }}</td>
+                <td>
+                    {{ geoCity.freeDelta }}
+                </td>
+                <td>
+                    {{ geoCity.freeTransitDelta }}
+                </td>
+                <td>
+                    {{ geoCity.reservedDelta }}
+                </td>
+                <td>
+                    {{ geoCity.reservedTransitDelta }}
+                </td>
+                <td>
+                    {{ geoCity.issuedDelta }}
+                </td>
+                <td>
+                    {{ geoCity.issuedTransitDelta }}
+                </td>
             </tr>
             {% for geoPointId in geoCity.geoPointIds %}
                 {% set geoPoint = reserves.geoPoints[geoPointId] %}
                 <tr class="type">
                     <td>{{ geoPoint.name }}</td>
-                    <td colspan="6"></td>
+                    <td>
+                        {{ geoPoint.freeDelta }}
+                    </td>
+                    <td>
+                        {{ geoPoint.freeTransitDelta }}
+                    </td>
+                    <td>
+                        {{ geoPoint.reservedDelta }}
+                    </td>
+                    <td>
+                        {{ geoPoint.reservedTransitDelta }}
+                    </td>
+                    <td>
+                        {{ geoPoint.issuedDelta }}
+                    </td>
+                    <td>
+                        {{ geoPoint.issuedTransitDelta }}
+                    </td>
                 </tr>
                 {% for geoRoomId in geoPoint.geoRoomIds %}
                     {% set geoRoom = reserves.geoRooms[geoRoomId] %}
                     <tr class="room">
                         <td>{{ geoRoom.name }}</td>
-                        <td colspan="6"></td>
+                        <td>
+                            {{ geoRoom.freeDelta }}
+                        </td>
+                        <td>
+                            {{ geoRoom.freeTransitDelta }}
+                        </td>
+                        <td>
+                            {{ geoRoom.reservedDelta }}
+                        </td>
+                        <td>
+                            {{ geoRoom.reservedTransitDelta }}
+                        </td>
+                        <td>
+                            {{ geoRoom.issuedDelta }}
+                        </td>
+                        <td>
+                            {{ geoRoom.issuedTransitDelta }}
+                        </td>
                     </tr>
                     {% for supply in geoRoom.supplies %}
                         <tr class="supply">

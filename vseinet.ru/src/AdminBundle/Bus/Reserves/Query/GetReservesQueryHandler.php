@@ -83,18 +83,27 @@ class GetReservesQueryHandler extends MessageHandler
             $geoCities[$geoObject->geoCityId]->geoPointIds[$geoObject->geoPointId] = $geoObject->geoPointId;
 
             if (empty($geoPoints[$geoObject->geoPointId])) {
-                $geoPoints[$geoObject->geoPointId] = new DTO\GeoPoint($geoObject->geoPointId, $geoObject->geoPointName);
+                $geoPoints[$geoObject->geoPointId] = new DTO\GeoPoint($geoObject->geoPointId, $geoObject->geoPointName, $geoObject->geoCityId);
             }
 
             $geoPoints[$geoObject->geoPointId]->geoRoomIds[$geoObject->geoRoomId] = $geoObject->geoRoomId;
 
             if (empty($geoRooms[$geoObject->geoRoomId])) {
-                $geoRooms[$geoObject->geoRoomId] = new DTO\GeoRoom($geoObject->geoRoomId, $geoObject->geoRoomName);
+                $geoRooms[$geoObject->geoRoomId] = new DTO\GeoRoom($geoObject->geoRoomId, $geoObject->geoRoomName, $geoObject->geoPointId);
             }
         }
 
+        $freeDelta = 0;
+        $freeTransitDelta = 0;
+        $reservedDelta = 0;
+        $reservedTransitDelta = 0;
+        $issuedDelta = 0;
+        $issuedTransitDelta = 0;
+
         foreach ($reserves as $reserve) {
             $geoRoomId = $reserve->geoRoomId ? $reserve->geoRoomId : $reserve->destinationGeoRoomId;
+            $geoPointId = $geoRooms[$geoRoomId]->geoPointId;
+            $geoCityId = $geoPoints[$geoPointId]->geoCityId;
 
             if (!isset($geoRooms[$geoRoomId]->supplies[$reserve->did])) {
                 $geoRooms[$geoRoomId]->supplies[$reserve->did] = new Supply(
@@ -109,22 +118,54 @@ class GetReservesQueryHandler extends MessageHandler
             if ($reserve->destinationGeoRoomId || $reserve->goodsPalletId) {
                 if (GoodsConditionCode::FREE === $reserve->goodsConditionCode) {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeTransitDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->freeTransitDelta += $reserve->delta;
+                    $geoPoints[$geoPointId]->freeTransitDelta += $reserve->delta;
+                    $geoCities[$geoCityId]->freeTransitDelta += $reserve->delta;
+                    $freeTransitDelta += $reserve->delta;
                 } elseif (GoodsConditionCode::RESERVED === $reserve->goodsConditionCode) {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->reservedTransitDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->reservedTransitDelta += $reserve->delta;
+                    $geoPoints[$geoPointId]->reservedTransitDelta += $reserve->delta;
+                    $geoCities[$geoCityId]->reservedTransitDelta += $reserve->delta;
+                    $reservedTransitDelta += $reserve->delta;
                 } else {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->issuedTransitDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->issuedTransitDelta += $reserve->delta;
+                    $geoPoints[$geoPointId]->issuedTransitDelta += $reserve->delta;
+                    $geoCities[$geoCityId]->issuedTransitDelta += $reserve->delta;
+                    $issuedTransitDelta += $reserve->delta;
                 }
             } else {
                 if (GoodsConditionCode::FREE === $reserve->goodsConditionCode) {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->freeDelta += $reserve->delta;
+                    $geoPoints[$geoPointId]->freeDelta += $reserve->delta;
+                    $geoCities[$geoCityId]->freeDelta += $reserve->delta;
+                    $freeDelta += $reserve->delta;
                 } elseif (GoodsConditionCode::RESERVED === $reserve->goodsConditionCode) {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->reservedDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->reservedDelta += $reserve->delta;
+                    $geoPoints[$geoPointId]->reservedDelta += $reserve->delta;
+                    $geoCities[$geoCityId]->reservedDelta += $reserve->delta;
+                    $reservedDelta += $reserve->delta;
                 } else {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->issuedDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->issuedDelta += $reserve->delta;
+                    $geoPoints[$geoPointId]->issuedDelta += $reserve->delta;
+                    $geoCities[$geoCityId]->issuedDelta += $reserve->delta;
+                    $issuedDelta += $reserve->delta;
                 }
             }
         }
 
-        return new DTO\Reserves($geoCities, $geoPoints, $geoRooms);
+        $reservesDTO = new DTO\Reserves($geoCities, $geoPoints, $geoRooms);
+        $reservesDTO->freeDelta = $freeDelta;
+        $reservesDTO->freeTransitDelta = $freeTransitDelta;
+        $reservesDTO->reservedDelta = $reservedDelta;
+        $reservesDTO->reservedTransitDelta = $reservedTransitDelta;
+        $reservesDTO->issuedDelta = $issuedDelta;
+        $reservesDTO->issuedTransitDelta = $issuedTransitDelta;
+
+        return $reservesDTO;
     }
 }

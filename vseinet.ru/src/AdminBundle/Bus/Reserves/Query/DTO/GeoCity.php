@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Reserves\Query\DTO;
 
@@ -22,6 +22,36 @@ class GeoCity
      * })
      */
     public $geoPointIds = [];
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $freeDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $freeTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $issuedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $issuedTransitDelta = 0;
 
 
     public function __construct($id, $name)
