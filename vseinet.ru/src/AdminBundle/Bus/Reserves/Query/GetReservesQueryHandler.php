@@ -95,8 +95,8 @@ class GetReservesQueryHandler extends MessageHandler
 
         foreach ($reserves as $reserve) {
             $geoRoomId = $reserve->geoRoomId ? $reserve->geoRoomId : $reserve->destinationGeoRoomId;
-            if (!isset($geoRooms[$geoRoomId]->supplies[$reserve->supplyId])) {
-                $geoRooms[$geoRoomId]->supplies[$reserve->supplyId] = new Supply(
+            if (!isset($geoRooms[$geoRoomId]->supplies[$reserve->did])) {
+                $geoRooms[$geoRoomId]->supplies[$reserve->did] = new Supply(
                     $reserve->did,
                     $reserve->number,
                     $reserve->code,
@@ -107,19 +107,19 @@ class GetReservesQueryHandler extends MessageHandler
 
             if ($reserve->destinationGeoRoomId || $reserve->goodsPalletId) {
                 if (GoodsConditionCode::FREE === $reserve->goodsConditionCode) {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->supplyId]->freeTransitDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeTransitDelta += $reserve->delta;
                 } elseif (GoodsConditionCode::RESERVED === $reserve->goodsConditionCode) {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->supplyId]->reservedTransitDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->reservedTransitDelta += $reserve->delta;
                 } else {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->supplyId]->issuedTransitDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->issuedTransitDelta += $reserve->delta;
                 }
             } else {
                 if (GoodsConditionCode::FREE === $reserve->goodsConditionCode) {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->supplyId]->freeDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeDelta += $reserve->delta;
                 } elseif (GoodsConditionCode::RESERVED === $reserve->goodsConditionCode) {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->supplyId]->reservedDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->reservedDelta += $reserve->delta;
                 } else {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->supplyId]->issuedDelta += $reserve->delta;
+                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->issuedDelta += $reserve->delta;
                 }
             }
         }
