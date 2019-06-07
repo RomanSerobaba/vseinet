@@ -40,7 +40,7 @@ class GetReservesQueryHandler extends MessageHandler
             INNER JOIN supply_doc AS sd ON sd.did = si.parent_did
             INNER JOIN supplier AS s ON s.id = sd.supplier_id
             WHERE grrc.base_product_id = :base_product_id
-        ", new DTORSM(DTO\Reserve::class, DTORSM::ARRAY_ASSOC));
+        ", new DTORSM(DTO\Reserve::class, DTORSM::ARRAY_INDEX));
         $q->setParameter('base_product_id', $product->getId());
         $reserves = $q->getResult('DTOHydrator');
 
@@ -95,6 +95,7 @@ class GetReservesQueryHandler extends MessageHandler
 
         foreach ($reserves as $reserve) {
             $geoRoomId = $reserve->geoRoomId ? $reserve->geoRoomId : $reserve->destinationGeoRoomId;
+
             if (!isset($geoRooms[$geoRoomId]->supplies[$reserve->did])) {
                 $geoRooms[$geoRoomId]->supplies[$reserve->did] = new Supply(
                     $reserve->did,
