@@ -5,7 +5,7 @@ namespace AdminBundle\Bus\Reserves\Query\DTO;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
 
-class Supply
+class Reserve
 {
     /**
      * @Assert\Type(type="integer")
