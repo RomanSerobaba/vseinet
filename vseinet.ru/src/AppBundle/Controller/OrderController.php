@@ -247,6 +247,7 @@ class OrderController extends Controller
         // $this->get('validation_bus')->handle($command);
 
         $form = $this->createForm(Form\CreateFormType::class, $command);
+        /** @var \AppBundle\Bus\Cart\Query\DTO\CartSummary $cart */
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetSummaryQuery([
             'products' => $cart->products,
             'discountCode' => $cart->discountCode,
@@ -259,6 +260,10 @@ class OrderController extends Controller
             'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
         ]));
+
+        if (empty($cart->products)) {
+            return $this->redirectToRoute('order_creation_page');
+        }
 
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);

@@ -11,7 +11,6 @@ class CreateCommandHandler extends MessageHandler
 {
     public function handle(CreateCommand $command)
     {
-        $em = $this->getDoctrine()->getManager();
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery());
         $items = [];
 
@@ -19,7 +18,6 @@ class CreateCommandHandler extends MessageHandler
             $items[] = ['baseProductId' => $product->id, 'quantity' => $product->quantity];
         }
 
-        $user = $this->getUser();
         $api = $this->getUserIsEmployee() ? $this->get('user.api.client') : $this->get('site.api.client');
 
         switch ($command->typeCode) {
