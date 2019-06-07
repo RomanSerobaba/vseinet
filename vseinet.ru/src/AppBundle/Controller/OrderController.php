@@ -261,7 +261,7 @@ class OrderController extends Controller
             'transportCompanyId' => $command->transportCompanyId,
         ]));
 
-        if (empty($cart->products)) {
+        if ($request->isMethod('POST') && empty($cart->products)) {
             return $this->redirectToRoute('order_creation_page');
         }
 
