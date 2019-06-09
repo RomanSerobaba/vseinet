@@ -1,15 +1,27 @@
 {% if app.userIsEmployee %}
     <div class="admin-panel" data-id="{{ product.id }}">
         <div class="actions">
-            <a 
-                href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}" 
-                class="edit" 
-                target="_blank" 
+            <a
+                href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}"
+                class="edit"
+                target="_blank"
                 title="Редактировать"
             ></a>
             <a href="{{ path('admin_product_merge') }}" class="merge" title="Объединить"></a>
             <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
             <a href="javascript:void(0)" title="Цены конкурентов" class="competitor"></a>
+            <a
+                href="{{ path('authority', { targetUrl: '/admin/orders?baseProductId=' ~ product.id }) }}"
+                class="orders"
+                target="_blank"
+                title="История заказов"
+            ></a>
+            <a
+                href="{{ path('authority', { targetUrl: '/admin/goodsIssues?baseProductIdIn%5B0%5D=' ~ product.id }) }}"
+                class="issues"
+                target="_blank"
+                title="Товар в претензиях"
+            ></a>
         </div>
         <div class="info-pane hidden">
             <div class="supplier-remains loading competitors"></div>
