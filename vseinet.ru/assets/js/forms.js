@@ -23,6 +23,7 @@ $.widget('sp.form', {
             submit: function (e) {
                 e.preventDefault();
                 this._validate(true);
+                return false;
             }
         });
 
@@ -54,6 +55,7 @@ $.widget('sp.form', {
                             }
                         }
                     }, this.options.delay);
+                    e.preventDefault();
                 }
             });
         }, this), 250);
@@ -72,6 +74,9 @@ $.widget('sp.form', {
             callback = this.options.validate;
         }
         var data = form.serializeArray();
+        if (submit) {
+            data.push({ name: 'submit', value: 1 });
+        }
         var trigger = $(document.activeElement);
         if (trigger.is('[type=submit]')) {
             var name = trigger.prop('name');
@@ -82,7 +87,7 @@ $.widget('sp.form', {
         callback.call(this.element, xhr);
         var inputs = this.element.data('inputs');
         var that = this;
-        xhr.done(function (data) {
+        xhr.then(function (data) {
             var errors = [];
             for (var id in inputs) {
                 var input = form.find('[name="' + inputs[id].name + '"]'), row = input.closest('div');

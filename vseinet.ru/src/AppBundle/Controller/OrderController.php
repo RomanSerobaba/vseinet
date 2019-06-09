@@ -268,7 +268,7 @@ class OrderController extends Controller
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
+            if ($form->isSubmitted() && $form->isValid() && !$request->isXmlHttpRequest()) {
                 try {
                     $this->get('command_bus')->handle($command);
                     $this->forward('AppBundle:Cart:clear');
@@ -276,13 +276,6 @@ class OrderController extends Controller
                     $this->get('session')->remove('form.orderCreation');
 
                     $this->get('session')->set('order_successfully_created', true);
-
-                    if ($request->isXmlHttpRequest()) {
-                        return $this->json([
-                            'id' => $command->id,
-                            'isInnerOrder' => OrderType::isInnerOrder($command->typeCode),
-                        ]);
-                    }
 
                     // if (OrderType::isInnerOrder($command->typeCode)) {
                     //     return $this->redirectToRoute('authority', ['targetUrl' => $this->getParameter('admin.host') . '/admin/orders/?id=' . $command->id]);
