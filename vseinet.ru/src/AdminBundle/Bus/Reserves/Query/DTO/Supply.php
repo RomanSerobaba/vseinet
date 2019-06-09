@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Reserves\Query\DTO;
 
@@ -10,37 +10,22 @@ class Supply
     /**
      * @Assert\Type(type="integer")
      */
-    public $did;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $geoRoomId;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $destinationGeoRoomId;
+    public $supplyId;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $code;
+    public $supplyNumber;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $number;
+    public $supplierCode;
 
     /**
      * @Assert\Type(type="datetime")
      */
-    public $createdAt;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
-    public $delta;
+    public $supplyCreatedAt;
 
     /**
      * @Assert\Type(type="integer")
@@ -48,31 +33,48 @@ class Supply
     public $purchasePrice;
 
     /**
-     * @Enum("AppBundle\Enum\GoodsConditionCode")
+     * @Assert\Type(type="integer")
      */
-    public $goodsConditionCode;
+    public $freeDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $freeTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $issuedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $issuedTransitDelta = 0;
 
 
     public function __construct(
-        $did, 
-        $geoRoomId,
-        $destinationGeoRoomId,
-        $code, 
-        $number, 
-        $createdAt, 
-        $delta, 
-        $purchasePrice, 
-        $goodsConditionCode
+        $supplyId,
+        $supplyNumber,
+        $supplierCode,
+        $supplyCreatedAt,
+        $purchasePrice
     )
     {
-        $this->did = $did;
-        $this->roomId = $roomId;
-        $this->destinationGeoRoomId = $destinationGeoRoomId;
-        $this->code = $code;
-        $this->number = $number;
-        $this->createdAt = $createdAt;
-        $this->delta = $delta;
+        $this->supplyId = $supplyId;
+        $this->supplyNumber = $supplyNumber;
+        $this->supplierCode = $supplierCode;
+        $this->supplyCreatedAt = $supplyCreatedAt;
         $this->purchasePrice = $purchasePrice;
-        $this->goodsConditionCode = $goodsConditionCode; 
     }
 }

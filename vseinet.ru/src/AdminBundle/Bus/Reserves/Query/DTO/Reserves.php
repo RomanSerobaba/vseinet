@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Reserves\Query\DTO;
 
@@ -26,20 +26,42 @@ class Reserves
      * })
      */
     public $geoRooms;
-    
-    /*
-     * @Assert\All({
-     *     @Assert\Type(type="AdminBundle\Bus\Reserves\Query\DTO\Supply")
-     * })
+
+    /**
+     * @Assert\Type(type="integer")
      */
-    public $supplies;
+    public $freeDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $freeTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $issuedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $issuedTransitDelta = 0;
 
 
-    public function __construct(array $geoCities = [], array $geoPoints = [], array $geoRooms = [], array $supplies = [])
+    public function __construct(array $geoCities = [], array $geoPoints = [], array $geoRooms = [])
     {
         $this->geoCities = $geoCities;
         $this->geoPoints = $geoPoints;
         $this->geoRooms = $geoRooms;
-        $this->supplies = $supplies;
     }
 }

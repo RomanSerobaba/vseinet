@@ -10,7 +10,7 @@
                 {% else %}
                     {{ order.number }}
                 {% endif %}
-                <span>от {{ order.createdAt|date('d F Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
             </h2>
             <dl>
                 {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}

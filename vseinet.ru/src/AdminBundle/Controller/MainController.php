@@ -38,7 +38,7 @@ class MainController extends Controller
     public function clockInAction(Request $request)
     {
         $user = $this->getUser();
-        $url = sprintf('/v1/work/%s/', null === $user->clockInTime ? 'start' : 'stop');
+        $url = sprintf('/api/v1/work/%s/', null === $user->clockInTime ? 'start' : 'stop');
         $this->get('user.api.client')->put($url);
         $user->person = null;
 
