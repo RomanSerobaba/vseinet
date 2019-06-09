@@ -1,12 +1,12 @@
 $(function() {
     var tree = $('#tree'),
-        menu = tree.children('ul').menuAim({
+        menu1 = tree.children('ul').menuAim({
             activate: function(element) {
                 var root = $(element);
                 if ($(window).innerWidth() > 992){
                     $('#subtree-' + root.data('id')).show();
                     root.find(' > a').addClass('active');
-                };              
+                };
             },
             deactivate: function(element) {
                 var root = $(element);
@@ -22,14 +22,16 @@ $(function() {
         trigger = $('#tree-trigger'),
         overlay = null;
 
-    menu.find('> li > span').not('.special, .go-to-category').click(function() {
+    menu1.find('> li > span').not('.special, .go-to-category').click(function() {
         return false;
     });
-    $('.subtree').css({minHeight: menu.outerHeight() - 50});
+    $('.subtree').css({minHeight: menu1.outerHeight() - 50});
     if (sp.mobile)
         sp.document.click(function(event) {
-            if ($(event.target).closest('#tree').length == 0)
-                menu.data('exit')();
+            if ($(event.target).closest('#tree').length == 0) {
+                // console.log(event.target, menu1)
+                menu1.data('exit')();
+            }
         });
 
     var mobMenuPageTrigger = function(){
@@ -66,7 +68,7 @@ $(function() {
                     if ( ! trigger.is('.expand')) {
                         overlay.stop().show().animate({opacity: .2}, 150);
                         tree.stop().css('left', trigger.offset().left).show().animate({height: height}, 150, function() {
-                            $('.subtree').css({minHeight: menu.outerHeight() - 50});
+                            $('.subtree').css({minHeight: menu1.outerHeight() - 50});
                         });
                         trigger.addClass('expand');
                     }
@@ -85,16 +87,16 @@ $(function() {
         }
         else{
             var nav_mobile = $('nav.page_nav').html();
-            $('nav.page_nav').remove(); 
+            $('nav.page_nav').remove();
 
             $('#header .holder').append(nav_mobile);
             $('#header .holder #tree').addClass('page_tree').attr('style', '');
         };
     };
     mobMenuPageTrigger();
-    
 
-    
+
+
         var hint = $('<a class="hint"/>').mouseleave(function() {
             hint.stop().hide();
         });
@@ -130,9 +132,9 @@ $(function() {
         });
         $('#tree ul li[data-id]').children('a').click(function(e){
             if (!$(e.target).is('.go-to-category')) {
-                if ($(window).width() < 992){   
+                if ($(window).width() < 992){
 
-                    $('#tree ul li').not($(this).parent('li')).removeClass('opened');           
+                    $('#tree ul li').not($(this).parent('li')).removeClass('opened');
                     $('.subtree').not($(this).next('.subtree')).slideUp('500');
                     $('.subtree ul').removeClass('third-menu-open');
 
@@ -144,12 +146,12 @@ $(function() {
                     };
 
                     if($(this).parent('li').hasClass('opened')){
-                        $(this).parent('li').removeClass('opened');                 
+                        $(this).parent('li').removeClass('opened');
                     }
                     else{
-                        $(this).parent('li').addClass('opened');    
+                        $(this).parent('li').addClass('opened');
                         var gt = $(this).find('.go-to-category');
-                        gt.css('lineHeight', 10 + gt.outerHeight() + 'px');             
+                        gt.css('lineHeight', 10 + gt.outerHeight() + 'px');
                     };
                                         return false;
                 }
@@ -162,7 +164,7 @@ $(function() {
                     var gt = $(this).find('.go-to-category');
                     gt.css('lineHeight', gt.outerHeight() + 'px');
                     return false;
-                }           
+                }
             }
         });
 });
