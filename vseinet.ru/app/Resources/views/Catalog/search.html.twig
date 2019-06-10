@@ -11,7 +11,11 @@
         </div>
         <div class="title category-title">
             <h1>Результаты поиска</h1>
-            <small id="products-total">{{ facets.total|number_format() }} {{ facets.total|declension('товар;товара;товаров') }}</small>
+            {% set total = facets.total %}
+            {% if total == 0 %}
+                {% set total = products|length %}
+            {% endif %}
+            <small id="products-total">{{ total|number_format() }} {{ total|declension('товар;товара;товаров') }}</small>
         </div>
         <nav class="sort" id="sorting">
             {% include 'Catalog/sorting.html.twig' %}
