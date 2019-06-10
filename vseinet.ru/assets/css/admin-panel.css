@@ -157,8 +157,12 @@ H4 A.competitor {
     background: url(../images/join.png);
 }
 
-.admin-panel A.defect {
-    /*background: url(../images/defect.png);*/
+.admin-panel A.orders {
+    background: url(../images/orders.png);
+}
+
+.admin-panel A.issues {
+    background: url(../images/issues.png);
 }
 
 .admin-panel A.competitor {

@@ -162,9 +162,16 @@ $(function() {
     container.on('click', '.admin-panel .pricetag', function(e) {
         e.preventDefault();
         var a = this;
+        if (a.classList.contains('busy')) {
+            return;
+        }
         sp.post(a.href, this.dataset).then(function(response) {
             a.classList.remove('busy');
-            if (response.isActive) a.classList.add('active'); else a.classList.remove('active');
+            if (response.isActive) {
+                a.classList.add('active');
+            } else {
+                a.classList.remove('active');
+            }
         });
         a.classList.add('busy');
     });
