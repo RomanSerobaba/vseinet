@@ -190,6 +190,12 @@ H4 A.competitor {
 .admin-panel A.pricetag.busy {
     background: url(../images/ajax.gif);
 }
+.admin-panel A.pricetag-print {
+    background: url(../images/print.png);
+    height: 16px;
+    margin: 8px 0 0 -6px;
+    width: 16px;
+}
 
 .admin-panel A.special {
     background: #f30;

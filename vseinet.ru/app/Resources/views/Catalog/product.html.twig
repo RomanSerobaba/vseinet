@@ -32,5 +32,5 @@
     >
         {% include 'Catalog/sale.html.twig' %}
     </div>
-    {% include '@Admin/Product/admin_panel.html.twig' with { product: product, pricetag: pricetags[product.id]|default(null), geoPoints: geoPoints[product.id] } only %}
+    {% include '@Admin/Product/admin_panel.html.twig' with { product: product, pricetag: pricetags[product.id]|default(null), geoPoints: geoPoints[product.id]|default([]) } only %}
 </div>
