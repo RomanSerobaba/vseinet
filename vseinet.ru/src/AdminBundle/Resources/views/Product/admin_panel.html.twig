@@ -25,7 +25,7 @@
             {% if geoPoints[app.user.defaultGeoPointId]|default(null) is not null %}
                 <a
                     href="{{ path('toggle_pricetag') }}"
-                    class="pricetag{% if pricetag is not null %} active{% endif %}"
+                    class="pricetag{% if product.isPricetagSelected %} active{% endif %}"
                     title="Печать ценника"
                     data-base-product-id="{{ product.id }}"
                     data-geo-point-id="141"

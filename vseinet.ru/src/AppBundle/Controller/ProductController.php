@@ -16,7 +16,6 @@ use AppBundle\Bus\Main\Command\AddLastviewProductCommand;
 use AppBundle\Enum\DetailType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Enum\ProductAvailabilityCode;
-use AppBundle\Bus\Pricetags\Query\GetQuery as GetPricetagQuery;
 
 class ProductController extends Controller
 {
@@ -82,13 +81,6 @@ class ProductController extends Controller
             $delivery = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductId' => $baseProduct->id]));
         }
 
-        if ($this->getUserIsEmployee()) {
-            $pricetag = $this->get('query_bus')->handle(new GetPricetagQuery([
-                'baseProductId' => $baseProduct->id,
-                'geoPointId' => $this->getUser()->defaultGeoPointId,
-            ]));
-        }
-
         $this->get('command_bus')->handle(new AddLastviewProductCommand(['baseProductId' => $baseProduct->id]));
         $cookie = new Cookie('products_lastview', $request->cookies->get('products_lastview'), time() + 3600 * 24 * 7);
         $response = new Response();
@@ -102,7 +94,6 @@ class ProductController extends Controller
             'details' => $details,
             'geoPoints' => $geoPoints ?? null,
             'delivery' => $delivery ?? null,
-            'pricetag' => $pricetag ?? null,
         ], $response);
     }
 
