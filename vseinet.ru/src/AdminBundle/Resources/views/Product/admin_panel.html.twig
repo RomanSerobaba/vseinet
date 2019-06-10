@@ -22,6 +22,16 @@
                 target="_blank"
                 title="Товар в претензиях"
             ></a>
+            {% if geoPoints[app.user.defaultGeoPointId]|default(null) is not null %}
+                <a
+                    href="{{ path('toggle_pricetag') }}"
+                    class="pricetag{% if pricetag is not null %} active{% endif %}"
+                    title="Печать ценника"
+                    data-base-product-id="{{ product.id }}"
+                    data-geo-point-id="141"
+                >
+                </a>
+            {% endif %}
         </div>
         <div class="info-pane hidden">
             <div class="supplier-remains loading competitors"></div>
@@ -30,6 +40,7 @@
         </div>
     </div>
 {% endif %}
+
 
 {#if $user and Model::factory('User')->is('PRODUCT_INFO')}
     <div class="admin-panel" data-id="{$product.id}">

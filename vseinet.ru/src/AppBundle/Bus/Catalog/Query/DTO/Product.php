@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query\DTO;
 
@@ -56,7 +56,6 @@ class Product
      * @Assert\Type(type="integer")
      */
     public $quantityInCart = 0;
-
 
     public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt)
     {

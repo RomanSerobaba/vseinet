@@ -38,7 +38,11 @@ class GetLocalAvailabilityQueryHandler extends MessageHandler
             ORDER BY gp.geo_city_id, gp.name
         ", new DTORSM(DTO\GeoPoint::class));
         $q->setParameter('base_product_id', $baseProduct->getId());
-        $geoPoints = $q->getResult('DTOHydrator');
+        $result = $q->getResult('DTOHydrator');
+        $geoPoints = [];
+        foreach ($result as $geoPoint) {
+            $geoPoints[$geoPoint->id] = $geoPoint;
+        }
 
         return $geoPoints;
     }
