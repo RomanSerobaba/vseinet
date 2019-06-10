@@ -274,19 +274,27 @@ class QueryBuilder extends ContainerAware
             ;
         ";
 
-        $this->reset();
-
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
+
+        $ids = [];
         if (empty($results[0])) {
+            $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
+        }
+        if (1 === count($this->match) and is_numeric($this->match[0])) {
+            $ids = array_merge([intval($this->match[0])], $ids);
+        }
+        if (empty($ids)) {
             return [];
         }
-        $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
+
         $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $ids]));
         $cartInfo = $this->get('query_bus')->handle(new GetCartInfoQuery());
 
         foreach ($products as $id => $product) {
             $product->quantityInCart = $cartInfo->products[$id] ?? 0;
         }
+
+        $this->reset();
 
         return $products;
     }
