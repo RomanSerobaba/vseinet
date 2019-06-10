@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            {% include '@Admin/Product/admin_panel.html.twig' with { product: baseProduct } only %}
+            {% include '@Admin/Product/admin_panel.html.twig' with { product: baseProduct, pricetag: pricetag, geoPoints: geoPoints } only %}
             {% if app.userIsEmployee and geoPoints is not null %}
                 <ul>
                     {% for geoPoint in geoPoints %}

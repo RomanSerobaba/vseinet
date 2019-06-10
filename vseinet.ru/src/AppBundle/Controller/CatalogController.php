@@ -13,6 +13,8 @@ use AppBundle\Bus\Catalog\Sorting;
 use AppBundle\Bus\Catalog\Enum\Availability;
 use AppBundle\Bus\Catalog\Enum\Nofilled;
 use AppBundle\Bus\Catalog\Enum\Sort;
+use AppBundle\Bus\Pricetags\Query\GetListQuery as GetPricetagsQuery;
+use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
 
 class CatalogController extends Controller
 {
@@ -310,6 +312,18 @@ class CatalogController extends Controller
         $facets = $finder->getFacets();
         $products = $finder->getProducts();
 
+        if ($this->getUserIsEmployee()) {
+            $ids = array_map(function ($product) { return $product->id; }, $products);
+            $pricetags = $this->get('query_bus')->handle(new GetPricetagsQuery([
+                'baseProductIds' => $ids,
+                'geoPointId' => $this->getUser()->defaultGeoPointId,
+            ]));
+            $geoPoints = [];
+            foreach ($ids as $id) {
+                $geoPoints[$id] = $this->get('query_bus')->handle(new GetLocalAvailabilityQuery(['baseProductId' => $id]));
+            }
+        }
+
         $baseUrl = $this->generateUrl($request->attributes->get('_route'), $attributes);
         $attributes = $filter->build();
 
@@ -332,6 +346,7 @@ class CatalogController extends Controller
         if ($request->isXmlHttpRequest()) {
             $productsHtml = $this->renderView('Catalog/products_list.html.twig', [
                 'products' => $products,
+                'pricetags' => $pricetags ?? [],
             ]);
             $pagingHtml = $this->renderView('Catalog/paging.html.twig', [
                 'paging' => $paging,
@@ -356,6 +371,8 @@ class CatalogController extends Controller
             'filter' => $filter,
             'facets' => $facets,
             'products' => $products,
+            'pricetags' => $pricetags ?? [],
+            'geoPoints' => $geoPoints ?? [],
             'paging' => $paging,
             'sorting' => $sorting,
             'availabilityChoices' => Availability::getChoices($this->getUserIsEmployee()),

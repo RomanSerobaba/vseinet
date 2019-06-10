@@ -177,6 +177,16 @@ H4 A.competitor {
     background: url(../images/right_arrow.png) center no-repeat;
 }
 
+.admin-panel A.pricetag {
+    background: url(../images/price_tag-inact.gif);
+}
+.admin-panel A.pricetag.active {
+    background: url(../images/price_tag.gif);
+}
+.admin-panel A.pricetag.busy {
+    background: url(../images/ajax.gif);
+}
+
 .admin-panel A.special {
     background: #f30;
     color: #fff;
@@ -227,37 +237,37 @@ H4 A.competitor {
     border-top: 7px solid #666;
 }
 
-.admin-panel A.pricetag {
-    /*background: url(/img/btns/price_tag.gif);*/
+/*.admin-panel A.pricetag {
+    background: url(/img/btns/price_tag.gif);
     padding-top: 10px;
     height: 14px;
     margin: 0 8px 0 3px;
-}
-
+}*/
+/*
 .admin-panel A.pricetag SPAN {
     color: #FCFFCF;
     text-shadow: -1px 0 #2fbb19, 0 -1px #2fbb19, 1px 0 #2fbb19, 0 1px #2fbb19, -1px -1px #2fbb19, 1px 1px #2fbb19, -1px 1px #2fbb19, 1px -1px #2fbb19, 1px 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19, 0 0 2px #2fbb19;
     font-weight: bold;
     font-size: 11px;
-}
+}*/
 
-.admin-panel A.pricetag.inact {
-    /*background: url(/img/btns/price_tag-inact.gif);*/
-}
+/*.admin-panel A.pricetag.inact {
+    background: url(/img/btns/price_tag-inact.gif);
+}*/
 
-.admin-panel A.pricetag.inact SPAN {
+/*.admin-panel A.pricetag.inact SPAN {
     text-shadow: -1px 0 #6a6a6a, 0 -1px #6a6a6a, 1px 0 #6a6a6a, 0 1px #6a6a6a, -1px -1px #6a6a6a, 1px 1px #6a6a6a, -1px 1px #6a6a6a, 1px -1px #6a6a6a, 1px 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a, 0 0 2px #6a6a6a;
 }
-
-.admin-panel A.pricetag-count {
+*/
+/*.admin-panel A.pricetag-count {
     border: none !important;
     line-height: 24px;
     width: auto;
     color: #0F68B1;
     font-weight: bold;
-}
+}*/
 
-.admin-panel A.pricetag-increase,
+/*.admin-panel A.pricetag-increase,
 .admin-panel A.pricetag-decrease {
     border: none !important;
     line-height: 24px;
@@ -265,13 +275,13 @@ H4 A.competitor {
     color: #0F68B1;
     font-weight: bold;
 }
-
-H1 A.pricetag {
+*/
+/*H1 A.pricetag {
     vertical-align: middle;
     margin-left: 10px;
     text-decoration: none;
     border: none;
-}
+}*/
 
 /* product marked
 -------------------------------------------------------------------*/

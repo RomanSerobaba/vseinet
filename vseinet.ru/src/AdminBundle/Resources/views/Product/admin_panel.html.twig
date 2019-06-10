@@ -1,15 +1,25 @@
 {% if app.userIsEmployee %}
     <div class="admin-panel" data-id="{{ product.id }}">
         <div class="actions">
-            <a 
-                href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}" 
-                class="edit" 
-                target="_blank" 
+            <a
+                href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}"
+                class="edit"
+                target="_blank"
                 title="Редактировать"
             ></a>
             <a href="{{ path('admin_product_merge') }}" class="merge" title="Объединить"></a>
             <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
             <a href="javascript:void(0)" title="Цены конкурентов" class="competitor"></a>
+            {% if geoPoints[app.user.defaultGeoPointId]|default(null) is not null %}
+                <a
+                    href="{{ path('toggle_pricetag') }}"
+                    class="pricetag{% if pricetag is not null %} active{% endif %}"
+                    title="Печать ценника"
+                    data-base-product-id="{{ product.id }}"
+                    data-geo-point-id="141"
+                >
+                </a>
+            {% endif %}
         </div>
         <div class="info-pane hidden">
             <div class="supplier-remains loading competitors"></div>
@@ -18,6 +28,7 @@
         </div>
     </div>
 {% endif %}
+
 
 {#if $user and Model::factory('User')->is('PRODUCT_INFO')}
     <div class="admin-panel" data-id="{$product.id}">

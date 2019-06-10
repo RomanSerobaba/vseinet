@@ -1,8 +1,8 @@
 <div id="product-{{ product.id }}" class="product clearfix" data-id="{{ product.id }}">
     <a href="{{ path('catalog_product', { id: product.id }) }}" class="image">
-        <img 
-            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" 
-            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+        <img
+            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
+            alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
         />
     </a>
     <div class="details">
@@ -10,7 +10,7 @@
             <a href="{{ path('catalog_product', { id: product.id }) }}" class="title">
                 {{ product.name }}
             </a>
-            <small>Код товара: 
+            <small>Код товара:
                 <b class="sku">{{ product.id }}</b>
             </small>
         </div>
@@ -22,15 +22,15 @@
             {{ product.description|raw }}
         </div>
     </div>
-    <div 
+    <div
         class="
             sale
             {% if product.quantityInCart %}in-cart{% else %}to-cart{% endif %}
             {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}sale-discount{% endif %}
-        " 
+        "
         id="sale{{ product.id }}"
     >
         {% include 'Catalog/sale.html.twig' %}
     </div>
-    {% include '@Admin/Product/admin_panel.html.twig' with { product: product } only %}
+    {% include '@Admin/Product/admin_panel.html.twig' with { product: product, pricetag: pricetags[product.id]|default(null), geoPoints: geoPoints[product.id] } only %}
 </div>

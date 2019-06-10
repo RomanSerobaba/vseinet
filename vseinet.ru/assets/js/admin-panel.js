@@ -158,6 +158,17 @@ $(function() {
         }
     });
 
+    // pricetags
+    container.on('click', '.admin-panel .pricetag', function(e) {
+        e.preventDefault();
+        var a = this;
+        sp.post(a.href, this.dataset).then(function(response) {
+            a.classList.remove('busy');
+            if (response.isActive) a.classList.add('active'); else a.classList.remove('active');
+        });
+        a.classList.add('busy');
+    });
+
     // supplier remains
     container.on('click', '.admin-panel .supplier-unlink', function(e) {
         e.preventDefault();
