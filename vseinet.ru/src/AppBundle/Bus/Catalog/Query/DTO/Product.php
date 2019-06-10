@@ -57,7 +57,12 @@ class Product
      */
     public $quantityInCart = 0;
 
-    public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt)
+    /**
+     * @Assert\Type("boolean")
+     */
+    public $isPricetagSelected;
+
+    public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt, $isPricetagSelected)
     {
         $this->id = $id;
         $this->name = $name;
@@ -68,5 +73,6 @@ class Product
         $this->description = $description;
         $this->minQuantity = $minQuantity;
         $this->updatedAt = $updatedAt;
+        $this->isPricetagSelected = $isPricetagSelected;
     }
 }

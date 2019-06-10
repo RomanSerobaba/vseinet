@@ -98,6 +98,11 @@ class BaseProduct
      */
     public $details;
 
+    /**
+     * @Assert\Type("boolean")
+     */
+    public $isPricetagSelected;
+
     public function __construct(
         $id,
         $name,
@@ -113,7 +118,8 @@ class BaseProduct
         $manualLink,
         $description,
         $estimate,
-        $canonicalId
+        $canonicalId,
+        $isPricetagSelected
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -130,6 +136,7 @@ class BaseProduct
         $this->description = $description;
         $this->estimate = $estimate;
         $this->canonicalId = $canonicalId;
+        $this->isPricetagSelected = $isPricetagSelected;
     }
 
     public function isManualPrice()
