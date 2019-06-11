@@ -211,7 +211,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         return $delivery;
     }
 
-    protected function getDateByRoute(int $startingGeoPointId, int $arrivalGeoPointId, ?\DateTime $startingDate = null): \DateTime
+    protected function getDateByRoute(int $startingGeoPointId, int $arrivalGeoPointId, ?\DateTime $startingDate = null): ?\DateTime
     {
         $date = $startingDate ?? new \DateTime();
         $routes = $this->getAllRoutes();
