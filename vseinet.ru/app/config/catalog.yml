@@ -11,6 +11,12 @@ services:
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
+    catalog.total_sale_product.finder:
+        class: 'AppBundle\Bus\Catalog\Finder\TotalSaleProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
     catalog.search_product.finder:
         class: 'AppBundle\Bus\Catalog\Finder\SearchProductFinder'
         public: true

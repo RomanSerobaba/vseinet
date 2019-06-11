@@ -24,7 +24,7 @@
 
 /* misc
 -------------------------------------------------------------------*/
-BODY {	
+BODY {
 	font: 12px/18px Arial;
 	background: #fff;
 	color: #333;
@@ -37,14 +37,14 @@ BODY {
 BODY.ml250{
 	margin-left: 250px;
 	position: fixed;
-	
+
 }
-.bs {    
+.bs {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.42857143;
 }
-.bs INPUT,    
-.bs TEXTAREA {    
+.bs INPUT,
+.bs TEXTAREA {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 A {
@@ -189,7 +189,7 @@ TIME, .time {
 #page {
 	min-height: 100%;
 }
-.smpl-container {	
+.smpl-container {
 	position: relative;
 }
 .holder {
@@ -247,7 +247,7 @@ TIME, .time {
 		margin: 0 0 15px;
                 position: relative;
 	}
-        
+
 	.logo-area .logo img {
                 position: absolute;
 	}
@@ -278,10 +278,10 @@ TIME, .time {
 -------------------------------------------------------------------*/
 
 #scroller{
-    position: fixed;    
+    position: fixed;
     bottom: 37px;
     right: 30px;
-    background: #fff url(../images/scroll_to_top_arrow.png) no-repeat center top;  
+    background: #fff url(../images/scroll_to_top_arrow.png) no-repeat center top;
     width: 64px;
     height: 32px;
     cursor: pointer;
@@ -295,7 +295,7 @@ TIME, .time {
 #scroller:hover {
     opacity: 0.8;
     box-shadow: 0px 0px 6px rgba(100,100,100,0.7);
-    background: #fff url(../images/scroll_to_top_arrow_hover.png) no-repeat center top; 
+    background: #fff url(../images/scroll_to_top_arrow_hover.png) no-repeat center top;
 }
 
 /**************************/
@@ -306,4 +306,11 @@ TIME, .time {
 }
 .clearfix:after {
   clear: both;
+}
+
+/* hot offer
+-------------------------------------------------------------------*/
+.hot-offer {
+    background: url(../images/hot_offer.png) center top !important;
+    height: 50px;
 }
