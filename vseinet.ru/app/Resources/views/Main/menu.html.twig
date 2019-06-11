@@ -1,9 +1,9 @@
 {% macro render_product(product) %}
     <div class="product">
         <a href="{{ url("catalog_product", { id: product.id }) }}" class="image">
-            <img 
-                src="{{ product|image(constant("AppBundle\\Enum\\BaseProductImage::SIZE_MD")) }}" 
-                alt="{{ product.name }}" 
+            <img
+                src="{{ product|image(constant("AppBundle\\Enum\\BaseProductImage::SIZE_MD")) }}"
+                alt="{{ product.name }}"
             />
         </a>
         <h6><a href="{{ url("catalog_product", { id: product.id }) }}">{{ product.name }}</a></h6>
@@ -16,7 +16,7 @@
     <h3 class="tree-title">Каталог</h3>
     <ul>
         <li>
-            <a href="{{ path('catalog_specials') }}" style="color:white;background-color:#ff4921;text-transform:uppercase;font-weight:bold">Тотальная распродажа</a>
+            <a href="{{ path('catalog_total_sale') }}" class="hot-offer"></a>
         </li>
         {% for category1 in menu %}
             <li data-id="{{ category1.id }}">
@@ -25,7 +25,7 @@
                     {% if category1.id == 7707 %}
                         <span class="new"></span>
                         <span style="display: block; font-size: 10px;">более 500 тыс. товаров</span>
-                    {% endif %} 
+                    {% endif %}
                     <span class="go-to-category">Перейти в раздел</span>
                 </a>
                 <div id="subtree-{{ category1.id }}" class="subtree">
@@ -40,7 +40,7 @@
                                         {{ category2.name }}
                                         {% if category2.id == 4590 %}
                                             <span class="new"></span>
-                                        {% endif %} 
+                                        {% endif %}
                                         <span class="go-to-category">Перейти в раздел</span>
                                     </a>
                                 </h4>
@@ -76,8 +76,8 @@
                         <ul class="mobile-all">
                             <li class="top">
                                 <h4>
-                                    <a href="{{ path('catalog_category', { id: category1.id}) }}" class="all go-to-category">Все разделы</a>  
-                                </h4>   
+                                    <a href="{{ path('catalog_category', { id: category1.id}) }}" class="all go-to-category">Все разделы</a>
+                                </h4>
                             </li>
                         </ul>
                     {% endif %}
