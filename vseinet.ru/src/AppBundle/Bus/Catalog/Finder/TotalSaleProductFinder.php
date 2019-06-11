@@ -2,6 +2,8 @@
 
 namespace AppBundle\Bus\Catalog\Finder;
 
+use AppBundle\Enum\ProductAvailabilityCode;
+
 class TotalSaleProductFinder extends AbstractProductFinder
 {
     /**
@@ -94,6 +96,9 @@ class TotalSaleProductFinder extends AbstractProductFinder
         }
 
         $products = $qb->getProducts();
+        array_walk($products, function (&$product) {
+            $product->availability = ProductAvailabilityCode::AVAILABLE;
+        });
 
         return $products;
     }

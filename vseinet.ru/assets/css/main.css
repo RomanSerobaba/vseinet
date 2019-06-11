@@ -311,6 +311,6 @@ TIME, .time {
 /* hot offer
 -------------------------------------------------------------------*/
 .hot-offer {
-    background: url(../images/hot_offer.png) center top;
+    background: url(../images/hot_offer.png) center top !important;
     height: 50px;
 }
