@@ -26,7 +26,7 @@ class GetProductsQueryHandler extends MessageHandler
                     bpd.shortDescription,
                     bp.minQuantity,
                     bp.updatedAt,
-                    CASE WHEN ppb.baseProductId IS NULL THEN false ELSE true END
+                    ppb.quantity
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id

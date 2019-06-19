@@ -23,14 +23,16 @@
                 title="Товар в претензиях"
             ></a>
             {% if geoPoints[app.user.defaultGeoPointId]|default(null) is not null %}
-                <a
-                    href="{{ path('toggle_pricetag') }}"
-                    class="pricetag{% if product.isPricetagSelected %} active{% endif %}"
+                <span
+                    class="pricetag{% if product.pricetagQuantity > 0 %} active{% endif %}"
                     title="Печать ценника"
+                >
+                </span>
+                <input class="pricetag-quantity" type="text"
                     data-base-product-id="{{ product.id }}"
                     data-geo-point-id="141"
-                >
-                </a>
+                    data-link="{{ path('toggle_pricetag') }}"
+                    value="{{ product.pricetagQuantity }}" />
                 <a
                     href="{{ path('authority', { targetUrl: '/admin/productPricetags'}) }}"
                     class="pricetag-print"

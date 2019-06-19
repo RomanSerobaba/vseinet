@@ -15,7 +15,7 @@ class PricetagController extends Controller
      *     condition="request.isXmlHttpRequest()"
      * )
      */
-    public function taggleAction(Request $request)
+    public function toggleAction(Request $request)
     {
         $isActive = $this->get('command_bus')->handle(new Command\ToggleCommand($request->request->all()));
 
