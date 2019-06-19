@@ -35,7 +35,7 @@ class GetQueryHandler extends MessageHandler
                     d.description,
                     bp.estimate,
                     bp.canonicalId,
-                    CASE WHEN ppb.baseProductId IS NULL THEN false ELSE true END
+                    ppb.quantity
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id

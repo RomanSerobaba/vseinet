@@ -181,20 +181,32 @@ H4 A.competitor {
     background: url(../images/right_arrow.png) center no-repeat;
 }
 
-.admin-panel A.pricetag {
+.admin-panel SPAN.pricetag {
     background: url(../images/price_tag-inact.gif);
+    border: none!important;
+    float: left;
+    height: 24px;
+    margin-right: 5px;
+    width: 24px;
 }
-.admin-panel A.pricetag.active {
+.admin-panel SPAN.pricetag.active {
     background: url(../images/price_tag.gif);
-}
-.admin-panel A.pricetag.busy {
-    background: url(../images/ajax.gif);
 }
 .admin-panel A.pricetag-print {
     background: url(../images/print.png);
     height: 16px;
-    margin: 8px 0 0 -6px;
+    margin: 8px 0 0 3px;
     width: 16px;
+}
+.admin-panel INPUT.pricetag-quantity {
+    height: 16px;
+    margin: 8px 0 0 -2px;
+    width: 24px;
+    font-size: 12px;
+    float: left;
+}
+.admin-panel INPUT.pricetag-quantity.busy {
+    background: url(../images/ajax.gif);
 }
 
 .admin-panel A.special {

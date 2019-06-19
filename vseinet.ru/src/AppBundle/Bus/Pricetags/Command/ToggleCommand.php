@@ -11,4 +11,9 @@ class ToggleCommand extends Message
      * @Assert\Type("integer")
      */
     public $baseProductId;
+
+    /**
+     * @Assert\Type("integer")
+     */
+    public $quantity = 1;
 }

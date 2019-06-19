@@ -18,7 +18,7 @@ class ToggleCommandHandler extends MessageHandler
             'createdBy' => $this->getUser()->getId(),
         ]);
 
-        if ($pricetagBuffer instanceof ProductPricetagBuffer) {
+        if ($pricetagBuffer instanceof ProductPricetagBuffer && !$command->quantity) {
             $em->remove($pricetagBuffer);
             $em->flush();
 
@@ -30,10 +30,13 @@ class ToggleCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->baseProductId));
         }
 
-        $pricetagBuffer = new ProductPricetagBuffer();
-        $pricetagBuffer->setBaseProductId($baseProduct->getId());
-        $pricetagBuffer->setCreatedBy($this->getUser()->getId());
-        $pricetagBuffer->setQuantity(1);
+        if (!$pricetagBuffer instanceof ProductPricetagBuffer) {
+            $pricetagBuffer = new ProductPricetagBuffer();
+            $pricetagBuffer->setBaseProductId($command->baseProductId);
+            $pricetagBuffer->setCreatedBy($this->getUser()->getId());
+        }
+
+        $pricetagBuffer->setQuantity($command->quantity);
 
         $em->persist($pricetagBuffer);
         $em->flush($pricetagBuffer);

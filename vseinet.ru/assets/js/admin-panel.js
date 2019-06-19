@@ -159,18 +159,23 @@ $(function() {
     });
 
     // pricetags
-    container.on('click', '.admin-panel .pricetag', function(e) {
+    container.on('change', '.admin-panel .pricetag-quantity', function(e) {
         e.preventDefault();
         var a = this;
         if (a.classList.contains('busy')) {
             return;
         }
-        sp.post(a.href, this.dataset).then(function(response) {
+        sp.post(a.dataset.link, {
+            quantity: a.value,
+            baseProductId: a.dataset.baseProductId,
+            geoPointId: a.dataset.geoPointId
+        }).then(function(response) {
             a.classList.remove('busy');
+            var i = container.find('.admin-panel .pricetag');
             if (response.isActive) {
-                a.classList.add('active');
+                i.addClass('active');
             } else {
-                a.classList.remove('active');
+                i.removeClass('active');
             }
         });
         a.classList.add('busy');
