@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Session;
 
@@ -17,7 +17,9 @@ class NativeSessionStorage extends BaseNativeSessionStorage
             return false;
         }
 
+        session_destroy();
         session_id($id);
+        session_start();
 
         $this->loadSession();
 
