@@ -17,15 +17,7 @@ class NativeSessionStorage extends BaseNativeSessionStorage
             return false;
         }
 
-        $data = session_encode();
-        var_dump(session_status());
-        session_write_close();
-        var_dump(session_status());
-        session_id($id);
-        session_start();
-        var_dump(session_status());
-        session_decode($data);
-var_dump($id, session_id());die();
+        @session_id($id);
         $this->loadSession();
 
         setcookie($this->getName(), $id, 0, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));
