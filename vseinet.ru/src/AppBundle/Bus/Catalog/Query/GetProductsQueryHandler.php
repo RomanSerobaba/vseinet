@@ -3,6 +3,7 @@
 namespace AppBundle\Bus\Catalog\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
+use AppBundle\Doctrine\ORM\Query\DTORSM;
 
 class GetProductsQueryHandler extends MessageHandler
 {
@@ -14,32 +15,39 @@ class GetProductsQueryHandler extends MessageHandler
             $userId = 0;
         }
 
-        $q = $this->getDoctrine()->getManager()->createQuery("
+        $q = $this->getDoctrine()->getManager()->createNativeQuery("
             SELECT
-                NEW AppBundle\Bus\Catalog\Query\DTO\Product (
-                    bp.id,
-                    bp.name,
-                    bpi.basename,
-                    COALESCE(p.productAvailabilityCode, p0.productAvailabilityCode),
-                    COALESCE(p.price, p0.price),
-                    COALESCE(p.priceType, p0.priceType),
-                    bpd.shortDescription,
-                    bp.minQuantity,
-                    bp.updatedAt,
-                    ppb.quantity
-                )
-            FROM AppBundle:BaseProduct AS bp
-            INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id
-            LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
-            INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0
-            LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-            LEFT OUTER JOIN AppBundle:ProductPricetagBuffer AS ppb WITH ppb.baseProductId = bp.id AND ppb.createdBy = :userId
-            WHERE bp.id IN (:ids)
-        ");
-        $q->setParameter('ids', $query->ids);
-        $q->setParameter('geoCityId', $this->getGeoCity()->getId());
-        $q->setParameter('userId', $userId);
-        $products = $q->getResult('IndexByHydrator');
+                b.id,
+                b.name,
+                bpi.basename AS base_src,
+                COALESCE ( p2.product_availability_code, p.product_availability_code ) AS availability,
+                COALESCE ( p2.price, p.price ) AS price,
+                COALESCE ( p2.price_type, p.price_type ) AS price_type,
+                bpd.short_description AS description,
+                b.min_quantity,
+                b.updated_at,
+                ppb.quantity AS pricetag_quantity
+            FROM
+                base_product AS b
+                INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )
+                LEFT JOIN product AS p2 ON ( p2.base_product_id = b.ID AND p2.geo_city_id = :geoCityId )
+                INNER JOIN product AS p ON ( p.base_product_id = b.ID AND p.geo_city_id = 0 )
+                LEFT JOIN base_product_image AS bpi ON ( bpi.base_product_id = b.ID AND bpi.sort_order = 1 )
+                LEFT JOIN product_pricetag_buffer AS ppb ON ( ppb.base_product_id = b.ID AND ppb.created_by = :userId )
+                JOIN UNNEST ( :ids::INT [] ) WITH ORDINALITY T ( ID, ord ) ON b.ID = T.ID
+            ORDER BY
+                T.ord
+        ", new DTORSM(DTO\Product::class))
+            ->setParameters([
+                'geoCityId' => $this->getGeoCity()->getId(),
+                'userId' => $userId,
+                'ids' => '{'.implode(',', $query->ids).'}',
+            ]);
+        $products = [];
+
+        foreach ($q->getResult('DTOHydrator') as $product) {
+            $products[$product->id] = $product;
+        }
 
         $sorted = [];
         foreach ($query->ids as $id) {
