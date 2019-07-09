@@ -17,9 +17,7 @@ class NativeSessionStorage extends BaseNativeSessionStorage
             return false;
         }
 
-        session_write_close();
         session_id($id);
-        session_start();
 
         $this->loadSession();
 
