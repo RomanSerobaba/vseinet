@@ -19,7 +19,7 @@ class NativeSessionStorage extends BaseNativeSessionStorage
 
         $data = session_encode();
         session_write_close();
-        session_id($id);
+        var_dump(session_id($id));
         session_start();
         session_decode($data);
 var_dump($id, session_id());die();
