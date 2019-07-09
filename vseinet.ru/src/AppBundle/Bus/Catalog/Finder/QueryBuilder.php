@@ -275,7 +275,7 @@ class QueryBuilder extends ContainerAware
         ";
 
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
-
+print_r($results);
         $ids = [];
         if (!empty($results[0])) {
             $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
