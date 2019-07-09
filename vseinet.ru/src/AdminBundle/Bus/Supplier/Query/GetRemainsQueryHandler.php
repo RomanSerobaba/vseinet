@@ -60,7 +60,7 @@ class GetRemainsQueryHandler extends MessageHandler
             LEFT OUTER JOIN \"user\" AS u ON u.id = oe.user_id
             LEFT OUTER JOIN person AS p ON p.id = u.person_id
             WHERE sp.base_product_id = :base_product_id
-            ORDER BY sp.product_availability_code DESC, sp.updated_at DESC
+            ORDER BY sp.product_availability_code DESC, sp.price, sp.updated_at DESC
         ", new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $remains = array_merge($remains, $q->getResult('DTOHydrator'));
