@@ -16,9 +16,10 @@ class NativeSessionStorage extends BaseNativeSessionStorage
         if (headers_sent()) {
             return false;
         }
-        print_r(session_save_path());die();
 
+        $data = session_encode();
         session_write_close();
+        decode($data);
         session_id($id);
         session_start();
 
