@@ -22,7 +22,7 @@ class NativeSessionStorage extends BaseNativeSessionStorage
         session_id($id);
         session_start();
         session_decode($data);
-print_r($data);print_r(session_encode());die();
+print_r($id);print_r(session_id());die();
         $this->loadSession();
 
         setcookie($this->getName(), $id, 0, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));
