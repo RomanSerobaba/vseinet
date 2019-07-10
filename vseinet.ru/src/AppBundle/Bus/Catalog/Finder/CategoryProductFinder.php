@@ -268,7 +268,7 @@ class CategoryProductFinder extends AbstractProductFinder
                 FROM AppBundle:CategorySection AS cs
                 WHERE cs.id IN (:ids)
             ");
-            $q->setParameter('ids', $ids);
+            $q->setParameter('ids', array_keys($categorySectionId2count));
             $categorySections = $q->getResult('IndexByHydrator');
         }
         $categorySections[0] = new DTO\CategorySection(0, '');
