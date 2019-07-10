@@ -17,7 +17,7 @@ class NativeSessionStorage extends BaseNativeSessionStorage
             return false;
         }
 
-        @session_id($id);
+        session_id($id);
         $this->loadSession();
 
         setcookie($this->getName(), $id, 0, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));
