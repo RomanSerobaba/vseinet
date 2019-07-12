@@ -140,12 +140,14 @@ class CategoryProductFinder extends AbstractProductFinder
 
         $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
 
+        $hasDetailRanges = false;
         if ($this->category->isTplEnabled) {
             $details = $this->getDetails();
             if (!empty($details)) {
                 $qb->facet('FACET category_section_id', $qb->getCriteriaCategorySections());
                 foreach ($details as $id => $detail) {
                     if (DetailType::CODE_NUMBER === $detail->typeCode) {
+                        $hasDetailRanges = true;
                         $qb->select($qb->getSelectDetailNumber($id), $qb->getCriteriaDetailNumber($id));
                     } elseif (DetailType::CODE_ENUM === $detail->typeCode) {
                         $qb->facet('FACET details.'.$id, $qb->getCriteriaDetailEnum($id));
@@ -178,7 +180,7 @@ class CategoryProductFinder extends AbstractProductFinder
 
         $results = array_slice($results, 5);
 
-        if ($this->category->isTplEnabled) {
+        if ($this->category->isTplEnabled && $hasDetailRanges) {
             foreach ($results as $index => $result) {
                 if (array_key_exists('total', $result[0])) {
                     $results = array_slice($results, $index + 1);
