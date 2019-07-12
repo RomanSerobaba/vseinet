@@ -416,8 +416,8 @@ class QueryBuilder extends ContainerAware
         }
 
         if (!empty($categoryIds[-1])) {
-            if (!empty($categories[-1]->includeIds)) {
-                $categoryIds = array_merge($categoryIds, $categories[-1]->includeIds);
+            if (!empty($categoryIds[-1]->includeIds)) {
+                $categoryIds = array_merge($categoryIds, $categoryIds[-1]->includeIds);
             }
             unset($categoryIds[-1]);
         }
