@@ -24,7 +24,6 @@ pipelines:
       - step:
           name: Production
           deployment: production
-          trigger: automatic
           script:
             - pipe: atlassian/ssh-run:0.2.0
               variables:
