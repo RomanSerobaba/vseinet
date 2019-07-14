@@ -23,10 +23,10 @@ class ReceiptsOfProductCommandHandler extends MessageHandler
 
         $geoCity = $this->getGeoCity();
         $representative = $this->get('representative.identity')->getRepresentative();
-        $address = new Schema\Address(['geoCity' => $geoCity->getId()]);
-
+        $address = new Schema\Address();
+        $address->setGeoCityId($geoCity->getId());
         $params = [
-            'typeCode' => OrderTypeCode::SITE,
+            'typeCode' => OrderTypeCode::REQUEST,
             'client' => $command->userData,
             'geoCityId' => $address->geoCityId,
             'geoPointId' => $representative->getGeoPointId(),

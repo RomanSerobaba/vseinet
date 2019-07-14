@@ -1,0 +1,33 @@
+# This is a sample build configuration for PHP.
+# Check our guides at https://confluence.atlassian.com/x/e8YWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# image: php:7.3.6
+pipelines:
+  default:
+    - step:
+        caches:
+          - composer
+        deployment: test
+        script:
+          - cd vseinet.ru
+  branches:
+    master:
+      - step:
+          name: Test
+          deployment: test
+          script:
+            - pipe: atlassian/ssh-run:0.2.0
+              variables:
+                SSH_USER: $USER
+                SERVER: $SERVER
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php72 /usr/local/bin/composer install; php72 bin/console app:config:bus-services; yarn build;'
+      - step:
+          name: Production
+          deployment: production
+          trigger: automatic
+          script:
+            - pipe: atlassian/ssh-run:0.2.0
+              variables:
+                SSH_USER: $USER
+                SERVER: $SERVER
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; composer install; php bin/console app:config:bus-services; yarn build;'

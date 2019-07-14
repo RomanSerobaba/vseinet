@@ -7,6 +7,7 @@ use AppBundle\Entity\Contact;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Comuser;
 use AppBundle\Enum\ContactTypeCode;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class IdentifyCommandHandler extends MessageHandler
 {
@@ -56,24 +57,36 @@ class IdentifyCommandHandler extends MessageHandler
                 ]);
                 if ($user instanceof User) {
                     $this->updateUserContacts($command->userData, $user);
-                    // var_dump($command->userData);
                 }
             }
         }
 
         if (null === $command->userData->userId) {
-            $comuser = $em->getRepository(Comuser::class)->findOneBy([
-                'phone' => [$command->userData->phone, $command->userData->additionalPhone],
-            ]);
-            if (!$comuser instanceof Comuser) {
-                $comuser = new Comuser();
-                $comuser->setFullname($command->userData->fullname);
-                $comuser->setPhone($command->userData->phone);
-                $comuser->setAdditionalPhone($command->userData->additionalPhone);
-                $comuser->setEmail($command->userData->email);
-                $em->persist($comuser);
+            $phones = [];
+
+            if (!empty($command->userData->phone)) {
+                $phones[] = $command->userData->phone;
             }
-            $command->userData->comuserId = $comuser->getId();
+
+            if (!empty($command->userData->additionalPhone)) {
+                $phones[] = $command->userData->additionalPhone;
+            }
+
+            if (!empty($phones)) {
+                $comuser = $em->getRepository(Comuser::class)->findOneBy([
+                    'phone' => $phones,
+                ]);
+
+                if (!$comuser instanceof Comuser) {
+                    $comuser = new Comuser();
+                    $comuser->setFullname($command->userData->fullname);
+                    $comuser->setPhone($command->userData->phone);
+                    $comuser->setAdditionalPhone($command->userData->additionalPhone);
+                    $comuser->setEmail($command->userData->email);
+                    $em->persist($comuser);
+                }
+                $command->userData->comuserId = $comuser->getId();
+            }
         }
 
         $em->flush();
@@ -85,22 +98,24 @@ class IdentifyCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $contact = $em->getRepository(Contact::class)->findOneBy([
-            'personId' => $user->getPersonId(),
-            'value' => $userData->phone,
-        ]);
-        if (!$contact instanceof Contact) {
-            $contact = new Contact();
-            if (9 == $userData->phone[0]) {
-                $contact->setContactTypeCode(ContactTypeCode::MOBILE);
-            } else {
-                $contact->setContactTypeCode(ContactTypeCode::PHONE);
+        if ($userData->phone) {
+            $contact = $em->getRepository(Contact::class)->findOneBy([
+                'personId' => $user->getPersonId(),
+                'value' => $userData->phone,
+            ]);
+            if (!$contact instanceof Contact) {
+                $contact = new Contact();
+                if (9 == $userData->phone[0]) {
+                    $contact->setContactTypeCode(ContactTypeCode::MOBILE);
+                } else {
+                    $contact->setContactTypeCode(ContactTypeCode::PHONE);
+                }
+                $contact->setValue($userData->phone);
+                $contact->setPersonId($user->getPersonId());
+                $em->persist($contact);
             }
-            $contact->setValue($userData->phone);
-            $contact->setPersonId($user->getPersonId());
-            $em->persist($contact);
+            $userData->contactIds[] = $contact->getId();
         }
-        $userData->contactIds[] = $contact->getId();
 
         if ($userData->additionalPhone) {
             $contact = $em->getRepository(Contact::class)->findOneBy([
@@ -114,7 +129,7 @@ class IdentifyCommandHandler extends MessageHandler
                 } else {
                     $contact->setContactTypeCode(ContactTypeCode::PHONE);
                 }
-                $contact->setValue($userData->value);
+                $contact->setValue($userData->additionalPhone);
                 $contact->setPersonId($user->getPersonId());
                 $em->persist($contact);
             }
