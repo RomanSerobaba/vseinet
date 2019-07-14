@@ -5,32 +5,32 @@
             <div class="sheet">
                 {% if banner.type == 1 %}
                     <a rel="nofollow" href="{{ banner.url }}">
-                        <div 
-                            class="photoBlock blockPc" 
-                            data-pos-x="{{ banner.posBackgroundPcX }}" 
-                            style="max-width: 845px; width: 845px; height: 280px;{% if banner.imgBackgroundPc %} 
+                        <div
+                            class="photoBlock blockPc"
+                            data-pos-x="{{ banner.posBackgroundPcX }}"
+                            style="max-width: 845px; width: 845px; height: 280px;{% if banner.imgBackgroundPc %}
                                 background: url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
                         >
                         </div>
-                        <div 
+                        <div
                             class="photoBlock blockTablet"
                             data-pos-x="{{ banner.posBackgroundTabletX }}"
-                            style="max-width: 750px; width: 750px; height: 280px;{% if banner.imgBackgroundTablet %} 
+                            style="max-width: 750px; width: 750px; height: 280px;{% if banner.imgBackgroundTablet %}
                                 background: url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
                         >
                         </div>
-                        <div 
+                        <div
                             class="photoBlock blockPhone"
                             data-pos-x="{{ banner.posBackgroundPhoneX }}"
-                            style="min-width: 320px; height: 240px;{% if banner.imgBackgroundPhone %} 
+                            style="min-width: 320px; height: 240px;{% if banner.imgBackgroundPhone %}
                                 background: url({{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
                         >
                         </div>
                     </a>
                 {% endif %}
                 {% if banner.type == 2 %}
-                    <div 
-                        class="photoBlock blockPc" 
+                    <div
+                        class="photoBlock blockPc"
                         data-pos-x="{{ banner.posBackgroundPcX }}"
                         style="max-width: 845px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPc %} url({{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
                     >
@@ -43,14 +43,14 @@
                             {% endif %}
                         </div>
                         {% if banner.imgPc %}
-                            <img 
-                                src="{{ asset(imagedir ~ banner.imgPc) }}" 
+                            <img
+                                src="{{ asset(imagedir ~ banner.imgPc) }}"
                                 alt=""
                                 style="right:{{ banner.imgPosPcX }}px; top:{{ banner.imgPosPcY }}px;"
                             />
                         {% endif %}
                     </div>
-                    <div 
+                    <div
                         class="photoBlock blockTablet"
                         data-pos-x="{{ banner.posBackgroundTabletX }}"
                         style="max-width: 750px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundTablet %} url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
@@ -64,14 +64,14 @@
                             {% endif %}
                         </div>
                         {% if banner.imgTablet %}
-                            <img 
-                                src="{{ url(imagedir ~ banner.imgTablet) }}" 
+                            <img
+                                src="{{ url(imagedir ~ banner.imgTablet) }}"
                                 alt=""
                                 style="right: {{ banner.imgPosTabletX }}px; top: {{ banner.imgPosTabletY }}px;"
                             />
                         {% endif %}
                     </div>
-                    <div 
+                    <div
                         class="photoBlock blockPhone"
                         data-pos-x="{{ banner.posBackgroundPhoneX }}"
                         style="max-width: 480px; height: 240px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
@@ -85,8 +85,8 @@
                             {% endif %}
                         </div>
                         {% if banner.imgPhone %}
-                            <img 
-                                src="{{ asset(imagedir ~ banner.imgPhone) }}" 
+                            <img
+                                src="{{ asset(imagedir ~ banner.imgPhone) }}"
                                 alt=""
                                 style="right: {{ banner.imgPosPhoneX }}px; top: {{ banner.imgPosPhoneY }}px;"
                             />
@@ -96,8 +96,8 @@
                 {% if banner.type == 3 %}
                     {% set product = products[banner.id][0] %}
                     <div class="one-product">
-                        <div 
-                            class="photoBlock blockPc" 
+                        <div
+                            class="photoBlock blockPc"
                             data-pos-x="{{ banner.posBackgroundPcX }}"
                             style="max-width: 845px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPc %} url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
                         >
@@ -129,7 +129,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div 
+                        <div
                             class="photoBlock blockTablet"
                             data-pos-x="{{ banner.posBackgroundTabletX }}"
                             style="max-width: 750px; min-width: 700px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundTablet %} url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
@@ -162,7 +162,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div 
+                        <div
                             class="photoBlock blockPhone"
                             data-pos-x="{{ banner.posBackgroundPhoneX }}"
                             style="max-width: 480px; min-width: 320px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
@@ -200,7 +200,7 @@
                 {% if banner.type == 4 %}
                     {% set productList = products[banner.id] %}
                     <div class="multi-product">
-                        <div 
+                        <div
                             class="photoBlock blockPc"
                             data-pos-x="{{ banner.posBackgroundPcX }}"
                             style="max-width: 845px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPc %} url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
@@ -227,7 +227,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div 
+                        <div
                             class="photoBlock blockTablet"
                             data-pos-x="{{ banner.posBackgroundTabletX }}"
                             style="max-width: 750px; min-width: 480px; height: 280px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundTablet %} url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
@@ -254,7 +254,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div 
+                        <div
                             class="photoBlock blockPhone"
                             data-pos-x="{{ banner.posBackgroundPhoneX }}"
                             style="max-width: 480px; min-width: 320px; height: 240px; background: {{ banner.backgroundColor }}{% if banner.imgBackgroundPhone %} url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
@@ -288,7 +288,7 @@
     </div>
     <div class="tabs">
         {% for banner in banners %}
-            <div 
+            <div
                 class="tab tabExample{% if banner.tabIsFixed %} fixed{% endif %}"
                 style="background:{% if banner.tabImg %} url('{{ asset(imagedir ~ banner.tabImg) }}') {{ banner.tabImgPosX }}px {{ banner.tabImgPosY }}px no-repeat{% endif %} {{ banner.tabBackgroundColor }}">
                 {% if banner.tabText %}
