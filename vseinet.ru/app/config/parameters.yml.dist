@@ -27,7 +27,7 @@ parameters:
 
     images.path: ''
     brands.path: ''
-    banner.path: ''
+    banners.images.web_path: ''
 
     default.geo_city_id: 1
     default.geo_point_id: 141
