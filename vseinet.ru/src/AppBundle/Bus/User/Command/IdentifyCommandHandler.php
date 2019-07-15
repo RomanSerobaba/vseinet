@@ -85,8 +85,6 @@ class IdentifyCommandHandler extends MessageHandler
                     $em->persist($comuser);
                 }
                 $command->userData->comuserId = $comuser->getId();
-            } else {
-                $command->userData->comuserId = $this->getParameter('const.retail.user.id');
             }
         }
 

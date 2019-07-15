@@ -2,4 +2,4 @@ parameters:
     const.payment.credit.threshold: 300000
     const.delivery.post.cost: 40000
     const.delivery.transport_company.cost: 20000
-    const.retail.user.id: 2
+    const.retail.financial_counteragent.id: 2
