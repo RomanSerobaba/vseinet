@@ -76,7 +76,6 @@ class IdentifyCommandHandler extends MessageHandler
                 $comuser = $em->getRepository(Comuser::class)->findOneBy([
                     'phone' => $phones,
                 ]);
-
                 if (!$comuser instanceof Comuser) {
                     $comuser = new Comuser();
                     $comuser->setFullname($command->userData->fullname);
@@ -86,6 +85,8 @@ class IdentifyCommandHandler extends MessageHandler
                     $em->persist($comuser);
                 }
                 $command->userData->comuserId = $comuser->getId();
+            } else {
+                $command->userData->comuserId = $this->getParameter('const.retail.user.id');
             }
         }
 
