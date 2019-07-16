@@ -29,14 +29,15 @@ class GetReservesQueryHandler extends MessageHandler
                 grrc.order_item_id,
                 grrc.destination_geo_room_id,
                 COALESCE(s.code, 'VS') AS code,
-                sd.number,
-                sd.created_at,
+                a.number,
+                a.created_at,
                 grrc.delta,
                 si.purchase_price,
                 grrc.goods_condition_code,
                 grrc.goods_pallet_id
             FROM goods_reserve_register_current AS grrc
             INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
+            INNER JOIN any_doc AS a ON a.did = si.parent_did
             LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did
             LEFT OUTER JOIN supplier AS s ON s.id = sd.supplier_id
             WHERE grrc.base_product_id = :base_product_id

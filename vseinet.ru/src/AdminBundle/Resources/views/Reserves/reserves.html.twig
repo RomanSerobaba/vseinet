@@ -103,7 +103,7 @@
                     </tr>
                     {% for supply in geoRoom.supplies %}
                         <tr class="supply">
-                            <td><a href="/admin/supplies/{{ supply.supplyId }}">{{ supply.supplierCode }}-{{ supply.supplyNumber }} от {{ supply.supplyCreatedAt|date('d.m.Y') }}</a></td>
+                            <td>{% if 1 !== supply.supplyId %}<a href="/admin/supplies/{{ supply.supplyId }}">{% endif %}{{ supply.supplierCode }}-{{ supply.supplyNumber }} от {{ supply.supplyCreatedAt|date('d.m.Y') }}{% if 1 !== supply.supplyId %}</a>{% endif %}</td>
                             <td>
                                 {{ supply.freeDelta }}
                             </td>
