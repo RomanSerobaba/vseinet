@@ -24,11 +24,11 @@ class GetReservesQueryHandler extends MessageHandler
 
         $q = $em->createNativeQuery("
             SELECT
-                si.parent_did,
+                si.parent_did AS did,
                 grrc.geo_room_id,
                 grrc.order_item_id,
                 grrc.destination_geo_room_id,
-                COALESCE(s.code, 'VS'),
+                COALESCE(s.code, 'VS') AS code,
                 sd.number,
                 sd.created_at,
                 grrc.delta,
