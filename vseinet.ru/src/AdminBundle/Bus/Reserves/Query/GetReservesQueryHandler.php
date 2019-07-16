@@ -24,11 +24,11 @@ class GetReservesQueryHandler extends MessageHandler
 
         $q = $em->createNativeQuery("
             SELECT
-                sd.did,
+                si.parent_did,
                 grrc.geo_room_id,
                 grrc.order_item_id,
                 grrc.destination_geo_room_id,
-                s.code,
+                COALESCE(s.code, 'VS'),
                 sd.number,
                 sd.created_at,
                 grrc.delta,
@@ -37,8 +37,8 @@ class GetReservesQueryHandler extends MessageHandler
                 grrc.goods_pallet_id
             FROM goods_reserve_register_current AS grrc
             INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
-            INNER JOIN supply_doc AS sd ON sd.did = si.parent_did
-            INNER JOIN supplier AS s ON s.id = sd.supplier_id
+            LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did
+            LEFT OUTER JOIN supplier AS s ON s.id = sd.supplier_id
             WHERE grrc.base_product_id = :base_product_id
         ", new DTORSM(DTO\Reserve::class, DTORSM::ARRAY_INDEX));
         $q->setParameter('base_product_id', $product->getId());
