@@ -38,6 +38,11 @@ class Product
     public $priceType;
 
     /**
+     * @Assert\Type("string")
+     */
+    public $priceTypeName;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $description;

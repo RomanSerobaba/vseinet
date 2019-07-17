@@ -49,6 +49,11 @@ class BaseProduct
     public $priceType;
 
     /**
+     * @Assert\Type("string")
+     */
+    public $priceTypeName;
+
+    /**
      * @Assert\Type("integer")
      */
     public $minQuantity;
