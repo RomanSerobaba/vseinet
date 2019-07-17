@@ -21,7 +21,7 @@ class GetQueryHandler extends MessageHandler
         $params = [];
 
         if (!empty($query->geoPointId)) {
-            $geoPoint = $em->getRepository(GeoPoint::class)->find($geoPointId);
+            $geoPoint = $em->getRepository(GeoPoint::class)->find($query->geoPointId);
 
             if ($geoPoint instanceof GeoPoint && (empty($query->geoCityId) || $query->geoCityId == $geoPoint->getGeoCityId())) {
                 $geoPointId = $geoPoint->getId();

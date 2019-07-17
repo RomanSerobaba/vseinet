@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use AppBundle\Entity\Cart;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
@@ -26,15 +29,28 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     protected $session;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $security;
+
+    /**
      * Constructor
      *
      * @param   RouterInterface $router
      * @param   Session $session
+     * @param   EntityManagerInterface $em
      */
-    public function __construct(RouterInterface $router, Session $session)
+    public function __construct(RouterInterface $router, Session $session, EntityManagerInterface $em, TokenStorageInterface $security)
     {
         $this->router  = $router;
         $this->session = $session;
+        $this->em = $em;
+        $this->security = $security;
     }
 
     /**
@@ -52,6 +68,22 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             'password' => $request->request->get('_password'),
         ];
         $this->session->set('credentials', $credentials);
+
+        $userId = $this->security->getToken()->getUser()->getId();
+        foreach ($this->session->get('cart', []) as $baseProductId => $cartItem) {
+            $cart = $this->em->getRepository(Cart::class)->findOneBy(['userId' => $userId, 'baseProductId' => $baseProductId,]);
+
+            if (!$cart instanceof Cart) {
+                $cart = new Cart();
+                $cart->setUserId($userId);
+                $cart->setBaseProductId($baseProductId);
+                $cart->setQuantity(0);
+            }
+
+            $cart->setQuantity($cart->getQuantity() + $cartItem['quantity']);
+            $this->em->persist($cart);
+        }
+        $this->em->flush();
 
         if ($request->isXmlHttpRequest()) {
             $response = new Response(json_encode(['success' => true]));
