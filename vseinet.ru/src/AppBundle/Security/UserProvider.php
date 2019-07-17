@@ -57,11 +57,17 @@ class UserProvider implements UserProviderInterface
                 throw new UsernameNotFoundException(sprintf('Пользователь с мобильным телефоном %s не найден', $phone));
             }
         } else {
-            $contact = $this->em->getRepository(Contact::class)->findOneBy([
-                'contactTypeCode' => ContactTypeCode::EMAIL,
+            $q = $this->em->createQuery("
+                SELECT c
+                FROM AppBundle:Contact AS c
+                WHERE c.contactTypeCode = :contactTypeCode_EMAIL AND c.isMain = TRUE AND LOWER(c.value) = LOWER(:value)
+            ");
+            $q->setParameters([
+                'contactTypeCode_EMAIL' => ContactTypeCode::EMAIL,
                 'value' => $username,
-                'isMain' => true,
             ]);
+            $contact = $q->getOneOrNullResult();
+
             if (!$contact instanceof Contact) {
                 throw new UsernameNotFoundException(sprintf('Пользователь с email %s не найден', $username));
             }

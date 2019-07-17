@@ -21,7 +21,7 @@
         {{ macro.availability(product) }}
     </div>
     {% if isAvailable %}
-        <div class="price">
+        <div class="price{% if app.userIsEmployee %} price-{{ baseProduct.priceType }}{% endif %}">
             <b class="old">{{ product.price|discount_price|price_format }} <span class="RUR">Р</span></b>
             <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
         </div>
