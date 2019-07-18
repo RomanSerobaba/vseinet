@@ -30,7 +30,7 @@ class GetRevisionsQueryHandler extends MessageHandler
                 ptc.price_time,
                 ptc.requested_at,
                 ptc.status,
-                CASE WHEN ptc.competitor_price IS NULL OR c.period IS NOT NULL AND ptc.price_time + INTERVAL c.period || \' day\' < NOW() THEN :void WHEN ptc.competitor_price > p.price THEN :ice ELSE :warning END AS state,
+                CASE WHEN ptc.competitor_price IS NULL OR c.period IS NOT NULL AND ptc.price_time + (c.period || \' day\')::INTERVAL < NOW() THEN :void WHEN ptc.competitor_price > p.price THEN :ice ELSE :warning END AS state,
                 ptc.server_response,
                 false AS read_only
             FROM product_to_competitor AS ptc
@@ -55,7 +55,7 @@ class GetRevisionsQueryHandler extends MessageHandler
                 sp.updated_at AS price_time,
                 NULL AS requested_at,
                 :completed::product_to_competitor_status AS status,
-                CASE WHEN ptc.competitor_price IS NULL OR c.period IS NOT NULL AND ptc.price_time + INTERVAL c.period || \' day\' < NOW() THEN :void WHEN ptc.competitor_price > p.price THEN :ice ELSE :warning END AS state,
+                CASE WHEN ptc.competitor_price IS NULL OR c.period IS NOT NULL AND ptc.price_time + (c.period || \' day\')::INTERVAL < NOW() THEN :void WHEN ptc.competitor_price > p.price THEN :ice ELSE :warning END AS state,
                 200 AS server_response,
                 true AS read_only
             FROM supplier_product AS sp
