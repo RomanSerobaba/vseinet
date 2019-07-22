@@ -30,7 +30,7 @@ class IdentifyCommandHandler extends MessageHandler
             $comuser = $em->getRepository(Comuser::class)->find($command->userData->comuserId);
 
             if (!$comuser instanceof Comuser) {
-                throw new NotFoundHttpException(sprintf('Гостевой пользователь с идентификатором %d не найден', $command->userData->userId));
+                throw new NotFoundHttpException(sprintf('Гостевой пользователь с идентификатором %d не найден', $command->userData->comuserId));
             }
 
             $comuser->setFullname($command->userData->fullname ?? $comuser->getFullname());
