@@ -273,9 +273,9 @@ class CreateFormType extends AbstractType
                     p.cashlessPercent
                 )
             FROM AppBundle:PaymentType AS p
-            WHERE p.isActive = TRUE
+            WHERE p.isActive = TRUE AND p.code != :paymentTypeCode_BANKCARD
             ORDER BY p.code
-        ");
+        ")->setParameters(['paymentTypeCode_BANKCARD' => PaymentTypeCode::BANKCARD,]);
         $paymentTypes = $q->getResult('IndexByHydrator');
 
         if (!is_object($user) || !$user->isEmployee()) {
