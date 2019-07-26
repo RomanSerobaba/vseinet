@@ -38,7 +38,7 @@ class GetSummaryQueryHandler extends MessageHandler
 
             if ($query->needLifting) {
                 if ($query->hasLift) {
-                    $floor = 1;
+                    $floor = 2;
                 } else {
                     $floor = $query->floor;
                 }
