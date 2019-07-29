@@ -501,6 +501,12 @@ H4 A.competitor {
     padding-left: 20px;
     text-align: left;
 }
+.point_reserve .type .pricetag-price {
+    float:right;
+}
+.point_reserve .type .pricetag-price.handmade {
+    color:violet;
+}
 
 .point_reserve .room {
     text-align: center;

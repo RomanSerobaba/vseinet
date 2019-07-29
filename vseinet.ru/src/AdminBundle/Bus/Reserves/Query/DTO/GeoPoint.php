@@ -58,11 +58,23 @@ class GeoPoint
      */
     public $issuedTransitDelta = 0;
 
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $pricetag;
 
-    public function __construct($id, $name, $geoCityId)
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $pricetagIsHandmade;
+
+
+    public function __construct($id, $name, $geoCityId, $pricetag, $pricetagIsHandmade)
     {
         $this->id = $id;
         $this->name = $name;
         $this->geoCityId = $geoCityId;
+        $this->pricetag = $pricetag;
+        $this->pricetagIsHandmade = $pricetagIsHandmade;
     }
 }

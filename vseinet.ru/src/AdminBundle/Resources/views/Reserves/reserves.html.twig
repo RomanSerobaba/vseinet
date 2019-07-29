@@ -58,7 +58,7 @@
             {% for geoPointId in geoCity.geoPointIds %}
                 {% set geoPoint = reserves.geoPoints[geoPointId] %}
                 <tr class="type">
-                    <td>{{ geoPoint.name }}</td>
+                    <td><span class="pricetag-price{% if geoPoint.pricetagIsHandmade %} handmade{% endif %}">{{ geoPoint.pricetag|price_format }}</span>{{ geoPoint.name }}</td>
                     <td>
                         {{ geoPoint.freeDelta }}
                     </td>

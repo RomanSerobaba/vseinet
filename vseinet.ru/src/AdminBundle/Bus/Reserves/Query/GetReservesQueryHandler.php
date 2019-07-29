@@ -63,13 +63,17 @@ class GetReservesQueryHandler extends MessageHandler
                 gp.id AS geo_point_id,
                 gp.name AS geo_point_name,
                 gc.id AS geo_city_id,
-                gc.name AS geo_city_name
+                gc.name AS geo_city_name,
+                pp.price AS pricetag,
+                pp.is_handmade AS pricetag_is_handmade
             FROM geo_room AS gr
             INNER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
             INNER JOIN geo_city AS gc ON gc.id = gp.geo_city_id
+            LEFT OUTER JOIN product_pricetag AS pp ON pp.geo_point_id = gp.id AND pp.base_product_id = :base_product_id
             WHERE gr.id IN (:ids)
         ", new DTORSM(DTO\GeoObject::class));
         $q->setParameter('ids', $roomIds);
+        $q->setParameter('base_product_id', $product->getId());
         $geoObjects = $q->getResult('DTOHydrator');
 
         $geoCities = [];
@@ -84,7 +88,7 @@ class GetReservesQueryHandler extends MessageHandler
             $geoCities[$geoObject->geoCityId]->geoPointIds[$geoObject->geoPointId] = $geoObject->geoPointId;
 
             if (empty($geoPoints[$geoObject->geoPointId])) {
-                $geoPoints[$geoObject->geoPointId] = new DTO\GeoPoint($geoObject->geoPointId, $geoObject->geoPointName, $geoObject->geoCityId);
+                $geoPoints[$geoObject->geoPointId] = new DTO\GeoPoint($geoObject->geoPointId, $geoObject->geoPointName, $geoObject->geoCityId, $geoObject->pricetag, $geoObject->pricetagIsHandmade);
             }
 
             $geoPoints[$geoObject->geoPointId]->geoRoomIds[$geoObject->geoRoomId] = $geoObject->geoRoomId;
