@@ -37,22 +37,22 @@
             <tr class="category">
                 <td>{{ geoCity.name }}</td>
                 <td>
-                    {{ geoCity.freeDelta }}
+                    {# {{ geoCity.freeDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.freeTransitDelta }}
+                    {# {{ geoCity.freeTransitDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.reservedDelta }}
+                    {# {{ geoCity.reservedDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.reservedTransitDelta }}
+                    {# {{ geoCity.reservedTransitDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.issuedDelta }}
+                    {# {{ geoCity.issuedDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.issuedTransitDelta }}
+                    {# {{ geoCity.issuedTransitDelta }} #}
                 </td>
             </tr>
             {% for geoPointId in geoCity.geoPointIds %}
@@ -60,22 +60,22 @@
                 <tr class="type">
                     <td><span class="pricetag-price{% if geoPoint.pricetagIsHandmade %} handmade{% endif %}">{{ geoPoint.pricetag|price_format }}</span>{{ geoPoint.name }}</td>
                     <td>
-                        {{ geoPoint.freeDelta }}
+                        {# {{ geoPoint.freeDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.freeTransitDelta }}
+                        {# {{ geoPoint.freeTransitDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.reservedDelta }}
+                        {# {{ geoPoint.reservedDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.reservedTransitDelta }}
+                        {# {{ geoPoint.reservedTransitDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.issuedDelta }}
+                        {# {{ geoPoint.issuedDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.issuedTransitDelta }}
+                        {# {{ geoPoint.issuedTransitDelta }} #}
                     </td>
                 </tr>
                 {% for geoRoomId in geoPoint.geoRoomIds %}

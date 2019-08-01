@@ -518,6 +518,8 @@ H4 A.competitor {
 }
 .point_reserve .supply {
     text-align: center;
+    font-size: 0.8em;
+    color: #AAAAAA;
 }
 .point_reserve .supply TD:first-child  {
     padding-left: 60px;
