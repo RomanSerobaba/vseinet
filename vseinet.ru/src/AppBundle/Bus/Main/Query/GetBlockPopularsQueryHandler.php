@@ -56,9 +56,14 @@ class GetBlockPopularsQueryHandler extends MessageHandler
                 INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
                 LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
                 INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId
-                LEFT JOIN AppBundle:GeoPoint AS gp WITH gp.geoCityId = :geoCityId
-                LEFT JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id AND r.isActive = true
-                WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds) AND (p.baseProductId IS NOT NULL OR r.geoPointId IS NULL)
+                WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds)
+                GROUP BY bp.id, c.id, bpi.id, p.price, p.baseProductId
+                HAVING p.baseProductId IS NOT NULL OR FIRST(
+                    SELECT r.geoPointId
+                    FROM AppBundle:GeoPoint AS gp
+                    JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
+                    WHERE gp.geoCityId = :geoCityId AND r.isActive = true
+                ) IS NULL
             ");
             $q->setParameter('randomId', $randomId);
             $q->setParameter('categoryIds', $categoryIds);
