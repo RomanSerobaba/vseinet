@@ -516,7 +516,7 @@ H4 A.competitor {
     padding-left: 40px;
     text-align: left;
 }
-.point_reserve .supply {
+.point_reserve .supply TD {
     text-align: center;
     font-size: 0.8em;
     color: #AAAAAA;
