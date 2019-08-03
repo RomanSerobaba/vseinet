@@ -25,8 +25,8 @@ parameters:
 
     cookie_secure: true
 
-    images.path: ''
-    brands.path: ''
+    products.images.web_path: ''
+    brands.logos.web_path: ''
     banners.images.web_path: ''
 
     default.geo_city_id: 1

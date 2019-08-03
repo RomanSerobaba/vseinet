@@ -171,7 +171,9 @@ $(function() {
             },
             method: 'get',
             load: function() {
-                var thumbs = this.find('.thumbs img')
+                var thumbsWrapper = this.find('.thumbs');
+                var thumbs = this.find('.thumbs img');
+                var ups = this.find('.thumbs .up');
                 if (thumbs.length) {
                     var view = this.find('.view img');
                     var indicator = $('<div/>').insertAfter(view);
@@ -187,6 +189,18 @@ $(function() {
                             view.click();
                         }
                         image.src = $(this).addClass('current').attr('rel');
+                    });
+                    ups.click(function() {
+                        var thumb = $(this).closest('.thumb');
+                        sp.post("{{ url('product_photo_set_first') }}", {
+                            id: thumb.data('id')
+                        }).then(function(response) {
+                            thumb.prependTo(thumbsWrapper);
+                            thumbsWrapper.find('.thumb img').each(function(index){
+                                $(this).prop('alt', 'Фото №' + index);
+                                this.dataset.index = index;
+                            });
+                        });
                     });
                     view.click(function() {
                         var thumb = thumbs.filter('.current').parent().next().find('img');

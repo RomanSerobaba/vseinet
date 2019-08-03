@@ -98,7 +98,7 @@ class ProductController extends Controller
 
                     return $this->json([]);
                 } catch (ValidationException $e) {
-                    $this->AddFormErrors($e->getAsArray());
+                    $this->AddFormErrors($form, $e->getAsArray());
                 }
             }
 
@@ -141,5 +141,19 @@ class ProductController extends Controller
         $product = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
 
         return $this->json(['product' => $product]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="product_photo_set_first",
+     *     path="/productPhotos/first/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function setFirstImageAction(Request $request)
+    {
+        $this->get('command_bus')->handle(new Command\SetFirstImageCommand(['id' => $request->request->get('id')]));
+
+        return $this->json([]);
     }
 }
