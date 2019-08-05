@@ -45,7 +45,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         if (!$product instanceof DTO\Product) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->baseProductId));
         }
-        if (ProductAvailabilityCode::ON_DEMAND !== $product->availability) {
+        if (!in_array($product->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT])) {
             throw new BadRequestHttpException(sprintf('Товар %d находится либо в наличии, либо отсутствует', $query->baseProductId));
         }
 
