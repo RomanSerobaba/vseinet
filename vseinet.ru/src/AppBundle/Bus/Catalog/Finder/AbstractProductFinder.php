@@ -24,7 +24,7 @@ class AbstractProductFinder extends ContainerAware
      */
     public function getQueryBuilder(): QueryBuilder
     {
-        return $this->get('catalog.product.finder.query_builder');
+        return $this->get('catalog.product.finder.query_builder')->reset();
     }
 
     /**
