@@ -26,7 +26,7 @@ class IdentifyCommandHandler extends MessageHandler
             }
 
             $this->updateUserContacts($command->userData, $user);
-        } elseif (!empty($command->userData->comuserId)) {
+        } elseif (!empty($command->userData->comuserId) && $command->userData->comuserId > 0) {
             $comuser = $em->getRepository(Comuser::class)->find($command->userData->comuserId);
 
             if (!$comuser instanceof Comuser) {
