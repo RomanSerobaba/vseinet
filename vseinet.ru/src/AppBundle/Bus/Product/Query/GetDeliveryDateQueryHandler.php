@@ -211,9 +211,14 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         return $delivery;
     }
 
-    protected function getDateByRoute(int $startingGeoPointId, int $arrivalGeoPointId, ?\DateTime $startingDate = null): ?\DateTime
+    protected function getDateByRoute(?int $startingGeoPointId, ?int $arrivalGeoPointId, ?\DateTime $startingDate = null): ?\DateTime
     {
         $date = $startingDate ?? new \DateTime();
+
+        if ($startingGeoPointId === $arrivalGeoPointId) {
+            return $date;
+        }
+
         $routes = $this->getAllRoutes();
 
         if (!isset($routes[$startingGeoPointId])) {
@@ -225,7 +230,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         }
 
         $queue = array_keys($routes[$fromGeoPointId = $startingGeoPointId]);
-        $visited = [];
+        $visited = [$fromGeoPointId => $fromGeoPointId];
 
         while (count($queue)) {
             $nextGeoPointId = array_shift($queue);
@@ -239,6 +244,13 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     }
 
                     if (isset($routes[$nextGeoPointId])) {
+                        //@TODO: костыль, скорее всего работает только если точка находится на втором прыжке маршрута
+                        foreach ($queue as $q) {
+                            if ($q === $arrivalGeoPointId && isset($routes[$fromGeoPointId][$q])) {
+                                return $this->getCron($routes[$fromGeoPointId][$q])->getNextRunDate($date);
+                            }
+                        }
+
                         $queue = array_merge($queue, array_keys($routes[$nextGeoPointId]));
                     }
                     $fromGeoPointId = $nextGeoPointId;
@@ -246,7 +258,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     $fromGeoPointId = $startingGeoPointId;
                 }
 
-                $visited[] = $nextGeoPointId;
+                $visited[$nextGeoPointId] = $nextGeoPointId;
             }
         }
 
