@@ -111,8 +111,6 @@ class QueryBuilder extends ContainerAware
             ;
         ";
 
-        $this->reset();
-
         return $this->get('sphinx')->createQuery()->setQuery(implode("\n", $query))->getResults();
     }
 
@@ -224,8 +222,6 @@ class QueryBuilder extends ContainerAware
             ";
         }
 
-        $this->reset();
-
         return $this->get('sphinx')->createQuery()->setQuery(implode("\n", $query))->getResults();
     }
 
@@ -293,8 +289,6 @@ class QueryBuilder extends ContainerAware
         foreach ($products as $id => $product) {
             $product->quantityInCart = $cartInfo->products[$id] ?? 0;
         }
-
-        $this->reset();
 
         return $products;
     }
