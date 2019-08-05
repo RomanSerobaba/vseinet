@@ -30,7 +30,7 @@
             <dd>&nbsp;</dd>
         {% else %}
             <dt content="preorder" class="status on-order">На заказ:</dt>
-            <dd><span>&nbsp;{{ delivery.date|date_format('%e %B') }}</span></dd>
+            <dd><span>&nbsp;{% if delivery.date %}{{ delivery.date|date_format('%e %B') }}{% endif %}</span></dd>
         {% endif %}
     </dl>
 
