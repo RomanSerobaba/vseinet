@@ -416,8 +416,8 @@ class QueryBuilder extends ContainerAware
         }
 
         if (!empty($categoryIds[-1])) {
-            if (!empty($categories[-1]->includeIds)) {
-                $categoryIds = array_merge($categoryIds, $categories[-1]->includeIds);
+            if (!empty($categoryIds[-1]->includeIds)) {
+                $categoryIds = array_merge($categoryIds, $categoryIds[-1]->includeIds);
             }
             unset($categoryIds[-1]);
         }
@@ -436,8 +436,8 @@ class QueryBuilder extends ContainerAware
         }
 
         if (!empty($brandIds[-1])) {
-            if (!empty($brands[-1]->includeIds)) {
-                $brandIds = array_merge($brandIds, $brands[-1]->includeIds);
+            if (!empty($brandIds[-1]->includeIds)) {
+                $brandIds = array_merge($brandIds, $brandIds[-1]->includeIds);
             }
             unset($brandIds[-1]);
         }

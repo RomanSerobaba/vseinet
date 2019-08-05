@@ -5,25 +5,25 @@
 	overflow: hidden;
 	width: 100%;
 }
-	#related .product {
-    	float: left;
-    	padding-right: 40px;
-    	width: 16.6%;
-	}
-	#related .product:nth-child(7){
-		display: none;
-	}
-		#related .image {
-			border: none !important;
-		}
-		.main #related .image img {
-			width: 100px;
-			height: 100px;
-		}
-		#related .price {
-			display: block;
-			font-size: 14px;
-			font-weight: 700;
-			margin: 0 0 10px;
-		}
+.main #related .product {
+    float: left;
+    padding-right: 40px;
+    width: 16.6%;
+}
+#related .product:nth-child(7){
+    display: none;
+}
+#related .image {
+    border: none !important;
+}
+.main #related .image img {
+    width: 100px;
+    height: 100px;
+}
+#related .price {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
 
