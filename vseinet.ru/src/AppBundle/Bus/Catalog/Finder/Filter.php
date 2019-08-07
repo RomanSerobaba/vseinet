@@ -422,7 +422,7 @@ class Filter extends ContainerAware
         $this->brandIds = [];
         $this->categoryIds = [];
         $this->categorySectionIds = [];
-        $this->q = null;
+        // $this->q = null;
         $this->name = null;
         $this->availability = Availability::ACTIVE;
         $this->nofilled = [];
