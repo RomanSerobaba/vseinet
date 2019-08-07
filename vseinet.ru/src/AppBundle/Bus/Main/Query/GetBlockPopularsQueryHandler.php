@@ -4,6 +4,7 @@ namespace AppBundle\Bus\Main\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\ProductAvailabilityCode;
+use Doctrine\ORM\AbstractQuery;
 
 class GetBlockPopularsQueryHandler extends MessageHandler
 {
@@ -38,38 +39,62 @@ class GetBlockPopularsQueryHandler extends MessageHandler
 
         while ($query->count--) {
             $randomId = rand($baseProductIds[2], $baseProductIds[1]);
-            $q = $em->createQuery("
-                SELECT
-                    NEW AppBundle\Bus\Main\Query\DTO\Product (
-                        bp.id,
-                        bp.name,
-                        bp.categoryId,
-                        c.name,
-                         (
-                            SELECT COALESCE(p.price, p0.price)
-                            FROM AppBundle:Product AS p0
-                            WHERE p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
-                        ),
-                        bpi.basename
-                    )
-                FROM AppBundle:BaseProduct AS bp
-                INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
-                INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId
-                WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds)
-                GROUP BY bp.id, c.id, bpi.id, p.price, p.baseProductId
-                HAVING p.baseProductId IS NOT NULL OR FIRST(
-                    SELECT r.geoPointId
-                    FROM AppBundle:GeoPoint AS gp
-                    JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
-                    WHERE gp.geoCityId = :geoCityId AND r.isActive = true
-                ) IS NULL
-            ");
-            $q->setParameter('randomId', $randomId);
-            $q->setParameter('categoryIds', $categoryIds);
-            $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
-            $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
-            $q->setParameter('on_demand', ProductAvailabilityCode::ON_DEMAND);
+            $q = $em->createQuery('
+                SELECT r.geoPointId
+                FROM AppBundle:Representative AS r
+                JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+                WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
+            ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+            $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
+            if ($geoPointId) {
+                $q = $em->createQuery("
+                    SELECT
+                        NEW AppBundle\Bus\Main\Query\DTO\Product (
+                            bp.id,
+                            bp.name,
+                            bp.categoryId,
+                            c.name,
+                            p.price,
+                            bpi.basename
+                        )
+                    FROM AppBundle:BaseProduct AS bp
+                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
+                    INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId
+                    WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds)
+                ")
+                    ->setParameters([
+                        'randomId' => $randomId,
+                        'categoryIds' => $categoryIds,
+                        'geoCityId' => $this->getGeoCity()->getRealId(),
+                        'available' => ProductAvailabilityCode::AVAILABLE
+                    ]);
+
+            } else {
+                $q = $em->createQuery("
+                    SELECT
+                        NEW AppBundle\Bus\Main\Query\DTO\Product (
+                            bp.id,
+                            bp.name,
+                            bp.categoryId,
+                            c.name,
+                            p.price,
+                            bpi.basename
+                        )
+                    FROM AppBundle:BaseProduct AS bp
+                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0 AND p.productAvailabilityCode = :on_demand AND p.price > 0
+                    INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId
+                    WHERE bp.id >= :randomId AND bp.categoryId NOT IN (:categoryIds)
+                ")
+                    ->setParameters([
+                        'randomId' => $randomId,
+                        'categoryIds' => $categoryIds,
+                        'on_demand' => ProductAvailabilityCode::ON_DEMAND
+                    ]);
+            }
+
             $q->setMaxResults(1);
             try {
                 $product = $q->getSingleResult();

@@ -8,6 +8,7 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceType;
+use Doctrine\ORM\AbstractQuery;
 
 class SetPriceCommandHandler extends MessageHandler
 {
@@ -25,14 +26,24 @@ class SetPriceCommandHandler extends MessageHandler
             'geoCityId' => $this->getGeoCity()->getId(),
         ]);
         if (!$product instanceof Product) {
-            $product = clone $em->getRepository(Product::class)->findOneBy([
+            $product = $em->getRepository(Product::class)->findOneBy([
                 'baseProductId' => $baseProduct->getId(),
                 'geoCityId' => 0,
             ]);
+            $q = $em->createQuery('
+                SELECT r.geoPointId
+                FROM AppBundle:Representative AS r
+                JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+                WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
+            ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+            $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
-            $product->setGeoCityId($this->getGeoCity()->getId());
-            $em->persist($product);
-            $em->flush();
+            if ($geoPointId) {
+                $product = clone $product;
+                $product->setGeoCityId($this->getGeoCity()->getId());
+                $em->persist($product);
+                $em->flush();
+            }
         }
 
         switch ($command->type) {

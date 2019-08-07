@@ -8,6 +8,7 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceType;
+use Doctrine\ORM\AbstractQuery;
 
 class ResetPriceCommandHandler extends MessageHandler
 {
@@ -20,9 +21,17 @@ class ResetPriceCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->id));
         }
 
+        $q = $em->createQuery('
+            SELECT r.geoPointId
+            FROM AppBundle:Representative AS r
+            JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+            WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
+        ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+        $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
         $product = $em->getRepository(Product::class)->findOneBy([
             'baseProductId' => $baseProduct->getId(),
-            'geoCityId' => $this->getGeoCity()->getId(),
+            'geoCityId' => $geoPointId ? $this->getGeoCity()->getId() : 0,
         ]);
         if ($product instanceof Product) {
             if ($price = $product->getTemporaryPrice()) {
