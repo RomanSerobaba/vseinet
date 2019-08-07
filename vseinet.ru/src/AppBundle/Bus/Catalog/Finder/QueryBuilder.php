@@ -521,7 +521,16 @@ class QueryBuilder extends ContainerAware
             return '';
         }
 
-        return sprintf('details.%d BETWEEN %f AND %f', $id, $filter->details[$id]->min, $filter->details[$id]->max);
+        $detail = $filter->details[$id];
+
+        if (null === $detail->min) {
+            return sprintf('details.%d <= %s', $id, str_replace(',', '.', $detail->max));
+        }
+        if (null === $detail->max) {
+            return sprintf('details.%d >= %s', $id, str_replace(',', '.', $detail->min));
+        }
+
+        return sprintf('details.%d BETWEEN %s AND %s', $id, str_replace(',', '.', $detail->min), str_replace(',', '.', $detail->max));
     }
 
     /**
