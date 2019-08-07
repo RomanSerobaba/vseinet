@@ -77,7 +77,7 @@ class ProductController extends Controller
         if (ProductAvailabilityCode::AVAILABLE === $baseProduct->availability || $this->getUserIsEmployee()) {
             $geoPoints = $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $baseProduct->id]));
         }
-        if (ProductAvailabilityCode::ON_DEMAND === $baseProduct->availability) {
+        if (in_array($baseProduct->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT])) {
             $delivery = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductId' => $baseProduct->id]));
         }
 

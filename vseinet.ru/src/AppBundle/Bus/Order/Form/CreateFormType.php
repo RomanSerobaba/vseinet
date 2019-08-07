@@ -123,14 +123,14 @@ class CreateFormType extends AbstractType
             $points = array_column($user->geoRooms, 'geo_point_id');
         }
 
-        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN]) && empty($points)) {
+        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN,UserRole::MANAGER]) && empty($points)) {
             return [];
         }
 
         $clause = '';
         $parameters = [];
 
-        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN])) {
+        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN, UserRole::MANAGER])) {
             $clause .= ' AND p.id IN (:ids)';
             $parameters['ids'] = $points;
         } else {
