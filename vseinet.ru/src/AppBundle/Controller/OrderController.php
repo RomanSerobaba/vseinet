@@ -268,7 +268,7 @@ class OrderController extends Controller
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
+            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit']) && $request->request->get('submit')) {
                 try {
                     $this->get('command_bus')->handle($command);
                     $this->forward('AppBundle:Cart:clear');
