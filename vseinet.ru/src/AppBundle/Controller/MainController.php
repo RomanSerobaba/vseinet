@@ -221,6 +221,16 @@ class MainController extends Controller
     /**
      * @internal
      */
+    public function getServicesAction()
+    {
+        $data = $this->get('query_bus')->handle(new Query\GetServicesQuery());
+
+        return $this->render('Main/services.html.twig', $data);
+    }
+
+    /**
+     * @internal
+     */
     public function getBannerMainAction()
     {
         $data = $this->get('query_bus')->handle(new Query\GetBannerMainQuery());

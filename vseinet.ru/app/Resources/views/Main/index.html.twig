@@ -28,6 +28,13 @@
 {% block content %}
     <nav id="nav">
         {{ render(controller('AppBundle:Main:getMenu')) }}
+
+        <div id="services">
+            {{ render(controller('AppBundle:Main:getServices')) }}
+        </div>
+        <a href="/partnership/#wholesale" class="bttn intro wholesalers">Оптовикам</a>
+        <a href="/partnership/#franchising" class="bttn intro franchising">Франчайзинг</a>
+            <a href="/partnership/#franchising" style="text-decoration: none;border:none;"><p style="background-color: #F5F5F5;border-radius: 4px;font-family: Intro; font-size: 15px; width: 200px; text-align: center; line-height: 25px; color: rgb(58, 164, 203);padding-bottom: 20px;display: inline-block;padding-top:15px;">ищем<br/> <span style="color:#C5A864">представителей</span><br/> в регионах</p></a>
     </nav>
 
     <div class="wrapper">
