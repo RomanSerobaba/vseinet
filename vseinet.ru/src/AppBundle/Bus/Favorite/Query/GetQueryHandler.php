@@ -37,8 +37,8 @@ class GetQueryHandler extends MessageHandler
                     bpi.basename
                 )
             FROM AppBundle:BaseProduct AS bp
-            LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
-            INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0
+            LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.canonicalId AND p.geoCityId = :geoCityId
+            INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.canonicalId AND p0.geoCityId = 0
             LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
             WHERE bp.id IN (:ids)
             ORDER BY bp.name

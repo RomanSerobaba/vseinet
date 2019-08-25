@@ -32,6 +32,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
         $q = $em->createQuery('
             SELECT MIN(bp.id), MAX(bp.id)
             FROM AppBundle:BaseProduct AS bp
+            WHERE bp.id = bp.canonicalId
         ');
         $baseProductIds = $q->getSingleResult();
 
@@ -75,7 +76,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                     INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
                     INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
                     {$categoryJoinSpec}
-                    WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec}
+                    WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec} AND bp.id = bp.canonicalId
                 ")
                     ->setParameters([
                         'randomId' => $randomId,
@@ -98,7 +99,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                     INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
                     INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0 AND p.productAvailabilityCode = :on_demand AND p.price > 0
                     {$categoryJoinSpec}
-                    WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec}
+                    WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec} AND bp.id = bp.canonicalId
                 ")
                     ->setParameters([
                         'randomId' => $randomId,

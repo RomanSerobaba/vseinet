@@ -7,7 +7,10 @@
 
 <div class="row h">
     {{ form_label(form.type, 'Тип цены' ) }}
-    {{ form_widget(form.type, { attr: { class: 'txt' }}) }}
+    {% for choice in form.type.vars.choices %}
+        <input type="radio" id="{{ form.type.vars.id }}_{{ choice.value }}" name="{{ form.type.vars.full_name }}" value="{{ choice.value }}"{% if choice.value == form.type.vars.value or loop.index is same as(1) and form.type.vars.value is empty %} checked="checked"{% endif %} />
+        {{ choice.label }}<br/>
+    {% endfor %}
 </div>
 
 <div class="row h">

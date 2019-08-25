@@ -36,6 +36,8 @@ class GetProductsQueryHandler extends MessageHandler
                 LEFT JOIN base_product_image AS bpi ON ( bpi.base_product_id = b.ID AND bpi.sort_order = 1 )
                 LEFT JOIN product_pricetag_buffer AS ppb ON ( ppb.base_product_id = b.ID AND ppb.created_by = :userId )
                 JOIN UNNEST ( :ids::INT [] ) WITH ORDINALITY T ( ID, ord ) ON b.ID = T.ID
+            WHERE
+                b.id = b.canonical_id
             ORDER BY
                 T.ord
         ", new DTORSM(DTO\Product::class))

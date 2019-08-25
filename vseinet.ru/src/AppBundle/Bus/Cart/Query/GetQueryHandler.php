@@ -118,8 +118,8 @@ class GetQueryHandler extends MessageHandler
                 FROM AppBundle:Cart c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
                 LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
-                INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.canonicalId AND p2.geoCityId = :geoCityId
+                INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.canonicalId AND p.geoCityId = 0
                 LEFT JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId AND cp.pid IN (:stroikaCategoriesIds)
                 WHERE c.userId = :userId
             ");
@@ -189,8 +189,8 @@ class GetQueryHandler extends MessageHandler
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                    LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.id AND p2.geoCityId = :geoCityId
-                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0
+                    LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.canonicalId AND p2.geoCityId = :geoCityId
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.canonicalId AND p.geoCityId = 0
                     LEFT JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId AND cp.pid IN (:stroikaCategoriesIds)
                     WHERE bp.id IN (:ids)
                 ");

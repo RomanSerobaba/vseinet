@@ -13,8 +13,9 @@ class GetInfoQueryHandler extends MessageHandler
 
         if (null !== $user) {
             $q = $em->createQuery("
-                SELECT f.baseProductId, f.baseProductId
+                SELECT bp.canonicalId, bp.canonicalId
                 FROM AppBundle:Favorite f 
+                INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = f.baseProductId
                 WHERE f.userId = :userId 
             ");
             $q->setParameter('userId', $user->getId());
