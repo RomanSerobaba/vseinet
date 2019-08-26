@@ -42,6 +42,20 @@ class GetRemainsQueryHandler extends MessageHandler
         $remains = $q->getResult('DTOHydrator');
 
         $q = $em->createNativeQuery("
+            WITH transfer_info AS (
+                SELECT
+                    sptl.transfered_at,
+                    CONCAT(p.lastname, ' ', p.firstname, ' ', p.secondname) AS transfered_by,
+                    sptl.supplier_product_id
+                FROM
+                    supplier_product_transfer_log AS sptl
+                    LEFT OUTER JOIN org_employee AS oe ON oe.user_id = sptl.transfered_by
+                    LEFT OUTER JOIN \"user\" AS u ON u.id = oe.user_id
+                    LEFT OUTER JOIN person AS p ON p.id = u.person_id
+                    LEFT OUTER JOIN supplier_product_transfer_log AS sptl2 ON sptl2.base_product_id = sptl.base_product_id AND (sptl.transfered_at < sptl2.transfered_at OR sptl.transfered_at = sptl2.transfered_at AND sptl.id < sptl2.id)
+                WHERE
+                    sptl.base_product_id = :base_product_id AND sptl2.id IS NULL
+            )
             SELECT
                 sp.id,
                 s.code AS supplier_code,
@@ -51,15 +65,13 @@ class GetRemainsQueryHandler extends MessageHandler
                 sp.product_availability_code,
                 sp.price,
                 sp.updated_at AS price_time,
-                CONCAT(p.lastname, ' ', p.firstname, ' ', p.secondname) AS transfered_by,
-                sptl.transfered_at
+                ti.transfered_by,
+                ti.transfered_at
             FROM supplier_product AS sp
             INNER JOIN supplier AS s ON s.id = sp.supplier_id
-            LEFT OUTER JOIN supplier_product_transfer_log AS sptl ON sptl.supplier_product_id = sp.id AND sptl.base_product_id = sp.base_product_id
-            LEFT OUTER JOIN org_employee AS oe ON oe.user_id = sptl.transfered_by
-            LEFT OUTER JOIN \"user\" AS u ON u.id = oe.user_id
-            LEFT OUTER JOIN person AS p ON p.id = u.person_id
-            WHERE sp.base_product_id = :base_product_id
+            INNER JOIN base_product AS bp ON bp.id = sp.base_product_id
+            LEFT OUTER JOIN transfer_info AS ti ON ti.supplier_product_id = sp.id
+            WHERE bp.canonical_id = :base_product_id
             ORDER BY sp.product_availability_code DESC, sp.price, sp.updated_at DESC
         ", new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
