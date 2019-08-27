@@ -8,14 +8,11 @@ class GetMenuQueryHandler extends MessageHandler
 {
     public function handle(GetMenuQuery $query)
     {
-        $cache = $this->get('cache.provider.memcached');
-        $cachedMenu = $cache->getItem('menu');
-        if ($cachedMenu->isHit()) {
-            $menu = @unserialize($cachedMenu->get());
-            if (is_object($menu)) {
-                return $menu;
-            }
-        }
+        // $cache = $this->get('cache.provider.memcached');
+        // $cachedMenu = $cache->getItem('menu');
+        // if ($cachedMenu->isHit()) {
+        //     return $cachedMenu->get();
+        // }
 
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
@@ -98,9 +95,9 @@ class GetMenuQueryHandler extends MessageHandler
             $menu[] = $category;
         }
 
-        $cachedMenu->set(serialize($menu));
-        $cachedMenu->expiresAfter(300 + rand(0, 100));
-        $cache->save($cachedMenu);
+        // $cachedMenu->set($menu);
+        // $cachedMenu->expiresAfter(300 + rand(0, 100));
+        // $cache->save($cachedMenu);
 
         return $menu;
     }
