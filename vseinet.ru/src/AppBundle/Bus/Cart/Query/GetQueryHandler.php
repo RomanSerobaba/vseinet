@@ -6,6 +6,7 @@ use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\DiscountCode;
 use AppBundle\Entity\GeoPoint;
 use AppBundle\Enum\GoodsConditionCode;
+use Doctrine\ORM\AbstractQuery;
 
 class GetQueryHandler extends MessageHandler
 {
