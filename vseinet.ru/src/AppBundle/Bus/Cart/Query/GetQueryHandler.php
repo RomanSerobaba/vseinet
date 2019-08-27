@@ -4,12 +4,8 @@ namespace AppBundle\Bus\Cart\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\DiscountCode;
-use AppBundle\Entity\Representative;
 use AppBundle\Entity\GeoPoint;
-use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Enum\GoodsConditionCode;
-use AppBundle\Entity\TransportCompany;
-use AppBundle\Entity\PaymentType;use Doctrine\ORM\AbstractQuery;
 
 class GetQueryHandler extends MessageHandler
 {
@@ -17,8 +13,6 @@ class GetQueryHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $spec = "";
-        $params = [];
 
         if (!empty($query->geoPointId)) {
             $geoPoint = $em->getRepository(GeoPoint::class)->find($query->geoPointId);
