@@ -11,7 +11,10 @@ class GetMenuQueryHandler extends MessageHandler
         $cache = $this->get('cache.provider.memcached');
         $cachedMenu = $cache->getItem('menu');
         if ($cachedMenu->isHit()) {
-            return $cachedMenu->get();
+            $menu = @unserialize($cachedMenu->get());
+            if (is_object($menu)) {
+                return $menu;
+            }
         }
 
         $q = $this->getDoctrine()->getManager()->createQuery("
@@ -97,7 +100,7 @@ class GetMenuQueryHandler extends MessageHandler
 
         $cachedMenu->set($menu);
         $cachedMenu->expiresAfter(300 + rand(0, 100));
-        $cache->save($cachedMenu);
+        $cache->save(serialize($cachedMenu));
 
         return $menu;
     }
