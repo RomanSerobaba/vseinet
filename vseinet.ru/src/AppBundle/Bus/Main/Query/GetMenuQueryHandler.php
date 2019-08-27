@@ -98,7 +98,7 @@ class GetMenuQueryHandler extends MessageHandler
         // $cachedMenu->set($menu);
         // $cachedMenu->expiresAfter(300 + rand(0, 100));
         // $cache->save($cachedMenu);
-
+$this->get('simple.logger')->setName('menu')->info(print_r($menu, true));
         return $menu;
     }
 }
