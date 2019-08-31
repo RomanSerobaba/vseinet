@@ -24,9 +24,9 @@ class MainController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
+        // if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+        //     echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        // }
         return $this->render('Main/index.html.twig');
     }
 
