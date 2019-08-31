@@ -20,9 +20,9 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
-        // if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-        //     echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        // }
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $helper = $this->get('security.authentication_utils');
 
         $form = $this->createForm(Form\LoginType::class, [
