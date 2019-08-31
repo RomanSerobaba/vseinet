@@ -21,6 +21,9 @@ class CartController extends Controller
      */
     public function getAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $cart = $this->get('query_bus')->handle(new Query\GetQuery($request->request->all()));
 
         if ($request->isXmlHttpRequest()) {
@@ -54,6 +57,9 @@ class CartController extends Controller
      */
     public function addAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\AddCommand($request->query->all(), ['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
@@ -79,6 +85,9 @@ class CartController extends Controller
      */
     public function setQuantityAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\SetQuantityCommand($request->query->all(), ['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
@@ -104,6 +113,9 @@ class CartController extends Controller
      */
     public function decQuantityAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $cart = $this->get('query_bus')->handle(new Query\GetInfoQuery());
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
@@ -125,6 +137,9 @@ class CartController extends Controller
      */
     public function incQuantityAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $cart = $this->get('query_bus')->handle(new Query\GetInfoQuery());
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
@@ -146,6 +161,9 @@ class CartController extends Controller
      */
     public function deleteAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
 
         if ($request->isXmlHttpRequest()) {
@@ -167,6 +185,9 @@ class CartController extends Controller
      */
     public function clearAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\ClearCommand());
         if ($request->isXmlHttpRequest()) {
             return $this->json([]);
@@ -187,6 +208,9 @@ class CartController extends Controller
      */
     public function toFavoriteAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
         $this->get('command_bus')->handle(new AddFavoriteCommand(['id' => $id]));
 

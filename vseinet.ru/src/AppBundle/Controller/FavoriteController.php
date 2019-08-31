@@ -20,6 +20,9 @@ class FavoriteController extends Controller
      */
     public function getAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $favorites = $this->get('query_bus')->handle(new Query\GetQuery());
 
         if ($request->isXMLHttpRequest()) {
@@ -47,6 +50,9 @@ class FavoriteController extends Controller
      */
     public function addAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\AddCommand(['id' => $id]));
 
         if ($request->isXMLHttpRequest()) {
@@ -72,6 +78,9 @@ class FavoriteController extends Controller
      */
     public function deleteAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
 
         if ($request->isXMLHttpRequest()) {
@@ -93,6 +102,9 @@ class FavoriteController extends Controller
      */
     public function clearAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\ClearCommand());
 
         if ($request->isXMLHttpRequest()) {
@@ -114,6 +126,9 @@ class FavoriteController extends Controller
      */
     public function toCartAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\DeleteCommand(['id' => $id]));
         $this->get('command_bus')->handle(new AddCartCommand(['id' => $id]));
 

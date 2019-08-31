@@ -45,6 +45,9 @@ class CatalogController extends Controller
      */
     public function showCategoryPageAction(int $id = 0, $brandName = null, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         if ($brandName) {
             $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
             $request->query->set('b', $brand->id);
@@ -122,6 +125,9 @@ class CatalogController extends Controller
      */
     public function showSpecialsPageAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $finder = $this->get('catalog.special_product.finder');
         $finder->setFilterData($request->query->all());
 
@@ -151,6 +157,9 @@ class CatalogController extends Controller
      */
     public function totalSaleAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $finder = $this->get('catalog.total_sale_product.finder');
         $finder->setFilterData($request->query->all());
 
@@ -180,6 +189,9 @@ class CatalogController extends Controller
      */
     public function showSearchPageAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $finder = $this->get('catalog.search_product.finder');
         $finder->setFilterData($request->query->all());
 
@@ -213,6 +225,9 @@ class CatalogController extends Controller
      */
     public function showBrandPageAction(string $name, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $name]));
         if (null === $brand) {
             throw new NotFoundHttpException();
@@ -248,6 +263,9 @@ class CatalogController extends Controller
      */
     public function showDetailPageAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $detail = $this->get('query_bus')->handle(new Query\GetDetailQuery(['id' => $id]));
 
         $finder = $this->get('catalog.detail_product.finder');
@@ -280,6 +298,9 @@ class CatalogController extends Controller
      */
     public function showDetailValuePageAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $value = $this->get('query_bus')->handle(new Query\GetDetailValueQuery(['id' => $id]));
 
         $finder = $this->get('catalog.detail_value_product.finder');
@@ -312,6 +333,9 @@ class CatalogController extends Controller
      */
     public function showSupplierPageAction(string $code, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $supplier = $this->get('query_bus')->handle(new Query\GetSupplierQuery(['code' => $code]));
 
         $finder = $this->get('catalog.supplier_product.finder');
@@ -336,6 +360,9 @@ class CatalogController extends Controller
 
     protected function show(string $view, $finder, Request $request, array $parameters = [], array $attributes = [])
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $filter = $finder->getFilter();
         $facets = $finder->getFacets();
         $products = $finder->getProducts();

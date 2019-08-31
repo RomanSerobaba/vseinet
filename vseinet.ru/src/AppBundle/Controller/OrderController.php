@@ -31,6 +31,9 @@ class OrderController extends Controller
      */
     public function statusAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $query = new Query\GetStatusQuery();
         $form = $this->createForm(Form\GetStatusFormType::class, $query);
 
@@ -96,6 +99,9 @@ class OrderController extends Controller
      */
     public function historyAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $query = new Query\GetHistoryQuery($request->query->all());
         $history = $this->get('query_bus')->handle($query);
 
@@ -134,6 +140,9 @@ class OrderController extends Controller
      */
     public function receiptsOfProduct(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $command = new Command\ReceiptsOfProductCommand();
 
         $baseProduct = $this->getDoctrine()->getManager()->getRepository(BaseProduct::class)->find($id);
@@ -198,6 +207,9 @@ class OrderController extends Controller
      */
     public function creationCreditAction(int $id)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->forward('AppBundle:Cart:add', ['id' => $id]);
         $this->get('session')->set('form.orderCreation', ['paymentTypeCode' => PaymentTypeCode::CREDIT]);
 
@@ -213,6 +225,9 @@ class OrderController extends Controller
      */
     public function creationPageAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         if ($request->isMethod('POST')) {
             $data = $request->request->get('create_form');
             $this->get('session')->set('form.orderCreation', $data);
@@ -342,6 +357,9 @@ class OrderController extends Controller
      */
     public function createdPageAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $query = new Query\GetOrderQuery(['id' => $id]);
         $order = $this->get('query_bus')->handle($query);
 

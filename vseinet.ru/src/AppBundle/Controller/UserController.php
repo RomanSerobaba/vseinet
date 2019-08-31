@@ -22,6 +22,9 @@ class UserController extends Controller
      */
     public function accountAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
         $contacts = $this->get('query_bus')->handle(new Query\GetContactsQuery());
         $addresses = $this->get('query_bus')->handle(new Query\GetAddressesQuery());
@@ -55,6 +58,9 @@ class UserController extends Controller
      */
     public function editAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         if ($request->isMethod('GET')) {
             $info = $this->get('query_bus')->handle(new Query\GetInfoQuery());
             $command = new Command\AccountEditCommand((array) $info);
@@ -99,6 +105,9 @@ class UserController extends Controller
      */
     public function addContactAction(int $id = 0, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         if ($id && $request->isMethod('GET')) {
             $contact = $this->get('query_bus')->handle(new Query\GetContactQuery(['id' => $id]));
             $command = new Command\AddContactCommand((array) $contact);
@@ -167,6 +176,9 @@ class UserController extends Controller
      */
     public function deleteContactAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\DeleteContactCommand(['id' => $id]));
 
         $notice = 'Контакт успешно удален';
@@ -198,6 +210,9 @@ class UserController extends Controller
      */
     public function addAddressAction(int $id = 0, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         if ($request->isMethod('GET')) {
             if ($id) {
                 $address = $this->get('query_bus')->handle(new Query\GetAddressQuery(['id' => $id]));
@@ -275,6 +290,9 @@ class UserController extends Controller
      */
     public function deleteAddressAction(int $id, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $this->get('command_bus')->handle(new Command\DeleteAddressCommand(['id' => $id]));
 
         $notice = 'Адрес доставки успешно удален';
@@ -300,6 +318,9 @@ class UserController extends Controller
      */
     public function searchAction(Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $users = $this->get('query_bus')->handle(new Query\SearchQuery($request->query->all()));
 
         return $this->json([

@@ -24,6 +24,9 @@ class ContentPageController extends Controller
      */
     public function pageAction($slug, Request $request)
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         return $this->show($slug, $request->query->all());
     }
 
@@ -35,6 +38,9 @@ class ContentPageController extends Controller
      */
     public function aboutAction()
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $vacancies = $this->get('query_bus')->handle(new GetVacanciesQuery());
 
         return $this->show('about', ['vacancies' => $vacancies]);
@@ -48,6 +54,9 @@ class ContentPageController extends Controller
      */
     public function deliveryAction()
     {
+        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
+            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
+        }
         $deliveryTaxes = $this->get('query_bus')->handle(new GetCategoryDeliveryTaxesQuery());
         $representatives = $this->get('query_bus')->handle(new GetRepresentativeDeleiveryTaxesQuery());
 
