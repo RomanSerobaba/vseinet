@@ -32,7 +32,7 @@ class GetReservesQueryHandler extends MessageHandler
                 a.number,
                 a.created_at,
                 grrc.delta,
-                si.purchase_price,
+                (si.purchase_price - si.bonus_amount) AS purchase_price,
                 grrc.goods_condition_code,
                 grrc.goods_pallet_id
             FROM goods_reserve_register_current AS grrc

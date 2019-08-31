@@ -27,7 +27,7 @@ class GetRemainsQueryHandler extends MessageHandler
                 NULL AS code,
                 bp.name,
                 :available::product_availability_code AS product_availability_code,
-                ROUND(SUM(grrc.delta * si.purchase_price) / SUM(grrc.delta)) AS price,
+                ROUND(SUM(grrc.delta * (si.purchase_price - si.bonus_amount)) / SUM(grrc.delta)) AS price,
                 NULL AS price_time,
                 NULL AS transfered_by,
                 NULL AS transfered_at
