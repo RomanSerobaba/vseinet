@@ -23,7 +23,7 @@ class GetSummaryQueryHandler extends MessageHandler
         if (OrderType::RETAIL == $query->orderTypeCode) {
             foreach ($products as $product) {
                 $product->price = $product->storePricetag ?? $product->price;
-                $product->priceWithDiscount = ($product->storePricetag ?? $product->price) - $product->discountAmount;
+                $product->priceWithDiscount = $product->storePricetag ?? $product->price;
                 $product->deliveryTax = 0;
             }
         }
