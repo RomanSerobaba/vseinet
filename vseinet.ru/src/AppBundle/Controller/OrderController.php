@@ -323,6 +323,11 @@ class OrderController extends Controller
                     'canCreateRetailOrder' => $canCreateRetailOrder,
                     'cart' => $cart,
                 ]),
+                'cart_html' => $this->renderView('Order/cart_ajax.html.twig', [
+                    'form' => $form->createView(),
+                    'canCreateRetailOrder' => $canCreateRetailOrder,
+                    'cart' => $cart,
+                ]),
             ]);
         }
 
