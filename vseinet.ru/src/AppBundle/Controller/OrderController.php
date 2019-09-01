@@ -259,6 +259,7 @@ class OrderController extends Controller
             'hasLift' => !empty($command->address) ? $command->address->hasLift : null,
             'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
+            'orderTypeCode' => $command->typeCode,
         ]));
 
         if ($request->isMethod('POST') && empty($cart->products)) {

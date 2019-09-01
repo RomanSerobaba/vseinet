@@ -21,15 +21,16 @@ class GetSummaryQueryHandler extends MessageHandler
         $products = $query->products;
 
         if (OrderType::RETAIL == $query->orderTypeCode) {
-            foreach ($products as $key => $product) {
-                $products[$key]->price = $product->storePricetag ?? $product->price;
-                $products[$key]->deliveryTax = 0;
+            foreach ($products as $product) {
+                $product->price = $product->storePricetag ?? $product->price;
+                $product->priceWithDiscount = ($product->storePricetag ?? $product->price) - $product->discountAmount;
+                $product->deliveryTax = 0;
             }
         }
 
         if (DeliveryTypeCode::COURIER !== $query->deliveryTypeCode || !$query->needLifting) {
-            foreach ($products as $key => $product) {
-                $products[$key]->liftingCost = 0;
+            foreach ($products as $product) {
+                $product->liftingCost = 0;
             }
         }
 
@@ -61,9 +62,9 @@ class GetSummaryQueryHandler extends MessageHandler
 
         if (in_array($query->deliveryTypeCode, [DeliveryTypeCode::COURIER, DeliveryTypeCode::EX_WORKS])) {
             if (RepresentativeTypeCode::PARTNER == $representative->getType() || 214 == $representative->getGeoPointId()) {
-                foreach ($products as $key => $product) {
+                foreach ($products as $product) {
                     $amount = $product->price * $product->quantity;
-                    $products[$key]->regionDeliveryTax = round((1000000 < $amount ? 100000 : $amount * .1) / $product->quantity, -3);
+                    $product->regionDeliveryTax = round((1000000 < $amount ? 100000 : $amount * .1) / $product->quantity, -3);
                 }
             } elseif (RepresentativeTypeCode::FRANCHISER == $representative->getType()) {
                 $mostExpensive = reset($products);
@@ -75,7 +76,7 @@ class GetSummaryQueryHandler extends MessageHandler
                         $mostExpensiveKey = $key;
                     }
 
-                    $products[$key]->regionDeliveryTax = $products[$key]->deliveryTax;
+                    $product->regionDeliveryTax = $product->deliveryTax;
                 }
 
                 $products[$mostExpensiveKey]->regionDeliveryTax += $representative->getDeliveryTax();
