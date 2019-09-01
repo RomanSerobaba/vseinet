@@ -9,7 +9,7 @@
     {{ render(controller('AppBundle:Favorite:getInfo')) }}
     <a href="{{ path('order_status') }}" class="status" data-popup="status-form">Статус заказа</a>
     {% if app.userIsEmployee and not app.user.isFired %}
-        {% if not app.user.ipAddress or app.user.ipAddress != app.request.clientIp %}
+        {% if not app.user.ipAddress or app.user.ipAddress == app.request.clientIp %}
             <a
                 href="{{ path('clockin') }}"
                 id="clock-in-out"
