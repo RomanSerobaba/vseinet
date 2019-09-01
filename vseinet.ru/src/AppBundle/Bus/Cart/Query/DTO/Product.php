@@ -82,6 +82,11 @@ class Product
      */
     public $storePricetag;
 
+    /**
+     * @Assert\Type(type="integer", message="Размер скидки")
+     */
+    public $discountAmount;
+
 
     public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $liftingCost, $quantity, $hasStroika, $discountAmount, $reserveQuantity, $storePricetag)
     {
@@ -98,6 +103,7 @@ class Product
         $this->liftingCost = $liftingCost;
         $this->hasStroika = (bool) $hasStroika;
         $this->priceWithDiscount = (int) round($price - $discountAmount, -2);
+        $this->discountAmount = $discountAmount;
         $this->reserveQuantity = (int) $reserveQuantity;
         $this->storePricetag = $storePricetag;
     }

@@ -117,8 +117,8 @@ class CartSummary
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
-            $this->amount += $product->quantity * $product->price;
-            $this->amountWithDiscount += $product->quantity * $product->priceWithDiscount;
+            $this->amount += $product->quantity * ($product->storePricetag ?? $product->price);
+            $this->amountWithDiscount += $product->quantity * (($product->storePricetag ?? $product->price) - ($discountCode ? $product->discountAmount : 0));
             $this->deliveryTaxAmount += $product->quantity * $product->deliveryTax;
             $this->deliveryToRepresentativeTaxAmount += $product->quantity * $product->regionDeliveryTax;
             $this->liftingCharges += $product->quantity * $liftingFloor * $product->liftingCost;
