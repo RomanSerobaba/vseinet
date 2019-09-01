@@ -20,9 +20,6 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $helper = $this->get('security.authentication_utils');
 
         $form = $this->createForm(Form\LoginType::class, [
@@ -53,9 +50,6 @@ class SecurityController extends Controller
      */
     public function logoutAction()
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         throw new \RuntimeException('This should never be called directly.');
     }
 
@@ -68,9 +62,6 @@ class SecurityController extends Controller
      */
     public function registrAction(Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $command = new Command\RegistrCommand();
         $form = $this->createForm(Form\RegistrType::class, $command);
 
@@ -104,9 +95,6 @@ class SecurityController extends Controller
      */
     public function forgotAction(Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $command = new Command\ForgotCommand();
         $form = $this->createForm(Form\ForgotType::class, $command);
 
@@ -138,9 +126,6 @@ class SecurityController extends Controller
      */
     public function checkAction(Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         if ($request->isMethod('GET') && $request->query->has('hash')) {
             $this->get('command_bus')->handle(new Command\CheckTokenCommand($request->query->all()));
 
@@ -178,9 +163,6 @@ class SecurityController extends Controller
      */
     public function restoreAction(Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $command = new Command\RestorePasswordCommand();
         $form = $this->createForm(Form\RestorePasswordType::class, $command);
 
@@ -213,9 +195,6 @@ class SecurityController extends Controller
      */
     public function passwordAction(Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $command = new Command\ChangePasswordCommand();
         $form = $this->createForm(Form\ChangePasswordType::class, $command);
 

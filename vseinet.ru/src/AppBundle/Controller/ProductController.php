@@ -40,9 +40,6 @@ class ProductController extends Controller
      */
     public function indexAction(int $id, int $categoryId = null, Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $baseProduct = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
 
         if (null === $categoryId) {
@@ -114,9 +111,6 @@ class ProductController extends Controller
      */
     public function galleryAction(int $id, Request $request)
     {
-        if (!$this->getUser() || $this->getUser()->getId() != 1503) {
-            echo '<html><head><title>Интернет-магазин Vseinet.ru</title></head><body style="text-align:center;font-size:60px;margin-top:20%;">Извините за временные неудобства!<br/>На сайте ведутся технические работы.</body></html>';die();
-        }
         $product = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
         $images = $this->get('query_bus')->handle(new Query\GetImagesQuery(['baseProductId' => $product->id]));
 
