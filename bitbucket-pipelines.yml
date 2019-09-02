@@ -23,14 +23,14 @@ pipelines:
               variables:
                 SSH_USER: $USER
                 SERVER: $SERVER
-                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php72 /usr/local/bin/composer -n install; php72 bin/console app:config:bus-services; yarn build;'
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php72 bin/console cache:clear --no-warmup; php72 /usr/local/bin/composer -n install; php72 bin/console app:config:bus-services; php72 bin/console cache:clear; yarn build;'
       - step:
           name: Production
           deployment: production
-          trigger: automatic
+          trigger: manual
           script:
             - pipe: atlassian/ssh-run:0.2.0
               variables:
                 SSH_USER: $USER
                 SERVER: $SERVER
-                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; composer -n install; php bin/console app:config:bus-services; yarn build;'
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php bin/console cache:clear --no-warmup; composer -n install; php bin/console app:config:bus-services; php bin/console cache:clear; yarn build;'

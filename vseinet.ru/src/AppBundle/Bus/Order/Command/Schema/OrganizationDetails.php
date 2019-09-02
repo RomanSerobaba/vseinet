@@ -52,4 +52,24 @@ class OrganizationDetails extends Message
     {
         $this->bankId = empty($bankId) ? null : (int) $bankId;
     }
+
+    public function setSettlementAccount($settlementAccount)
+    {
+        $this->bankId = empty($settlementAccount) ? null : $settlementAccount;
+    }
+
+    public function setTin($tin)
+    {
+        $this->tin = empty($tin) ? null : $tin;
+    }
+
+    public function setKpp($kpp)
+    {
+        $this->kpp = empty($kpp) ? null : $kpp;
+    }
+
+    public function setBic($bic)
+    {
+        $this->bic = empty($bic) ? null : $bic;
+    }
 }

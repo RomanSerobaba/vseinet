@@ -31,6 +31,20 @@ class ContentPage
     /**
      * @var string
      *
+     * @ORM\Column(name="title_short", type="string")
+     */
+    private $titleShort;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string")
+     */
+    private $url;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="content", type="string")
      */
     private $content;
@@ -82,6 +96,54 @@ class ContentPage
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Set titleShort.
+     *
+     * @param string $titleShort
+     *
+     * @return ContentPage
+     */
+    public function setTitleShort($titleShort)
+    {
+        $this->titleShort = $titleShort;
+
+        return $this;
+    }
+
+    /**
+     * Get titleShort.
+     *
+     * @return string
+     */
+    public function getTitleShort()
+    {
+        return $this->titleShort;
+    }
+
+    /**
+     * Set url.
+     *
+     * @param string $url
+     *
+     * @return ContentPage
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
 

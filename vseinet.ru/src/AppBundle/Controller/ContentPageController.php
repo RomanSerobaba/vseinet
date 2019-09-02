@@ -16,15 +16,15 @@ class ContentPageController extends Controller
      * @VIA\Get(
      *     name="content_page",
      *     path="/{slug}/",
-     *     requirements={"slug" = "payment|garanty|credit|promo|partnership|help"},
+     *     requirements={"slug" = "payment|garanty|credit|promo|partnership|help|service"},
      *     parameters={
      *         @VIA\Parameter(name="slug", type="string")
      *     }
      * )
      */
-    public function pageAction($slug)
+    public function pageAction($slug, Request $request)
     {
-        return $this->show($slug);
+        return $this->show($slug, $request->query->all());
     }
 
     /**
@@ -56,8 +56,8 @@ class ContentPageController extends Controller
 
     protected function show($slug, array $data = [])
     {
-        $page = $this->get('query_bus')->handle(new GetQuery(['slug' => $slug]));
-        $template = empty($data) ? 'page' : $slug;
+        $page = $this->get('query_bus')->handle(new GetQuery(['slug' => $slug, 'id' => $data['id'] ?? null]));
+        $template = empty($data) || 'service' === $slug ? 'page' : $slug;
 
         return $this->render("ContentPage/{$template}.html.twig", $data + ['page' => $page]);
     }

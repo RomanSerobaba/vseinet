@@ -18,7 +18,7 @@ class OrderType
                 self::NATURAL => 'Частное лицо',
                 self::LEGAL => 'Организацию',
                 self::RETAIL => 'Продажу с магазина',
-                self::RESUPPLY => 'Пополнение складских запасов',
+                self::RESUPPLY => 'Пополнение магазина (Акция)',
                 self::CONSUMABLES => 'Покупку расходных материалов',
                 // self::EQUIPMENT => 'Покупку оборудования',
             ];

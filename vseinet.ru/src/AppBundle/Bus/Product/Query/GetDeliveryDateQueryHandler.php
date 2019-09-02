@@ -34,7 +34,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 bp.supplier_id,
                 bp.supplier_availability_code AS supplier_availability
             FROM product AS p
-            INNER JOIN base_product AS bp ON bp.id = p.base_product_id
+            INNER JOIN base_product AS bp ON bp.canonical_id = p.base_product_id
             WHERE bp.id = :base_product_id AND p.geo_city_id IN (0, :geo_city_id)
             ORDER BY p.geo_city_id DESC
             LIMIT 1

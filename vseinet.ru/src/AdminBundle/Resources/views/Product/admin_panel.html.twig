@@ -22,6 +22,12 @@
                 target="_blank"
                 title="Товар в претензиях"
             ></a>
+            <a
+                href="{{ path('authority', { targetUrl: '/admin/goodsReservesMovements?baseProductIdIn[0]=' ~ product.id }) }}"
+                class="orders"
+                target="_blank"
+                title="История движений товара"
+            ></a>
             {% if geoPoints[app.user.defaultGeoPointId]|default(null) is not null %}
                 <span
                     class="pricetag{% if product.pricetagQuantity > 0 %} active{% endif %}"

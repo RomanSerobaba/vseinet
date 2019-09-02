@@ -4,7 +4,6 @@ namespace AppBundle\Bus\Cart\Query;
 
 use AppBundle\Bus\Message\Message;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\Enum;
 
 class GetQuery extends Message
 {

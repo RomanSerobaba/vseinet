@@ -222,8 +222,8 @@ class OrderController extends Controller
 
         $command = new Command\CreateCommand($data);
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
-            'discountCode' => $this->get('session')->get('discountCode', null),
-            'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null,
+            'discountCode' => $this->get('session')->get('discountCode'),
+            'geoPointId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null,
         ]));
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
@@ -259,6 +259,7 @@ class OrderController extends Controller
             'hasLift' => !empty($command->address) ? $command->address->hasLift : null,
             'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
+            'orderTypeCode' => $command->typeCode,
         ]));
 
         if ($request->isMethod('POST') && empty($cart->products)) {
@@ -268,7 +269,7 @@ class OrderController extends Controller
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
+            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit']) && $request->request->get('submit')) {
                 try {
                     $this->get('command_bus')->handle($command);
                     $this->forward('AppBundle:Cart:clear');
@@ -318,6 +319,11 @@ class OrderController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'html' => $this->renderView('Order/'.$command->typeCode.'_creation_ajax.html.twig', [
+                    'form' => $form->createView(),
+                    'canCreateRetailOrder' => $canCreateRetailOrder,
+                    'cart' => $cart,
+                ]),
+                'cart_html' => $this->renderView('Order/cart_ajax.html.twig', [
                     'form' => $form->createView(),
                     'canCreateRetailOrder' => $canCreateRetailOrder,
                     'cart' => $cart,

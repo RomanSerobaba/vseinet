@@ -263,6 +263,7 @@ $(function() {
 
                     if (response.hasOwnProperty('html')) {
                         $('#create_form_wrapper').html(response.html);
+                        $('#products.cart').html(response.cart_html);
                         refreshFormEvents();
                         attachMasks();
                         attachUserAutocomplete();

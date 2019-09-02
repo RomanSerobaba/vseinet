@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Container\ContainerAware;
 use AppBundle\Entity\GeoCity;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class GeoCityIdentity extends ContainerAware
 {
@@ -37,6 +38,22 @@ class GeoCityIdentity extends ContainerAware
         if (null !== $token) {
             $user = $token->getUser();
             if (is_object($user)) {
+                $data = $em->createNativeQuery('
+                    SELECT
+                        p.geo_city_id
+                    FROM org_employment_history AS eh
+                    INNER JOIN org_employee_to_geo_room AS e2r ON e2r.org_employee_user_id = eh.org_employee_user_id
+                    INNER JOIN geo_room AS r ON r.id = e2r.geo_room_id
+                    INNER JOIN geo_point AS p ON p.id = r.geo_point_id
+                    WHERE eh.org_employee_user_id = :user_id AND eh.hired_at IS NOT NULL AND eh.fired_at IS NULL AND e2r.is_main = TRUE
+                ', (new ResultSetMapping())->addScalarResult('geo_city_id', 'geoCityId', 'integer'))
+                    ->setParameter('user_id', $user->getId())
+                    ->getOneOrNullResult();
+
+                if ($data) {
+                    return $data['geoCityId'];
+                }
+
                 $geoCityId = $user->getGeoCityId();
                 if ($geoCityId) {
                     return $geoCityId;

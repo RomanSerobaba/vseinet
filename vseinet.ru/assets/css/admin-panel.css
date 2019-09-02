@@ -259,6 +259,15 @@ H4 A.competitor {
     border-top: 7px solid #666;
 }
 
+A.pricetag {
+    background: url(../images/price_tag.gif);
+    border: none!important;
+    height: 24px;
+    margin-right: 5px;
+    width: 24px;
+    display: inline-block;
+    vertical-align: middle;
+}
 /*.admin-panel A.pricetag {
     background: url(/img/btns/price_tag.gif);
     padding-top: 10px;

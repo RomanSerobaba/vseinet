@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Favorite\Query;
 
@@ -13,9 +13,10 @@ class GetProductIdsQueryHandler extends MessageHandler
 
         if (null !== $user) {
             $q = $em->createQuery("
-                SELECT f.baseProductId
-                FROM AppBundle:Favorite f 
-                WHERE f.userId = :userId 
+                SELECT bp.canonicalId AS baseProductId
+                FROM AppBundle:Favorite f
+                JOIN AppBundle:BaseProduct AS bp WITH bp.id = f.baseProductId
+                WHERE f.userId = :userId
             ");
             $q->setParameter('userId', $user->getId());
 

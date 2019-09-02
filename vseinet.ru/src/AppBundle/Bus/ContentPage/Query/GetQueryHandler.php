@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\ContentPage\Query;
 
@@ -12,7 +12,7 @@ class GetQueryHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository(ContentPage::class)->findOneBy(['slug' => $query->slug, 'isActive' => true]);
+        $page = $em->getRepository(ContentPage::class)->findOneBy(['slug' => $query->slug, 'isActive' => true] + ($query->id ? ['id' => $query->id] : []));
         if (!$page instanceof ContentPage) {
             throw new NotFoundHttpException(sprintf('Страница "%s" не найдена', $query->slug));
         }
