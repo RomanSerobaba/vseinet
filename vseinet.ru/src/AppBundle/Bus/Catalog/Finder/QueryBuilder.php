@@ -42,7 +42,7 @@ class QueryBuilder extends ContainerAware
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".addcslashes(implode(' ', $this->match), '\()|-!@~"&/^$=<>\'')."')";
+            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
         }
 
         // total, all filters
@@ -121,7 +121,7 @@ class QueryBuilder extends ContainerAware
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".addcslashes(implode(' ', $this->match), '\()|-!@~"&/^$=<>\'')."')";
+            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
         }
 
         // total, all filters
@@ -237,7 +237,7 @@ class QueryBuilder extends ContainerAware
             $this->criteria[] = $this->getCriteriaNofilled();
         }
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".addcslashes(implode(' ', $this->match), '\()|-!@~"&/^$=<>\'')."')";
+            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
         }
         $criteria = implode(' AND ', array_filter($this->criteria));
 
@@ -561,5 +561,18 @@ class QueryBuilder extends ContainerAware
         }
 
         return sprintf('details.%d = %d', $id, $filter->details[$id]);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function escape(string $string): string
+    {
+        $from = ['\\',   '(',  ')',  '|',  '-',  '!',  '@',  '~',  '"',  '&',  '/',  '^',  '$',  '='];
+        $to = ['\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', '\&', '\/', '\^', '\$', '\='];
+
+        return str_replace($from, $to, $string);
     }
 }
