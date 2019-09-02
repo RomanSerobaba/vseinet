@@ -14,7 +14,7 @@
                 href="{{ path('clockin') }}"
                 id="clock-in-out"
                 class="{% if app.user.clockInTime %}work{% else %}rest{% endif %}"
-                title="{% if app.user.clockInTime %}{{ app.user.clockInTime|date('%H:%M') }}{% endif %}"
+                title="{% if app.user.clockInTime %}{{ app.user.clockInTime|date('H:i') }}{% endif %}"
             >
             </a>
         {% endif %}
