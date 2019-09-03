@@ -284,11 +284,18 @@ class CreateFormType extends AbstractType
             });
         }
 
-        if (OrderType::RETAIL == $options['data']->typeCode) {
-            $paymentTypes = array_filter($paymentTypes, function ($val) use ($options) {
-                return PaymentTypeCode::TERMINAL != $val->code || in_array($options['data']->geoCityId, [950, 174]);
-            });
-        }
+        $q = $this->em->createQuery("
+            SELECT
+                cd.id
+            FROM AppBundle:GeoRoom AS gr
+            JOIN AppBundle:CashDesk AS cd WITH cd.geoRoomId = gr.id
+            WHERE cd.deactivatedAt IS NULL AND cd.terminalId > 0 AND gr.geoPointId = :geoPointId
+        ")->setParameters(['geoPointId' => $options['data']->geoPointId,]);
+        $terminals = $q->getResult();
+
+        $paymentTypes = array_filter($paymentTypes, function ($val) use ($terminals) {
+            return PaymentTypeCode::TERMINAL != $val->code || !empty($terminals);
+        });
 
         if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST])) {
             $paymentTypes = array_filter($paymentTypes, function ($val) {
