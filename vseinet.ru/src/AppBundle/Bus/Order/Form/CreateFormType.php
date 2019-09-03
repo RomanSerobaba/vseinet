@@ -287,11 +287,10 @@ class CreateFormType extends AbstractType
         $q = $this->em->createQuery("
             SELECT
                 cd.id
-            FROM AppBundle:GeoPoint AS gp
-            JOIN AppBundle:GeoRoom AS gr WITH gr.geoPointId = gp.id
+            FROM AppBundle:GeoRoom AS gr
             JOIN AppBundle:CashDesk AS cd WITH cd.geoRoomId = gr.id
-            WHERE cd.deactivatedAt IS NULL AND cd.terminalId > 0 AND gp.geoCityId = :geoCityId
-        ")->setParameters(['geoCityId' => $options['data']->geoCityId,]);
+            WHERE cd.deactivatedAt IS NULL AND cd.terminalId > 0 AND gr.geoPointId = :geoPointId
+        ")->setParameters(['geoPointId' => $options['data']->geoPointId,]);
         $terminals = $q->getResult();
 
         $paymentTypes = array_filter($paymentTypes, function ($val) use ($terminals) {
