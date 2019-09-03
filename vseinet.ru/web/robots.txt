@@ -1,0 +1,64 @@
+# www.robotstxt.org/
+# www.google.com/support/webmasters/bin/answer.py?hl=en&answer=156449
+
+Host: https://vseinet.ru
+Sitemap: https://vseinet.ru/sitemap.xml
+
+User-agent: *
+Crawl-delay: 2
+Clean-param: q /catalog/*
+Clean-param: q /product/*
+Disallow: /catalog/*/?
+Allow: /catalog/*/?page=
+Disallow: /admin/
+Disallow: /search
+Disallow: /cart/add
+Disallow: /catalog/*/rating
+Disallow: /catalog/*/price
+Disallow: /catalog/*/novelty
+Disallow: /catalog/*/name
+Disallow: /city/set
+Disallow: /product/compare
+Disallow: /favorite
+Disallow: /cheaper
+Disallow: /user/oauth/
+Disallow: /org/
+Disallow: /cart/
+Disallow: /user/
+Disallow: /order/
+Disallow: /complaint/
+Disallow: /suggestion/
+
+User-agent: Yandex
+Crawl-delay: 1
+Clean-param: q /catalog/*
+Clean-param: q /product/*
+Disallow: /catalog/*/?
+Allow: /catalog/*/?page=
+Disallow: /admin/
+Disallow: /search
+Disallow: /cart/add
+Disallow: /catalog/*/rating
+Disallow: /catalog/*/price
+Disallow: /catalog/*/novelty
+Disallow: /catalog/*/name
+Disallow: /city/set
+Disallow: /product/compare
+Disallow: /favorite
+Disallow: /cheaper
+Disallow: /user/oauth/
+Disallow: /org/
+Disallow: /cart/
+Disallow: /user/
+Disallow: /order/
+Disallow: /complaint/
+Disallow: /suggestion/
+
+User-Agent: SputnikBot
+Crawl-delay: 3
+
+User-Agent: Slurp
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
