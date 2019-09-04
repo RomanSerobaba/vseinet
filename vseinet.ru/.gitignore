@@ -16,6 +16,8 @@
 /vendor/
 /web/*
 !/web/robots.txt
+!/web/images/
+!/web/sitemap.xml
 /.idea
 /nbproject
 /node_modules/*
