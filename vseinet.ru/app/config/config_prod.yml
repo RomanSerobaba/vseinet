@@ -20,3 +20,7 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+        errors:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_errors.log'
+            level: error
