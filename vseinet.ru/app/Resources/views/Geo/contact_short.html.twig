@@ -1,8 +1,8 @@
-<div 
-    class="city" 
-    data-id="{{ contact.geoPointId }}" 
+<div
+    class="city"
+    data-id="{{ contact.geoPointId }}"
     data-type="{{ contact.type }}"
-    {% if contact.coordinates %} data-coordinates="{{ contact.coordinates }}"{% endif %}
+    {% if contact.coordinates %} data-coordinates="{{ contact.coordinates.longitude }},{{ contact.coordinates.latitude }}"{% endif %}
 >
     <div class="wrapper">
         <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}" class="image">
@@ -13,7 +13,7 @@
                 <span class="name">{{ contact.geoCityName }}</span>
                 {% if contact.address %}, <span class="address">{{ contact.address }}</span>{% endif %}
             </a>
-            {% if contact.isNew %} 
+            {% if contact.isNew %}
                 <span class="new_point">новая!</span>
             {% endif %}
         </h4>

@@ -84,7 +84,7 @@
                     }});
                     return false;
                 });
-                var coordinates = point.data('coordinates').split(',')
+                var coordinates = point.data('coordinates').replace(/[\(\)]+/g,'').split(',')
                 var placemark = new ymaps.Placemark(coordinates, {
                     hintContent: point.find('.name').text()
                 }, {
