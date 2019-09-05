@@ -30,11 +30,13 @@ class GetRevisionsQueryHandler extends MessageHandler
                 ptc.price_time,
                 ptc.requested_at,
                 ptc.status,
-                CASE WHEN COALESCE(ptc.competitor_price, 0) = 0 OR c.period IS NOT NULL AND ptc.price_time + (c.period || ' day')::INTERVAL < NOW() THEN :void WHEN ptc.competitor_price > p.price THEN :ice ELSE :warning END AS state,
+                CASE WHEN COALESCE(ptc.competitor_price, 0) = 0 OR c.period IS NOT NULL AND ptc.price_time + (c.period || ' day')::INTERVAL < NOW() THEN :void WHEN ptc.competitor_price > COALESCE(p2.price, p.price) THEN :ice ELSE :warning END AS state,
                 ptc.server_response,
                 CASE WHEN c.channel = 'site' THEN false ELSE true END AS read_only
             FROM product_to_competitor AS ptc
             INNER JOIN base_product AS bp ON bp.id = ptc.base_product_id
+            LEFT OUTER JOIN product AS p2 ON p2.base_product_id = bp.canonical_id AND p2.geo_city_id = ptc.geo_city_id
+            INNER JOIN product AS p ON p.base_product_id = bp.canonical_id AND p.geo_city_id = 0
             INNER JOIN competitor AS c ON c.id = ptc.competitor_id
             WHERE bp.canonical_id = :base_product_id AND ptc.geo_city_id IN (:geo_city_id, 0) AND c.is_active = true
             ORDER BY ptc.price_time
