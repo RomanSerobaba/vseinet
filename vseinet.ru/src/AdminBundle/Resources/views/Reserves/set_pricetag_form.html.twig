@@ -1,0 +1,14 @@
+{{ form_start(form, { action: path('admin_handmade_pricetag_edit', { id: command.id, geoPointId: command.geoPointId }) }) }}
+
+<div class="row h">
+    {{ form_label(form.price, 'Цена') }}
+    {{ form_widget(form.price, { attr: { class: 'txt' }}) }}
+</div>
+
+<div class="row h">
+    {{ form_widget(form.submit, { label: 'Установить', attr: { class: 'bttn blue' }}) }}
+    {{ form_widget(form._token) }}
+    {{ form_widget(form.geoPointId) }}
+</div>
+
+{{ form_end(form, { render_rest: false }) }}
