@@ -99,8 +99,9 @@ class GeoCityIdentity extends ContainerAware
         }
         $q = $em->createQuery("
             SELECT
-                gi.geoCityId
+                gic.geoCityId
             FROM AppBundle:GeoIp AS gi
+            INNER JOIN AppBundle:GeoIpCity AS gic WITH gic.id = gi.geoIpCityId
             WHERE :longIp BETWEEN gi.longIp1 AND gi.longIp2
         ");
         $q->setParameter('longIp', ip2long($this->get('request_stack')->getMasterRequest()->getClientIp()));
