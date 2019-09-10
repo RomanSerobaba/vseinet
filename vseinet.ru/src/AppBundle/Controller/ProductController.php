@@ -23,7 +23,7 @@ class ProductController extends Controller
      * @VIA\Get(
      *     name="catalog_product",
      *     path="/product/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
      *     }
@@ -31,7 +31,7 @@ class ProductController extends Controller
      * @VIA\Get(
      *     name="catalog_product_with_category",
      *     path="/product/{id}/{categoryId}/",
-     *     requirements={"id": "\d+", "categoryId": "\d+"},
+     *     requirements={"id"="\d+", "categoryId"="\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
      *         @VIA\Parameter(name="categoryId", type="integer")
@@ -101,7 +101,7 @@ class ProductController extends Controller
      * @VIA\Get(
      *     name="catalog_product_gallery",
      *     path="/product/gallary/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
      *         @VIA\Parameter(name="index", type="integer")

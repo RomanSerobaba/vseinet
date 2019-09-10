@@ -26,7 +26,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category",
      *     path="/catalog/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
@@ -35,7 +35,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category_with_brand",
      *     path="/catalog/{id}/{brandName}/",
-     *     requirements={"id": "\d+", "brandName": "[^\/]*"},
+     *     requirements={"id"="\d+", "brandName"="[^\/]*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
@@ -204,7 +204,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_brand",
      *     path="/brand/{name}/",
-     *     requirements={"name": "[^\/]*"},
+     *     requirements={"name"="[^\/]*"},
      *     parameters={
      *         @VIA\Parameter(name="name", type="string")
      *     },
@@ -242,7 +242,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_detail",
      *     path="/detail/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"}
      * )
      */
@@ -274,7 +274,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_detail_value",
      *     path="/detailValue/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"}
      * )
      */
@@ -306,7 +306,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_supplier",
      *     path="/supplier/{code}/",
-     *     requirements={"code": "[^\/]*"},
+     *     requirements={"code"="[^\/]*"},
      *     methods={"GET", "POST"}
      * )
      */

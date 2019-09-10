@@ -117,7 +117,7 @@ class GeoController extends Controller
      * @VIA\Get(
      *     name="contacts_representative",
      *     path="/contacts/{geoPointId}/",
-     *     requirements={"geoPointId": "\d+"}
+     *     requirements={"geoPointId"="\d+"}
      * )
      */
     public function getContactAction(int $geoPointId, Request $request)

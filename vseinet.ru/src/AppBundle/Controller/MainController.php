@@ -50,7 +50,7 @@ class MainController extends Controller
      * @VIA\Route(
      *     name="cheaper_request",
      *     path="/cheaper/request/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -107,7 +107,7 @@ class MainController extends Controller
      * @VIA\Get(
      *     name="credit_calculators",
      *     path="/credit/calculators/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     condition="request.isXmlHttpRequest()"
      * )
      */

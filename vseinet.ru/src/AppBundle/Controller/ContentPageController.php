@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\ContentPage\Query\GetQuery;
-use AppBundle\Bus\Vacancy\Query\GetListQuery as GetVacanciesQuery;
 use AppBundle\Bus\Category\Query\GetDeliveryTaxesQuery as GetCategoryDeliveryTaxesQuery;
 use AppBundle\Bus\Geo\Query\GetDeliveryTaxesQuery as GetRepresentativeDeleiveryTaxesQuery;
+use AppBundle\Bus\Vacancy\Query\GetListQuery;
 
 class ContentPageController extends Controller
 {
@@ -16,7 +15,7 @@ class ContentPageController extends Controller
      * @VIA\Get(
      *     name="content_page",
      *     path="/{slug}/",
-     *     requirements={"slug" = "payment|garanty|credit|promo|partnership|help|service"},
+     *     requirements={"slug"="payment|garanty|credit|promo|partnership|help|service"},
      *     parameters={
      *         @VIA\Parameter(name="slug", type="string")
      *     }
@@ -35,7 +34,7 @@ class ContentPageController extends Controller
      */
     public function aboutAction()
     {
-        $vacancies = $this->get('query_bus')->handle(new GetVacanciesQuery());
+        $vacancies = $this->get('query_bus')->handle(new GetListQuery());
 
         return $this->show('about', ['vacancies' => $vacancies]);
     }
@@ -56,6 +55,10 @@ class ContentPageController extends Controller
 
     protected function show($slug, array $data = [])
     {
+        if ('about' === $slug) {
+            return $this->render("ContentPage/about.html.twig", $data);
+        }
+
         $page = $this->get('query_bus')->handle(new GetQuery(['slug' => $slug, 'id' => $data['id'] ?? null]));
         $template = empty($data) || 'service' === $slug ? 'page' : $slug;
 

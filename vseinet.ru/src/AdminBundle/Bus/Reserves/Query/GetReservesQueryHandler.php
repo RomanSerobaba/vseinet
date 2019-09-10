@@ -5,7 +5,6 @@ namespace AdminBundle\Bus\Reserves\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
-use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
 use AdminBundle\Bus\Reserves\Query\DTO\Supply;
 use AppBundle\Enum\GoodsConditionCode;
