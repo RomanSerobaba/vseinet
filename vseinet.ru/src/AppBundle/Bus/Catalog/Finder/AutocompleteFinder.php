@@ -4,6 +4,7 @@ namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Bus\Catalog\Query\GetProductsQuery;
 use AppBundle\Entity\BaseProduct;
+use AppBundle\Bus\Catalog\Enum\Availability;
 
 class AutocompleteFinder extends AbstractProductFinder
 {
@@ -76,12 +77,14 @@ class AutocompleteFinder extends AbstractProductFinder
             }
         }
 
+        $availability = $this->getUserIsEmployee() ? Availability::FOR_ALL_TIME : Availability::ACTIVE;
+
         $query = "
             SELECT
                 id,
                 WEIGHT() AS weight
             FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."')
+            WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AND availability <= {$availability}
             ORDER BY availability ASC, weight DESC, rating DESC
             LIMIT ".self::COUNT_PRODUCTS."
             OPTION ranker=expr('sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25')
