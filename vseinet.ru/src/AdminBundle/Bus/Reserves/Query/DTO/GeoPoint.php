@@ -68,13 +68,43 @@ class GeoPoint
      */
     public $pricetagIsHandmade;
 
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $handmadePricetag;
 
-    public function __construct($id, $name, $geoCityId, $pricetag, $pricetagIsHandmade)
+    /**
+     * @Assert\Type(type="datetime")
+     */
+    public $pricetagDate;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $pricetagCreator;
+
+    /**
+     * @Assert\Type(type="datetime")
+     */
+    public $handmadePricetagDate;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $handmadePricetagCreator;
+
+
+    public function __construct($id, $name, $geoCityId, $pricetag, $pricetagIsHandmade, $handmadePricetag, $pricetagDate, $pricetagCreator, $handmadePricetagDate, $handmadePricetagCreator)
     {
         $this->id = $id;
         $this->name = $name;
         $this->geoCityId = $geoCityId;
         $this->pricetag = $pricetag;
         $this->pricetagIsHandmade = $pricetagIsHandmade;
+        $this->handmadePricetag = $handmadePricetag;
+        $this->pricetagDate = $pricetagDate;
+        $this->pricetagCreator = $pricetagCreator;
+        $this->handmadePricetagDate = $handmadePricetagDate;
+        $this->handmadePricetagCreator = $handmadePricetagCreator;
     }
 }

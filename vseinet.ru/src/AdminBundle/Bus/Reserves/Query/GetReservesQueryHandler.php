@@ -65,11 +65,21 @@ class GetReservesQueryHandler extends MessageHandler
                 gc.id AS geo_city_id,
                 gc.name AS geo_city_name,
                 pp.price AS pricetag,
-                pp.is_handmade AS pricetag_is_handmade
+                pp.is_handmade AS pricetag_is_handmade,
+                pps.handmade_price AS handmade_pricetag,
+                pp.printed_at AS pricetag_date,
+                CONCAT_WS(' ', p.lastname, p.firstname, p.secondname) AS pricetag_creator,
+                pps.handmade_created_at AS handmade_pricetag_date,
+                CONCAT_WS(' ', p2.lastname, p2.firstname, p2.secondname) AS handmade_pricetag_creator
             FROM geo_room AS gr
             INNER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
             INNER JOIN geo_city AS gc ON gc.id = gp.geo_city_id
             LEFT OUTER JOIN product_pricetag AS pp ON pp.geo_point_id = gp.id AND pp.base_product_id = :base_product_id
+            LEFT OUTER JOIN product_pricetag_settings AS pps ON pps.geo_point_id = gp.id AND pps.base_product_id = :base_product_id
+            LEFT OUTER JOIN \"user\" AS u ON u.id = pp.printed_by
+            LEFT OUTER JOIN person AS p ON p.id = u.person_id
+            LEFT OUTER JOIN \"user\" AS u2 ON u2.id = pps.handmade_created_by
+            LEFT OUTER JOIN person AS p2 ON p2.id = u2.person_id
             WHERE gr.id IN (:ids)
         ", new DTORSM(DTO\GeoObject::class));
         $q->setParameter('ids', $roomIds);
@@ -88,7 +98,7 @@ class GetReservesQueryHandler extends MessageHandler
             $geoCities[$geoObject->geoCityId]->geoPointIds[$geoObject->geoPointId] = $geoObject->geoPointId;
 
             if (empty($geoPoints[$geoObject->geoPointId])) {
-                $geoPoints[$geoObject->geoPointId] = new DTO\GeoPoint($geoObject->geoPointId, $geoObject->geoPointName, $geoObject->geoCityId, $geoObject->pricetag, $geoObject->pricetagIsHandmade);
+                $geoPoints[$geoObject->geoPointId] = new DTO\GeoPoint($geoObject->geoPointId, $geoObject->geoPointName, $geoObject->geoCityId, $geoObject->pricetag, $geoObject->pricetagIsHandmade, $geoObject->handmadePricetag, $geoObject->pricetagDate, $geoObject->pricetagCreator, $geoObject->handmadePricetagDate, $geoObject->handmadePricetagCreator);
             }
 
             $geoPoints[$geoObject->geoPointId]->geoRoomIds[$geoObject->geoRoomId] = $geoObject->geoRoomId;

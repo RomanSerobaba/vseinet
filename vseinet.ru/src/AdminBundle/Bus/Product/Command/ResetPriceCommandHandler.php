@@ -9,6 +9,7 @@ use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceType;
 use Doctrine\ORM\AbstractQuery;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ResetPriceCommandHandler extends MessageHandler
 {
@@ -34,17 +35,17 @@ class ResetPriceCommandHandler extends MessageHandler
             'geoCityId' => $geoPointId ? $this->getGeoCity()->getId() : 0,
         ]);
         if ($product instanceof Product) {
-            if ($price = $product->getTemporaryPrice()) {
+            if ($product->getTemporaryPrice()) {
                 $type = ProductPriceType::TEMPORARY;
                 $product->setTemporaryPrice(null);
-            } elseif ($price = $product->getUltimatePrice()) {
+            } elseif ($product->getUltimatePrice()) {
                 $type = ProductPriceType::ULTIMATE;
                 $product->setUltimatePrice(null);
-            } elseif ($price = $product->getManualPrice()) {
+            } elseif ($product->getManualPrice()) {
                 $type = ProductPriceType::MANUAL;
                 $product->setManualPrice(null);
             } else {
-                throw new BadRequeetsHttpException('У товара не задана ручная цена');
+                throw new BadRequestHttpException('У товара не задана ручная цена');
             }
             $em->persist($product);
 

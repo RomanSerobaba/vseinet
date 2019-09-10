@@ -287,6 +287,26 @@ $(function() {
             }
         });
     });
+    container.on('click', '.handmade-pricetag-edit', function(e) {
+        e.preventDefault();
+        var a = $(this);
+        sp.openAjaxDialog(a, {
+            dialog: {
+                minWidth: 600,
+                title: 'Установить ручной ценник'
+            },
+            load: function() {
+                var dialog = this;
+                var form = dialog.find('form').submit(function(e) {
+                    e.preventDefault();
+                    sp.post(form.prop('action'), form.serializeArray()).then(function() {
+                        dialog.dialog('close');
+                        a.next('span').html(form.find('[name="set_pricetag_form[price]"]').val());
+                    });
+                });
+            }
+        });
+    });
     container.on('click', '.reset-price', function(e) {
         e.preventDefault();
         container.find('.price-wrapper').addClass('loading');

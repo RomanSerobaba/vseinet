@@ -101,7 +101,7 @@ class CatalogController extends Controller
         }
 
         if (0 === $category->countProducts && !$this->getUserIsEmployee()) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Категории не существует');
         }
 
         if (1 === $finder->getFilter()->page && !empty($category->description)) {

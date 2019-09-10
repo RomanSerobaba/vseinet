@@ -1,12 +1,12 @@
 <div class="representative">
-    <img src="/u/contacts/{{ representative.geoPointId }}_p.jpg" alt="" />
+    <img src="{{ uploads_domain }}/contacts/{{ representative.geoPointId }}_p.jpg" alt="" />
     <h2>{{ representative.geoPointName }}</h2>
     <h4>{% if representative.hasRetail %}точка самовывоза{% else %}курьерская доставка{% endif %}</h4>
     <p class="address">
         {{ representative.geoCityName }}{% if representative.address %},{{ representative.address }}{% endif %}
     </p>
     <div class="phones">
-        <p>тел. 
+        <p>тел.
             {% for phone in representative.phones %}
                 {{ phone.value }}{% if not loop.last %},{% endif %}
             {% endfor %}

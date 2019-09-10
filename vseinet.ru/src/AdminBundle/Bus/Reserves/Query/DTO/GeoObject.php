@@ -42,7 +42,32 @@ class GeoObject
     public $pricetag;
 
     /**
+     * @Assert\Type(type="datetime")
+     */
+    public $pricetagDate;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $pricetagCreator;
+
+    /**
      * @Assert\Type(type="boolean")
      */
     public $pricetagIsHandmade;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $handmadePricetag;
+
+    /**
+     * @Assert\Type(type="datetime")
+     */
+    public $handmadePricetagDate;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $handmadePricetagCreator;
 }

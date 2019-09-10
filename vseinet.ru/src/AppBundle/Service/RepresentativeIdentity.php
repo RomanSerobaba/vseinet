@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Service;
 
@@ -11,20 +11,20 @@ class RepresentativeIdentity extends ContainerAware
     public function getRepresentative(): Representative
     {
         $session = $this->get('request_stack')->getMasterRequest()->getSession();
-        
+
         $geoCity = $this->getGeoCity();
         if (0 === $geoCity->getCountGeoPoints()) {
             $geoCityId = $this->getParameter('default.geo_city_id');
         } else {
             $geoCityId = $geoCity->getId();
         }
-        
+
         $representative = $session->get('representative');
         if (null === $representative || $representative->geoCityId !== $geoCityId) {
             $representative = $this->loadRepresentative($geoCityId);
             $session->set('representative', $representative);
         }
-        
+
         return $representative;
     }
 
@@ -34,22 +34,24 @@ class RepresentativeIdentity extends ContainerAware
 
         $q = $em->createQuery("
             SELECT r
-            FROM AppBundle:Representative AS r 
-            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId 
+            FROM AppBundle:Representative AS r
+            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
             INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId
-            WHERE r.isActive = true AND gc.id = :geoCityId AND r.isCentral = true
+            WHERE r.isActive = true AND gc.id = :geoCityId
+            ORDER BY r.isCentral DESC
         ");
         $q->setParameter('geoCityId', $geoCityId);
+        $q->setMaxResults(1);
         $representative = $q->getSingleResult();
         if (!$representative instanceof Representative) {
             throw new \RuntimeException('Representative not found');
         }
 
         $q = $em->createQuery("
-            SELECT ga.address 
-            FROM AppBundle:GeoAddress AS ga 
-            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.geoAddressId = ga.id 
-            WHERE gp.id = :id 
+            SELECT ga.address
+            FROM AppBundle:GeoAddress AS ga
+            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.geoAddressId = ga.id
+            WHERE gp.id = :id
         ");
         $q->setParameter('id', $representative->getGeoPointId());
         try {
@@ -61,10 +63,10 @@ class RepresentativeIdentity extends ContainerAware
             SELECT
                 c.value,
                 CASE WHEN c.isMain = true THEN 1 ELSE CASE WHEN c.contactTypeCode = :phoneOrd THEN 2 ELSE 3 END END AS ORD
-            FROM AppBundle:RepresentativePhone AS rp 
+            FROM AppBundle:RepresentativePhone AS rp
             INNER JOIN AppBundle:Contact AS c WITH c.id = rp.contactId
             WHERE rp.representativeId = :representativeId AND c.contactTypeCode IN (:phone, :mobile)
-            ORDER BY ORD 
+            ORDER BY ORD
         ");
         $q->setParameter('representativeId', $representative->getGeoPointId());
         $q->setParameter('phoneOrd', ContactTypeCode::PHONE);
@@ -75,11 +77,11 @@ class RepresentativeIdentity extends ContainerAware
 
         $dayOfWeek = date('N');
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 rs.s{$dayOfWeek} AS s,
                 rs.t{$dayOfWeek} AS t
-            FROM AppBundle:RepresentativeSchedule rs 
-            WHERE rs.representativeId = :representativeId     
+            FROM AppBundle:RepresentativeSchedule rs
+            WHERE rs.representativeId = :representativeId
         ");
         $q->setParameter('representativeId', $representative->getGeoPointId());
         $schedule = $q->getSingleResult();
@@ -112,7 +114,7 @@ class RepresentativeIdentity extends ContainerAware
             $matches[$index] = [];
             if (!preg_match('/\((\d+)\)\s*(.+)/uD', $contact['value'], $matches[$index])) {
                 $matches[$index][1] = '';
-                $matches[$index][2] = '';    
+                $matches[$index][2] = '';
             }
             $representative->contacts[] = $contact['value'];
         }
@@ -130,13 +132,13 @@ class RepresentativeIdentity extends ContainerAware
 
             return $representative;
         }
-        
+
         if ($matches[0][1]) {
             if ($matches[0][1] == $matches[1][1]) {
                 $representative->phone1 = '+7 ('.$matches[0][1].') '.$matches[0][2].', '.$matches[1][2];
                 $representative->phone2 = $contacts[2]['value'];
                 if ($matches[0][1] == $matches[2][1]) {
-                    $representative->phone3 = $representative->phone1.', '.$matches[2][2];    
+                    $representative->phone3 = $representative->phone1.', '.$matches[2][2];
                 }
             }
             elseif ($matches[0][1] == $matches[2][1]) {
