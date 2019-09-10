@@ -34,7 +34,7 @@
         </div>
         <div class="title">
             <h1 itemprop="name">{{ baseProduct.name }}</h1>
-            <small>Код товара: <b itemprop="sku" class="sku">{{ baseProduct.id }}</b></small>
+            <small>Код товара: <b itemprop="sku" class="sku">{{ baseProduct.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (baseProduct.price - baseProduct.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}</small>
         </div>
         <div id="product" data-id="{{ baseProduct.id }}">
             <div class="row clearfix">

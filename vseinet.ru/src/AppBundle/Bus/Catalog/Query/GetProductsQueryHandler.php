@@ -4,6 +4,7 @@ namespace AppBundle\Bus\Catalog\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
+use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Enum\ProductPriceType;
 
 class GetProductsQueryHandler extends MessageHandler
@@ -27,7 +28,13 @@ class GetProductsQueryHandler extends MessageHandler
                 bpd.short_description AS description,
                 b.min_quantity,
                 b.updated_at,
-                ppb.quantity AS pricetag_quantity
+                ppb.quantity AS pricetag_quantity,
+                COALESCE((
+                    SELECT ROUND(SUM(grrc.delta * (si.purchase_price - si.bonus_amount)) / SUM(grrc.delta))
+                    FROM goods_reserve_register_current AS grrc
+                    INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
+                    WHERE grrc.base_product_id = b.id AND grrc.goods_condition_code = :goodsConditionCode_FREE
+                ), b.supplier_price) AS purchase_price
             FROM
                 base_product AS b
                 INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )
@@ -45,6 +52,7 @@ class GetProductsQueryHandler extends MessageHandler
                 'geoCityId' => $this->getGeoCity()->getId(),
                 'userId' => $userId,
                 'ids' => '{'.implode(',', $query->ids).'}',
+                'goodsConditionCode_FREE' => GoodsConditionCode::FREE,
             ]);
         $products = [];
 
