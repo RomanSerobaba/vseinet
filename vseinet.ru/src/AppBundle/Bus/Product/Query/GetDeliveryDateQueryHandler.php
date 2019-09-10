@@ -100,12 +100,14 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         // Резервов нет, но товар на заказ, значить есть у поставщика
         if (empty($reserves)) {
             if (ProductAvailabilityCode::AVAILABLE !== $product->supplierAvailability) {
-                throw new BadRequestHttpException(sprintf('Товар %d отсутсвует у постащика', $product->baseProductId));
+                // throw new BadRequestHttpException(sprintf('Товар %d отсутсвует у постащика', $product->baseProductId));
+                return null;
             }
 
             $supplier = $em->getRepository(Supplier::class)->find($product->supplierId);
             if (!$supplier instanceof Supplier) {
-                throw new NotFoundHttpException(sprintf('Поставщик %d не найден', $product->supplierId));
+                // throw new NotFoundHttpException(sprintf('Поставщик %d не найден', $product->supplierId));
+                return null;
             }
 
             return new DTO\DeliveryDate($supplier->getOrderDeliveryDate());
