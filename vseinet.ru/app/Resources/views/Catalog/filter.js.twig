@@ -22,7 +22,7 @@ $(function() {
         if (window.history.pushState) {
             window.history.pushState({}, null, this.dataset.url);
         }
-        sp.get(this.dataset.url).done(function(response) {
+        sp.get(this.dataset.url, {t: Date.now()}).done(function(response) {
             productList.append(response.products)
             sorting1.html(response.sorting)
             paging1.html(response.paging)
@@ -39,7 +39,7 @@ $(function() {
             productList.stop().fadeOut(500)
         }
         productList.addClass('in')
-        sp.get(url).then(function(data) {
+        sp.get(url, {t: Date.now()}).then(function(data) {
             if (!supportsTransitions) {
                 productList.stop().fadeIn(250)
             }
