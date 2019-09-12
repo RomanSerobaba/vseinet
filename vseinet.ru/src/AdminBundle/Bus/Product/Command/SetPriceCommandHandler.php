@@ -66,7 +66,7 @@ class SetPriceCommandHandler extends MessageHandler
 
         $log = new ProductPriceLog();
         $log->setBaseproductId($baseProduct->getId());
-        $log->setGeoCityId($this->getGeoCity()->getId());
+        $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
         $log->setPrice($command->price);
         $log->setPriceType($command->type);
         $log->setOperatedBy($this->getUser()->getId());
