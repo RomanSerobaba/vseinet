@@ -66,6 +66,7 @@ $.widget('sp.form', {
         this.element.data('inputs', inputs);
     },
     _validate: function (submit) {
+        sp.abort();
         var form = this.element, callback;
         if (submit) {
             callback = this.options.submit;
