@@ -56,6 +56,7 @@ class AddAddressCommandHandler extends MessageHandler
             $q->setParameter('geoAddressId', $geoAddress->getId());
             $q->setParameter('personId', $this->getUser()->getPersonId());
             $q->setParameter('isMain', $command->isMain);
+            $q->execute();
         }
 
         $ga2p = $em->getRepository(GeoAddressToPerson::class)->findOneBy([

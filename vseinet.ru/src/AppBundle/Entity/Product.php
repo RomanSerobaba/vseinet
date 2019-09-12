@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright (c) VseInet.ru
+ * Author: Kalchenko Sergey
+ * Date: 29.03.2019.
+ */
 
 namespace AppBundle\Entity;
 
@@ -13,132 +18,185 @@ use Doctrine\ORM\Mapping as ORM;
 class Product
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="base_product_id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
-    private $baseProductId;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="geo_city_id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
+     *
+     * @var int
      */
     private $geoCityId;
 
     /**
-     * @var string
+     * @ORM\Column(name="base_product_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      *
+     * @var int
+     */
+    private $baseProductId;
+
+    /**
      * @ORM\Column(name="product_availability_code", type="string", length=255)
+     *
+     * @var string
      */
     private $productAvailabilityCode;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="price", type="integer")
+     *
+     * @var int
      */
     private $price;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="price_type", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     private $priceType;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="price_time", type="datetime")
+     *
+     * @var \DateTime
      */
     private $priceTime;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="discount_amount", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $discountAmount;
 
     /**
-     * @var \DateTime
+     * @ORM\Column(name="offer_percent", type="integer", nullable=true)
      *
+     * @var int
+     */
+    private $offerPercent;
+
+    /**
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     private $createdAt;
 
     /**
-     * @var int
+     * @ORM\Column(name="modified_at", type="datetime", nullable=true)
      *
+     * @var \DateTime
+     */
+    private $modifiedAt;
+
+    /**
+     * @ORM\Column(name="delivery_tax", type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $deliveryTax;
+
+    /**
+     * @ORM\Column(name="lifting_tax", type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $liftingTax;
+
+    /**
      * @ORM\Column(name="manual_price", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $manualPrice;
 
     /**
-     * @var int
+     * @ORM\Column(name="manual_price_operated_by", type="integer", nullable=true)
      *
+     * @var int
+     */
+    private $manualPriceOperatedBy;
+
+    /**
+     * @ORM\Column(name="manual_price_operated_at", type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $manualPriceOperatedAt;
+
+    /**
      * @ORM\Column(name="ultimate_price", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $ultimatePrice;
 
     /**
-     * @var int
+     * @ORM\Column(name="ultimate_price_operated_by", type="integer", nullable=true)
      *
+     * @var int
+     */
+    private $ultimatePriceOperatedBy;
+
+    /**
+     * @ORM\Column(name="ultimate_price_operated_at", type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $ultimatePriceOperatedAt;
+
+    /**
      * @ORM\Column(name="competitor_price", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $competitorPrice;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="temporary_price", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $temporaryPrice;
 
     /**
-     * @var int
+     * @ORM\Column(name="temporary_price_operated_by", type="integer", nullable=true)
      *
-     * @ORM\Column(name="profit", type="integer")
+     * @var int
+     */
+    private $temporaryPriceOperatedBy;
+
+    /**
+     * @ORM\Column(name="temporary_price_operated_at", type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $temporaryPriceOperatedAt;
+
+    /**
+     * @ORM\Column(name="rating", type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $rating;
+
+    /**
+     * @ORM\Column(name="profit", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $profit;
-
-    /**
-     * Set baseProductId.
-     *
-     * @param int $baseProductId
-     *
-     * @return Product
-     */
-    public function setBaseProductId($baseProductId)
-    {
-        $this->baseProductId = $baseProductId;
-
-        return $this;
-    }
-
-    /**
-     * Get baseProductId.
-     *
-     * @return int
-     */
-    public function getBaseProductId()
-    {
-        return $this->baseProductId;
-    }
 
     /**
      * Set geoCityId.
      *
      * @param int $geoCityId
      *
-     * @return Product
+     * @return $this
      */
-    public function setGeoCityId($geoCityId)
+    public function setGeoCityId($geoCityId): self
     {
         $this->geoCityId = $geoCityId;
 
@@ -150,9 +208,33 @@ class Product
      *
      * @return int
      */
-    public function getGeoCityId()
+    public function getGeoCityId(): int
     {
         return $this->geoCityId;
+    }
+
+    /**
+     * Set baseProductId.
+     *
+     * @param int $baseProductId
+     *
+     * @return $this
+     */
+    public function setBaseProductId($baseProductId): self
+    {
+        $this->baseProductId = $baseProductId;
+
+        return $this;
+    }
+
+    /**
+     * Get baseProductId.
+     *
+     * @return int
+     */
+    public function getBaseProductId(): int
+    {
+        return $this->baseProductId;
     }
 
     /**
@@ -160,9 +242,9 @@ class Product
      *
      * @param string $productAvailabilityCode
      *
-     * @return Product
+     * @return $this
      */
-    public function setProductAvailabilityCode($productAvailabilityCode)
+    public function setProductAvailabilityCode($productAvailabilityCode): self
     {
         $this->productAvailabilityCode = $productAvailabilityCode;
 
@@ -174,7 +256,7 @@ class Product
      *
      * @return string
      */
-    public function getProductAvailabilityCode()
+    public function getProductAvailabilityCode(): string
     {
         return $this->productAvailabilityCode;
     }
@@ -184,9 +266,9 @@ class Product
      *
      * @param int $price
      *
-     * @return Product
+     * @return $this
      */
-    public function setPrice($price)
+    public function setPrice($price): self
     {
         $this->price = $price;
 
@@ -198,7 +280,7 @@ class Product
      *
      * @return int
      */
-    public function getPrice()
+    public function getPrice(): int
     {
         return $this->price;
     }
@@ -208,9 +290,9 @@ class Product
      *
      * @param string $priceType
      *
-     * @return Product
+     * @return $this
      */
-    public function setPriceType($priceType)
+    public function setPriceType($priceType): self
     {
         $this->priceType = $priceType;
 
@@ -222,7 +304,7 @@ class Product
      *
      * @return string
      */
-    public function getPriceType()
+    public function getPriceType(): string
     {
         return $this->priceType;
     }
@@ -230,11 +312,11 @@ class Product
     /**
      * Set priceTime.
      *
-     * @param \DateTime $priceTime
+     * @param \DateTime|null $priceTime
      *
-     * @return Product
+     * @return $this
      */
-    public function setPriceTime($priceTime)
+    public function setPriceTime($priceTime): self
     {
         $this->priceTime = $priceTime;
 
@@ -244,9 +326,9 @@ class Product
     /**
      * Get priceTime.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getPriceTime()
+    public function getPriceTime(): ?\DateTime
     {
         return $this->priceTime;
     }
@@ -254,11 +336,11 @@ class Product
     /**
      * Set discountAmount.
      *
-     * @param int $discountAmount
+     * @param int|null $discountAmount
      *
-     * @return Product
+     * @return $this
      */
-    public function setDiscountAmount($discountAmount)
+    public function setDiscountAmount($discountAmount): self
     {
         $this->discountAmount = $discountAmount;
 
@@ -268,21 +350,45 @@ class Product
     /**
      * Get discountAmount.
      *
-     * @return int
+     * @return int|null
      */
-    public function getDiscountAmount()
+    public function getDiscountAmount(): ?int
     {
         return $this->discountAmount;
     }
 
     /**
+     * Set offerPercent.
+     *
+     * @param int|null $offerPercent
+     *
+     * @return $this
+     */
+    public function setOfferPercent($offerPercent): self
+    {
+        $this->offerPercent = $offerPercent;
+
+        return $this;
+    }
+
+    /**
+     * Get offerPercent.
+     *
+     * @return int|null
+     */
+    public function getOfferPercent(): ?int
+    {
+        return $this->offerPercent;
+    }
+
+    /**
      * Set createdAt.
      *
-     * @param \DateTime $createdAt
+     * @param \DateTime|null $createdAt
      *
-     * @return Product
+     * @return $this
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt($createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -292,21 +398,93 @@ class Product
     /**
      * Get createdAt.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
     /**
+     * Set modifiedAt.
+     *
+     * @param \DateTime|null $modifiedAt
+     *
+     * @return $this
+     */
+    public function setModifiedAt($modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get modifiedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getModifiedAt(): ?\DateTime
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * Set deliveryTax.
+     *
+     * @param int|null $deliveryTax
+     *
+     * @return $this
+     */
+    public function setDeliveryTax($deliveryTax): self
+    {
+        $this->deliveryTax = $deliveryTax;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveryTax.
+     *
+     * @return int|null
+     */
+    public function getDeliveryTax(): ?int
+    {
+        return $this->deliveryTax;
+    }
+
+    /**
+     * Set liftingTax.
+     *
+     * @param int|null $liftingTax
+     *
+     * @return $this
+     */
+    public function setLiftingTax($liftingTax): self
+    {
+        $this->liftingTax = $liftingTax;
+
+        return $this;
+    }
+
+    /**
+     * Get liftingTax.
+     *
+     * @return int|null
+     */
+    public function getLiftingTax(): ?int
+    {
+        return $this->liftingTax;
+    }
+
+    /**
      * Set manualPrice.
      *
-     * @param int $manualPrice
+     * @param int|null $manualPrice
      *
-     * @return Product
+     * @return $this
      */
-    public function setManualPrice($manualPrice)
+    public function setManualPrice($manualPrice): self
     {
         $this->manualPrice = $manualPrice;
 
@@ -316,21 +494,69 @@ class Product
     /**
      * Get manualPrice.
      *
-     * @return int
+     * @return int|null
      */
-    public function getManualPrice()
+    public function getManualPrice(): ?int
     {
         return $this->manualPrice;
     }
 
     /**
+     * Set manualPriceOperatedBy.
+     *
+     * @param int|null $manualPriceOperatedBy
+     *
+     * @return $this
+     */
+    public function setManualPriceOperatedBy($manualPriceOperatedBy): self
+    {
+        $this->manualPriceOperatedBy = $manualPriceOperatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get manualPriceOperatedBy.
+     *
+     * @return int|null
+     */
+    public function getManualPriceOperatedBy(): ?int
+    {
+        return $this->manualPriceOperatedBy;
+    }
+
+    /**
+     * Set manualPriceOperatedAt.
+     *
+     * @param \DateTime|null $manualPriceOperatedAt
+     *
+     * @return $this
+     */
+    public function setManualPriceOperatedAt($manualPriceOperatedAt): self
+    {
+        $this->manualPriceOperatedAt = $manualPriceOperatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get manualPriceOperatedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getManualPriceOperatedAt(): ?\DateTime
+    {
+        return $this->manualPriceOperatedAt;
+    }
+
+    /**
      * Set ultimatePrice.
      *
-     * @param int $ultimatePrice
+     * @param int|null $ultimatePrice
      *
-     * @return Product
+     * @return $this
      */
-    public function setUltimatePrice($ultimatePrice)
+    public function setUltimatePrice($ultimatePrice): self
     {
         $this->ultimatePrice = $ultimatePrice;
 
@@ -340,21 +566,69 @@ class Product
     /**
      * Get ultimatePrice.
      *
-     * @return int
+     * @return int|null
      */
-    public function getUltimatePrice()
+    public function getUltimatePrice(): ?int
     {
         return $this->ultimatePrice;
     }
 
     /**
+     * Set ultimatePriceOperatedBy.
+     *
+     * @param int|null $ultimatePriceOperatedBy
+     *
+     * @return $this
+     */
+    public function setUltimatePriceOperatedBy($ultimatePriceOperatedBy): self
+    {
+        $this->ultimatePriceOperatedBy = $ultimatePriceOperatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get ultimatePriceOperatedBy.
+     *
+     * @return int|null
+     */
+    public function getUltimatePriceOperatedBy(): ?int
+    {
+        return $this->ultimatePriceOperatedBy;
+    }
+
+    /**
+     * Set ultimatePriceOperatedAt.
+     *
+     * @param \DateTime|null $ultimatePriceOperatedAt
+     *
+     * @return $this
+     */
+    public function setUltimatePriceOperatedAt($ultimatePriceOperatedAt): self
+    {
+        $this->ultimatePriceOperatedAt = $ultimatePriceOperatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get ultimatePriceOperatedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getUltimatePriceOperatedAt(): ?\DateTime
+    {
+        return $this->ultimatePriceOperatedAt;
+    }
+
+    /**
      * Set competitorPrice.
      *
-     * @param int $competitorPrice
+     * @param int|null $competitorPrice
      *
-     * @return Product
+     * @return $this
      */
-    public function setCompetitorPrice($competitorPrice)
+    public function setCompetitorPrice($competitorPrice): self
     {
         $this->competitorPrice = $competitorPrice;
 
@@ -364,9 +638,9 @@ class Product
     /**
      * Get competitorPrice.
      *
-     * @return int
+     * @return int|null
      */
-    public function getCompetitorPrice()
+    public function getCompetitorPrice(): ?int
     {
         return $this->competitorPrice;
     }
@@ -374,11 +648,11 @@ class Product
     /**
      * Set temporaryPrice.
      *
-     * @param int $temporaryPrice
+     * @param int|null $temporaryPrice
      *
-     * @return Product
+     * @return $this
      */
-    public function setTemporaryPrice($temporaryPrice)
+    public function setTemporaryPrice($temporaryPrice): self
     {
         $this->temporaryPrice = $temporaryPrice;
 
@@ -388,21 +662,93 @@ class Product
     /**
      * Get temporaryPrice.
      *
-     * @return int
+     * @return int|null
      */
-    public function getTemporaryPrice()
+    public function getTemporaryPrice(): ?int
     {
         return $this->temporaryPrice;
     }
 
     /**
+     * Set temporaryPriceOperatedBy.
+     *
+     * @param int|null $temporaryPriceOperatedBy
+     *
+     * @return $this
+     */
+    public function setTemporaryPriceOperatedBy($temporaryPriceOperatedBy): self
+    {
+        $this->temporaryPriceOperatedBy = $temporaryPriceOperatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get temporaryPriceOperatedBy.
+     *
+     * @return int|null
+     */
+    public function getTemporaryPriceOperatedBy(): ?int
+    {
+        return $this->temporaryPriceOperatedBy;
+    }
+
+    /**
+     * Set temporaryPriceOperatedAt.
+     *
+     * @param \DateTime|null $temporaryPriceOperatedAt
+     *
+     * @return $this
+     */
+    public function setTemporaryPriceOperatedAt($temporaryPriceOperatedAt): self
+    {
+        $this->temporaryPriceOperatedAt = $temporaryPriceOperatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get temporaryPriceOperatedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getTemporaryPriceOperatedAt(): ?\DateTime
+    {
+        return $this->temporaryPriceOperatedAt;
+    }
+
+    /**
+     * Set rating.
+     *
+     * @param int|null $rating
+     *
+     * @return $this
+     */
+    public function setRating($rating): self
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating.
+     *
+     * @return int|null
+     */
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    /**
      * Set profit.
      *
-     * @param int $profit
+     * @param int|null $profit
      *
-     * @return Product
+     * @return $this
      */
-    public function setProfit($profit)
+    public function setProfit($profit): self
     {
         $this->profit = $profit;
 
@@ -412,9 +758,9 @@ class Product
     /**
      * Get profit.
      *
-     * @return int
+     * @return int|null
      */
-    public function getProfit()
+    public function getProfit(): ?int
     {
         return $this->profit;
     }
