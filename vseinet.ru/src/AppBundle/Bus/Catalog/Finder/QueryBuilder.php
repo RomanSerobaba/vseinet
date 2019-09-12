@@ -256,6 +256,7 @@ class QueryBuilder extends ContainerAware
         $page = min($filter->page, ceil(self::MAX_MATCHES / self::PER_PAGE));
         $offset = ($page - 1) * self::PER_PAGE;
 
+        // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
         $options = 'ranker=expr(\'sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25\'), max_matches='.self::MAX_MATCHES;
 
         $query = "

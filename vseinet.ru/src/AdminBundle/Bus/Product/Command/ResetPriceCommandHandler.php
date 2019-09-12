@@ -32,7 +32,7 @@ class ResetPriceCommandHandler extends MessageHandler
 
         $product = $em->getRepository(Product::class)->findOneBy([
             'baseProductId' => $baseProduct->getId(),
-            'geoCityId' => $geoPointId ? $this->getGeoCity()->getId() : 0,
+            'geoCityId' => /*$geoPointId ? $this->getGeoCity()->getId() : */0,
         ]);
         if ($product instanceof Product) {
             if ($product->getTemporaryPrice()) {
@@ -51,7 +51,7 @@ class ResetPriceCommandHandler extends MessageHandler
 
             $log = new ProductPriceLog();
             $log->setBaseProductId($baseProduct->getId());
-            $log->setGeoCityId($this->getGeoCity()->getId());
+            $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
             $log->setPrice(null);
             $log->setPriceType($type);
             $log->setOperatedBy($this->getUser()->getId());
