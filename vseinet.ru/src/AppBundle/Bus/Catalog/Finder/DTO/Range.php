@@ -30,8 +30,8 @@ class Range implements \Countable
 
     public function set(string $min, string $max): self
     {
-        $this->min = empty($min) ? null : $this->sanitize($min);
-        $this->max = empty($max) ? null : $this->sanitize($max);
+        $this->min = $this->sanitize($min);
+        $this->max = $this->sanitize($max);
 
         if (null !== $this->min && null !== $this->max) {
             $exp = $this->exp($this->max);
@@ -58,8 +58,12 @@ class Range implements \Countable
         return ($this->max - $this->min) / $this->step;
     }
 
-    protected function sanitize($number): float
+    protected function sanitize($number): ?float
     {
+        if (null === $number || '' === $number) {
+            return null;
+        }
+
         return round(floatval(str_replace([' ', ','], ['', '.'], (string) $number)), self::PRECISION);
     }
 

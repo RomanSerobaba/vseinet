@@ -397,6 +397,13 @@ class QueryBuilder extends ContainerAware
             return '';
         }
 
+        if (null === $price->min) {
+            return sprintf('price <= %s', str_replace(',', '.', $price->max));
+        }
+        if (null === $price->max) {
+            return sprintf('price >= %s', str_replace(',', '.', $price->min));
+        }
+
         return sprintf('price BETWEEN %d AND %d', $price->min, $price->max);
     }
 
