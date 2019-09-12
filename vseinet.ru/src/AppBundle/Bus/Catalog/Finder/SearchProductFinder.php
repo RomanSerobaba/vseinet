@@ -23,7 +23,7 @@ class SearchProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET category_id FACET brand_id');
+        $qb->facet('FACET category_id LIMIT 1000 FACET brand_id LIMIT 1000');
         $q = $this->getFilter()->q;
         if (!empty($q)) {
             $qb->match($q);
@@ -58,8 +58,8 @@ class SearchProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET category_id', $qb->getCriteriaCategories());
-        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
+        $qb->facet('FACET category_id LIMIT 1000', $qb->getCriteriaCategories());
+        $qb->facet('FACET brand_id LIMIT 1000', $qb->getCriteriaBrands());
         $q = $this->getFilter()->q;
         if (!empty($q)) {
             $qb->match($q);

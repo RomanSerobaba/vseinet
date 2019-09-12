@@ -32,7 +32,7 @@ class DetailProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET category_id FACET brand_id');
+        $qb->facet('FACET category_id LIMIT 1000 FACET brand_id LIMIT 1000');
         $qb->select("LENGTH(details.{$this->detail->id}) AS has_detail");
         $qb->criteria('has_detail = 1');
         $name = $this->getFilter()->name;
@@ -67,8 +67,8 @@ class DetailProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET category_id', $qb->getCriteriaCategories());
-        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
+        $qb->facet('FACET category_id LIMIT 1000', $qb->getCriteriaCategories());
+        $qb->facet('FACET brand_id LIMIT 1000', $qb->getCriteriaBrands());
         $qb->select("LENGTH(details.{$this->detail->id}) AS has_detail");
         $qb->criteria('has_detail = 1');
         $name = $this->getFilter()->name;

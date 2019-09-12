@@ -25,7 +25,7 @@ class TotalSaleProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET category_id FACET brand_id');
+        $qb->facet('FACET category_id LIMIT 1000 FACET brand_id LIMIT 1000');
         $qb->criteria('is_total_sale = 1');
 
         $results = $qb->getFeatures();
@@ -53,8 +53,8 @@ class TotalSaleProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET category_id', $qb->getCriteriaCategories());
-        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
+        $qb->facet('FACET category_id LIMIT 1000', $qb->getCriteriaCategories());
+        $qb->facet('FACET brand_id LIMIT 1000', $qb->getCriteriaBrands());
         $qb->criteria('is_total_sale = 1');
         $name = $this->getFilter()->name;
         if (!empty($name)) {
