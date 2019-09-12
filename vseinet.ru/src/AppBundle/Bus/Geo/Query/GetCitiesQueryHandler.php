@@ -31,6 +31,34 @@ class GetCitiesQueryHandler extends MessageHandler
         $q->setParameter('geoRegionId', $query->geoRegionId);
         $geoCities = $q->getResult('IndexByHydrator');
 
+        $q = $em->createQuery("
+            SELECT
+                NEW AppBundle\Bus\Geo\Query\DTO\City (
+                    gc.id,
+                    gc.name,
+                    gc.isCentral
+                )
+            FROM AppBundle:GeoCity AS gc
+            JOIN AppBundle:GeoPoint AS gp WITH gp.geoCityId = gc.id
+            JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
+            WHERE gc.geoRegionId = :geoRegionId AND r.isActive = TRUE AND r.isCentral = TRUE AND (r.hasRetail = TRUE OR r.hasWarehouse = TRUE)
+            GROUP BY gc.id
+            ORDER BY gc.name
+        ");
+        $q->setParameter('geoRegionId', $query->geoRegionId);
+        $geoCitiesFromRepresentatives = $q->getResult('IndexByHydrator');
+
+        if (!empty($geoCitiesFromRepresentatives)) {
+            $geoCities += $geoCitiesFromRepresentatives;
+            uasort($geoCities, function($a, $b) {
+                if ($a->name == $b->name) {
+                    return 0;
+                }
+
+                return $a->name < $b->name ? -1 : 1;
+            });
+        }
+
         if (empty($geoCities)) {
             return [
                 'geoCityCentral' => null,
