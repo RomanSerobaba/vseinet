@@ -23,7 +23,7 @@ class SetPriceCommandHandler extends MessageHandler
 
         $product = $em->getRepository(Product::class)->findOneBy([
             'baseProductId' => $baseProduct->getId(),
-            'geoCityId' => $this->getGeoCity()->getId(),
+            'geoCityId' => 0,//$this->getGeoCity()->getId(),
         ]);
         if (!$product instanceof Product) {
             $product = $em->getRepository(Product::class)->findOneBy([
