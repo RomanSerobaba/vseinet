@@ -16,7 +16,6 @@ class SetPriceCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        throw new NotFoundHttpException('Сервис временно не доступен');
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);
         if (!$baseProduct instanceof BaseProduct) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->id));
@@ -47,29 +46,29 @@ class SetPriceCommandHandler extends MessageHandler
         //     }
         // }
 
-        foreach ($em->getRepository(Product::class)->findBy(['baseProductId' => $command->id, 'geoCityId' => 0,]) as $product) {
-            switch ($command->type) {
-                case ProductPriceType::MANUAL:
-                    $product->setManualPrice($command->price);
-                    $product->setManualPriceOperatedAt(new \DateTime());
-                    $product->setManualPriceOperatedBy($this->getUser()->getId());
-                    break;
+        $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
-                case ProductPriceType::ULTIMATE:
-                    $product->setUltimatePrice($command->price);
-                    $product->setUltimatePriceOperatedAt(new \DateTime());
-                    $product->setUltimatePriceOperatedBy($this->getUser()->getId());
-                    break;
+        switch ($command->type) {
+            case ProductPriceType::MANUAL:
+                $product->setManualPrice($command->price);
+                $product->setManualPriceOperatedAt(new \DateTime());
+                $product->setManualPriceOperatedBy($this->getUser()->getId());
+                break;
 
-                case ProductPriceType::TEMPORARY:
-                    $product->setTemporaryPrice($command->price);
-                    $product->setTemporaryPriceOperatedAt(new \DateTime());
-                    $product->setTemporaryPriceOperatedBy($this->getUser()->getId());
-                    break;
+            case ProductPriceType::ULTIMATE:
+                $product->setUltimatePrice($command->price);
+                $product->setUltimatePriceOperatedAt(new \DateTime());
+                $product->setUltimatePriceOperatedBy($this->getUser()->getId());
+                break;
 
-                default:
-                    throw new BadRequeetsHttpException(sprintf('Тип цены %s нельзя установить вручную', $command->type));
-            }
+            case ProductPriceType::TEMPORARY:
+                $product->setTemporaryPrice($command->price);
+                $product->setTemporaryPriceOperatedAt(new \DateTime());
+                $product->setTemporaryPriceOperatedBy($this->getUser()->getId());
+                break;
+
+            default:
+                throw new BadRequeetsHttpException(sprintf('Тип цены %s нельзя установить вручную', $command->type));
         }
 
         $log = new ProductPriceLog();
