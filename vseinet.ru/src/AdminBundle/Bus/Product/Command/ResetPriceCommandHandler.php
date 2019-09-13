@@ -17,49 +17,47 @@ class ResetPriceCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        throw new NotFoundHttpException('Сервис временно не доступен');
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);
         if (!$baseProduct instanceof BaseProduct) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->id));
         }
 
-        $q = $em->createQuery('
-            SELECT r.geoPointId
-            FROM AppBundle:Representative AS r
-            JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
-            WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
-        ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
-        $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+        // $q = $em->createQuery('
+        //     SELECT r.geoPointId
+        //     FROM AppBundle:Representative AS r
+        //     JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+        //     WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
+        // ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+        // $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
-        $product = $em->getRepository(Product::class)->findOneBy([
-            'baseProductId' => $baseProduct->getId(),
-            'geoCityId' => /*$geoPointId ? $this->getGeoCity()->getId() : */0,
-        ]);
-        if ($product instanceof Product) {
-            if ($product->getTemporaryPrice()) {
-                $type = ProductPriceType::TEMPORARY;
-                $product->setTemporaryPrice(null);
-            } elseif ($product->getUltimatePrice()) {
-                $type = ProductPriceType::ULTIMATE;
-                $product->setUltimatePrice(null);
-            } elseif ($product->getManualPrice()) {
-                $type = ProductPriceType::MANUAL;
-                $product->setManualPrice(null);
-            } else {
-                throw new BadRequestHttpException('У товара не задана ручная цена');
-            }
-            $em->persist($product);
+        // $product = $em->getRepository(Product::class)->findOneBy([
+        //     'baseProductId' => $baseProduct->getId(),
+        //     'geoCityId' => /*$geoPointId ? $this->getGeoCity()->getId() : */0,
+        // ]);
+        $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
-            $log = new ProductPriceLog();
-            $log->setBaseProductId($baseProduct->getId());
-            $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
-            $log->setPrice(null);
-            $log->setPriceType($type);
-            $log->setOperatedBy($this->getUser()->getId());
-            $log->setOperatedAt(new \DateTime());
-            $em->persist($log);
-
-            $em->flush();
+        if ($product->getTemporaryPrice()) {
+            $type = ProductPriceType::TEMPORARY;
+            $product->setTemporaryPrice(null);
+        } elseif ($product->getUltimatePrice()) {
+            $type = ProductPriceType::ULTIMATE;
+            $product->setUltimatePrice(null);
+        } elseif ($product->getManualPrice()) {
+            $type = ProductPriceType::MANUAL;
+            $product->setManualPrice(null);
+        } else {
+            throw new BadRequestHttpException('У товара не задана ручная цена');
         }
+
+        $log = new ProductPriceLog();
+        $log->setBaseProductId($baseProduct->getId());
+        $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
+        $log->setPrice(null);
+        $log->setPriceType($type);
+        $log->setOperatedBy($this->getUser()->getId());
+        $log->setOperatedAt(new \DateTime());
+        $em->persist($log);
+
+        $em->flush();
     }
 }
