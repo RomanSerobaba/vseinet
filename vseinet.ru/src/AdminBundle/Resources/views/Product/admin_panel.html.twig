@@ -11,7 +11,7 @@
             <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
             <a href="javascript:void(0)" title="Цены конкурентов" class="competitor"></a>
             <a
-                href="{{ path('authority', { targetUrl: '/admin/orders?baseProductId=' ~ product.id }) }}"
+                href="{{ path('authority', { targetUrl: '/admin/orders?baseProduct[id]=' ~ product.id }) }}"
                 class="orders"
                 target="_blank"
                 title="История заказов"
