@@ -17,6 +17,7 @@ class ResetPriceCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
+        throw new NotFoundHttpException('Сервис временно не доступен');
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);
         if (!$baseProduct instanceof BaseProduct) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->id));
