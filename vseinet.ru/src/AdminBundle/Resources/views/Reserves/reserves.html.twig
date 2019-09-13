@@ -59,10 +59,10 @@
                 {% set geoPoint = reserves.geoPoints[geoPointId] %}
                 <tr class="type">
                     <td>
-                        <span class="pricetag-price{% if geoPoint.pricetagIsHandmade %} handmade{% endif %}" title="{{ geoPoint.pricetagDate|date('m.d.Y H:i') }}, {{ geoPoint.pricetagCreator }}">{{ geoPoint.pricetag|price_format }}</span>
+                        <span class="pricetag-price{% if geoPoint.pricetagIsHandmade %} handmade{% endif %}" title="{{ geoPoint.pricetagDate|date('d.m.Y H:i') }}, {{ geoPoint.pricetagCreator }}">{{ geoPoint.pricetag|price_format }}</span>
                         {{ geoPoint.name }}
                         <a href="{{ path('admin_handmade_pricetag_edit', { geoPointId: geoPointId, id: baseProductId }) }}" class="icon-edit handmade-pricetag-edit" title="Редактировать"></a>
-                        <span title="{{ geoPoint.handmadePricetagDate|date('m.d.Y H:i') }}, {{ geoPoint.handmadePricetagCreator }}">{{ geoPoint.handmadePricetag|price_format }}</span>
+                        <span title="{{ geoPoint.handmadePricetagDate|date('d.m.Y H:i') }}, {{ geoPoint.handmadePricetagCreator }}">{{ geoPoint.handmadePricetag|price_format }}</span>
                     </td>
                     <td>
                         {# {{ geoPoint.freeDelta }} #}

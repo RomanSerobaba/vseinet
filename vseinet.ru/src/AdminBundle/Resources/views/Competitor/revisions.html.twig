@@ -12,13 +12,13 @@
                     {% endif %}
                 </td>
                 <td style="text-align:right;width:60px">
-                    {% if revision.competitorPrice is not null %} 
+                    {% if revision.competitorPrice is not null %}
                         {{ revision.competitorPrice|price_format }}
                     {% endif %}
                 </td>
                 <td style="text-align:center;width:120px">
-                    {% if revision.competitorPrice is not null %} 
-                        {{ revision.priceTime|date('m.d.Y H:i') }}
+                    {% if revision.competitorPrice is not null %}
+                        {{ revision.priceTime|date('d.m.Y H:i') }}
                     {% endif %}
                 </td>
                 <td style="text-align:center;width:30px">
@@ -33,7 +33,7 @@
                         {% endif %}
                     {% endif %}
                 </td>
-            </tr>   
+            </tr>
         {% endfor %}
     </tbody>
 </table>
