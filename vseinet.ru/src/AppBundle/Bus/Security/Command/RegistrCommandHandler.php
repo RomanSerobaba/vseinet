@@ -103,21 +103,25 @@ class RegistrCommandHandler extends MessageHandler
         $u2sr->setSubroleId($subrole->getId());
         $em->persist($u2sr);
 
-        $contact = new Contact();
-        $contact->setPersonId($person->getId());
-        $contact->setValue($command->mobile);
-        $contact->setContactTypeCode(ContactTypeCode::MOBILE);
-        $contact->setCityId($geoCity->getId());
-        $contact->setIsMain(true);
-        $em->persist($contact);
+        if (!empty($command->mobile)) {
+            $contact = new Contact();
+            $contact->setPersonId($person->getId());
+            $contact->setValue($command->mobile);
+            $contact->setContactTypeCode(ContactTypeCode::MOBILE);
+            $contact->setCityId($geoCity->getId());
+            $contact->setIsMain(true);
+            $em->persist($contact);
+        }
 
-        $contact = new Contact();
-        $contact->setPersonId($person->getId());
-        $contact->setValue($command->email);
-        $contact->setContactTypeCode(ContactTypeCode::EMAIL);
-        $contact->setCityId($geoCity->getId());
-        $contact->setIsMain(true);
-        $em->persist($contact);
+        if (!empty($command->email)) {
+            $contact = new Contact();
+            $contact->setPersonId($person->getId());
+            $contact->setValue($command->email);
+            $contact->setContactTypeCode(ContactTypeCode::EMAIL);
+            $contact->setCityId($geoCity->getId());
+            $contact->setIsMain(true);
+            $em->persist($contact);
+        }
 
         if (!empty($command->phones) && is_array($command->phones)) {
             // @todo: сделать выборку телефонов из произвольной строки
