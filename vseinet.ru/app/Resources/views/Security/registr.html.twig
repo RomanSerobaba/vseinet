@@ -51,7 +51,7 @@
 
             <div class="row h{% if errors.registr_birthday is defined %} error{% endif %}">
                 {{ form_label(form.birthday, 'Дата рождения:') }}
-                {{ form_widget(form.birthday, { attr: { class: 'txt' }}) }}
+                {{ form_widget(form.birthday, { attr: { class: 'txt datepicker' }}) }}
                 <span class="status"></span>
                 {% if errors.registr_birthday is defined %}
                     <div class="error">{{ errors.registr_birthday.0 }}</div>
@@ -136,4 +136,15 @@
 
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(function() {
+    $('#registr_birthday').datepicker({
+        changeMonth: true,
+        changeYear: true,
+    });
+});
+</script>
 {% endblock %}

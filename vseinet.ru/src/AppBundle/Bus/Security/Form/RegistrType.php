@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use AppBundle\Form\Type\HiddenIntType;
 use AppBundle\Enum\PersonGender;
 use AppBundle\Bus\User\Form\IsHumanType;
@@ -24,7 +25,12 @@ class RegistrType extends AbstractType
             ->add('firstname', TextType::class)
             ->add('secondname', TextType::class, ['required' => false])
             ->add('gender', ChoiceType::class, ['expanded' => true, 'choices' => array_flip(PersonGender::getChoices())])
-            ->add('birthday', TextType::class, ['required' => false])
+            ->add('birthday', DateType::class, [
+                'required' => false,
+                'widget' => 'single_text',
+                'html5' => false,
+                'format' => 'dd.MM.yyyy',
+            ])
             ->add('geoCityName', TextType::class)
             ->add('geoCityId', HiddenIntType::class)
             ->add('mobile', TextType::class, ['required' => false])

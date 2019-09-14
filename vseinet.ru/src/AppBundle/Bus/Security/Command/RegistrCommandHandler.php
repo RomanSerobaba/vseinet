@@ -27,7 +27,7 @@ class RegistrCommandHandler extends MessageHandler
             if (11 === strlen($command->mobile) && ('7' === $command->mobile[0] || '8' === $command->mobile[0])) {
                 $command->mobile = substr($command->mobile, 1);
             }
-            if (10 !== strlen($commnad->mobile) || '9' !== $command->mobile[0]) {
+            if (10 !== strlen($command->mobile) || '9' !== $command->mobile[0]) {
                 throw new ValidationException('mobile', 'Неверный формат мобильного телефона');
             }
             $q = $em->createQuery('
@@ -81,7 +81,7 @@ class RegistrCommandHandler extends MessageHandler
         $em->flush();
 
         $user = new User();
-        $user->setCityId($geoCity->getId());
+        $user->setGeoCityId($geoCity->getId());
         $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
         $user->setPersonId($person->getId());
         $user->setRegisteredAt(new \DateTime());
@@ -90,7 +90,7 @@ class RegistrCommandHandler extends MessageHandler
         $em->persist($user);
         $em->flush();
 
-        $role = $em->getRepository(Role::class)->findOneBy(['code' => UserRole::CLIENT]);
+        $role = $em->getRepository(Role::class)->findOneBy(['code' => str_replace('ROLE_', '', UserRole::CLIENT)]);
         if (!$role instanceof Role) {
             throw new BadRequestHttpException();
         }
