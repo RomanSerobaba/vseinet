@@ -17,7 +17,7 @@ class GetOrderQueryHandler extends MessageHandler
             return null;
         }
 
-        if (0 === $result['total']) {
+        if (empty($result['order'])) {
             return null;
         }
 
