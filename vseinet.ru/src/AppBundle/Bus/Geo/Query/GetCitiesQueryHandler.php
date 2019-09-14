@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Geo\Query;
 
@@ -18,24 +18,52 @@ class GetCitiesQueryHandler extends MessageHandler
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Geo\Query\DTO\City (
                     gc.id,
                     gc.name,
                     gc.isCentral
                 )
-            FROM AppBundle:GeoCity AS gc 
-            WHERE gc.geoRegionId = :geoRegionId AND gc.isListed = true
-            ORDER BY gc.name 
+            FROM AppBundle:GeoCity AS gc
+            WHERE gc.geoRegionId = :geoRegionId AND gc.AOLEVEL <= 4 AND gc.geoAreaId IS NULL
+            ORDER BY gc.name
         ");
         $q->setParameter('geoRegionId', $query->geoRegionId);
         $geoCities = $q->getResult('IndexByHydrator');
+
+        $q = $em->createQuery("
+            SELECT
+                NEW AppBundle\Bus\Geo\Query\DTO\City (
+                    gc.id,
+                    gc.name,
+                    gc.isCentral
+                )
+            FROM AppBundle:GeoCity AS gc
+            JOIN AppBundle:GeoPoint AS gp WITH gp.geoCityId = gc.id
+            JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
+            WHERE gc.geoRegionId = :geoRegionId AND r.isActive = TRUE AND r.isCentral = TRUE AND (r.hasRetail = TRUE OR r.hasWarehouse = TRUE)
+            GROUP BY gc.id
+            ORDER BY gc.name
+        ");
+        $q->setParameter('geoRegionId', $query->geoRegionId);
+        $geoCitiesFromRepresentatives = $q->getResult('IndexByHydrator');
+
+        if (!empty($geoCitiesFromRepresentatives)) {
+            $geoCities += $geoCitiesFromRepresentatives;
+            uasort($geoCities, function($a, $b) {
+                if ($a->name == $b->name) {
+                    return 0;
+                }
+
+                return $a->name < $b->name ? -1 : 1;
+            });
+        }
 
         if (empty($geoCities)) {
             return [
                 'geoCityCentral' => null,
                 'geoCityGroups' => [],
-            ];   
+            ];
         }
 
         $q = $em->createQuery("
@@ -44,11 +72,11 @@ class GetCitiesQueryHandler extends MessageHandler
                     gp.geoCityId,
                     r.hasRetail,
                     r.hasDelivery,
-                    CASE WHEN TIMESTAMPDIFF(MONTH, r.openingDate, CURRENT_TIMESTAMP()) < 2 THEN true ELSE false END 
+                    CASE WHEN TIMESTAMPDIFF(MONTH, r.openingDate, CURRENT_TIMESTAMP()) < 2 THEN true ELSE false END
                 )
             FROM AppBundle:GeoPoint AS gp
-            INNER JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id 
-            WHERE gp.geoCityId IN (:geoCityIds) AND r.isActive = true 
+            INNER JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
+            WHERE gp.geoCityId IN (:geoCityIds) AND r.isActive = true
         ");
         $q->setParameter('geoCityIds', array_keys($geoCities));
         $geoPoints = $q->getArrayResult();
@@ -76,7 +104,7 @@ class GetCitiesQueryHandler extends MessageHandler
             }
             $alphabetIndex[mb_substr($geoCity->name, 0, 1)][] = $geoCity;
         }
-        
+
         $groupCount = 3;
         $getCityPerGroup = ceil(count($geoCities) / $groupCount);
         $geoCityGroups = [];

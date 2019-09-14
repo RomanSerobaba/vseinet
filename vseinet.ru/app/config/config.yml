@@ -1,5 +1,4 @@
 imports:
-    - { resource: 'admin.yml' }
     - { resource: 'parameters.yml' }
     - { resource: 'security.yml' }
     - { resource: 'services.yml' }
@@ -50,3 +49,4 @@ framework:
         log: true
     templating:
         engines: ['twig']
+    profiler: ~

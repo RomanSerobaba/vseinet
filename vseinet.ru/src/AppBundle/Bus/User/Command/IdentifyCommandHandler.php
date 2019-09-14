@@ -26,11 +26,11 @@ class IdentifyCommandHandler extends MessageHandler
             }
 
             $this->updateUserContacts($command->userData, $user);
-        } elseif (!empty($command->userData->comuserId)) {
+        } elseif (!empty($command->userData->comuserId) && $command->userData->comuserId > 0) {
             $comuser = $em->getRepository(Comuser::class)->find($command->userData->comuserId);
 
             if (!$comuser instanceof Comuser) {
-                throw new NotFoundHttpException(sprintf('Гостевой пользователь с идентификатором %d не найден', $command->userData->userId));
+                throw new NotFoundHttpException(sprintf('Гостевой пользователь с идентификатором %d не найден', $command->userData->comuserId));
             }
 
             $comuser->setFullname($command->userData->fullname ?? $comuser->getFullname());
@@ -76,7 +76,6 @@ class IdentifyCommandHandler extends MessageHandler
                 $comuser = $em->getRepository(Comuser::class)->findOneBy([
                     'phone' => $phones,
                 ]);
-
                 if (!$comuser instanceof Comuser) {
                     $comuser = new Comuser();
                     $comuser->setFullname($command->userData->fullname);

@@ -34,7 +34,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 bp.supplier_id,
                 bp.supplier_availability_code AS supplier_availability
             FROM product AS p
-            INNER JOIN base_product AS bp ON bp.id = p.base_product_id
+            INNER JOIN base_product AS bp ON bp.canonical_id = p.base_product_id
             WHERE bp.id = :base_product_id AND p.geo_city_id IN (0, :geo_city_id)
             ORDER BY p.geo_city_id DESC
             LIMIT 1
@@ -45,7 +45,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         if (!$product instanceof DTO\Product) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->baseProductId));
         }
-        if (ProductAvailabilityCode::ON_DEMAND !== $product->availability) {
+        if (!in_array($product->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT])) {
             throw new BadRequestHttpException(sprintf('Товар %d находится либо в наличии, либо отсутствует', $query->baseProductId));
         }
 
@@ -100,12 +100,14 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         // Резервов нет, но товар на заказ, значить есть у поставщика
         if (empty($reserves)) {
             if (ProductAvailabilityCode::AVAILABLE !== $product->supplierAvailability) {
-                throw new BadRequestHttpException(sprintf('Товар %d отсутсвует у постащика', $product->baseProductId));
+                // throw new BadRequestHttpException(sprintf('Товар %d отсутсвует у постащика', $product->baseProductId));
+                return null;
             }
 
             $supplier = $em->getRepository(Supplier::class)->find($product->supplierId);
             if (!$supplier instanceof Supplier) {
-                throw new NotFoundHttpException(sprintf('Поставщик %d не найден', $product->supplierId));
+                // throw new NotFoundHttpException(sprintf('Поставщик %d не найден', $product->supplierId));
+                return null;
             }
 
             return new DTO\DeliveryDate($supplier->getOrderDeliveryDate());
@@ -211,9 +213,14 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         return $delivery;
     }
 
-    protected function getDateByRoute(int $startingGeoPointId, int $arrivalGeoPointId, ?\DateTime $startingDate = null): ?\DateTime
+    protected function getDateByRoute(?int $startingGeoPointId, ?int $arrivalGeoPointId, ?\DateTime $startingDate = null): ?\DateTime
     {
         $date = $startingDate ?? new \DateTime();
+
+        if ($startingGeoPointId === $arrivalGeoPointId) {
+            return $date;
+        }
+
         $routes = $this->getAllRoutes();
 
         if (!isset($routes[$startingGeoPointId])) {
@@ -225,7 +232,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         }
 
         $queue = array_keys($routes[$fromGeoPointId = $startingGeoPointId]);
-        $visited = [];
+        $visited = [$fromGeoPointId => $fromGeoPointId];
 
         while (count($queue)) {
             $nextGeoPointId = array_shift($queue);
@@ -239,6 +246,13 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     }
 
                     if (isset($routes[$nextGeoPointId])) {
+                        //@TODO: костыль, скорее всего работает только если точка находится на втором прыжке маршрута
+                        foreach ($queue as $q) {
+                            if ($q === $arrivalGeoPointId && isset($routes[$fromGeoPointId][$q])) {
+                                return $this->getCron($routes[$fromGeoPointId][$q])->getNextRunDate($date);
+                            }
+                        }
+
                         $queue = array_merge($queue, array_keys($routes[$nextGeoPointId]));
                     }
                     $fromGeoPointId = $nextGeoPointId;
@@ -246,7 +260,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     $fromGeoPointId = $startingGeoPointId;
                 }
 
-                $visited[] = $nextGeoPointId;
+                $visited[$nextGeoPointId] = $nextGeoPointId;
             }
         }
 

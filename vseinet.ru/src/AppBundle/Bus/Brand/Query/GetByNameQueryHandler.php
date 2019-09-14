@@ -27,7 +27,7 @@ class GetByNameQueryHandler extends MessageHandler
         if (!$brand instanceof DTO\Brand) {
             $q = $em->createQuery("
                 SELECT
-                    AppBundle\Bus\Brand\Query\DTO\Brand (
+                    NEW AppBundle\Bus\Brand\Query\DTO\Brand (
                         b.id,
                         bp.name,
                         b.url,

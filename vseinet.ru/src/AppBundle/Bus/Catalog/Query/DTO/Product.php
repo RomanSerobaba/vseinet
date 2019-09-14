@@ -38,6 +38,11 @@ class Product
     public $priceType;
 
     /**
+     * @Assert\Type("string")
+     */
+    public $priceTypeName;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $description;
@@ -62,7 +67,12 @@ class Product
      */
     public $pricetagQuantity;
 
-    public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt, $pricetagQuantity)
+    /**
+     * @Assert\Type("integer")
+     */
+    public $purchasePrice;
+
+    public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice)
     {
         $this->id = $id;
         $this->name = $name;
@@ -74,5 +84,6 @@ class Product
         $this->minQuantity = $minQuantity;
         $this->updatedAt = $updatedAt;
         $this->pricetagQuantity = $pricetagQuantity;
+        $this->purchasePrice = $purchasePrice ?? null;
     }
 }

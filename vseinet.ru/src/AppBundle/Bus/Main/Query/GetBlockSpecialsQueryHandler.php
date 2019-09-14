@@ -4,6 +4,7 @@ namespace AppBundle\Bus\Main\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\ProductAvailabilityCode;
+use Doctrine\ORM\AbstractQuery;
 
 class GetBlockSpecialsQueryHandler extends MessageHandler
 {
@@ -31,6 +32,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
         $q = $em->createQuery('
             SELECT MIN(bp.id), MAX(bp.id)
             FROM AppBundle:BaseProduct AS bp
+            WHERE bp.id = bp.canonicalId
         ');
         $baseProductIds = $q->getSingleResult();
 
@@ -51,30 +53,60 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
 
         while ($query->count--) {
             $randomId = rand($baseProductIds[1], $baseProductIds[2]);
-            $q = $em->createQuery("
-                SELECT
-                    NEW AppBundle\Bus\Main\Query\DTO\Product (
-                        bp.id,
-                        bp.name,
-                        bp.categoryId,
-                        '',
-                        (
-                            SELECT COALESCE(p.price, p0.price)
-                            FROM AppBundle:Product AS p0
-                            WHERE p0.baseProductId = bp.id AND p0.geoCityId = 0 AND p0.productAvailabilityCode = :on_demand AND p0.price > 0
-                        ),
-                        bpi.basename
-                    )
-                FROM AppBundle:BaseProduct AS bp
-                INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
-                LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
-                {$categoryJoinSpec}
-                WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec}
-            ");
-            $q->setParameter('randomId', $randomId);
-            $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
-            $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
-            $q->setParameter('on_demand', ProductAvailabilityCode::ON_DEMAND);
+            $q = $em->createQuery('
+                SELECT r.geoPointId
+                FROM AppBundle:Representative AS r
+                JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+                WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
+            ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+            $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
+            if ($geoPointId) {
+                $q = $em->createQuery("
+                    SELECT
+                        NEW AppBundle\Bus\Main\Query\DTO\Product (
+                            bp.id,
+                            bp.name,
+                            bp.categoryId,
+                            '',
+                            p.price,
+                            bpi.basename
+                        )
+                    FROM AppBundle:BaseProduct AS bp
+                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
+                    {$categoryJoinSpec}
+                    WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec} AND bp.id = bp.canonicalId
+                ")
+                    ->setParameters([
+                        'randomId' => $randomId,
+                        'geoCityId' => $this->getGeoCity()->getRealId(),
+                        'available' => ProductAvailabilityCode::AVAILABLE
+                    ]);
+
+            } else {
+                $q = $em->createQuery("
+                    SELECT
+                        NEW AppBundle\Bus\Main\Query\DTO\Product (
+                            bp.id,
+                            bp.name,
+                            bp.categoryId,
+                            '',
+                            p.price,
+                            bpi.basename
+                        )
+                    FROM AppBundle:BaseProduct AS bp
+                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0 AND p.productAvailabilityCode = :on_demand AND p.price > 0
+                    {$categoryJoinSpec}
+                    WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec} AND bp.id = bp.canonicalId
+                ")
+                    ->setParameters([
+                        'randomId' => $randomId,
+                        'on_demand' => ProductAvailabilityCode::ON_DEMAND
+                    ]);
+            }
+
             if ($excludeIdsSpec) {
                 $q->setParameter('ids', empty($products) ? [0] : array_keys($products));
             }

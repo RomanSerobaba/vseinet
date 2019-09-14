@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\ContentPage\Query;
 
@@ -12,4 +12,9 @@ class GetQuery extends Message
      * @Assert\Type(type="string")
      */
     public $slug;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $id;
 }

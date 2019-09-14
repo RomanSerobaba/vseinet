@@ -13,11 +13,13 @@ $(function() {
                 var errorRow = $(this).find('.error').first();
                 destination = errorRow.offset().top;
 
-                if ($(window).width() > 992){
-                    $('body, html ').animate( { scrollTop: destination - 45}, 500 );
-                }
-                else{
-                    $('body, html ').animate( { scrollTop: destination - 10}, 500 );
+                if (submit) {
+                    if ($(window).width() > 992){
+                        $('body, html ').animate( { scrollTop: destination - 45}, 500 );
+                    }
+                    else{
+                        $('body, html ').animate( { scrollTop: destination - 10}, 500 );
+                    }
                 }
             },
             onSuccess: function(data) {
@@ -263,6 +265,7 @@ $(function() {
 
                     if (response.hasOwnProperty('html')) {
                         $('#create_form_wrapper').html(response.html);
+                        $('#products.cart').html(response.cart_html);
                         refreshFormEvents();
                         attachMasks();
                         attachUserAutocomplete();

@@ -29,7 +29,7 @@ class GetStatusQueryHandler extends MessageHandler
         $api = $this->get('site.api.client');
 
         try {
-            $result = $api->get('/api/v1/orders/?id='.$order->getDId());
+            $result = $api->get('/api/v1/orders/'.$order->getDId().'/');
         } catch (BadRequestHttpException $e) {
             throw new ValidationException('number', $e->getMessage());
         }

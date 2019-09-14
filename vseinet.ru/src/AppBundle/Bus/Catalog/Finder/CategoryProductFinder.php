@@ -41,7 +41,7 @@ class CategoryProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET brand_id');
+        $qb->facet('FACET brand_id LIMIT 1000');
 
         if ($this->category->isTplEnabled) {
             $details = $this->getDetails();
@@ -138,7 +138,7 @@ class CategoryProductFinder extends AbstractProductFinder
     {
         $qb = $this->getQueryBuilder();
 
-        $qb->facet('FACET brand_id', $qb->getCriteriaBrands());
+        $qb->facet('FACET brand_id LIMIT 1000', $qb->getCriteriaBrands());
 
         $hasDetailRanges = false;
         if ($this->category->isTplEnabled) {

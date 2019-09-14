@@ -4,11 +4,12 @@ namespace AppBundle\Bus\Catalog\Finder;
 
 use AppBundle\Bus\Catalog\Query\GetProductsQuery;
 use AppBundle\Entity\BaseProduct;
+use AppBundle\Bus\Catalog\Enum\Availability;
 
 class AutocompleteFinder extends AbstractProductFinder
 {
-    const COUNT_CATEGORIES = 3;
-    const COUNT_PRODUCTS = 10;
+    public const COUNT_CATEGORIES = 3;
+    public const COUNT_PRODUCTS = 10;
 
     /**
      * @param iterable $values
@@ -33,14 +34,14 @@ class AutocompleteFinder extends AbstractProductFinder
                 id,
                 WEIGHT() AS weight
             FROM category
-            WHERE MATCH('".addcslashes($filter->q, '\()|-!@~"&/^$=<>\'')."')
+            WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
             OPTION ranker=expr('sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25')
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
         if (!empty($results[0])) {
-            $categoryIds = array_map(function($row) { return intval($row['id']); }, $results[0]);
+            $categoryIds = array_map(function ($row) { return intval($row['id']); }, $results[0]);
             $q = $em->createQuery("
                 SELECT
                     NEW AppBundle\Bus\Catalog\Finder\DTO\Autocomplete\Category (
@@ -72,16 +73,18 @@ class AutocompleteFinder extends AbstractProductFinder
         if (is_numeric($filter->q)) {
             $product = $em->getRepository(BaseProduct::class)->find($filter->q);
             if ($product instanceof BaseProduct) {
-                $result[] = new DTO\Autocomplete\Product($product->getId(), $product->getName());
+                $result[] = new DTO\Autocomplete\Product($product->getCanonicalId(), $product->getName());
             }
         }
+
+        $availability = $this->getUserIsEmployee() ? Availability::FOR_ALL_TIME : Availability::ACTIVE;
 
         $query = "
             SELECT
                 id,
                 WEIGHT() AS weight
             FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE MATCH('".addcslashes($filter->q, '\()|-!@~"&/^$=<>\'')."')
+            WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AND availability <= {$availability}
             ORDER BY availability ASC, weight DESC, rating DESC
             LIMIT ".self::COUNT_PRODUCTS."
             OPTION ranker=expr('sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25')
@@ -89,7 +92,7 @@ class AutocompleteFinder extends AbstractProductFinder
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
         if (!empty($results[0])) {
-            $productIds = array_map(function($row) { return intval($row['id']); }, $results[0]);
+            $productIds = array_map(function ($row) { return intval($row['id']); }, $results[0]);
             $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $productIds]));
             foreach ($products as $product) {
                 $result[] = new DTO\Autocomplete\Product($product->id, $product->name);

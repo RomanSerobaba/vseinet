@@ -11,7 +11,7 @@
                 {{ product.name }}
             </a>
             <small>Код товара:
-                <b class="sku">{{ product.id }}</b>
+                <b class="sku">{{ product.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (product.price - product.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}
             </small>
         </div>
         <div class="rating" data-rating="{#$product.estimate#}"><span>Рейтинг:</span></div>

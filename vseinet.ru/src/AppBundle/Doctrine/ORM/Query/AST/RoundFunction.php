@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Dictrine\ORM\Query\AST;
+namespace AppBundle\Doctrine\ORM\Query\AST;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Parser;

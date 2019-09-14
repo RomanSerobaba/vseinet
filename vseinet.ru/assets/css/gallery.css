@@ -6,7 +6,7 @@
 	width: 94px;
 }
 	#gallery .thumbs IMG {
-		border: 2px solid #fff;        
+		border: 2px solid #fff;
         cursor: pointer;
 	}
 		#gallery .thumbs IMG.current {
@@ -41,6 +41,12 @@
 	}
 #gallery .thumb {
 	position: relative;
+}
+#gallery .thumb A.up {
+    background: url(../images/arrow_up.png);
+    width: 9px;
+    height: 10px;
+    float: left;
 }
 #gallery .delete {
 	background: url(../images/delete.gif);

@@ -42,7 +42,7 @@ class QueryBuilder extends ContainerAware
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".addcslashes(implode(' ', $this->match), '\()|-!@~"&/^$=<>\'')."')";
+            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
         }
 
         // total, all filters
@@ -111,8 +111,6 @@ class QueryBuilder extends ContainerAware
             ;
         ";
 
-        $this->reset();
-
         return $this->get('sphinx')->createQuery()->setQuery(implode("\n", $query))->getResults();
     }
 
@@ -123,7 +121,7 @@ class QueryBuilder extends ContainerAware
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".addcslashes(implode(' ', $this->match), '\()|-!@~"&/^$=<>\'')."')";
+            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
         }
 
         // total, all filters
@@ -224,8 +222,6 @@ class QueryBuilder extends ContainerAware
             ";
         }
 
-        $this->reset();
-
         return $this->get('sphinx')->createQuery()->setQuery(implode("\n", $query))->getResults();
     }
 
@@ -241,7 +237,7 @@ class QueryBuilder extends ContainerAware
             $this->criteria[] = $this->getCriteriaNofilled();
         }
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".addcslashes(implode(' ', $this->match), '\()|-!@~"&/^$=<>\'')."')";
+            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
         }
         $criteria = implode(' AND ', array_filter($this->criteria));
 
@@ -254,12 +250,13 @@ class QueryBuilder extends ContainerAware
         } elseif (Sort::NAME === $filter->sort) {
             $sort = 'name '.$sortDirection;
         } else {
-            $sort = 'availability ASC, weight DESC, profit DESC';
+            $sort = 'availability ASC, weight DESC';
         }
 
         $page = min($filter->page, ceil(self::MAX_MATCHES / self::PER_PAGE));
         $offset = ($page - 1) * self::PER_PAGE;
 
+        // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
         $options = 'ranker=expr(\'sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25\'), max_matches='.self::MAX_MATCHES;
 
         $query = "
@@ -293,8 +290,6 @@ class QueryBuilder extends ContainerAware
         foreach ($products as $id => $product) {
             $product->quantityInCart = $cartInfo->products[$id] ?? 0;
         }
-
-        $this->reset();
 
         return $products;
     }
@@ -400,6 +395,13 @@ class QueryBuilder extends ContainerAware
         $price = $this->getFilter()->price;
         if (null === $price) {
             return '';
+        }
+
+        if (null === $price->min) {
+            return sprintf('price <= %s', str_replace(',', '.', $price->max));
+        }
+        if (null === $price->max) {
+            return sprintf('price >= %s', str_replace(',', '.', $price->min));
         }
 
         return sprintf('price BETWEEN %d AND %d', $price->min, $price->max);
@@ -527,7 +529,16 @@ class QueryBuilder extends ContainerAware
             return '';
         }
 
-        return sprintf('details.%d BETWEEN %f AND %f', $id, $filter->details[$id]->min, $filter->details[$id]->max);
+        $detail = $filter->details[$id];
+
+        if (null === $detail->min) {
+            return sprintf('details.%d <= %s', $id, str_replace(',', '.', $detail->max));
+        }
+        if (null === $detail->max) {
+            return sprintf('details.%d >= %s', $id, str_replace(',', '.', $detail->min));
+        }
+
+        return sprintf('details.%d BETWEEN %s AND %s', $id, str_replace(',', '.', $detail->min), str_replace(',', '.', $detail->max));
     }
 
     /**
@@ -558,5 +569,18 @@ class QueryBuilder extends ContainerAware
         }
 
         return sprintf('details.%d = %d', $id, $filter->details[$id]);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function escape(string $string): string
+    {
+        $from = ['\\',   '(',  ')',  '|',  '-',  '!',  '@',  '~',  '"',  '&',  '/',  '^',  '$',  '='];
+        $to = ['\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', '\&', '\/', '\^', '\$', '\='];
+
+        return str_replace($from, $to, $string);
     }
 }

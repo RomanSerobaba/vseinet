@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Container\ContainerAware;
 use AppBundle\Entity\GeoCity;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class GeoCityIdentity extends ContainerAware
 {
@@ -16,6 +17,30 @@ class GeoCityIdentity extends ContainerAware
         if (null === $geoCity) {
             $geoCity = $this->loadGeoCity($this->detectGeoCityId());
             $session->set('geo_city', $geoCity);
+        } else {
+            //@TODO: перенести определение города для сотрудника в логинизацию, чтобы оно делалось разово и давало выбрать другой город после авторизации
+            $token = $this->get('security.token_storage')->getToken();
+            if (null !== $token) {
+                $user = $token->getUser();
+                if (is_object($user)) {
+                    $data = $this->getDoctrine()->getManager()->createNativeQuery('
+                        SELECT
+                            p.geo_city_id
+                        FROM org_employment_history AS eh
+                        INNER JOIN org_employee_to_geo_room AS e2r ON e2r.org_employee_user_id = eh.org_employee_user_id
+                        INNER JOIN geo_room AS r ON r.id = e2r.geo_room_id
+                        INNER JOIN geo_point AS p ON p.id = r.geo_point_id
+                        WHERE eh.org_employee_user_id = :user_id AND eh.hired_at IS NOT NULL AND eh.fired_at IS NULL AND e2r.is_main = TRUE
+                    ', (new ResultSetMapping())->addScalarResult('geo_city_id', 'geoCityId', 'integer'))
+                        ->setParameter('user_id', $user->getId())
+                        ->getOneOrNullResult();
+
+                    if ($data) {
+                        $geoCity = $this->loadGeoCity($data['geoCityId']);
+                        $session->set('geo_city', $geoCity);
+                    }
+                }
+            }
         }
 
         return $geoCity;
@@ -37,6 +62,22 @@ class GeoCityIdentity extends ContainerAware
         if (null !== $token) {
             $user = $token->getUser();
             if (is_object($user)) {
+                $data = $em->createNativeQuery('
+                    SELECT
+                        p.geo_city_id
+                    FROM org_employment_history AS eh
+                    INNER JOIN org_employee_to_geo_room AS e2r ON e2r.org_employee_user_id = eh.org_employee_user_id
+                    INNER JOIN geo_room AS r ON r.id = e2r.geo_room_id
+                    INNER JOIN geo_point AS p ON p.id = r.geo_point_id
+                    WHERE eh.org_employee_user_id = :user_id AND eh.hired_at IS NOT NULL AND eh.fired_at IS NULL AND e2r.is_main = TRUE
+                ', (new ResultSetMapping())->addScalarResult('geo_city_id', 'geoCityId', 'integer'))
+                    ->setParameter('user_id', $user->getId())
+                    ->getOneOrNullResult();
+
+                if ($data) {
+                    return $data['geoCityId'];
+                }
+
                 $geoCityId = $user->getGeoCityId();
                 if ($geoCityId) {
                     return $geoCityId;
@@ -58,8 +99,9 @@ class GeoCityIdentity extends ContainerAware
         }
         $q = $em->createQuery("
             SELECT
-                gi.geoCityId
+                gic.geoCityId
             FROM AppBundle:GeoIp AS gi
+            INNER JOIN AppBundle:GeoIpCity AS gic WITH gic.id = gi.geoIpCityId
             WHERE :longIp BETWEEN gi.longIp1 AND gi.longIp2
         ");
         $q->setParameter('longIp', ip2long($this->get('request_stack')->getMasterRequest()->getClientIp()));

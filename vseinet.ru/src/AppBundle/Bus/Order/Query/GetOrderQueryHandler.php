@@ -12,10 +12,7 @@ class GetOrderQueryHandler extends MessageHandler
         $api = $this->get('site.api.client');
 
         try {
-            $parameters = [
-                'id' => $query->id,
-            ];
-            $result = $api->get('/api/v1/orders/?'.http_build_query($parameters));
+            $result = $api->get('/api/v1/orders/'.$query->id.'/');
         } catch (BadRequestHttpException $e) {
             return null;
         }
@@ -24,7 +21,7 @@ class GetOrderQueryHandler extends MessageHandler
             return null;
         }
 
-        $order = reset($result['orders']);
+        $order = $result['order'];
 
         foreach ($result['orderItems'] as $item) {
             foreach ($item['statuses'] as $status) {

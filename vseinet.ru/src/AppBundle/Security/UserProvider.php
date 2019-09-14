@@ -57,11 +57,17 @@ class UserProvider implements UserProviderInterface
                 throw new UsernameNotFoundException(sprintf('Пользователь с мобильным телефоном %s не найден', $phone));
             }
         } else {
-            $contact = $this->em->getRepository(Contact::class)->findOneBy([
-                'contactTypeCode' => ContactTypeCode::EMAIL,
+            $q = $this->em->createQuery("
+                SELECT c
+                FROM AppBundle:Contact AS c
+                WHERE c.contactTypeCode = :contactTypeCode_EMAIL AND c.isMain = TRUE AND LOWER(c.value) = LOWER(:value)
+            ");
+            $q->setParameters([
+                'contactTypeCode_EMAIL' => ContactTypeCode::EMAIL,
                 'value' => $username,
-                'isMain' => true,
             ]);
+            $contact = $q->getOneOrNullResult();
+
             if (!$contact instanceof Contact) {
                 throw new UsernameNotFoundException(sprintf('Пользователь с email %s не найден', $username));
             }
@@ -110,10 +116,10 @@ class UserProvider implements UserProviderInterface
                         oe.clock_in_time,
                         r.ip
                     FROM org_employee AS oe
-                    INNER JOIN org_department AS od ON od.id = oe.org_department_id
-                    INNER JOIN geo_room AS gr ON gr.id = od.geo_room_id
+                    INNER JOIN org_employee_to_geo_room AS oe2gr ON oe.user_id = oe2gr.org_employee_user_id
+                    INNER JOIN geo_room AS gr ON gr.id = oe2gr.geo_room_id
                     INNER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
-                    WHERE oe.user_id = :user_id
+                    WHERE oe.user_id = :user_id AND oe2gr.is_main = true
                 ");
                 $stmt->execute(['user_id' => $user->getId()]);
                 $data = $stmt->fetch(\PDO::FETCH_ASSOC);

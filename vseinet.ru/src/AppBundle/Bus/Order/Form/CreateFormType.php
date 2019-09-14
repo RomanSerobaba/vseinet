@@ -123,14 +123,14 @@ class CreateFormType extends AbstractType
             $points = array_column($user->geoRooms, 'geo_point_id');
         }
 
-        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN]) && empty($points)) {
+        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN,UserRole::MANAGER]) && empty($points)) {
             return [];
         }
 
         $clause = '';
         $parameters = [];
 
-        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN])) {
+        if (!$user->isRoleIn([UserRole::PURCHASER, UserRole::ADMIN, UserRole::MANAGER])) {
             $clause .= ' AND p.id IN (:ids)';
             $parameters['ids'] = $points;
         } else {
@@ -273,9 +273,9 @@ class CreateFormType extends AbstractType
                     p.cashlessPercent
                 )
             FROM AppBundle:PaymentType AS p
-            WHERE p.isActive = TRUE
+            WHERE p.isActive = TRUE AND p.code != :paymentTypeCode_BANKCARD
             ORDER BY p.code
-        ");
+        ")->setParameters(['paymentTypeCode_BANKCARD' => PaymentTypeCode::BANKCARD,]);
         $paymentTypes = $q->getResult('IndexByHydrator');
 
         if (!is_object($user) || !$user->isEmployee()) {
@@ -284,11 +284,18 @@ class CreateFormType extends AbstractType
             });
         }
 
-        if (OrderType::RETAIL == $options['data']->typeCode) {
-            $paymentTypes = array_filter($paymentTypes, function ($val) use ($options) {
-                return PaymentTypeCode::TERMINAL != $val->code || in_array($options['data']->geoCityId, [950, 174]);
-            });
-        }
+        $q = $this->em->createQuery("
+            SELECT
+                cd.id
+            FROM AppBundle:GeoRoom AS gr
+            JOIN AppBundle:CashDesk AS cd WITH cd.geoRoomId = gr.id
+            WHERE cd.deactivatedAt IS NULL AND cd.terminalId > 0 AND gr.geoPointId = :geoPointId
+        ")->setParameters(['geoPointId' => $options['data']->geoPointId,]);
+        $terminals = $q->getResult();
+
+        $paymentTypes = array_filter($paymentTypes, function ($val) use ($terminals) {
+            return PaymentTypeCode::TERMINAL != $val->code || !empty($terminals);
+        });
 
         if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST])) {
             $paymentTypes = array_filter($paymentTypes, function ($val) {

@@ -56,4 +56,19 @@ class Client extends Message
     {
         $this->comuserId = empty($comuserId) ? null : (int) $comuserId;
     }
+
+    public function setPhone($phone)
+    {
+        $this->phone = empty($phone) ? null : $phone;
+    }
+
+    public function setAdditionalPhone($additionalPhone)
+    {
+        $this->additionalPhone = empty($additionalPhone) ? null : $additionalPhone;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = empty($email) ? null : $email;
+    }
 }

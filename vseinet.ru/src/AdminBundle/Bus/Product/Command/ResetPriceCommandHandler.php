@@ -8,6 +8,8 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceType;
+use Doctrine\ORM\AbstractQuery;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ResetPriceCommandHandler extends MessageHandler
 {
@@ -20,35 +22,42 @@ class ResetPriceCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->id));
         }
 
-        $product = $em->getRepository(Product::class)->findOneBy([
-            'baseProductId' => $baseProduct->getId(),
-            'geoCityId' => $this->getGeoCity()->getId(),
-        ]);
-        if ($product instanceof Product) {
-            if ($price = $product->getTemporaryPrice()) {
-                $type = ProductPriceType::TEMPORARY;
-                $product->setTemporaryPrice(null);
-            } elseif ($price = $product->getUltimatePrice()) {
-                $type = ProductPriceType::ULTIMATE;
-                $product->setUltimatePrice(null);
-            } elseif ($price = $product->getManualPrice()) {
-                $type = ProductPriceType::MANUAL;
-                $product->setManualPrice(null);
-            } else {
-                throw new BadRequeetsHttpException('У товара не задана ручная цена');
-            }
-            $em->persist($product);
+        // $q = $em->createQuery('
+        //     SELECT r.geoPointId
+        //     FROM AppBundle:Representative AS r
+        //     JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
+        //     WHERE gp.geoCityId = :geoCityId AND r.isActive = TRUE AND r.isCentral = TRUE
+        // ')->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+        // $geoPointId = $q->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
-            $log = new ProductPriceLog();
-            $log->setBaseProductId($baseProduct->getId());
-            $log->setGeoCityId($this->getGeoCity()->getId());
-            $log->setPrice(null);
-            $log->setPriceType($type);
-            $log->setOperatedBy($this->getUser()->getId());
-            $log->setOperatedAt(new \DateTime());
-            $em->persist($log);
+        // $product = $em->getRepository(Product::class)->findOneBy([
+        //     'baseProductId' => $baseProduct->getId(),
+        //     'geoCityId' => /*$geoPointId ? $this->getGeoCity()->getId() : */0,
+        // ]);
+        $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
-            $em->flush();
+        if ($product->getTemporaryPrice()) {
+            $type = ProductPriceType::TEMPORARY;
+            $product->setTemporaryPrice(null);
+        } elseif ($product->getUltimatePrice()) {
+            $type = ProductPriceType::ULTIMATE;
+            $product->setUltimatePrice(null);
+        } elseif ($product->getManualPrice()) {
+            $type = ProductPriceType::MANUAL;
+            $product->setManualPrice(null);
+        } else {
+            throw new BadRequestHttpException('У товара не задана ручная цена');
         }
+
+        $log = new ProductPriceLog();
+        $log->setBaseProductId($baseProduct->getId());
+        $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
+        $log->setPrice(null);
+        $log->setPriceType($type);
+        $log->setOperatedBy($this->getUser()->getId());
+        $log->setOperatedAt(new \DateTime());
+        $em->persist($log);
+
+        $em->flush();
     }
 }

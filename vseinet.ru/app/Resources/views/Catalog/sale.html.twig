@@ -21,11 +21,11 @@
         {{ macro.availability(product) }}
     </div>
     {% if isAvailable %}
-        <div class="price">
+        <div class="price{% if app.userIsEmployee %} price-{{ product.priceType }}" title="{{ product.priceTypeName }}{% endif %}">
             <b class="old">{{ product.price|discount_price|price_format }} <span class="RUR">Р</span></b>
             <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
         </div>
-    {% else %}
+    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != product.availability %}
         <strong class="price"{% if product.price|default(0) %}>{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</strong>
     {% endif %}
     <div class="status-all-screens">

@@ -1,7 +1,7 @@
 {% extends "layout.html.twig" %}
 
 {% block pageTitle %}
-    Купить {{ baseProduct.name }} в Пензе, цена / Интернет-магазин "Vseinet.ru"
+    Купить {{ baseProduct.name }} в Пензе, цена
 {% endblock %}
 
 {% block pageDescription %}
@@ -34,7 +34,7 @@
         </div>
         <div class="title">
             <h1 itemprop="name">{{ baseProduct.name }}</h1>
-            <small>Код товара: <b itemprop="sku" class="sku">{{ baseProduct.id }}</b></small>
+            <small>Код товара: <b itemprop="sku" class="sku">{{ baseProduct.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (baseProduct.price - baseProduct.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}</small>
         </div>
         <div id="product" data-id="{{ baseProduct.id }}">
             <div class="row clearfix">
@@ -171,7 +171,9 @@ $(function() {
             },
             method: 'get',
             load: function() {
-                var thumbs = this.find('.thumbs img')
+                var thumbsWrapper = this.find('.thumbs');
+                var thumbs = this.find('.thumbs img');
+                var ups = this.find('.thumbs .up');
                 if (thumbs.length) {
                     var view = this.find('.view img');
                     var indicator = $('<div/>').insertAfter(view);
@@ -187,6 +189,18 @@ $(function() {
                             view.click();
                         }
                         image.src = $(this).addClass('current').attr('rel');
+                    });
+                    ups.click(function() {
+                        var thumb = $(this).closest('.thumb');
+                        sp.post("{{ url('product_photo_set_first') }}", {
+                            id: thumb.data('id')
+                        }).then(function(response) {
+                            thumb.prependTo(thumbsWrapper);
+                            thumbsWrapper.find('.thumb img').each(function(index){
+                                $(this).prop('alt', 'Фото №' + index);
+                                this.dataset.index = index;
+                            });
+                        });
                     });
                     view.click(function() {
                         var thumb = thumbs.filter('.current').parent().next().find('img');

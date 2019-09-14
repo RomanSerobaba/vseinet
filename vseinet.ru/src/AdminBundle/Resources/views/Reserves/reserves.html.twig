@@ -37,45 +37,50 @@
             <tr class="category">
                 <td>{{ geoCity.name }}</td>
                 <td>
-                    {{ geoCity.freeDelta }}
+                    {# {{ geoCity.freeDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.freeTransitDelta }}
+                    {# {{ geoCity.freeTransitDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.reservedDelta }}
+                    {# {{ geoCity.reservedDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.reservedTransitDelta }}
+                    {# {{ geoCity.reservedTransitDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.issuedDelta }}
+                    {# {{ geoCity.issuedDelta }} #}
                 </td>
                 <td>
-                    {{ geoCity.issuedTransitDelta }}
+                    {# {{ geoCity.issuedTransitDelta }} #}
                 </td>
             </tr>
             {% for geoPointId in geoCity.geoPointIds %}
                 {% set geoPoint = reserves.geoPoints[geoPointId] %}
                 <tr class="type">
-                    <td>{{ geoPoint.name }}</td>
                     <td>
-                        {{ geoPoint.freeDelta }}
+                        <span class="pricetag-price{% if geoPoint.pricetagIsHandmade %} handmade{% endif %}" title="{{ geoPoint.pricetagDate|date('d.m.Y H:i') }}, {{ geoPoint.pricetagCreator }}">{{ geoPoint.pricetag|price_format }}</span>
+                        {{ geoPoint.name }}
+                        <a href="{{ path('admin_handmade_pricetag_edit', { geoPointId: geoPointId, id: baseProductId }) }}" class="icon-edit handmade-pricetag-edit" title="Редактировать"></a>
+                        <span title="{{ geoPoint.handmadePricetagDate|date('d.m.Y H:i') }}, {{ geoPoint.handmadePricetagCreator }}">{{ geoPoint.handmadePricetag|price_format }}</span>
                     </td>
                     <td>
-                        {{ geoPoint.freeTransitDelta }}
+                        {# {{ geoPoint.freeDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.reservedDelta }}
+                        {# {{ geoPoint.freeTransitDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.reservedTransitDelta }}
+                        {# {{ geoPoint.reservedDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.issuedDelta }}
+                        {# {{ geoPoint.reservedTransitDelta }} #}
                     </td>
                     <td>
-                        {{ geoPoint.issuedTransitDelta }}
+                        {# {{ geoPoint.issuedDelta }} #}
+                    </td>
+                    <td>
+                        {# {{ geoPoint.issuedTransitDelta }} #}
                     </td>
                 </tr>
                 {% for geoRoomId in geoPoint.geoRoomIds %}
@@ -103,7 +108,10 @@
                     </tr>
                     {% for supply in geoRoom.supplies %}
                         <tr class="supply">
-                            <td><a href="/admin/supplies/{{ supply.supplyId }}">{{ supply.supplierCode }}-{{ supply.supplyNumber }} от {{ supply.supplyCreatedAt|date('d.m.Y') }}</a></td>
+                            <td>
+                                <span style="float: right">закуп. {{ supply.purchasePrice|price_format }}</span>
+                                {% if 1 != supply.supplyId %}<a href="/admin/supplies/{{ supply.supplyId }}">{% endif %}{{ supply.supplierCode }}-{{ supply.supplyNumber }} от {{ supply.supplyCreatedAt|date('d.m.Y') }}{% if 1 != supply.supplyId %}</a>{% endif %}
+                            </td>
                             <td>
                                 {{ supply.freeDelta }}
                             </td>

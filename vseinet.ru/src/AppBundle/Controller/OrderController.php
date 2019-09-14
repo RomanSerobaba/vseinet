@@ -127,7 +127,7 @@ class OrderController extends Controller
      * @VIA\Route(
      *     name="order_receipts_of_product",
      *     path="/order/receiptsOfProduct/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -193,7 +193,7 @@ class OrderController extends Controller
      * @VIA\Get(
      *     name="order_creation_credit",
      *     path="/order/credit/{id}/",
-     *     requirements={"id": "\d+"}
+     *     requirements={"id"="\d+"}
      * )
      */
     public function creationCreditAction(int $id)
@@ -222,8 +222,8 @@ class OrderController extends Controller
 
         $command = new Command\CreateCommand($data);
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
-            'discountCode' => $this->get('session')->get('discountCode', null),
-            'geoPoinId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null,
+            'discountCode' => $this->get('session')->get('discountCode'),
+            'geoPointId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null,
         ]));
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
@@ -259,6 +259,7 @@ class OrderController extends Controller
             'hasLift' => !empty($command->address) ? $command->address->hasLift : null,
             'floor' => !empty($command->address) ? $command->address->floor : null,
             'transportCompanyId' => $command->transportCompanyId,
+            'orderTypeCode' => $command->typeCode,
         ]));
 
         if ($request->isMethod('POST') && empty($cart->products)) {
@@ -268,7 +269,7 @@ class OrderController extends Controller
         if ($request->isMethod('POST') && !$request->query->get('refreshOnly')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit'])) {
+            if ($form->isSubmitted() && $form->isValid() && !empty($data['submit']) && $request->request->get('submit')) {
                 try {
                     $this->get('command_bus')->handle($command);
                     $this->forward('AppBundle:Cart:clear');
@@ -322,6 +323,11 @@ class OrderController extends Controller
                     'canCreateRetailOrder' => $canCreateRetailOrder,
                     'cart' => $cart,
                 ]),
+                'cart_html' => $this->renderView('Order/cart_ajax.html.twig', [
+                    'form' => $form->createView(),
+                    'canCreateRetailOrder' => $canCreateRetailOrder,
+                    'cart' => $cart,
+                ]),
             ]);
         }
 
@@ -337,7 +343,7 @@ class OrderController extends Controller
      * @VIA\Get(
      *     name="order_created_page",
      *     path="/order/success/{id}/",
-     *     requirements={"id": "\d+"}
+     *     requirements={"id"="\d+"}
      * )
      */
     public function createdPageAction(int $id, Request $request)

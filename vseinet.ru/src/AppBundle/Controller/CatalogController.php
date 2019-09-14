@@ -26,7 +26,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category",
      *     path="/catalog/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer")
@@ -35,7 +35,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_category_with_brand",
      *     path="/catalog/{id}/{brandName}/",
-     *     requirements={"id": "\d+", "brandName": "[^\/]*"},
+     *     requirements={"id"="\d+", "brandName"="[^\/]*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
@@ -85,7 +85,7 @@ class CatalogController extends Controller
         }
 
         if (empty($category->pageTitle)) {
-            $category->pageTitle = sprintf('Купить %s в Пензе, цена / Интернет-магазин "Vseinet.ru"', $category->name);
+            $category->pageTitle = sprintf('Купить %s в Пензе, цена"', $category->name);
         }
         if (empty($category->pageDescription)) {
             $category->pageDescription = sprintf('В каталоге %s вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!', $category->name);
@@ -101,7 +101,7 @@ class CatalogController extends Controller
         }
 
         if (0 === $category->countProducts && !$this->getUserIsEmployee()) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Категории не существует');
         }
 
         if (1 === $finder->getFilter()->page && !empty($category->description)) {
@@ -204,7 +204,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_brand",
      *     path="/brand/{name}/",
-     *     requirements={"name": "[^\/]*"},
+     *     requirements={"name"="[^\/]*"},
      *     parameters={
      *         @VIA\Parameter(name="name", type="string")
      *     },
@@ -242,7 +242,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_detail",
      *     path="/detail/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"}
      * )
      */
@@ -274,7 +274,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_detail_value",
      *     path="/detailValue/{id}/",
-     *     requirements={"id": "\d+"},
+     *     requirements={"id"="\d+"},
      *     methods={"GET", "POST"}
      * )
      */
@@ -306,7 +306,7 @@ class CatalogController extends Controller
      * @VIA\Route(
      *     name="catalog_supplier",
      *     path="/supplier/{code}/",
-     *     requirements={"code": "[^\/]*"},
+     *     requirements={"code"="[^\/]*"},
      *     methods={"GET", "POST"}
      * )
      */

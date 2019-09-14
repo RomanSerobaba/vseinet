@@ -1,11 +1,10 @@
 imports:
+    - { resource: admin.yml }
     - { resource: config.yml }
 
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
 
 monolog:
     handlers:
@@ -20,3 +19,7 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+        errors:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_errors.log'
+            level: error

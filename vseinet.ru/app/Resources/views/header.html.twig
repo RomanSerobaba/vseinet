@@ -33,15 +33,15 @@
 <ul class="location">
     <li><em>Ваш город</em></li>
     <li>
-        <a 
-            href="javascript:void(0)" 
-            class="ajax city" 
+        <a
+            href="javascript:void(0)"
+            class="ajax city"
             data-id="City"
         >
             {{ geoCity.name }}
         </a>
         {% if geoCity.countGeoPoints %}
-            и еще 
+            и еще
             <a href="javascript:void(0)" class="ajax" data-id="City">
                 {{ geoCity.countGeoPoints }} {{ geoCity.countGeoPoints|declension('пункт;пункта;пунктов') }} по области
             </a>
@@ -63,7 +63,7 @@
         <a href="{{ path('contacts_page') }}" class="black address">Адреса магазинов</a>
         {% if geoCity.countNewGeoPoints %}
             <span class="new">
-                +{{ geoCity.countNewGeoPoints }} {{ geoCity.countNewGeoPoints|declension('новый;новых') }}! 
+                +{{ geoCity.countNewGeoPoints }} {{ geoCity.countNewGeoPoints|declension('новый;новых') }}!
             </span>
         {% endif %}
     </li>
@@ -78,7 +78,7 @@
         <li><a href="{{ path('content_page', { slug: 'credit' }) }}">Рассрочка и кредит</a></li>
         <li><a href="{{ path('contacts_page') }}">Контакты</a></li>
         <li>
-            <a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a> 
+            <a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a>
             <span style="color: red; font-size: 11px; vertical-align: sub;">new</span>
         </li>
     </ul>
@@ -86,12 +86,12 @@
 
 <form action="{{ url('catalog_search') }}" method="get" class="search">
     <div>
-        <input 
-            type="text" 
-            class="txt" 
-            name="q" 
-            value="{{ app.request.query.get('q', '')|url_decode }}" 
-            placeholder="{{ render(controller('AppBundle:Search:getPlaceholder')) }}" 
+        <input
+            type="text"
+            class="txt"
+            name="q"
+            value="{{ app.request.query.get('q', '')|url_decode }}"
+            placeholder="{{ render(controller('AppBundle:Search:getPlaceholder')) }}"
         />
         <button type="submit" class="bttn light">Найти</button>
         <div class="indicator"></div>

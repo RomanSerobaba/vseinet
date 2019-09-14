@@ -364,7 +364,7 @@ class Filter extends ContainerAware
 
     protected function parseStr(string $value): ?string
     {
-        $str = preg_replace('/\p{C}+/u', '', urldecode($value)) ?: null;
+        $str = preg_replace('/\p{C}+/u', '', urldecode(trim($value))) ?: null;
         if (empty($str) || 2 > mb_strlen($str)) {
             return null;
         }
@@ -422,7 +422,7 @@ class Filter extends ContainerAware
         $this->brandIds = [];
         $this->categoryIds = [];
         $this->categorySectionIds = [];
-        $this->q = null;
+        // $this->q = null;
         $this->name = null;
         $this->availability = Availability::ACTIVE;
         $this->nofilled = [];

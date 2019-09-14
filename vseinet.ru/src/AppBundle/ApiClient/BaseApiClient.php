@@ -133,7 +133,7 @@ abstract class BaseApiClient
                 }
 
                 if ('Ошибки валидации входящих параметров' == $message || 'Внутренняя ошибка приложения' == $message) {
-                    $paramErrors = $content['parameters'];
+                    $paramErrors = $content['items'];
                 }
             }
 

@@ -84,12 +84,12 @@
                     }});
                     return false;
                 });
-                var coordinates = point.data('coordinates').split(',')
+                var coordinates = point.data('coordinates').replace(/[\(\)]+/g,'').split(',')
                 var placemark = new ymaps.Placemark(coordinates, {
                     hintContent: point.find('.name').text()
                 }, {
                     openEmptyBalloon: true,
-                    iconImageHref: '/media/images/placemark'+(point.data('type')==='courier'?'Courier':'')+'.png',
+                    iconImageHref: '/images/placemark'+(point.data('type')==='courier'?'Courier':'')+'.png',
                     iconImageSize: [41, 44],
                     iconImageOffset: [-14, -44]
                 });

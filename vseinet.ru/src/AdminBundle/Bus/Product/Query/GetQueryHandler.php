@@ -19,12 +19,12 @@ class GetQueryHandler extends MessageHandler
         }
 
         $product = $em->getRepository(Product::class)->findOneBy([
-            'baseProductId' => $baseProduct->getId(),
+            'baseProductId' => $baseProduct->getCanonicalId(),
             'geoCityId' => $this->getGeoCity()->getId(),
         ]);
         if (!$product instanceof Product) {
             $product = $em->getRepository(Product::class)->findOneBy([
-                'baseProductId' => $baseProduct->getId(),
+                'baseProductId' => $baseProduct->getCanonicalId(),
                 'geoCityId' => 0,
             ]);
         }

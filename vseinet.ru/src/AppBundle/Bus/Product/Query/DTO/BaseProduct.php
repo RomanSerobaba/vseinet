@@ -49,6 +49,11 @@ class BaseProduct
     public $priceType;
 
     /**
+     * @Assert\Type("string")
+     */
+    public $priceTypeName;
+
+    /**
      * @Assert\Type("integer")
      */
     public $minQuantity;
@@ -103,6 +108,11 @@ class BaseProduct
      */
     public $pricetagQuantity;
 
+    /**
+     * @Assert\Type("integer")
+     */
+    public $purchasePrice;
+
     public function __construct(
         $id,
         $name,
@@ -119,7 +129,8 @@ class BaseProduct
         $description,
         $estimate,
         $canonicalId,
-        $pricetagQuantity
+        $pricetagQuantity,
+        $purchasePrice
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -137,6 +148,7 @@ class BaseProduct
         $this->estimate = $estimate;
         $this->canonicalId = $canonicalId;
         $this->pricetagQuantity = $pricetagQuantity;
+        $this->purchasePrice = $purchasePrice;
     }
 
     public function isManualPrice()

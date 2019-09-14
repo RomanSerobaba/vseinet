@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Range implements \Countable
 {
-    const PRECISION = 4;
+    public const PRECISION = 4;
 
     /**
      * @Assert\Type(type="float")
@@ -23,7 +23,6 @@ class Range implements \Countable
      */
     public $step = 1;
 
-
     public function __construct(string $min, string $max)
     {
         $this->set($min, $max);
@@ -31,15 +30,10 @@ class Range implements \Countable
 
     public function set(string $min, string $max): self
     {
-        $this->min = empty($min) ? null : $this->sanitize($min);
-        $this->max = empty($max) ? null : $this->sanitize($max);
-        if (null === $this->max) {
-            $this->min = null;
-        } elseif (null === $this->min) {
-            $this->min = 0;
-        }
+        $this->min = $this->sanitize($min);
+        $this->max = $this->sanitize($max);
 
-        if ($this->max) {
+        if (null !== $this->min && null !== $this->max) {
             $exp = $this->exp($this->max);
             if ($this->min) {
                 $exp = min($exp, $this->exp($this->min));
@@ -64,8 +58,12 @@ class Range implements \Countable
         return ($this->max - $this->min) / $this->step;
     }
 
-    protected function sanitize($number): float
+    protected function sanitize($number): ?float
     {
+        if (null === $number || '' === $number) {
+            return null;
+        }
+
         return round(floatval(str_replace([' ', ','], ['', '.'], (string) $number)), self::PRECISION);
     }
 
@@ -75,7 +73,7 @@ class Range implements \Countable
         if ($value = round(round($value, self::PRECISION) * pow(10, self::PRECISION))) {
             foreach (str_split(strrev($value)) as $char) {
                 if ('0' === $char) {
-                    $e++;
+                    ++$e;
                 } else {
                     break;
                 }
