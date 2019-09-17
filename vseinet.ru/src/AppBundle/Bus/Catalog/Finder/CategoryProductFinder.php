@@ -57,7 +57,7 @@ class CategoryProductFinder extends AbstractProductFinder
             }
         }
 
-        $qb->criteria('category_id = '.$this->category->id);
+        $qb->criteria('category_id = '.($this->category->aliasForId ?? $this->category->id));
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -158,7 +158,7 @@ class CategoryProductFinder extends AbstractProductFinder
             }
         }
 
-        $qb->criteria('category_id = '.$this->category->id);
+        $qb->criteria('category_id = '.($this->category->aliasForId ?? $this->category->id));
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -243,7 +243,7 @@ class CategoryProductFinder extends AbstractProductFinder
             }
         }
 
-        $qb->criteria('category_id = '.$this->category->id);
+        $qb->criteria('category_id = '.($this->category->aliasForId ?? $this->category->id));
         $name = $this->getFilter()->name;
         if (!empty($name)) {
             $qb->match($name);
@@ -301,7 +301,7 @@ class CategoryProductFinder extends AbstractProductFinder
             WHERE dg.categoryId = :categoryId AND d.typeCode IN (:typeCodes) AND d.pid IS NULL
             ORDER BY dg.sortOrder, d.sortOrder
         ");
-        $q->setParameter('categoryId', $this->category->id);
+        $q->setParameter('categoryId', ($this->category->aliasForId ?? $this->category->id));
         $q->setParameter('typeCodes', DetailType::getFilterTypeCodes());
 
         return $q->getResult('IndexByHydrator');
