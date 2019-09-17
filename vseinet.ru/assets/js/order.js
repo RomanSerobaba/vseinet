@@ -23,8 +23,7 @@ $(function() {
                 }
             },
             onSuccess: function(data) {
-                console.log(data);
-                // window.location = Routing.generate('order_created_page', { id: data.id });
+                window.location = Routing.generate('order_created_page', { id: data.id });
             }
         });
     }
