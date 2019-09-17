@@ -348,8 +348,14 @@ class CatalogController extends Controller
             }
         }
 
-        unset($attributes['brandName']);
-        $baseUrl = $this->generateUrl($request->attributes->get('_route'), $attributes);
+        $route = $request->attributes->get('_route');
+        $baseUrl = $this->generateUrl($route, $attributes);
+        if ('catalog_category_with_brand' === $route) {
+            $route = 'catalog_category';
+            unset($attributes['brandName']);
+        }
+        $resetUrl = $this->generateUrl($route, $attributes);
+
         $attributes = $filter->build();
 
         $paging = new Paging([
@@ -358,6 +364,7 @@ class CatalogController extends Controller
             'perpage' => $finder->getQueryBuilder()::PER_PAGE,
             'lines' => 8,
             'baseUrl' => $baseUrl,
+            'resetUrl' => $resetUrl,
             'attributes' => $attributes,
         ]);
         $sorting = new Sorting([
@@ -402,6 +409,7 @@ class CatalogController extends Controller
             'availabilityChoices' => Availability::getChoices($this->getUserIsEmployee()),
             'nofilledChoices' => Nofilled::getChoices(),
             'baseUrl' => $baseUrl,
+            'resetUrl' => $resetUrl,
         ]);
     }
 }
