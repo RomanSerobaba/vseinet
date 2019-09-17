@@ -21,10 +21,10 @@ $(function() {
                         $('body, html ').animate( { scrollTop: destination - 10}, 500 );
                     }
                 }
-            }/*,
+            },
             onSuccess: function(data) {
                 window.location = Routing.generate('order_created_page', { id: data.id });
-            }*/
+            }
         });
     }
 
