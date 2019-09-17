@@ -26,13 +26,13 @@ $(function() {
         return false;
     });
     $('.subtree').css({minHeight: menu1.outerHeight() - 50});
-    if (sp.mobile)
-        sp.document.click(function(event) {
-            if ($(event.target).closest('#tree').length == 0) {
-                // console.log(event.target, menu1)
-                menu1.data('exit')();
-            }
-        });
+    // if (sp.mobile)
+    //     sp.document.click(function(event) {
+    //         if ($(event.target).closest('#tree').length == 0) {
+    //             // console.log(event.target, menu1)
+    //             menu1.data('exit')();
+    //         }
+    //     });
 
     var mobMenuPageTrigger = function(){
         if ($(window).width() > 992) {
