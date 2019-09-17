@@ -7,6 +7,7 @@ use AppBundle\Annotation as VIA;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Validator\Constraints\MobilePhone;
+use Symfony\Component\Validator\Context\ExecutionContext;
 
 class RegistrCommand extends Message
 {
@@ -85,4 +86,16 @@ class RegistrCommand extends Message
      * @Assert\Type("boolean")
      */
     public $isMarketingSubscribed;
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContext $context, $payload)
+    {
+        if (empty($this->geoCityId)) {
+            $context->buildViolation('Необходимо указать город')
+                ->atPath('geoCityName')
+                ->addViolation();
+        }
+    }
 }
