@@ -1,4 +1,6 @@
 <form method="post" id="ProductFilter">
+    <a href="#" class="bttn light close_mob_filter">Закрыть фильтры</a>
+    <a href="{{ baseUrl }}" class="bttn light gray mob_filter_reset">Сброс</a>
     {# categories #}
     {% if features.categories is not null and features.categories|length %}
         <div class="filter">
