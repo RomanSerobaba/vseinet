@@ -78,7 +78,7 @@ $.widget('sp.form', {
         if (submit) {
             data.push({ name: 'submit', value: 1 });
         }
-        console.log(submit, form.name, data);
+        console.log(submit, form.prop('name'), data);
         var trigger = $(document.activeElement);
         if (trigger.is('[type=submit]')) {
             var name = trigger.prop('name');
