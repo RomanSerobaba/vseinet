@@ -75,6 +75,7 @@ $.widget('sp.form', {
             callback = this.options.validate;
         }
         var data = form.serializeArray();
+        console.log(data);
         if (submit) {
             data.push({ name: 'submit', value: 1 });
         }
