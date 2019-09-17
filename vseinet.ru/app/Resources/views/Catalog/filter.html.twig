@@ -1,4 +1,6 @@
 <form method="post" id="ProductFilter">
+    <a href="#" class="bttn light close_mob_filter">Закрыть фильтры</a>
+    <a href="{{ resetUrl }}" class="bttn light gray mob_filter_reset">Сброс</a>
     {# categories #}
     {% if features.categories is not null and features.categories|length %}
         <div class="filter">
@@ -241,7 +243,7 @@
         </div>
         {# apply #}
         <div class="tab last apply">
-            <a href="{{ baseUrl }}" class="gray">Сброс</a>
+            <a href="{{ resetUrl }}" class="gray">Сброс</a>
             <button type="submit" class="bttn light r">Применить</button>
             <button type="submit" class="bttn light prev total hidden"></button>
         </div>

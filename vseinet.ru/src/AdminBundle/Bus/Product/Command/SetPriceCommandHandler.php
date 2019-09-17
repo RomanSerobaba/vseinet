@@ -71,6 +71,8 @@ class SetPriceCommandHandler extends MessageHandler
                 throw new BadRequeetsHttpException(sprintf('Тип цены %s нельзя установить вручную', $command->type));
         }
 
+        $em->persist($product);
+
         $log = new ProductPriceLog();
         $log->setBaseproductId($baseProduct->getId());
         $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);

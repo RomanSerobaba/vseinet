@@ -318,12 +318,12 @@
 
         $(document).mousemove(mousemoveDocument);
 
-        $menu.data('exit', function() {
-			if (activeRow) {
-				options.deactivate(activeRow);
-			}
-			activeRow = null;
-        });
+   //      $menu.data('exit', function() {
+			// if (activeRow) {
+			// 	options.deactivate(activeRow);
+			// }
+			// activeRow = null;
+   //      });
     };
 })(jQuery);
 

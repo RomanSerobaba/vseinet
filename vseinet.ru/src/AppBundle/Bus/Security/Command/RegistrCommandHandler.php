@@ -83,6 +83,7 @@ class RegistrCommandHandler extends MessageHandler
         $user = new User();
         $user->setGeoCityId($geoCity->getId());
         $user->setIsMarketingSubscribed($command->isMarketingSubscribed);
+        $user->setIsTransactionalSubscribed(true);
         $user->setPersonId($person->getId());
         $user->setRegisteredAt(new \DateTime());
         $password = $this->get('security.password_encoder')->encodePassword($user, $command->password);

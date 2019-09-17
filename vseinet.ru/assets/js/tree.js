@@ -26,13 +26,13 @@ $(function() {
         return false;
     });
     $('.subtree').css({minHeight: menu1.outerHeight() - 50});
-    if (sp.mobile)
-        sp.document.click(function(event) {
-            if ($(event.target).closest('#tree').length == 0) {
-                // console.log(event.target, menu1)
-                menu1.data('exit')();
-            }
-        });
+    // if (sp.mobile)
+    //     sp.document.click(function(event) {
+    //         if ($(event.target).closest('#tree').length == 0) {
+    //             // console.log(event.target, menu1)
+    //             menu1.data('exit')();
+    //         }
+    //     });
 
     var mobMenuPageTrigger = function(){
         if ($(window).width() > 992) {
@@ -160,10 +160,12 @@ $(function() {
         $('.subtree .top').children().children().not('.go-to-category').click(function(e){
             if (!$(e.target).is('.go-to-category')) {
                 if ($(window).width() < 992){
-                    $(this).closest('ul').toggleClass('third-menu-open');
-                    var gt = $(this).find('.go-to-category');
-                    gt.css('lineHeight', gt.outerHeight() + 'px');
-                    return false;
+                    if ($(this).closest('ul').find('li').length > 1) {
+                        $(this).closest('ul').toggleClass('third-menu-open');
+                        var gt = $(this).find('.go-to-category');
+                        gt.css('lineHeight', gt.outerHeight() + 'px');
+                        return false;
+                    }
                 }
             }
         });
