@@ -87,7 +87,8 @@ sp.dialog = function(width) {
 $(function() {
     sp.window = $(window);
     sp.document = $(document);
-    sp.mobile = navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
+    sp.mobile = typeof window.orientation !== 'undefined';
+    // sp.mobile = navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
     if (!sp.mobile) {
         $('#top').sticky();
     }
