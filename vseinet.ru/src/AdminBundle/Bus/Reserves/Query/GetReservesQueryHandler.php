@@ -107,11 +107,12 @@ class GetReservesQueryHandler extends MessageHandler
             }
         }
 
-        $freeDelta = 0;
-        $freeTransitDelta = 0;
-        $reservedDelta = 0;
-        $reservedTransitDelta = 0;
-        $issuedDelta = 0;
+        $freeDelta =
+        $freeReservedDelta =
+        $freeTransitDelta =
+        $reservedDelta =
+        $reservedTransitDelta =
+        $issuedDelta =
         $issuedTransitDelta = 0;
 
         foreach ($reserves as $reserve) {
@@ -151,11 +152,19 @@ class GetReservesQueryHandler extends MessageHandler
                 }
             } else {
                 if (GoodsConditionCode::FREE === $reserve->goodsConditionCode) {
-                    $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeDelta += $reserve->delta;
-                    $geoRooms[$geoRoomId]->freeDelta += $reserve->delta;
-                    $geoPoints[$geoPointId]->freeDelta += $reserve->delta;
-                    $geoCities[$geoCityId]->freeDelta += $reserve->delta;
-                    $freeDelta += $reserve->delta;
+                    if ($reserve->orderItemId) {
+                        $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeReservedDelta += $reserve->delta;
+                        $geoRooms[$geoRoomId]->freeReservedDelta += $reserve->delta;
+                        $geoPoints[$geoPointId]->freeReservedDelta += $reserve->delta;
+                        $geoCities[$geoCityId]->freeReservedDelta += $reserve->delta;
+                        $freeReservedDelta += $reserve->delta;
+                    } else {
+                        $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeDelta += $reserve->delta;
+                        $geoRooms[$geoRoomId]->freeDelta += $reserve->delta;
+                        $geoPoints[$geoPointId]->freeDelta += $reserve->delta;
+                        $geoCities[$geoCityId]->freeDelta += $reserve->delta;
+                        $freeDelta += $reserve->delta;
+                    }
                 } elseif (GoodsConditionCode::RESERVED === $reserve->goodsConditionCode) {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->reservedDelta += $reserve->delta;
                     $geoRooms[$geoRoomId]->reservedDelta += $reserve->delta;
@@ -174,6 +183,7 @@ class GetReservesQueryHandler extends MessageHandler
 
         $reservesDTO = new DTO\Reserves($geoCities, $geoPoints, $geoRooms);
         $reservesDTO->freeDelta = $freeDelta;
+        $reservesDTO->freeReservedDelta = $freeReservedDelta;
         $reservesDTO->freeTransitDelta = $freeTransitDelta;
         $reservesDTO->reservedDelta = $reservedDelta;
         $reservesDTO->reservedTransitDelta = $reservedTransitDelta;

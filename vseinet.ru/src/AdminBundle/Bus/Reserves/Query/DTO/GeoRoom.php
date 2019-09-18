@@ -36,6 +36,11 @@ class GeoRoom
     /**
      * @Assert\Type(type="integer")
      */
+    public $freeReservedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $freeTransitDelta = 0;
 
     /**
