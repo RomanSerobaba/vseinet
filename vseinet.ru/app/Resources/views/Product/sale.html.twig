@@ -45,9 +45,18 @@
         </strong>
     {% else %}
         <strong
+            class="price"
             style="cursor:help"
             title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}"
         >
+            {% if app.userIsEmployee %}
+                <a
+                    href="{{ path('product_set_price', { id: baseProduct.id }) }}"
+                    class="icon set-price"
+                    title="Установить ручную цену"
+                >
+                </a>
+            {% endif %}
             ???
         </strong>
     {% endif %}

@@ -38,8 +38,8 @@ $(function() {
             changeYear: true,
             changeDay: true,
             maxDate: "+0d",
-            minDate: "01.01.1991",
-            yearRange: "1991:+0",
+            minDate: "01.01.1900",
+            yearRange: "1900:+0",
         });
     }
 

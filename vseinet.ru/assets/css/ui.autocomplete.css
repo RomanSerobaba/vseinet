@@ -11,6 +11,10 @@
 	top: 0;
 	z-index: 100;
 }
+
+.ui-autocomplete-loading {
+    background: white url("../images/ajax.gif") right center no-repeat;
+  }
 	.ui-autocomplete .ui-menu-item {
 		overflow: hidden;
 	}
