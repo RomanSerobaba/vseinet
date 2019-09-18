@@ -17,6 +17,9 @@
             {% endif %}
             <small id="products-total">{{ total|number_format() }} {{ total|declension('товар;товара;товаров') }}</small>
         </div>
+        <div class="mobile-filter-btn">
+            <a href="#" class="bttn light">Показать фильтры по параметрам <span class="hide">Показать фильтры</span></a>
+        </div>
         <nav class="sort" id="sorting">
             {% include 'Catalog/sorting.html.twig' %}
         </nav>
