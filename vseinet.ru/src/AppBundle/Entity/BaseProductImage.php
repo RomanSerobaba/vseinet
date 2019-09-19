@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * BaseProductImage
+ * BaseProductImage.
  *
  * @ORM\Table(name="base_product_image")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BaseProductImageRepository")
@@ -58,20 +58,12 @@ class BaseProductImage
     private $sortOrder;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="parser_image_id", type="integer")
-     */
-    private $parserImageId;
-
-    /**
      * @Assert\Type(type="string")
      */
     public $src;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -81,9 +73,9 @@ class BaseProductImage
     }
 
     /**
-     * Set baseProductId
+     * Set baseProductId.
      *
-     * @param integer $baseProductId
+     * @param int $baseProductId
      *
      * @return ProductImage
      */
@@ -95,7 +87,7 @@ class BaseProductImage
     }
 
     /**
-     * Get baseProductId
+     * Get baseProductId.
      *
      * @return int
      */
@@ -105,7 +97,7 @@ class BaseProductImage
     }
 
     /**
-     * Set basename
+     * Set basename.
      *
      * @param string $basename
      *
@@ -119,7 +111,7 @@ class BaseProductImage
     }
 
     /**
-     * Get basename
+     * Get basename.
      *
      * @return string
      */
@@ -129,9 +121,9 @@ class BaseProductImage
     }
 
     /**
-     * Set width
+     * Set width.
      *
-     * @param integer $width
+     * @param int $width
      *
      * @return BaseProductImage
      */
@@ -143,7 +135,7 @@ class BaseProductImage
     }
 
     /**
-     * Get width
+     * Get width.
      *
      * @return int
      */
@@ -153,9 +145,9 @@ class BaseProductImage
     }
 
     /**
-     * Set height
+     * Set height.
      *
-     * @param integer $height
+     * @param int $height
      *
      * @return BaseProductImage
      */
@@ -167,7 +159,7 @@ class BaseProductImage
     }
 
     /**
-     * Get height
+     * Get height.
      *
      * @return int
      */
@@ -177,9 +169,9 @@ class BaseProductImage
     }
 
     /**
-     * Set sortOrder
+     * Set sortOrder.
      *
-     * @param integer $sortOrder
+     * @param int $sortOrder
      *
      * @return BaseProductImage
      */
@@ -191,7 +183,7 @@ class BaseProductImage
     }
 
     /**
-     * Get sortOrder
+     * Get sortOrder.
      *
      * @return int
      */
@@ -199,29 +191,4 @@ class BaseProductImage
     {
         return $this->sortOrder;
     }
-
-    /**
-     * Set parserImageId
-     *
-     * @param integer $parserImageId
-     *
-     * @return BaseProductImage
-     */
-    public function setParserImageId($parserImageId)
-    {
-        $this->parserImageId = $parserImageId;
-
-        return $this;
-    }
-
-    /**
-     * Get parserImageId
-     *
-     * @return int
-     */
-    public function getParserImageId()
-    {
-        return $this->parserImageId;
-    }
 }
-
