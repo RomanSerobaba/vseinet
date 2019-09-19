@@ -6,7 +6,7 @@ use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\Competitor;
 use AppBundle\Entity\Product;
-use AppBundle\Entity\ProductToCompetitor;
+use AppBundle\Entity\CompetitorProduct;
 use AppBundle\Exception\ValidationException;
 
 class AddRevisionCommandHandler extends MessageHandler
@@ -15,8 +15,8 @@ class AddRevisionCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        if (null === $command->link && null === $command->competitorPrice) {
-            throw new ValidationException('link', 'Укажите ссылку или цену');
+        if (null === $command->url && null === $command->price) {
+            throw new ValidationException('url', 'Укажите ссылку или цену');
         }
 
         $competitor = $em->getRepository(Competitor::class)->find($command->competitorId);
@@ -38,26 +38,26 @@ class AddRevisionCommandHandler extends MessageHandler
         }
 
         if ($command->id) {
-            $revision = $em->getRepository(ProductToCompetitor::class)->find($command->id);
-            if (!$revision instanceof ProductToCompetitor) {
+            $revision = $em->getRepository(CompetitorProduct::class)->find($command->id);
+            if (!$revision instanceof CompetitorProduct) {
                 throw new NotFoundHttpException(sprintf('Товар конкурента %d не найден', $command->id));
             }
             $em->remove($revision);
             $em->flush($revision);
         }
 
-        $revision = new ProductToCompetitor();
+        $revision = new CompetitorProduct();
         $revision->setCompetitorId($competitor->getId());
         $revision->setBaseProductId($product->getBaseProductId());
         $revision->setGeoCityId($geoCityId);
-        $revision->setLink($command->link);
-        if ($command->competitorPrice) {
-            $revision->setCompetitorPrice($command->competitorPrice);
-            $revision->setPriceTime(new \DateTime());
+        $revision->setUrl($command->url);
+        if ($command->price) {
+            $revision->setPrice($command->price);
+            $revision->setCompletedAt(new \DateTime());
+        } elseif ($command->url) {
+            $revision->setIsManualRequest(true);
         }
-        $revision->setRequestedAt(new \DateTime());
         $revision->setCreatedBy($this->getUser()->getId());
-        $revision->setCreatedAt(new \DateTime());
 
         $em->persist($revision);
         $em->flush();

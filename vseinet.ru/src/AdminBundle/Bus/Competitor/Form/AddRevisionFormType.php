@@ -6,7 +6,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\Extension\Core\Type\{ ChoiceType, HiddenType, SubmitType, TextType };
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AppBundle\Form\Type\PriceType;
 use AppBundle\Entity\Competitor;
 use AdminBundle\Bus\Competitor\Command\AddRevisionCommand;
@@ -17,7 +20,6 @@ class AddRevisionFormType extends AbstractType
      * @var EntityManagerInterface
      */
     protected $em;
-
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -36,8 +38,8 @@ class AddRevisionFormType extends AbstractType
             ->add('id', HiddenType::class, ['required' => false])
             ->add('competitorId', ChoiceType::class, ['choices' => $competitorsChoice])
             ->add('baseProductId', HiddenType::class)
-            ->add('link', TextType::class, ['required' => false])
-            ->add('competitorPrice', PriceType::class, ['required' => false])
+            ->add('url', TextType::class, ['required' => false])
+            ->add('price', PriceType::class, ['required' => false])
             ->add('submit', SubmitType::class)
         ;
     }
