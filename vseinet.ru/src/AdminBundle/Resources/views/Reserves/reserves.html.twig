@@ -3,12 +3,13 @@
     <thead>
         <tr>
             <th>Точка</th>
-            <th>Свободных</th>
-            <th>Своб. в пути</th>
-            <th>Заказанных</th>
-            <th>Заказ. в пути</th>
-            <th>В претензиях</th>
-            <th>Претензион. в пути</th>
+            <th title="Свободные остатки на складе">Свободных</th>
+            <th title="Свободные остатки на складе, зарезервированные под перемещение на другой склад">Своб. в резерве</th>
+            <th title="Свободные остатки, находящиеся в пути на склад">Своб. в пути</th>
+            <th title="Заказанный товар, находящийся на складе">Заказанных</th>
+            <th title="Заказанный товар, находящийся в пути">Заказ. в пути</th>
+            <th title="Претензионный товар, находящийся на складе">В претензиях</th>
+            <th title="Претензионный товар, находящийся в пути на склад">Претензион. в пути</th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +17,9 @@
             <td>На всех точках</td>
             <td>
                 {{ reserves.freeDelta }}
+            </td>
+            <td>
+                {{ reserves.freeReservedDelta }}
             </td>
             <td>
                 {{ reserves.freeTransitDelta }}
@@ -38,6 +42,9 @@
                 <td>{{ geoCity.name }}</td>
                 <td>
                     {# {{ geoCity.freeDelta }} #}
+                </td>
+                <td>
+                    {# {{ geoCity.freeReservedDelta }} #}
                 </td>
                 <td>
                     {# {{ geoCity.freeTransitDelta }} #}
@@ -68,6 +75,9 @@
                         {# {{ geoPoint.freeDelta }} #}
                     </td>
                     <td>
+                        {# {{ geoPoint.freeReservedDelta }} #}
+                    </td>
+                    <td>
                         {# {{ geoPoint.freeTransitDelta }} #}
                     </td>
                     <td>
@@ -89,6 +99,9 @@
                         <td>{{ geoRoom.name }}</td>
                         <td>
                             {{ geoRoom.freeDelta }}
+                        </td>
+                        <td>
+                            {{ geoRoom.freeReservedDelta }}
                         </td>
                         <td>
                             {{ geoRoom.freeTransitDelta }}
@@ -114,6 +127,9 @@
                             </td>
                             <td>
                                 {{ supply.freeDelta }}
+                            </td>
+                            <td>
+                                {{ supply.freeReservedDelta }}
                             </td>
                             <td>
                                 {{ supply.freeTransitDelta }}
