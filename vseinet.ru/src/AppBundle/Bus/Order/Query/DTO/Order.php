@@ -114,7 +114,7 @@ class Order
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }
-        $this->cityName = $order['cityName'] ?? null;
+        $this->cityName = $order['geoCityName'] ?? null;
         $this->address = $order['deliveryAddress'] ?? null;
         $statuses = [];
         foreach ($order['items'] as $item) {
