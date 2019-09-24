@@ -22,8 +22,8 @@
                         <div
                             class="photoBlock blockPhone"
                             data-pos-x="{{ banner.posBackgroundPhoneX }}"
-                            style="min-width: 320px; height: 240px;{% if banner.imgBackgroundPhone %}
-                                background: url({{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
+                            style="max-width: 750px; width: 750px; height: 280px;{% if banner.imgBackgroundPhone %}
+                                background: url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
                         >
                         </div>
                     </a>

@@ -739,7 +739,7 @@
     }
 }
 
-@media all and (max-width: 1159px) {
+@media all and (min-width: 481px) and (max-width: 1159px) {
     .blockPc, .blockPhone {
         display: none;
     }
@@ -754,15 +754,12 @@
 }
 
 @media screen and (max-width: 480px) {
+    .blockPc, .blockTablet {
+        display: none;
+    }
     #slideshow .sheets {
         height: 240px !important;
         /* pointer-events: none; */
         /* -webkit-user-select: none; */
-    }
-    .blockPhone {
-        display: block;
-    }
-    .blockTablet, .blockPc {
-        display: none;
     }
 }
