@@ -11,7 +11,6 @@ use AppBundle\Enum\OrderType;
 use AppBundle\Bus\Order\Command;
 use AppBundle\Bus\Order\Query;
 use AppBundle\Bus\Order\Form;
-use AppBundle\Enum\OrderItemStatus;
 use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
@@ -19,6 +18,7 @@ use AppBundle\ApiClient\ApiClientException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
+use AppBundle\Entity\OrderItemStatus;
 
 class OrderController extends Controller
 {
@@ -76,11 +76,17 @@ class OrderController extends Controller
             ]);
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $statuses = [];
+        foreach ($em->getRepository(OrderItemStatus::class)->findAll() as $status) {
+            $statuses[$status->getCode()] = $status->getClientName();
+        }
+
         return $this->render('Order/status_tracker.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
             'order' => $order ?? null,
-            'statuses' => OrderItemStatus::getChoices(),
+            'statuses' => $statuses,
         ]);
     }
 
