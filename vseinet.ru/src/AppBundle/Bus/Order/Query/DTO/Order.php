@@ -117,6 +117,7 @@ class Order
         $this->cityName = $order['geoCityName'] ?? null;
         $this->address = $order['deliveryAddress'] ?? null;
         $statuses = [];
+        $codes = [];
         foreach ($order['items'] as $item) {
             $this->items[] = new OrderItem($item);
 
@@ -131,11 +132,14 @@ class Order
 
             if (!isset($statuses[$item['statusCode']])) {
                 $statuses[$item['statusCode']] = 0;
+                $codes[$item['statusCode']] = '';
+            } else {
+                $codes[$item['statusCode']] = $item['statusCodeName'];
             }
             ++$statuses[$item['statusCode']];
         }
         uasort($statuses, function ($count1, $count2) { return $count1 > $count2 ? 1 : -1; });
         $this->statusCode = key($statuses);
-        $this->statusCodeName = OrderItemStatus::getName($this->statusCode);
+        $this->statusCodeName = $codes[$this->statusCode];
     }
 }

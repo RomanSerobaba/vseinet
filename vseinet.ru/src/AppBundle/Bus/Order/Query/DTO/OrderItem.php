@@ -74,7 +74,7 @@ class OrderItem
     {
         $this->quantity = $item['quantity'];
         $this->statusCode = $item['statusCode'];
-        $this->statusCodeName = OrderItemStatus::getName($item['statusCode']);
+        $this->statusCodeName = $item['statusCodeName'];
         $this->tracker = OrderItemStatus::getTracker($item['statusCode']);
         $this->productName = $item['baseProductName'];
         $this->baseProductId = $item['baseProductId'];
