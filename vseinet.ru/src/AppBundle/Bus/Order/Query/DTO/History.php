@@ -2,6 +2,7 @@
 
 namespace AppBundle\Bus\Order\Query\DTO;
 
+use AppBundle\Enum\OrderItemStatus;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class History
@@ -18,6 +19,11 @@ class History
      */
     public $total;
 
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $canBePayed = false;
+
 
     public function __construct(array $history)
     {
@@ -25,5 +31,17 @@ class History
             $this->orders[] = new Order($order);
         }
         $this->total = $history['total'] ?? 0;
+
+        foreach ($history['items'] as $item) {
+            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
+                $this->canBePayed = true;
+            }
+        }
+
+        foreach ($history['items'] as $item) {
+            if (OrderItemStatus::CREATED === $item['statusCode']) {
+                $this->canBePayed = false;
+            }
+        }
     }
 }

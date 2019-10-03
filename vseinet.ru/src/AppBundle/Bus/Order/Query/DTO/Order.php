@@ -106,6 +106,16 @@ class Order
     public $address;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isCancelRequested;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isCancelEnabled = false;
+
+    /**
      * @Assert\All({
      *     @Assert\Type(type="AppBundle\Bus\Order\Query\DTO\OrderItem")
      * })
@@ -128,6 +138,7 @@ class Order
         $this->addresseename = $order['personName'] ?? null;
         $this->typeCode = $order['orderTypeCode'] ?? null;
         $this->prepaymentAmount = $order['prepaymentAmount'] ?? 0;
+        $this->isCancelRequested = $order['isCancelRequested'] ?? false;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }
@@ -150,13 +161,17 @@ class Order
             if (!isset($statuses[$item['statusCode']])) {
                 $statuses[$item['statusCode']] = 0;
                 $codes[$item['statusCode']] = '';
-            } else {
-                $codes[$item['statusCode']] = $item['statusCodeName'];
             }
+
+            $codes[$item['statusCode']] = $item['statusCodeName'];
             ++$statuses[$item['statusCode']];
 
             if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
                 $this->canBePayed = true;
+            }
+
+            if (in_array($item['statusCode'], [OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED, OrderItemStatus::CREATED])) {
+                $this->isCancelEnabled = true;
             }
         }
 

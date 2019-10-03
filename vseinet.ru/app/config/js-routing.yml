@@ -7,6 +7,7 @@ fos_js_routing:
         - 'user_search_autocomplete'
         - 'order_created_page'
         - 'authority'
+        - 'cart'
         - 'geo_cities'
         - 'select_geo_region'
         - 'select_geo_city'

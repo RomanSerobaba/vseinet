@@ -1,0 +1,19 @@
+{{ form_start(form, { action: path('cancel_request'), attr: { id: 'cancel-request-form', novalidate: true }}) }}
+
+<fieldset>
+    <div class="row v">
+        {{ form_label(form.comment, 'Причина отмены заказа') }}
+        {{ form_widget(form.comment, { attr: { class: 'txt' }}) }}
+    </div>
+
+    {% include 'User/is_human_form.html.twig' with { form: form } only %}
+
+    <div class="row v">
+        {{ form_widget(form.submit, { label: 'Отказаться от заказа', attr: { class: 'bttn blue' }}) }}
+        {{ form_widget(form._token) }}
+        {{ form_widget(form.id) }}
+    </div>
+
+</fieldset>
+
+{{ form_end(form, { render_rest: false }) }}
