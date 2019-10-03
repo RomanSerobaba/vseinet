@@ -48,8 +48,12 @@ class GeoCityIdentity extends ContainerAware
             ->getOneOrNullResult();
 
         if ($data) {
-            $geoCity = $this->loadGeoCity($data['geoCityId']);
-            $this->get('request_stack')->getMasterRequest()->getSession()->set('geo_city', $geoCity);
+            $session = $this->get('request_stack')->getMasterRequest()->getSession();
+            $geoCity = $session->get('geo_city');
+            if ($geoCity->getId() !== $data['geoCityId']) {
+                $geoCity = $this->loadGeoCity($data['geoCityId']);
+                $session->set('geo_city', $geoCity);
+            }
         }
     }
 
