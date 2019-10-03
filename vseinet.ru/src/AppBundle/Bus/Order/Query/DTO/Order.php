@@ -34,6 +34,21 @@ class Order
     public $amount;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $prepaymentAmount;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $canBePayed = false;
+
+    /**
+     * @Enum("AppBundle\Enum\PaymentTypeCode")
+     */
+    public $paymentTypeCode;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $paymentTypeName;
@@ -104,6 +119,7 @@ class Order
         $this->financialCounteragentId = $order['financialCounteragentId'] ?? null;
         $this->createdAt = $order['createdAt'];
         $this->amount = 0;
+        $this->paymentTypeCode = $order['paymentTypeCode'] ?? null;
         $this->paymentType = $order['paymentType'] ?? null;
         $this->paymentTypeName = $order['paymentTypeName'] ?? null;
         $this->deliveryType = $order['deliveryType'] ?? null;
@@ -111,6 +127,7 @@ class Order
         $this->username = $order['financialCounteragentName'] ?? null;
         $this->addresseename = $order['personName'] ?? null;
         $this->typeCode = $order['orderTypeCode'] ?? null;
+        $this->prepaymentAmount = $order['prepaymentAmount'] ?? 0;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }
@@ -137,7 +154,18 @@ class Order
                 $codes[$item['statusCode']] = $item['statusCodeName'];
             }
             ++$statuses[$item['statusCode']];
+
+            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
+                $this->canBePayed = true;
+            }
         }
+
+        foreach ($order['items'] as $item) {
+            if (OrderItemStatus::CREATED === $item['statusCode']) {
+                $this->canBePayed = false;
+            }
+        }
+
         uasort($statuses, function ($count1, $count2) { return $count1 > $count2 ? 1 : -1; });
         $this->statusCode = key($statuses);
         $this->statusCodeName = $codes[$this->statusCode];
