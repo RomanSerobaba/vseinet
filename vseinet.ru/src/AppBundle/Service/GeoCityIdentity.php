@@ -50,7 +50,7 @@ class GeoCityIdentity extends ContainerAware
         if ($data) {
             $session = $this->get('request_stack')->getMasterRequest()->getSession();
             $geoCity = $session->get('geo_city');
-            if ($geoCity->getId() !== $data['geoCityId']) {
+            if (empty($geoCity) || $geoCity->getId() !== $data['geoCityId']) {
                 $geoCity = $this->loadGeoCity($data['geoCityId']);
                 $session->set('geo_city', $geoCity);
             }
