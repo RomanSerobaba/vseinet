@@ -1,7 +1,7 @@
 {% if not products is empty %}
     <section class="wrapper" id="lastview">
         <h3>Вы смотрели</h3>
-        <div id="related">
+        <div id="lastview_content">
             {% for product in products %}
                 <div class="product">
                     <a href="{{ url('catalog_product', { id: product.id }) }}" class="image">

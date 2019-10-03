@@ -859,6 +859,13 @@
 	#related .product:nth-child(6){
 		display: none;
 	}
+	#lastview_content .product{
+		width: 25%;
+	}
+	#lastview_content .product:nth-child(5),
+	#lastview_content .product:nth-child(6){
+		display: none;
+	}
 	.representatives .city{
 		float: left;
 		width: 50%;
@@ -1754,6 +1761,32 @@
 	#related .product h4{
 		margin-bottom: 20px;
 	}
+	#lastview_content{
+		width: 100%;
+	}
+	#lastview_content .product{
+		float: none;
+		width: 100%;
+		padding-right: 0;
+		margin-bottom: 20px;
+		clear: both;
+	}
+	#lastview_content .product h6{
+		margin-bottom: 30px;
+	}
+	#lastview_content .image{
+		width: 33.333334%;
+		padding-right: 15px;
+		float: left;
+		height: auto;
+	}
+	#lastview_content .image img{
+		max-width: 100%;
+		height: auto;
+	}
+	#lastview_content .product h4{
+		margin-bottom: 20px;
+	}
 	.paging{
 		text-align: center;
 		font-size: 16px;
@@ -1921,6 +1954,9 @@
 	#related .price{
 		font-size: 18px;
 	}
+	#lastview_content .price{
+		font-size: 18px;
+	}
 	.ui-tabs .tabs LI{
 		margin-right: 11px;
 	}
@@ -1928,6 +1964,13 @@
 		margin-bottom: 44px;
 	}
 	.product + .wrapper #related{
+		margin-top: 40px;
+		margin-bottom: 30px;
+	}
+	.product + .wrapper #lastview_content .product{
+		margin-bottom: 44px;
+	}
+	.product + .wrapper #lastview_content{
 		margin-top: 40px;
 		margin-bottom: 30px;
 	}
@@ -2268,7 +2311,7 @@
 	#lastview h3{
 		margin-bottom: 30px;
 	}
-	#lastview #related .price{
+	#lastview #lastview_content .price{
 		font-size: 18px;
 		margin-left: 33.3%;
 	}

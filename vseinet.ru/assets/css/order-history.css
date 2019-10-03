@@ -217,6 +217,11 @@ DIV.order-history .product P STRONG {
     font-weight: bold;
 
 }
+.order-history .annulled {
+    color: #CCC;
+    font-weight: bold;
+
+}
 .order-history .prepayable {
     color: #ef6b00;
     font-weight: bold;

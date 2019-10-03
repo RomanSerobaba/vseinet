@@ -193,10 +193,10 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         $transit = array_filter($reserves, function ($reserve) { return 'other-transit' == $reserve->transitType; });
         if (!empty($transit)) {
             foreach ($transit as $reserve) {
-                if ($reserve->arringGeoPointId == $reserve->destinationGeoPointId) {
+                if ($reserve->arrivingGeoPointId == $reserve->destinationGeoPointId) {
                     $date = $reserve->arrivingDate;
                 } else {
-                    $date = $this->getDateByRoute($reserve->arringGeoPointId, $reserve->destinationGeoPointId, $reserve->arrivingDate);
+                    $date = $this->getDateByRoute($reserve->arrivingGeoPointId, $reserve->destinationGeoPointId, $reserve->arrivingDate);
                 }
                 $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id, $date));
             }

@@ -15,9 +15,9 @@
 <div id="tree">
     <h3 class="tree-title">Каталог</h3>
     <ul>
-        <li>
+        {# <li>
             <a href="{{ path('catalog_total_sale') }}" class="hot-offer"></a>
-        </li>
+        </li> #}
         {% for category1 in menu %}
             <li data-id="{{ category1.id }}">
                 <a href="{{ path('catalog_category', { id: category1.id}) }}"{% if category1.id == 33536 %} class="special service"{% elseif category1.id == 5086104 %} class="special on-order"{% endif %}>
