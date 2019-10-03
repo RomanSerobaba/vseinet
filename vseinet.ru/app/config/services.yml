@@ -18,7 +18,7 @@ services:
     app.security.authentication_handler:
         class: 'AppBundle\Security\AuthenticationHandler'
         public: false
-        arguments: [ '@router', '@session', '@doctrine.orm.entity_manager', '@security.token_storage' ]
+        arguments: [ '@router', '@session', '@doctrine.orm.entity_manager', '@security.token_storage', '@geo_city.identity' ]
 
     user.api.client:
         class: 'AppBundle\ApiClient\UserApiClient'
