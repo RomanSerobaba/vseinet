@@ -46,6 +46,8 @@ class GetStatusQueryHandler extends MessageHandler
             'id' => $order->getDId(),
             'number' => $order->getNumber(),
             'createdAt' => $order->getCreatedAt(),
+            'paymentTypeCode' => $result['order']['paymentTypeCode'],
+            'prepaymentAmount' => $result['order']['prepaymentAmount'],
             'items' => $items,
         ]);
     }
