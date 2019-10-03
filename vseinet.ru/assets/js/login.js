@@ -20,6 +20,11 @@ $(function() {
                     if (response.error) {
                         form.toggleState(true);
                     } else {
+                        if (window.localStorage) {
+                            window.localStorage.removeItem('persist:user');
+                            window.localStorage.removeItem('persist:users');
+                            window.localStorage.removeItem('persist:auth');
+                        }
                         window.location.reload();
                     }
                 }).fail(form.toggleState);
