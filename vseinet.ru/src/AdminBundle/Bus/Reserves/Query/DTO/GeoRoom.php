@@ -41,12 +41,22 @@ class GeoRoom
     /**
      * @Assert\Type(type="integer")
      */
+    public $freeAssembledDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $freeTransitDelta = 0;
 
     /**
      * @Assert\Type(type="integer")
      */
     public $reservedDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $reservedAssembledDelta = 0;
 
     /**
      * @Assert\Type(type="integer")
