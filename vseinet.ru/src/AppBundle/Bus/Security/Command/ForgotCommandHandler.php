@@ -111,7 +111,7 @@ class ForgotCommandHandler extends MessageHandler
                 $api->post('/api/v1/email/', [], [
                     'mobile' => $contact->getValue(),
                     'subject' => 'Восстановление пароля',
-                    'text' => 'Код подтверждения для восстановления пароля: <b>'.$code.'</b><br/>Либо вы можете просто перейти по ссылке <a href="https://vseinet.ru/check/token/?hash='.$hash.'"></a>',
+                    'text' => 'Код подтверждения для восстановления пароля: <b>'.$code.'</b><br/>Либо вы можете просто перейти по <a href="https://vseinet.ru/check/token/?hash='.$hash.'">ссылке</a>',
                 ]);
             } catch (BadRequestHttpException $e) {
                 return null;
