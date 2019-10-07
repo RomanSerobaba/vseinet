@@ -99,19 +99,19 @@ class ForgotCommandHandler extends MessageHandler
 
         if (ContactTypeCode::MOBILE === $contact->getContactTypeCode()) {
             try {
-                $api->post('/api/v1/sms/', [], [
+                $api->post('/api/v1/password/message/', [], [
                     'phone' => $contact->getValue(),
-                    'text' => 'Код подтверждения для восстановления пароля: '.$code,
+                    'code' => $code,
                 ]);
             } catch (BadRequestHttpException $e) {
                 return null;
             }
         } else {
             try {
-                $api->post('/api/v1/email/', [], [
+                $api->post('/api/v1/password/message/', [], [
                     'email' => $contact->getValue(),
-                    'subject' => 'Восстановление пароля',
-                    'text' => 'Код подтверждения для восстановления пароля: <b>'.$code.'</b><br/>Либо вы можете просто перейти по <a href="https://vseinet.ru/check/token/?hash='.$hash.'">ссылке</a>',
+                    'code' => $code,
+                    'hash' => $hash,
                 ]);
             } catch (BadRequestHttpException $e) {
                 return null;
