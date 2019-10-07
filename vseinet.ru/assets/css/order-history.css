@@ -143,6 +143,7 @@ DIV.order-history .actions .bttn {
 DIV.order-history .actions .order-cancel-text {
     font-weight: bold;
     text-align: center;
+    margin-left: -20px;
 }
 DIV.order-history .row {
     display: table;
@@ -213,6 +214,11 @@ DIV.order-history .product P STRONG {
     font-weight: bold;
 }
 .order-history .canceled {
+    color: #CCC;
+    font-weight: bold;
+
+}
+.order-history .annulled {
     color: #CCC;
     font-weight: bold;
 

@@ -19,7 +19,17 @@
                 на сумму {{ order.amount|price_format }} <span class="RUR">Р</span>
             </span>
             Заказ №{{ order.number }} от {{ order.createdAt|date_format('%d.%m.%Y') }}
-            {# if $curr.can_payed && 7 == $curr.payment_type_id} <a data-popup="Sberbank-{$curr.id}" href="javascript:void(0)" target="_blank" style="margin-left:15px;" class="bttn green">Оплатить</a>{/if}{if 7 == $curr.payment_type_id && $curr.prepay}<span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {$curr.prepay|@price_format} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>{/if#}
+            {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode %}
+                <a
+                    data-url="{{ path('sberbank', { id: order.id }) }}"
+                    rel="nofollow"
+                    href="{{ path('sberbank', { id: order.id }) }}"
+                    style="margin-left:15px;"
+                    class="bttn green sberbank">Оплатить</a>
+            {% endif %}
+            {% if constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
+                <span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>
+            {% endif %}
         </h4>
         {% for item in order.items %}
             <div class="position">
@@ -72,10 +82,6 @@
                 {% endif %#}
             </div>
         {% endfor %}
-        {#if $curr.can_payed}
-            {assign var=order value="$curr"}
-            {include file='order/_sberbank_payment_form.tpl' form_class='popup'}
-        {/if#}
         <p>* Внимание! Указанная дата прибытия является ожидаемой (приблизительной).</p>
     </div>
 {% endif %}

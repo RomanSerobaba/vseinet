@@ -10,7 +10,7 @@ use AppBundle\Exception\ValidationException;
 use AppBundle\Annotation as VIA;
 use AppBundle\Entity\Competitor;
 use AppBundle\Entity\BaseProduct;
-use AppBundle\Entity\ProductToCompetitor;
+use AppBundle\Entity\CompetitorProduct;
 use AdminBundle\Bus\Competitor\Query;
 use AdminBundle\Bus\Competitor\Command;
 use AdminBundle\Bus\Competitor\Form;
@@ -53,15 +53,15 @@ class CompetitorController extends Controller
         if ($request->isMethod('GET')) {
             $em = $this->getDoctrine()->getManager();
             if ($id) {
-                $revision = $em->getRepository(ProductToCompetitor::class)->find($id);
-                if (!$revision instanceof ProductToCompetitor) {
+                $revision = $em->getRepository(CompetitorProduct::class)->find($id);
+                if (!$revision instanceof CompetitorProduct) {
                     throw new NotFoundHttpException(sprintf('Товар конкурента %d не найден', $id));
                 }
                 $command->competitorId = $revision->getCompetitorId();
                 $command->baseProductId = $revision->getBaseProductId();
-                $command->link = $revision->getLink();
-                if (empty($command->link)) {
-                    $command->competitorPrice = $revision->getCompetitorPrice();
+                $command->url = $revision->getUrl();
+                if (empty($command->url)) {
+                    $command->price = $revision->getPrice();
                 }
             } else {
                 $product = $em->getRepository(BaseProduct::class)->find($request->query->get('baseProductId'));
@@ -123,7 +123,7 @@ class CompetitorController extends Controller
      */
     public function requestAction(int $id)
     {
-        $this->get('command_bus')->handle(new Command\RequestCommand(['id' => $id]));
+        $this->get('command_bus')->handle(new Command\RequestRevisionCommand(['id' => $id]));
 
         return $this->json([]);
     }

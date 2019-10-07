@@ -7,28 +7,28 @@
                     {{ revision.name }}
                 </td>
                 <td style="word-break:break-all">
-                    {% if not revision.readOnly and revision.link is not null %}
-                        <a href="{{ revision.link }}" target="_blank">{{ revision.link }}</a>
+                    {% if not revision.readOnly and revision.url is not null %}
+                        <a href="{{ revision.url }}" target="_blank">{{ revision.url }}</a>
                     {% endif %}
                 </td>
                 <td style="text-align:right;width:60px">
-                    {% if revision.competitorPrice is not null %}
-                        {{ revision.competitorPrice|price_format }}
+                    {% if revision.price is not null %}
+                        {{ revision.price|price_format }}
                     {% endif %}
                 </td>
                 <td style="text-align:center;width:120px">
-                    {% if revision.competitorPrice is not null %}
-                        {{ revision.priceTime|date('d.m.Y H:i') }}
+                    {% if revision.price is not null %}
+                        {{ revision.completedAt|date('d.m.Y H:i') }}
                     {% endif %}
                 </td>
                 <td style="text-align:center;width:30px">
-                    {{ revision.serverResponse }}
+                    {{ revision.status }}
                 </td>
                 <td style="width:45px">
                     {% if not revision.readOnly %}
                         <a href="{{ path('admin_competitor_revision_edit', { id: revision.id }) }}" class="icon-edit revision-edit" title="Редактировать"></a>
                         <a href="{{ path('admin_competitor_revision_delete', { id: revision.id }) }}" class="icon-delete revision-delete" title="Удалить"></a>
-                        {% if revision.link is not null and revision.requestedAt is null %}
+                        {% if revision.url is not null and revision.requestedAt is null %}
                             <a href="{{ path('admin_competitor_revision_request', { id: revision.id }) }}" class="icon-loop revision-request" title="Отправить запрос"></a>
                         {% endif %}
                     {% endif %}

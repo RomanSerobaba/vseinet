@@ -11,7 +11,7 @@
 }
 	#populars .products {
 		overflow: hidden;
-		clear: both;						
+		clear: both;
 	}
 	#populars .product {
 		float: left;
@@ -20,7 +20,7 @@
 		width: 25%;
 		min-height: 350px;
 	}
-		
+
 		#populars .image {
 			border: none;
 			display: table-cell;
@@ -40,12 +40,42 @@
 			line-height: 1;
 		}
 
+#populars .see-more{
+	display: none;
+}
+
 #lastview {
 	clear: both;
 	margin: 0 0 0px;
 	overflow: hidden;
 	width: 100%;
 }
-#populars .see-more{
-	display: none;
+#lastview_content {
+	margin: 0 0 20px;
+	overflow: hidden;
+	width: 100%;
+}
+#lastview_content .product {
+    float: left;
+    padding-right: 40px;
+    width: 16.6%;
+}
+#products #lastview_content .product {
+    width: 100%;
+}
+#lastview_content .product:nth-child(7){
+    display: none;
+}
+#lastview_content .image {
+    border: none !important;
+}
+#lastview_content .image img {
+    width: 100px;
+    height: 100px;
+}
+#lastview_content .price {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 10px;
 }

@@ -27,10 +27,10 @@ class AddRevisionCommand extends Message
     /**
      * @Assert\Type(type="string")
      */
-    public $link;
+    public $url;
 
     /**
      * @Assert\Type(type="integer")
      */
-    public $competitorPrice;
+    public $price;
 }

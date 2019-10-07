@@ -34,6 +34,21 @@ class Order
     public $amount;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $prepaymentAmount;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $canBePayed = false;
+
+    /**
+     * @Enum("AppBundle\Enum\PaymentTypeCode")
+     */
+    public $paymentTypeCode;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $paymentTypeName;
@@ -91,6 +106,16 @@ class Order
     public $address;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isCancelRequested;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isCancelEnabled = false;
+
+    /**
      * @Assert\All({
      *     @Assert\Type(type="AppBundle\Bus\Order\Query\DTO\OrderItem")
      * })
@@ -104,6 +129,7 @@ class Order
         $this->financialCounteragentId = $order['financialCounteragentId'] ?? null;
         $this->createdAt = $order['createdAt'];
         $this->amount = 0;
+        $this->paymentTypeCode = $order['paymentTypeCode'] ?? null;
         $this->paymentType = $order['paymentType'] ?? null;
         $this->paymentTypeName = $order['paymentTypeName'] ?? null;
         $this->deliveryType = $order['deliveryType'] ?? null;
@@ -111,12 +137,15 @@ class Order
         $this->username = $order['financialCounteragentName'] ?? null;
         $this->addresseename = $order['personName'] ?? null;
         $this->typeCode = $order['orderTypeCode'] ?? null;
+        $this->prepaymentAmount = $order['prepaymentAmount'] ?? 0;
+        $this->isCancelRequested = $order['isCancelRequested'] ?? false;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }
-        $this->cityName = $order['cityName'] ?? null;
+        $this->cityName = $order['geoCityName'] ?? null;
         $this->address = $order['deliveryAddress'] ?? null;
         $statuses = [];
+        $codes = [];
         foreach ($order['items'] as $item) {
             $this->items[] = new OrderItem($item);
 
@@ -131,11 +160,29 @@ class Order
 
             if (!isset($statuses[$item['statusCode']])) {
                 $statuses[$item['statusCode']] = 0;
+                $codes[$item['statusCode']] = '';
             }
+
+            $codes[$item['statusCode']] = $item['statusCodeName'];
             ++$statuses[$item['statusCode']];
+
+            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
+                $this->canBePayed = true;
+            }
+
+            if (in_array($item['statusCode'], [OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED, OrderItemStatus::CREATED])) {
+                $this->isCancelEnabled = true;
+            }
         }
+
+        foreach ($order['items'] as $item) {
+            if (OrderItemStatus::CREATED === $item['statusCode']) {
+                $this->canBePayed = false;
+            }
+        }
+
         uasort($statuses, function ($count1, $count2) { return $count1 > $count2 ? 1 : -1; });
         $this->statusCode = key($statuses);
-        $this->statusCodeName = OrderItemStatus::getName($this->statusCode);
+        $this->statusCodeName = $codes[$this->statusCode];
     }
 }

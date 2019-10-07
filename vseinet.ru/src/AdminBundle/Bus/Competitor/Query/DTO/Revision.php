@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Competitor\Query\DTO;
 
@@ -20,27 +20,22 @@ class Revision
     /**
      * @Assert\Type(type="string")
      */
-    public $link;
+    public $url;
 
     /**
      * @Assert\Type(type="integer")
      */
-    public $competitorPrice;
+    public $price;
 
     /**
      * @Assert\Type(type="datetime")
      */
-    public $priceTime;
+    public $completedAt;
 
     /**
      * @Assert\Type(type="datetime")
      */
     public $requestedAt;
-
-    /**
-     * @Enum("AppBundle\Enum\ProductToCompetitorStatus")
-     */
-    public $status;
 
     /**
      * @Enum("AppBunlde\Enum\ProductToCompetitorState")
@@ -50,7 +45,7 @@ class Revision
     /**
      * @Assert\Type(type="integer")
      */
-    public $serverResponse;
+    public $status;
 
     /**
      * @Assert\Type(type="boolean")

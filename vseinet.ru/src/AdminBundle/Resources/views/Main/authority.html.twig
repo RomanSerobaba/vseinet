@@ -20,6 +20,11 @@
                 }
                 localStorage.setItem('persist:user', JSON.stringify(user));
 
+                var users = {
+                    currentUserId: {{ user.id }}
+                };
+                localStorage.setItem('persist:users', JSON.stringify(users));
+
                 setTimeout(function() {
                     window.location = '{{ targetUrl|raw }}';
                 }, 100);

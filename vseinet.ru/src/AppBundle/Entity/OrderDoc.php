@@ -33,10 +33,17 @@ class OrderDoc
      */
     private $number;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_cancel_requested", type="boolean", nullable=true)
+     */
+    private $isCancelRequested;
+
 
     /**
      * Get DId.
-     * 
+     *
      * @return int
      */
     public function getDId()
@@ -62,5 +69,29 @@ class OrderDoc
     public function getNumber()
     {
         return $this->number;
+    }
+
+    /**
+     * Set isCancelRequested.
+     *
+     * @param bool|null $isCancelRequested
+     *
+     * @return Bank
+     */
+    public function setIsCancelRequested($isCancelRequested = null)
+    {
+        $this->isCancelRequested = $isCancelRequested;
+
+        return $this;
+    }
+
+    /**
+     * Get isCancelRequested.
+     *
+     * @return bool|null
+     */
+    public function getIsCancelRequested()
+    {
+        return $this->isCancelRequested;
     }
 }

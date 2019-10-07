@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Entity\Cart;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use AppBundle\Service\GeoCityIdentity;
 
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
@@ -39,43 +40,55 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     protected $security;
 
     /**
-     * Constructor
-     *
-     * @param   RouterInterface $router
-     * @param   Session $session
-     * @param   EntityManagerInterface $em
+     * @var GeoCityIdentity
      */
-    public function __construct(RouterInterface $router, Session $session, EntityManagerInterface $em, TokenStorageInterface $security)
-    {
-        $this->router  = $router;
+    protected $geoCityIdentity;
+
+    /**
+     * Constructor.
+     *
+     * @param RouterInterface        $router
+     * @param Session                $session
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(
+        RouterInterface $router,
+        Session $session,
+        EntityManagerInterface $em,
+        TokenStorageInterface $security,
+        GeoCityIdentity $geoCityIdentity
+    ) {
+        $this->router = $router;
         $this->session = $session;
         $this->em = $em;
         $this->security = $security;
+        $this->geoCityIdentity = $geoCityIdentity;
     }
 
     /**
-     * onAuthenticationSuccess
+     * onAuthenticationSuccess.
      *
-     * @param   Request $request
-     * @param   TokenInterface $token
+     * @param Request        $request
+     * @param TokenInterface $token
      *
-     * @return  Response
+     * @return Response
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $credentials = [
-            'username' => $request->request->get('_username'),
-            'password' => $request->request->get('_password'),
+            'username' => trim($request->request->get('_username')),
+            'password' => trim($request->request->get('_password')),
         ];
         $this->session->set('credentials', $credentials);
 
-        $userId = $this->security->getToken()->getUser()->getId();
+        $user = $this->security->getToken()->getUser();
+
         foreach ($this->session->get('cart', []) as $baseProductId => $cartItem) {
-            $cart = $this->em->getRepository(Cart::class)->findOneBy(['userId' => $userId, 'baseProductId' => $baseProductId,]);
+            $cart = $this->em->getRepository(Cart::class)->findOneBy(['userId' => $user->getId(), 'baseProductId' => $baseProductId]);
 
             if (!$cart instanceof Cart) {
                 $cart = new Cart();
-                $cart->setUserId($userId);
+                $cart->setUserId($user->getId());
                 $cart->setBaseProductId($baseProductId);
                 $cart->setQuantity(0);
             }
@@ -85,12 +98,15 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         }
         $this->em->flush();
 
+        if ($user->isEmployee()) {
+            $this->geoCityIdentity->setEmployeeGeoCity($user->getId());
+        }
+
         if ($request->isXmlHttpRequest()) {
             $response = new Response(json_encode(['success' => true]));
             $response->headers->set('Content-Type', 'application/json');
 
             return $response;
-
         }
 
         if ($this->session->get('_security.main.target_path')) {
@@ -103,17 +119,18 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     }
 
     /**
-     * onAuthenticationFailure
+     * onAuthenticationFailure.
      *
-     * @param   Request $request
-     * @param   AuthenticationException $exception
-     * @return  Response
+     * @param Request                 $request
+     * @param AuthenticationException $exception
+     *
+     * @return Response
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         if ($request->isXmlHttpRequest()) {
             $response = new Response(json_encode(['error' => $exception->getMessage()]));
-            $response->headers->set( 'Content-Type', 'application/json' );
+            $response->headers->set('Content-Type', 'application/json');
 
             return $response;
         }

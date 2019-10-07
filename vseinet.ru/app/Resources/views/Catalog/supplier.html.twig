@@ -13,6 +13,9 @@
             <h1>Поставщик "{{ supplier.name }}"</h1>
             <small id="products-total">{{ facets.total|number_format() }} {{ facets.total|declension('товар;товара;товаров') }}</small>
         </div>
+        <div class="mobile-filter-btn">
+            <a href="#" class="bttn light">Показать фильтры по параметрам <span class="hide">Показать фильтры</span></a>
+        </div>
         <nav class="sort" id="sorting">
             {% include 'Catalog/sorting.html.twig' %}
         </nav>

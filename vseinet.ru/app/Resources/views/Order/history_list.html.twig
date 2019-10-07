@@ -10,7 +10,7 @@
                 {% else %}
                     {{ order.number }}
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'рт': 'рта', 'ст': 'ста' }) }}</span>
             </h2>
             <dl>
                 {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
@@ -44,6 +44,8 @@
             {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
                 <h2>Данные покупателя</h2>
                 <dl>
+                    <dt>Город:</dt>
+                    <dd>{{ order.cityName }}</dd>
                     {% if constant('AppBundle\\Enum\\OrderType::LEGAL') == order.typeCode and order.username is not empty %}
                     <dt>Организация:</dt>
                     <dd>{{ order.username }}</dd>
@@ -65,6 +67,33 @@
                         <dd>{{ order.address }}</dd>
                     {% endif %}
                 </dl>
+            {% endif %}
+        </div>
+         <div class="actions">
+            {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
+                <div style="text-align: center;padding:2px 5px;margin-right:26px;background-color:yellow;color: green;font-size: 0.85em;font-weight:bold;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></div>
+            {% endif %}
+            {% if order.canBePayed %}
+                <div><a
+                    data-url="{{ path('sberbank', { id: order.id }) }}"
+                    rel="nofollow"
+                    href="{{ path('sberbank', { id: order.id }) }}"
+                    class="bttn green sberbank"
+                    title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить</a></div>
+            {% elseif constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode  %}{# and order.available_sum #}
+                <div><a href="javascript:void(0)" class="bttn green disabled" title="Внимание! Заказ можно будет оплатить после подтверждения менеджером наличия товара">Оплатить</a>
+                <p style="color:red;margin-top:10px">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p></div>
+            {% endif %}
+            <a href="{{ path('repeat_order', { id: order.id }) }}" class="bttn blue repeat_order">Заказать повторно</a>
+            {% if order.isCancelRequested and order.isCancelEnabled %}
+                <p class="order-cancel-text">Ваш запрос на отмену заказа принят и будет обработан в ближайшее время</p>
+            {% elseif order.isCancelEnabled %}
+                <a
+                    data-url="{{ path('cancel_request', { id: order.id }) }}"
+                    rel="nofollow"
+                    href="{{ path('cancel_request', { id: order.id }) }}"
+                    class="bttn coral cancel_request"
+                    title="Оплатить позиции, наличие которых подтверждено менеджером">Хочу отказаться</a>
             {% endif %}
         </div>
     </div>
