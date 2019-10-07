@@ -7,6 +7,14 @@ image: php:7.3.6
 
 pipelines:
   default:
+    - step:
+        caches:
+          - composer
+        deployment: test
+        script:
+          - cd vseinet.ru
+  branches:
+    master:
       - step:
           name: Test
           deployment: test
