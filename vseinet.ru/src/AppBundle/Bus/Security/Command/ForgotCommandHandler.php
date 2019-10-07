@@ -109,7 +109,7 @@ class ForgotCommandHandler extends MessageHandler
         } else {
             try {
                 $api->post('/api/v1/email/', [], [
-                    'mobile' => $contact->getValue(),
+                    'email' => $contact->getValue(),
                     'subject' => 'Восстановление пароля',
                     'text' => 'Код подтверждения для восстановления пароля: <b>'.$code.'</b><br/>Либо вы можете просто перейти по <a href="https://vseinet.ru/check/token/?hash='.$hash.'">ссылке</a>',
                 ]);
