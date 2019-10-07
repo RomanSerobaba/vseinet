@@ -33,7 +33,7 @@ class RegistrCommandHandler extends MessageHandler
             $q = $em->createQuery('
                 SELECT c
                 FROM AppBundle:Contact AS c
-                WHERE c.contactTypeCode = :type AND c.value = :value
+                WHERE c.contactTypeCode = :type AND c.value = :value AND c.isMain = true
             ');
             $q->setParameter('type', ContactTypeCode::MOBILE);
             $q->setParameter('value', $command->mobile);
@@ -47,13 +47,13 @@ class RegistrCommandHandler extends MessageHandler
         $q = $em->createQuery('
             SELECT c
             FROM AppBundle:Contact AS c
-            WHERE c.contactTypeCode = :type AND c.value = :value
+            WHERE c.contactTypeCode = :type AND c.value = :value AND c.isMain = true
         ');
         $q->setParameter('type', ContactTypeCode::EMAIL);
         $q->setParameter('value', $command->email);
         try {
             $q->getSingleResult();
-            throw new ValidationException('email', 'Пользователь с указанным E-mail  уже существует');
+            throw new ValidationException('email', 'Пользователь с указанным E-mail уже существует');
         } catch (NoResultException $e) {
         }
 
