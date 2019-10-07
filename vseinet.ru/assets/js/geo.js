@@ -1,5 +1,6 @@
 $(function() {
-    var cache = {};
+    var cache = {},
+        current = '';
     $.fn.geoCity = function(options) {
         options = $.extend({
             appendTo: 'body',
@@ -11,9 +12,11 @@ $(function() {
             var input = $(this).autocomplete({
                 appendTo: options.appendTo,
                 minLength: 2,
+                autoFocus: true,
                 select: function(e, ui) {
                     if (options.selectorId) {
                         $(options.selectorId).val(ui.item.id);
+                        current = ui.item.value;
                     }
                     options.select(e, ui);
                     input.trigger('change');
@@ -33,6 +36,10 @@ $(function() {
                         });
                         response(cache[term]);
                     });
+                }
+            }).on('blur', function(){
+                if (options.selectorId) {
+                    $(this).val(current);
                 }
             });
             input.data('ui-autocomplete')._renderItem = function(ul, item) {

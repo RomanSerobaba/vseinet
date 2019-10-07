@@ -8,7 +8,9 @@
     <h1>Регистрация на сайте</h1>
     <div class="block gray w60p">
         <div class="wrapper">
-
+        {% if app.user %}
+            Вы уже зарегистрированы.
+        {% else %}
             {{ form_start(form, { action: path('registr'), attr: { id: 'registr-form', novalidate: true }}) }}
 
             <div class="row h{% if errors.registr_lastname is defined %} error{% endif %}">
@@ -60,7 +62,7 @@
 
             <div class="row h{% if errors.registr_geoCityName is defined %} error{% endif %}">
                 {{ form_label(form.geoCityName, 'Город*:') }}
-                {{ form_widget(form.geoCityName, { attr: { class: 'txt' }}) }}
+                {{ form_widget(form.geoCityName, { attr: { class: 'txt', placeholder: 'Начните вводить город и выберите нужный из списка' }}) }}
                 {% if errors.registr_geoCityName is defined %}
                     <div class="error">{{ errors.registr_geoCityName.0 }}</div>
                 {% endif %}
@@ -133,7 +135,7 @@
             </div>
 
             {{ form_end(form)}}
-
+        {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -144,6 +146,9 @@ $(function() {
     $('#registr_birthday').datepicker({
         changeMonth: true,
         changeYear: true,
+        maxDate: "+0d",
+        minDate: "01.01.1900",
+        yearRange: "1900:+0",
     });
 });
 </script>
