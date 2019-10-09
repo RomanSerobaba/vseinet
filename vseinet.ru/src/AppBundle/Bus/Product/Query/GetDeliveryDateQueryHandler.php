@@ -6,9 +6,10 @@ use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
-use AppBundle\Entity\Supplier;
+use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Enum\ProductAvailabilityCode;
 use Cron\CronExpression;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class GetDeliveryDateQueryHandler extends MessageHandler
 {
@@ -32,9 +33,17 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 p.base_product_id,
                 p.product_availability_code AS availability,
                 bp.supplier_id,
-                bp.supplier_availability_code AS supplier_availability
+                bp.supplier_availability_code AS supplier_availability,
+                s.order_delivery_date AS supplier_delivery_date,
+                (
+                    SELECT r.geo_point_id
+                    FROM representative AS r
+                    INNER JOIN geo_point AS gp ON gp.id = r.geo_point_id
+                    WHERE gp.geo_city_id = :geo_city_id AND r.is_active = TRUE AND r.is_central = TRUE
+                ) as geo_point_id
             FROM product AS p
             INNER JOIN base_product AS bp ON bp.canonical_id = p.base_product_id
+            LEFT OUTER JOIN supplier AS s ON s.id = bp.supplier_id
             WHERE bp.id = :base_product_id AND p.geo_city_id IN (0, :geo_city_id)
             ORDER BY p.geo_city_id DESC
             LIMIT 1
@@ -42,6 +51,8 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         $q->setParameter('base_product_id', $query->baseProductId);
         $q->setParameter('geo_city_id', $geoCity->getId());
         $product = $q->getResult('DTOHydrator');
+        $product->geoPointId = $product->geoPointId ?? $this->getParameter('default.point.id');
+
         if (!$product instanceof DTO\Product) {
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->baseProductId));
         }
@@ -54,15 +65,11 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 gr.geo_point_id,
                 dgr.geo_point_id AS destination_geo_point_id,
                 CASE WHEN grrc.destination_geo_room_id IS NOT NULL THEN
-                    CASE WHEN od.geo_city_id = :geo_city_id OR (dgp.geo_city_id = :geo_city_id AND grrc.order_item_id IS NULL) THEN
-                        CASE WHEN grrc.goods_release_id IS NOT NULL THEN 'movement' ELSE 'transit' END
-                    ELSE
-                        CASE WHEN grrc.goods_release_id IS NOT NULL THEN 'other-movement' ELSE 'other-transit' END
-                    END
+                    CASE WHEN dgp.geo_city_id = :geo_city_id
+                    THEN 'transit'
+                    ELSE 'other-transit' END
                 ELSE 'other-free' END AS transit_type,
-                grrc.delta AS quantity,
-                sd.arriving_date,
-                agr.geo_point_id AS arriving_geo_point_id
+                COALESCE(to_char(grd.completed_at, 'YYYY-MM-DD')::date, sd.arriving_date) AS arriving_date
             FROM goods_reserve_register_current AS grrc
             LEFT OUTER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
             LEFT OUTER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
@@ -71,143 +78,68 @@ class GetDeliveryDateQueryHandler extends MessageHandler
             LEFT OUTER JOIN order_item AS oi ON oi.id = grrc.order_item_id
             LEFT OUTER JOIN order_doc AS od ON od.did = oi.order_did
             LEFT OUTER JOIN supply_item AS si ON si.id = grrc.supply_item_id
-            LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did
-            LEFT OUTER JOIN geo_room AS agr ON agr.id = sd.destination_room_id
+            LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did AND grrc.goods_release_id IS NULL AND grrc.geo_room_id IS NULL
+            LEFT OUTER JOIN goods_release_doc AS grd ON grd.did = grrc.goods_release_id
+            LEFT OUTER JOIN geo_room AS sgr ON sgr.id = sd.destination_room_id
             WHERE grrc.base_product_id = :base_product_id AND grrc.goods_condition_code = 'free'::goods_condition_code
-                AND grrc.goods_pallet_id IS NULL
-
-            UNION ALL
-
-            SELECT
-                gr.geo_point_id,
-                o.geo_point_id AS destination_geo_point_id,
-                CASE WHEN gp.geo_city_id = :geo_city_id THEN 'pallet' ELSE 'other-pallet' END AS transit_type,
-                grrc.delta AS quantity,
-                NULL AS arriving_date,
-                NULL AS arriving_geo_point_id
-            FROM goods_reserve_register_current AS grrc
-            INNER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
-            INNER JOIN order_item AS oi ON oi.id = grrc.order_item_id
-            INNER JOIN order_doc AS o ON o.did = oi.order_did
-            INNER JOIN geo_point AS gp ON gp.id = o.geo_point_id
-            WHERE grrc.base_product_id = :base_product_id AND grrc.goods_condition_code = 'free'::goods_condition_code
-                AND grrc.goods_pallet_id IS NOT NULL
         ", new DTORSM(DTO\FreeReserve::class));
-        $q->setParameter('geo_city_id', $geoCity->getId());
-        $q->setParameter('base_product_id', $product->baseProductId);
+        $q->setParameter('base_product_id', $query->baseProductId);
+        $q->setParameter('geo_city_id', $geoCity);
+        $q->setParameter('goods_condition_code_FREE', GoodsConditionCode::FREE);
+
         $reserves = $q->getResult('DTOHydrator');
 
-        // Резервов нет, но товар на заказ, значить есть у поставщика
-        if (empty($reserves)) {
-            if (ProductAvailabilityCode::AVAILABLE !== $product->supplierAvailability) {
-                // throw new BadRequestHttpException(sprintf('Товар %d отсутсвует у постащика', $product->baseProductId));
-                return null;
-            }
-
-            $supplier = $em->getRepository(Supplier::class)->find($product->supplierId);
-            if (!$supplier instanceof Supplier) {
-                // throw new NotFoundHttpException(sprintf('Поставщик %d не найден', $product->supplierId));
-                return null;
-            }
-
-            return new DTO\DeliveryDate($supplier->getOrderDeliveryDate());
-        }
-
-        // выбираем лучшую дату
         $delivery = new DTO\DeliveryDate();
 
-        // В пути на эту точку с другой точки
-        $movement = array_filter($reserves, function ($reserve) { return 'movement' == $reserve->transitType; });
-        if (!empty($movement)) {
-            foreach ($movement as $reserve) {
-                $delivery->setDate($this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId));
-            }
-        }
-        // В пути на эту точку от поставщика
-        $transit = array_filter($reserves, function ($reserve) { return 'transit' == $reserve->transitType; });
-        if (!empty($transit)) {
-            foreach ($transit as $reserve) {
-                if ($reserve->arrivingGeoPointId == $reserve->destinationGeoPointId) {
-                    $date = $reserve->arrivingDate;
-                } else {
-                    $date = $this->getDateByRoute($reserve->arrivingGeoPointId, $reserve->destinationGeoPointId, $reserve->arrivingDate);
+        $defaultGeoPointId = $this->getParameter('default.point.id');
+
+        // В пути на эту точку
+        $transitToDestination = array_filter($reserves, function ($reserve) {
+            return 'transit' == $reserve->transitType;
+        });
+        if (!empty($transitToDestination)) {
+            foreach ($transitToDestination as $reserve) {
+                $date = $reserve->arrivingDate;
+                if (empty($delivery->date) || $delivery->date > $date) {
+                    $delivery->setDate($date);
                 }
-                $delivery->setDate($date);
             }
-        }
-        // В палете на другой точке для этой точки
-        $pallet = array_filter($reserves, function ($reserve) { return 'pallet' == $reserve->transitType; });
-        if (!empty($pallet)) {
-            foreach ($pallet as $reserve) {
-                $delivery->setDate($this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId));
-            }
-        }
-        if (null !== $delivery->date) {
             return $delivery;
         }
 
-        // Центральная точка города
-        $q = $em->createNativeQuery('
-            SELECT
-                gp.id,
-                gp.geo_city_id,
-                gp.code,
-                gp.name
-            FROM geo_point AS gp
-            INNER JOIN representative AS r ON r.geo_point_id = gp.id
-            WHERE gp.geo_city_id = :geo_city_id AND r.is_central = true
-        ', new DTORSM(DTO\GeoPoint::class, DTORSM::OBJECT_SINGLE));
-        $q->setParameter('geo_city_id', $geoCity->getId());
-        $currentGeoPoint = $q->getResult('DTOHydrator');
-        if (!$currentGeoPoint instanceof DTO\GeoPoint) {
-            throw new NotFoundHttpException(sprintf('В городе %s не найдена центральная точка', $geoCity->getName()));
-        }
-
-        // Свободные остатки на других точках
-        $free = array_filter($reserves, function ($reserve) { return 'other-free' == $reserve->transitType; });
-        if (!empty($free)) {
-            foreach ($free as $reserve) {
-                if (null !== $reserve->arrivingGeoPointId) {
-                    $date = $this->getDateByRoute($reserve->geoPointId, $reserve->arrivingGeoPointId);
-                    $middleGeoPointId = $reserve->arrivingGeoPointId;
-                } else {
-                    $date = new \DateTime();
-                    $middleGeoPointId = $reserve->geoPointId;
-                }
-                $delivery->setDate($this->getDateByRoute($middleGeoPointId, $currentGeoPoint->id, $date));
+        // Резервов нет, но возможно есть у поставщика
+        if (ProductAvailabilityCode::AVAILABLE == $product->supplierAvailability) {
+            if ($product->geoPointId == $defaultGeoPointId) {
+                $delivery->setDate($product->supplierDeliveryDate);
+            } else {
+                $delivery->setDate($this->getDateByRoute($defaultGeoPointId, $product->geoPointId, $product->supplierDeliveryDate));
             }
-        }
-        if (null !== $delivery->date) {
+
             return $delivery;
         }
 
-        // В пути на другую точку с другой точки
-        $movement = array_filter($reserves, function ($reserve) { return 'other-movement' == $reserve->transitType; });
-        if (!empty($movement)) {
-            foreach ($movement as $reserve) {
-                $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId);
-                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id, $date));
-            }
-        }
-        // В пути от поставщика на другую точку
-        $transit = array_filter($reserves, function ($reserve) { return 'other-transit' == $reserve->transitType; });
-        if (!empty($transit)) {
-            foreach ($transit as $reserve) {
-                if ($reserve->arrivingGeoPointId == $reserve->destinationGeoPointId) {
-                    $date = $reserve->arrivingDate;
-                } else {
-                    $date = $this->getDateByRoute($reserve->arrivingGeoPointId, $reserve->destinationGeoPointId, $reserve->arrivingDate);
+        // Резервы на других точках
+        $atAnotherPoint = array_filter($reserves, function ($reserve) { return 'other-free' == $reserve->transitType; });
+        if (!empty($atAnotherPoint)) {
+            foreach ($atAnotherPoint as $reserve) {
+                $date = $this->getDateByRoute($reserve->geoPointId, $product->geoPointId, new \DateTime());
+                if (empty($delivery->date) || $delivery->date > $date) {
+                    $delivery->setDate($date);
                 }
-                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id, $date));
             }
+            return $delivery;
         }
-        // В палете на другую точку
-        $pallet = array_filter($reserves, function ($reserve) { return 'other-pallet' == $reserve->transitType; });
-        if (!empty($pallet)) {
-            foreach ($pallet as $reserve) {
-                $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId);
-                $delivery->setDate($this->getDateByRoute($reserve->destinationGeoPointId, $currentGeoPoint->id, $date));
+
+        // В пути на другую точку
+        $transitToAnotherPoint = array_filter($reserves, function ($reserve) { return 'other-transitt' == $reserve->transitType; });
+        if (!empty($transitToAnotherPoint)) {
+            foreach ($transitToAnotherPoint as $reserve) {
+                $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $reserve->arrivingDate);
+                if (empty($delivery->date) || $delivery->date > $date) {
+                    $delivery->setDate($date);
+                }
             }
+            return $delivery;
         }
 
         return $delivery;
@@ -228,7 +160,10 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         }
 
         if (isset($routes[$startingGeoPointId][$arrivalGeoPointId])) {
-            return $this->getCron($routes[$startingGeoPointId][$arrivalGeoPointId])->getNextRunDate($date);
+            $route = $routes[$startingGeoPointId][$arrivalGeoPointId];
+            $nth = !empty($route['next_week_condition']) && $this->getCron($route['next_week_condition'])->isDue() ? 1 : 0;
+
+            return $this->getCron($route['schedule'])->getNextRunDate($date, $nth);
         }
 
         $queue = array_keys($routes[$fromGeoPointId = $startingGeoPointId]);
@@ -239,7 +174,9 @@ class GetDeliveryDateQueryHandler extends MessageHandler
 
             if (!isset($visited[$nextGeoPointId])) {
                 if (isset($routes[$fromGeoPointId][$nextGeoPointId])) {
-                    $date = $this->getCron($routes[$fromGeoPointId][$nextGeoPointId])->getNextRunDate($date);
+                    $route = $routes[$fromGeoPointId][$nextGeoPointId];
+                    $nth = !empty($route['next_week_condition']) && $this->getCron($route['next_week_condition'])->isDue() ? 1 : 0;
+                    $date = $this->getCron($route['schedule'])->getNextRunDate($date, $nth);
 
                     if ($nextGeoPointId === $arrivalGeoPointId) {
                         return $date;
@@ -249,7 +186,10 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                         //@TODO: костыль, скорее всего работает только если точка находится на втором прыжке маршрута
                         foreach ($queue as $q) {
                             if ($q === $arrivalGeoPointId && isset($routes[$fromGeoPointId][$q])) {
-                                return $this->getCron($routes[$fromGeoPointId][$q])->getNextRunDate($date);
+                                $route = $routes[$fromGeoPointId][$q];
+                                $nth = !empty($route['next_week_condition']) && $this->getCron($route['next_week_condition'])->isDue() ? 1 : 0;
+
+                                return $this->getCron($route['schedule'])->getNextRunDate($date);
                             }
                         }
 
@@ -283,13 +223,18 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 SELECT
                     starting_point_id,
                     arrival_point_id,
-                    schedule
+                    schedule,
+                    next_week_condition
                 FROM geo_point_route
-            ', new DTORSM(DTO\GeoPointRoute::class));
-            $routes = $q->getResult('DTOHydrator');
+            ', new ResultSetMapping());
+            $rows = $q->getResult('ListAssocHydrator');
 
-            foreach ($routes as $route) {
-                $this->routes[$route->startingPointId][$route->arrivalPointId] = $route->schedule;
+            $this->routes = [];
+            foreach ($rows as $row) {
+                $this->routes[$row['starting_point_id']][$row['arrival_point_id']] = [
+                    'schedule' => $row['schedule'],
+                    'next_week_condition' => $row['next_week_condition'],
+                ];
             }
         }
 
