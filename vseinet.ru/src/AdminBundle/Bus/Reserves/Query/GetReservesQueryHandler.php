@@ -132,7 +132,7 @@ class GetReservesQueryHandler extends MessageHandler
                 );
             }
 
-            if ($reserve->destinationGeoRoomId || $reserve->goodsPalletId) {
+            if ($reserve->destinationGeoRoomId) {
                 if (GoodsConditionCode::FREE === $reserve->goodsConditionCode) {
                     $geoRooms[$geoRoomId]->supplies[$reserve->did]->freeTransitDelta += $reserve->delta;
                     $geoRooms[$geoRoomId]->freeTransitDelta += $reserve->delta;
