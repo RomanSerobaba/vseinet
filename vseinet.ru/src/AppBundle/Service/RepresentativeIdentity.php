@@ -94,15 +94,15 @@ class RepresentativeIdentity extends ContainerAware
 
     protected function formatContacts(Representative $representative, array $contacts): Representative
     {
+        foreach ($contacts as $index => $contact) {
+            $contacts[$index]['value'] = $this->get('phone.formatter')->format($contact['value']);
+        }
+
         if (1 === count($contacts)) {
             $representative->phone1 = $contacts[0]['value'];
             $representative->phone3 = $contacts[0]['value'];
 
             return $representative;
-        }
-
-        foreach ($contacts as &$contact) {
-            $contact['value'] = $this->get('phone.formatter')->format($contact['value']);
         }
 
         $contacts = array_filter($contacts, function($contact) {
@@ -124,10 +124,10 @@ class RepresentativeIdentity extends ContainerAware
             $representative->phone2 = $contacts[1]['value'];
             $representative->phone3 = $contacts[0]['value'].', ';
             if ($matches[0][1] == $matches[1][1]) {
-                $representative->phone3 = $matches[1][2];
+                $representative->phone3 .= $matches[1][2];
             }
             else {
-                $representative->phone3 = $contacts[1]['value'];
+                $representative->phone3 .= $contacts[1]['value'];
             }
 
             return $representative;

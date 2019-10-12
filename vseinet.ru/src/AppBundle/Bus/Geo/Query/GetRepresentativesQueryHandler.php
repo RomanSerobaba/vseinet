@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Geo\Query;
 
@@ -8,8 +8,10 @@ class GetRepresentativesQueryHandler extends MessageHandler
 {
     public function handle(GetRepresentativesQuery $query)
     {
-        $q = $this->getDoctrine()->getManager()->createQuery("
-            SELECT 
+        $em = $this->getDoctrine()->getManager();
+
+        $q = $em->createQuery("
+            SELECT
                 NEW AppBundle\Bus\Geo\Query\DTO\Representative (
                     gp.id,
                     gr.id,
@@ -18,41 +20,41 @@ class GetRepresentativesQueryHandler extends MessageHandler
                     gc.name,
                     ga.address,
                     r.hasRetail,
-                    r.hasDelivery, 
+                    r.hasDelivery,
                     r.deliveryTax,
                     r.type
                 ),
                 CASE WHEN r.isCentral = true THEN 1 ELSE 2 END AS HIDDEN ORD1,
-                CASE WHEN r.hasDelivery = true THEN 1 ELSE 2 END AS HIDDEN ORD2 
-            FROM AppBundle:Representative AS r 
+                CASE WHEN r.hasDelivery = true THEN 1 ELSE 2 END AS HIDDEN ORD2
+            FROM AppBundle:Representative AS r
             INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
-            INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId 
+            INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId
             INNER JOIN AppBundle:GeoRegion AS gr WITH gr.id = gc.geoRegionId
-            LEFT OUTER JOIN AppBundle:GeoAddress AS ga WITH ga.id = gp.geoAddressId 
+            LEFT OUTER JOIN AppBundle:GeoAddress AS ga WITH ga.id = gp.geoAddressId
             WHERE r.isActive = true AND (r.hasRetail = true OR r.hasDelivery = true)
-            ORDER BY ORD1, ORD2, gc.name  
+            ORDER BY ORD1, ORD2, gc.name
         ");
 
         $representatives = $q->getResult('IndexByHydrator');
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 rp.representativeId,
-                c.value, 
+                c.value,
                 CASE WHEN c.isMain = true THEN 1 ELSE 2 END HIDDEN ORD
-            FROM AppBundle:RepresentativePhone rp 
+            FROM AppBundle:RepresentativePhone rp
             INNER JOIN AppBundle:Contact c WITH c.id = rp.contactId
-            WHERE rp.representativeId IN (:representativeIds) AND c.typeCode = :phone 
+            WHERE rp.representativeId IN (:representativeIds) AND c.typeCode = :phone
             ORDER BY ORD
         ");
         $q->setParameter('phone', ContactTypeCode::PHONE);
         $phones = $q->getArrayResult();
         foreach ($phones as $phone) {
-            $representatives[$phone->representativeId]->phones[] = $phone->value; 
+            $representatives[$phone->representativeId]->phones[] = $phone->value;
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Representative\Query\DTO\Schedule (
                     rs.representativeId,
                     rs.s1, rs.t1,
