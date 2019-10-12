@@ -63,8 +63,9 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         $q = $em->createNativeQuery("
             SELECT
                 gr.geo_point_id,
-                dgr.geo_point_id AS destination_geo_point_id,
-                CASE WHEN grrc.destination_geo_room_id IS NOT NULL THEN
+                COALESCE(gpal.geo_point_id, dgr.geo_point_id) AS destination_geo_point_id,
+                CASE WHEN gpal.geo_point_id IS NOT NULL THEN 'pallet'
+                WHEN grrc.destination_geo_room_id IS NOT NULL THEN
                     CASE WHEN dgp.geo_city_id = :geo_city_id
                     THEN 'transit'
                     ELSE 'other-transit' END
@@ -82,6 +83,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
             LEFT OUTER JOIN goods_release_doc AS grd ON grd.did = grrc.goods_release_id
             LEFT OUTER JOIN goods_acceptance_doc AS gad ON grd.did = gad.parent_doc_did
             LEFT OUTER JOIN geo_room AS sgr ON sgr.id = sd.destination_room_id
+            LEFT OUTER JOIN goods_pallet AS gpal ON gpal.id = grrc.goods_pallet_id
             WHERE grrc.base_product_id = :base_product_id AND grrc.goods_condition_code = 'free'::goods_condition_code
         ", new DTORSM(DTO\FreeReserve::class));
         $q->setParameter('base_product_id', $query->baseProductId);
@@ -136,6 +138,19 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         if (!empty($transitToAnotherPoint)) {
             foreach ($transitToAnotherPoint as $reserve) {
                 $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $reserve->arrivingDate);
+                if (empty($delivery->date) || $delivery->date > $date) {
+                    $delivery->setDate($date);
+                }
+            }
+            return $delivery;
+        }
+
+        // В паллете на точке
+        $pallet = array_filter($reserves, function ($reserve) { return 'pallet' == $reserve->transitType; });
+        if (!empty($pallet)) {
+            foreach ($pallet as $reserve) {
+                $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId, new \DateTime());
+                $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $date);
                 if (empty($delivery->date) || $delivery->date > $date) {
                     $delivery->setDate($date);
                 }
