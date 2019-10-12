@@ -69,7 +69,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     THEN 'transit'
                     ELSE 'other-transit' END
                 ELSE 'other-free' END AS transit_type,
-                COALESCE(to_char(grd.completed_at, 'YYYY-MM-DD')::date, sd.arriving_date) AS arriving_date
+                COALESCE(to_char(gad.arriving_time, 'YYYY-MM-DD')::date, sd.arriving_date) AS arriving_date
             FROM goods_reserve_register_current AS grrc
             LEFT OUTER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
             LEFT OUTER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
@@ -80,6 +80,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
             LEFT OUTER JOIN supply_item AS si ON si.id = grrc.supply_item_id
             LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did AND grrc.goods_release_id IS NULL AND grrc.geo_room_id IS NULL
             LEFT OUTER JOIN goods_release_doc AS grd ON grd.did = grrc.goods_release_id
+            LEFT OUTER JOIN goods_acceptance_doc AS gad ON grd.did = gad.parent_doc_did
             LEFT OUTER JOIN geo_room AS sgr ON sgr.id = sd.destination_room_id
             WHERE grrc.base_product_id = :base_product_id AND grrc.goods_condition_code = 'free'::goods_condition_code
         ", new DTORSM(DTO\FreeReserve::class));
