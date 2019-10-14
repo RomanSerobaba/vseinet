@@ -5,7 +5,7 @@ namespace AppBundle\Bus\Catalog\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
 use AppBundle\Enum\GoodsConditionCode;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class GetProductsQueryHandler extends MessageHandler
 {
@@ -57,7 +57,7 @@ class GetProductsQueryHandler extends MessageHandler
         $products = [];
 
         foreach ($q->getResult('DTOHydrator') as $product) {
-            $product->priceTypeName = ProductPriceType::getName($product->priceType);
+            $product->priceTypeName = ProductPriceTypeCode::getName($product->priceType);
             $products[$product->id] = $product;
         }
 

@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Form\Type\PriceType;
 use AdminBundle\Bus\Product\Command\SetPriceCommand;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class SetPriceFormType extends AbstractType
 {
@@ -19,7 +19,7 @@ class SetPriceFormType extends AbstractType
         $builder
             // ->add('id', HiddenType::class)
             ->add('price', PriceType::class)
-            ->add('type', ChoiceType::class, ['choices' => array_flip(ProductPriceType::getChoices())])
+            ->add('type', ChoiceType::class, ['choices' => array_flip(ProductPriceTypeCode::getChoices())])
             ->add('submit', SubmitType::class)
         ;
     }

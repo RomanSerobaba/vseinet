@@ -4,7 +4,7 @@ namespace AppBundle\Bus\Product\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as VIC;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class BaseProduct
 {
@@ -44,7 +44,7 @@ class BaseProduct
     public $price;
 
     /**
-     * @VIC\Enum("AppBundle\Enum\ProductPriceType")
+     * @VIC\Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
     public $priceType;
 
@@ -153,6 +153,6 @@ class BaseProduct
 
     public function isManualPrice()
     {
-        return in_array($this->priceType, [ProductPriceType::MANUAL, ProductPriceType::ULTIMATE, ProductPriceType::TEMPORARY]);
+        return in_array($this->priceType, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
     }
 }

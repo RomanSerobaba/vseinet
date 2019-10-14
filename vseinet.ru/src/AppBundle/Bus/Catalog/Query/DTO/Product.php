@@ -33,7 +33,7 @@ class Product
     public $price;
 
     /**
-     * @VIC\Enum("AppBundle\Enum\ProductPriceType")
+     * @VIC\Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
     public $priceType;
 
