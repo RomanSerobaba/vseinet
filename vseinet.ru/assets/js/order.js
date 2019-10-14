@@ -4,6 +4,14 @@ $(function() {
         var orderForm = $('#order-creation-form');
 
         orderForm.form({
+            submit: function (xhr) {
+                $('#create_form_submit').prop('disabled', true).prop('title', 'Запрос обрабатывается').addClass('loading');
+                xhr.done(function (data) {
+                    if (!data.errors || 0 === data.errors.length) {
+                        window.location = Routing.generate('order_created_page', { id: data.id });
+                    }
+                });
+            },
             afterResponse: function(data) {
                 if ('undefined' !== typeof data.html && data.html.length > 0) {
                     $('#products').html(data.html);
@@ -12,6 +20,7 @@ $(function() {
             error: function(errors, submit) {
                 var errorRow = $(this).find('.error').first();
                 destination = errorRow.offset().top;
+                $('#create_form_submit').prop('disabled', false).prop('title', '').removeClass('loading');
 
                 if (submit) {
                     if ($(window).width() > 992){
@@ -21,9 +30,6 @@ $(function() {
                         $('body, html ').animate( { scrollTop: destination - 10}, 500 );
                     }
                 }
-            },
-            onSuccess: function(data) {
-                window.location = Routing.generate('order_created_page', { id: data.id });
             }
         });
     }
