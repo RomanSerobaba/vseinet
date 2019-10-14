@@ -82,8 +82,8 @@
             </a>
             {% if geoCity.countGeoPoints %}
                 и еще <a href="javascript:void(0)" class="ajax" data-id="City">
-                    {{ geoCity.countGeoPoints }}
-                    {{ geoCity.countGeoPoints|declension('пункт;пункта;пунктов') }} по области
+                    {{ geoCity.countGeoPoints - 1 }}
+                    {{ (geoCity.countGeoPoints - 1)|declension('пункт;пункта;пунктов') }} по области
                 </a>
             {% endif%}
         </li>
