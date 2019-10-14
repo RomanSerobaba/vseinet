@@ -246,7 +246,7 @@ class QueryBuilder extends ContainerAware
         if (Sort::PRICE === $filter->sort) {
             $sort = 'price_order ASC, price '.$sortDirection;
         } elseif (Sort::NOVELTY === $filter->sort) {
-            $sort = 'created_at '.$sortDirection;
+            $sort = 'created_at '.(SortDirection::ASC === $filter->sortDirection ? 'DESC' : 'ASC');
         } elseif (Sort::NAME === $filter->sort) {
             $sort = 'name '.$sortDirection;
         } elseif (Sort::MARGING === $filter->sort) {

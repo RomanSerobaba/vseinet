@@ -96,18 +96,25 @@ class GetDeliveryDateQueryHandler extends MessageHandler
 
         $defaultGeoPointId = $this->getParameter('default.point.id');
 
-        // В пути на эту точку
-        $transitToDestination = array_filter($reserves, function ($reserve) {
-            return 'transit' == $reserve->transitType;
-        });
-        if (!empty($transitToDestination)) {
-            foreach ($transitToDestination as $reserve) {
-                $date = $reserve->arrivingDate;
-                if (empty($delivery->date) || $delivery->date > $date) {
-                    $delivery->setDate($date);
+        if (!empty($reserves)) {
+            // В пути на эту точку
+            $transitToDestination = array_filter($reserves, function ($reserve) {
+                return 'transit' == $reserve->transitType;
+            });
+
+            if (!empty($transitToDestination)) {
+                foreach ($transitToDestination as $reserve) {
+                    $date = $reserve->arrivingDate;
+
+                    if (empty($delivery->date) || $delivery->date > $date) {
+                        $delivery->setDate($date);
+                    }
+                }
+
+                if (null !== $delivery->date) {
+                    return $delivery;
                 }
             }
-            return $delivery;
         }
 
         // Резервов нет, но возможно есть у поставщика
@@ -121,44 +128,56 @@ class GetDeliveryDateQueryHandler extends MessageHandler
             return $delivery;
         }
 
-        // Резервы на других точках
-        $atAnotherPoint = array_filter($reserves, function ($reserve) { return 'other-free' == $reserve->transitType; });
-        if (!empty($atAnotherPoint)) {
-            foreach ($atAnotherPoint as $reserve) {
-                $date = $this->getDateByRoute($reserve->geoPointId, $product->geoPointId, new \DateTime());
-                if (empty($delivery->date) || $delivery->date > $date) {
-                    $delivery->setDate($date);
+        if (!empty($reserves)) {
+            // Резервы на других точках
+            $atAnotherPoint = array_filter($reserves, function ($reserve) { return 'other-free' == $reserve->transitType; });
+
+            if (!empty($atAnotherPoint)) {
+                foreach ($atAnotherPoint as $reserve) {
+                    $date = $this->getDateByRoute($reserve->geoPointId, $product->geoPointId, new \DateTime());
+
+                    if (empty($delivery->date) || $delivery->date > $date) {
+                        $delivery->setDate($date);
+                    }
+                }
+
+                if (null !== $delivery->date) {
+                    return $delivery;
                 }
             }
-            return $delivery;
-        }
 
-        // В пути на другую точку
-        $transitToAnotherPoint = array_filter($reserves, function ($reserve) { return 'other-transitt' == $reserve->transitType; });
-        if (!empty($transitToAnotherPoint)) {
-            foreach ($transitToAnotherPoint as $reserve) {
-                $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $reserve->arrivingDate);
-                if (empty($delivery->date) || $delivery->date > $date) {
-                    $delivery->setDate($date);
+            // В пути на другую точку
+            $transitToAnotherPoint = array_filter($reserves, function ($reserve) { return 'other-transitt' == $reserve->transitType; });
+
+            if (!empty($transitToAnotherPoint)) {
+                foreach ($transitToAnotherPoint as $reserve) {
+                    $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $reserve->arrivingDate);
+
+                    if (empty($delivery->date) || $delivery->date > $date) {
+                        $delivery->setDate($date);
+                    }
+                }
+
+                if (null !== $delivery->date) {
+                    return $delivery;
                 }
             }
-            return $delivery;
-        }
 
-        // В паллете на точке
-        $pallet = array_filter($reserves, function ($reserve) { return 'pallet' == $reserve->transitType; });
-        if (!empty($pallet)) {
-            foreach ($pallet as $reserve) {
-                $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId, new \DateTime());
-                $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $date);
-                if (empty($delivery->date) || $delivery->date > $date) {
-                    $delivery->setDate($date);
+            // В паллете на точке
+            $pallet = array_filter($reserves, function ($reserve) { return 'pallet' == $reserve->transitType; });
+            if (!empty($pallet)) {
+                foreach ($pallet as $reserve) {
+                    $date = $this->getDateByRoute($reserve->geoPointId, $reserve->destinationGeoPointId, new \DateTime());
+                    $date = $this->getDateByRoute($reserve->destinationGeoPointId, $product->geoPointId, $date);
+
+                    if (empty($delivery->date) || $delivery->date > $date) {
+                        $delivery->setDate($date);
+                    }
                 }
             }
+
             return $delivery;
         }
-
-        return $delivery;
     }
 
     protected function getDateByRoute(?int $startingGeoPointId, ?int $arrivalGeoPointId, ?\DateTime $startingDate = null): ?\DateTime
