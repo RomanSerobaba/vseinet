@@ -1,0 +1,13 @@
+{% if app.userIsEmployee %}
+    <div class="tab expanded"><span class="filter-titles">Заполненность</span></div>
+    <div class="sheet multi" style="display:block">
+        {% for id, title in nofilledChoices %}
+            {% if features.nofilled[id] is defined %}
+                <label for="filter_nofilled_{{ id }}">
+                    <input type="checkbox" id="filter_nofilled_{{ id }}" name="filter[nofilled][{{ id }}]" />
+                    {{ title }}&nbsp;<small>({{ features.nofilled[id] }})</small>
+                </label>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

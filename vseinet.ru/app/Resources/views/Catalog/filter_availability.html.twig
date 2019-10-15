@@ -1,0 +1,20 @@
+{% if features.availability|length %}
+    <div class="tab expanded"><span class="filter-titles">Доступность</span></div>
+    <div class="sheet multi availability" style="display:block">
+        {% for id, title in availabilityChoices %}
+            {% if features.availability[id] is defined and features.availability[id] %}
+                <label for="filter_availability_{{ id }}">
+                    <input
+                        type="radio"
+                        id="filter_availability_{{ id }}"
+                        name="filter[availability]"
+                        value="{{ id }}"
+                        novalidate="novalidate"
+                        {% if filter.availability == id %}checked{% endif %}
+                    />
+                    {{ title }}&nbsp;<small>({{ features.availability[id] }})</small>
+                </label><br />
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,32 @@
+{% if features.price is not null and features.price.min is not null and features.price.max is not null %}
+    <div class="tab first price expanded">
+        <span class="filter-titles">Цена</span>
+    </div>
+    <div
+        class="sheet price range"
+        style="display:block"
+        data-min="{{ features.price.min }}"
+        data-max="{{ features.price.max }}"
+        data-step="{{ features.price.step }}"
+    >
+        <label for="filter_price_min">от</label>
+        <input
+            type="text"
+            id="filter_price_min"
+            name="filter[price][min]"
+            class="txt"
+            value="{% if filter.price and filter.price.min != features.price.min %}{{ filter.price.min }}{% endif %}"
+            placeholder="{{ features.price.min }}"
+        />
+        <label for="filter_price_max">до</label>
+        <input
+            type="text"
+            id="filter_price_max"
+            name="filter[price][max]"
+            class="txt"
+            value="{% if filter.price and filter.price.max != features.price.max %}{{ filter.price.max }}{% endif %}"
+            placeholder="{{ features.price.max }}"
+        />
+        <span class="RUR">Р</span>
+    </div>
+{% endif %}

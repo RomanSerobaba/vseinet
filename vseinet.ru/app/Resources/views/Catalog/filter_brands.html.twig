@@ -1,0 +1,33 @@
+{% if features.brands is not null and features.brands|length %}
+    <div class="tab brands expanded">
+        <span class="filter-titles">Производитель</span>
+    </div>
+    <div class="sheet multi brands" style="display:block">
+        {% set hasOtherBrands = false %}
+        {% for brand in features.brands %}
+            {% if not (brand.isTop or filter.brandIds[brand.id] is defined) %}
+                {% set hasOtherBrands = true %}
+            {% endif %}
+            <div class="{% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %}">
+                <a
+                    href="{#{ path('catalog_category_with_brand', { id: category.id, brandName: brand.name }) }#}"
+                    class="brand-page"
+                >
+                    &rarr;
+                </a>
+                <label for="filter_brand_{{ brand.id }}" data-id="{{ brand.id }}">
+                    <input
+                        type="checkbox"
+                        id="filter_brand_{{ brand.id }}"
+                        name="filter[brand][{{ brand.id }}]"
+                        {% if filter.brandIds[brand.id] is defined %}checked{% endif %}
+                    />
+                    {{ brand.name }}&nbsp;<small>({{ brand.countProducts }})</small>
+                </label>
+            </div>
+        {% endfor %}
+        {% if hasOtherBrands %}
+            <a href="javascript:void(0)" class="toggle-other ajax gray r">показать все</a>
+        {% endif %}
+    </div>
+{% endif %}

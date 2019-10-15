@@ -1,0 +1,104 @@
+{% if features.details|length %}
+    {% if features.categorySections|length > 2 %}
+        <div class="tab sections expanded">
+            <span class="filter-titles">Наименование</span>
+        </div>
+        <div class="sheet multi sections" style="display:block">
+            {% for section in features.categorySections %}
+                {% if section.id > 0 %}
+                    <label for="filter_section_{{ section.id }}" data-id="{{ section.id }}">
+                        <input
+                            type="checkbox"
+                            id="filter_section_{{ section.id }}"
+                            name="filter[section][{{ section.id }}]"
+                            {% if filter.sectionIds[section.id] is defined %}checked{% endif %}
+                        />
+                        {{ section.name }}&nbsp;<small>({{ section.countProducts }})</small>
+                    </label>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% for detail in features.details %}
+        <div class="detail">
+            <div class="tab detail-{{ detail.id }}{% if data.details[detail.id] is defined %} expanded{% endif %}">
+                <span class="filter-titles">{{ detail.name }}{% if detail.unit %}, {{ detail.unit }}{% endif %}</span>
+            </div>
+            <div class="sheet multi detail-{{ detail.id }}{% if 'boolean' == detail.typeCode %} inline{% endif %}"{% if filter.details[detail.id] is defined %} style="display:block"{% endif %} data-id="{{ detail.id }}">
+                {% if 'boolean' == detail.typeCode %}
+                    <label for="filter_detail_{{ detail.id }}_1" data-value="1">
+                        <input
+                            type="radio"
+                            id="filter_detail_{{ detail.id }}"
+                            name="filter[detail][{{ detail.id}}]"
+                            value="1"
+                            {% if filter.details[detail.id] is defined and filter.details[detail.id] == 1 %}checked{% endif %}
+                        />
+                        есть
+                    </label>
+                    <label for="filter_detail_{{ detail.id }}_0" data-value="0">
+                        <input
+                            type="radio"
+                            id="filter_detail_{{ detail.id }}"
+                            name="filter[detail][{{ detail.id}}]"
+                            value="0"
+                            {% if filter.details[detail.id] is defined and filter.details[detail.id] == 0 %}checked{% endif %}
+                        />
+                        нет
+                    </label>
+                    <label for="filter_detail_{{detail.id }}_" data-value="">
+                        <input
+                            type="radio"
+                            id="filter_detail_{{ detail.id }}_"
+                            name="filter[detail][{{ detail.id}}]"
+                            value=""
+                            {% if filter.details[detail.id] is not defined %}checked{% endif %}
+                        />
+                        неважно
+                    </label>
+                {% elseif 'enum' == detail.typeCode %}
+                    {% for id, count in detail.values %}
+                        {% if features.detailValues[id] is defined %}
+                            <label for="filter_detail_{{ detail.id }}_{{ id }}" data-id="{{ id }}">
+                                <input
+                                    type="checkbox"
+                                    id="filter_detail_{{ detail.id }}_{{ id }}"
+                                    name="filter[detail][{{ detail.id }}][{{ id }}]"
+                                    {% if filter.details[detail.id][id] is defined %}checked{% endif %}
+                                />
+                                {{ features.detailValues[id].name }}&nbsp;<small>({{ count }})</small>
+                            </label><br />
+                        {% endif %}
+                    {% endfor %}
+                {% elseif 'number' == detail.typeCode %}
+                    <div
+                        class="range"
+                        data-min="{{ detail.values.min }}"
+                        data-max="{{ detail.values.max }}"
+                        data-step="{{ detail.values.step }}"
+                    >
+                        <label for="filter_detail_{{ detail.id }}_min">от</label>
+                        <input
+                            type="text"
+                            id="filter_detail_{{ detail.id }}_min"
+                            name="filter[detail][{{ detail.id }}][min]"
+                            class="txt"
+                            value="{% if filter.details[detail.id] is defined and filter.details[detail.id].min != detail.values.min %}{{filter.details[detail.id].min }}{% endif %}"
+                            pceholder="{{ detail.values.min }}"
+                        />
+                        <label for="filter_detail_{{ detail.id }}_max">до</label>
+                        <input
+                            type="text"
+                            id="filter_detail_{{ detail.id }}_max"
+                            name="filter[detail][{{ detail.id }}][max]"
+                            class="txt"
+                            value="{% if filter.details[detail.id] is defined and filter.details[detail.id].max != detail.values.max %}{{filter.details[detail.id].max }}{% endif %}"
+                            placeholder="{{ detail.values.max }}"
+                        />
+                        <a href="javascript:void(0)" class="clear"></a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
