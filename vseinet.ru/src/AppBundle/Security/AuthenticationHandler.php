@@ -100,6 +100,8 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         if ($user->isEmployee()) {
             $this->geoCityIdentity->setEmployeeGeoCity($user->getId());
+        } elseif ($user->getGeoCityId()) {
+            $this->geoCityIdentity->setGeoCityId($user->getGeoCityId());
         }
 
         if ($request->isXmlHttpRequest()) {

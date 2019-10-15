@@ -33,7 +33,7 @@ class GeoCityIdentity extends ContainerAware
     /**
      * @param int $userId
      */
-    public function setEmployeeGeoCity($userId): void
+    public function setEmployeeGeoCity(int $userId): void
     {
         $data = $this->getDoctrine()->getManager()->createNativeQuery('
             SELECT
