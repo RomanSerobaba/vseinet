@@ -18,7 +18,9 @@ use AppBundle\ApiClient\ApiClientException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
+use AppBundle\Entity\Contact;
 use AppBundle\Entity\OrderItemStatus;
+use AppBundle\Enum\ContactTypeCode;
 
 class OrderController extends Controller
 {
@@ -224,6 +226,41 @@ class OrderController extends Controller
             $this->get('session')->set('form.orderCreation', $data);
         } else {
             $data = $this->get('session')->get('form.orderCreation', []);
+            if ($this->getUser() && !$this->getUserIsEmployee()) {
+                if (empty($data['client']['fullname'])) {
+                    $person = $this->getUser()->person;
+                    $data['client']['fullname'] = implode(' ', [$person->getLastName(), $person->getFirstName(), $person->getSecondName()]);
+                }
+                if (empty($data['client']['phone'])) {
+                    $em = $this->getDoctrine()->getManager();
+                    $personId = $this->getUser()->getPersonId();
+                    $contact = $em->getRepository(Contact::class)->findOneBy(['personId' => $personId, 'contactTypeCode' => ContactTypeCode::MOBILE, 'isMain' => true]);
+                    if (!empty($contact)) {
+                        $data['client']['phone'] = $contact->getValue();
+                    }
+                }
+                if (empty($data['client']['email'])) {
+                    $em = $this->getDoctrine()->getManager();
+                    $personId = $this->getUser()->getPersonId();
+                    $contact = $em->getRepository(Contact::class)->findOneBy(['personId' => $personId, 'contactTypeCode' => ContactTypeCode::EMAIL, 'isMain' => true]);
+                    if (!empty($contact)) {
+                        $data['client']['email'] = $contact->getValue();
+                    }
+                }
+                if (empty($data['client']['additionalPhone'])) {
+                    $em = $this->getDoctrine()->getManager();
+                    $personId = $this->getUser()->getPersonId();
+                    $contacts = $em->getRepository(Contact::class)->findBy(['personId' => $personId, 'contactTypeCode' => [ContactTypeCode::MOBILE, ContactTypeCode::PHONE], 'isMain' => false]);
+                    if (!empty($contacts)) {
+                        $phones = [];
+                        foreach ($contacts as $contact) {
+                            $phones[$contact->getValue()] = $contact->getValue();
+                        }
+                        $data['client']['additionalPhone'] = implode(', ', $phones);
+                    }
+                }
+
+            }
         }
 
         $command = new Command\CreateCommand($data);
