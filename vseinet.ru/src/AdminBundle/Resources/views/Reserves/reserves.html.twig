@@ -2,64 +2,83 @@
 <table class="point_reserve">
     <thead>
         <tr>
-            <th>Точка</th>
-            <th title="Свободные остатки на складе">Свободных</th>
-            <th title="Свободные остатки на складе, зарезервированные под перемещение на другой склад">Своб. в резерве</th>
-            <th title="Свободные остатки, находящиеся в пути на склад">Своб. в пути</th>
-            <th title="Заказанный товар, находящийся на складе">Заказанных</th>
-            <th title="Заказанный товар, находящийся в пути">Заказ. в пути</th>
-            <th title="Претензионный товар, находящийся на складе">В претензиях</th>
-            <th title="Претензионный товар, находящийся в пути на склад">Претензион. в пути</th>
+            <th rowspan="2">Точка</th>
+            <th colspan="4" class="free">Свободные остатки</th>
+            <th colspan="3" class="reserved">Под клиентов</th>
+            <th colspan="2" class="issued">В претензиях</th>
+        </tr>
+        <tr>
+            <th class="free" title="Свободные остатки на складе">На складе</th>
+            <th class="free" title="Свободные остатки на складе, зарезервированные под перемещение на другой склад">К перемещению</th>
+            <th class="free" title="Свободные остатки, зарезервированные под перемещение на другой склад, упакованные для отправки">Упакован</th>
+            <th class="free" title="Свободные остатки, находящиеся в пути на склад">В пути</th>
+            <th class="reserved" title="Заказанный товар, находящийся на складе">На складе</th>
+            <th class="reserved" title="Заказанный товар, упакованный на складе для отправки на другой склад">Упакован</th>
+            <th class="reserved" title="Заказанный товар, находящийся в пути">В пути</th>
+            <th class="issued" title="Претензионный товар, находящийся на складе">На складе</th>
+            <th class="issued" title="Претензионный товар, находящийся в пути на склад">В пути</th>
         </tr>
     </thead>
     <tbody>
         <tr class="all">
             <td>На всех точках</td>
             <td>
-                {{ reserves.freeDelta }}
+                {{ reserves.freeDelta ?: '' }}
             </td>
             <td>
-                {{ reserves.freeReservedDelta }}
+                {{ reserves.freeReservedDelta ?: '' }}
             </td>
             <td>
-                {{ reserves.freeTransitDelta }}
+                {{ reserves.freeAssembledDelta ?: '' }}
             </td>
             <td>
-                {{ reserves.reservedDelta }}
+                {{ reserves.freeTransitDelta ?: '' }}
             </td>
             <td>
-                {{ reserves.reservedTransitDelta }}
+                {{ reserves.reservedDelta ?: '' }}
             </td>
             <td>
-                {{ reserves.issuedDelta }}
+                {{ reserves.reservedAssembledDelta ?: '' }}
             </td>
             <td>
-                {{ reserves.issuedTransitDelta }}
+                {{ reserves.reservedTransitDelta ?: '' }}
+            </td>
+            <td>
+                {{ reserves.issuedDelta ?: '' }}
+            </td>
+            <td>
+                {{ reserves.issuedTransitDelta ?: '' }}
             </td>
         </tr>
         {% for geoCity in reserves.geoCities %}
             <tr class="category">
                 <td>{{ geoCity.name }}</td>
                 <td>
-                    {# {{ geoCity.freeDelta }} #}
+                    {# {{ geoCity.freeDelta ?: '' }} #}
                 </td>
                 <td>
-                    {# {{ geoCity.freeReservedDelta }} #}
+                    {# {{ geoCity.freeReservedDelta ?: '' }} #}
                 </td>
                 <td>
-                    {# {{ geoCity.freeTransitDelta }} #}
+                    {# {{ geoCity.freeAssembledDelta ?: '' }} #}
                 </td>
                 <td>
-                    {# {{ geoCity.reservedDelta }} #}
+                    {# {{ geoCity.freeTransitDelta ?: '' }} #}
                 </td>
                 <td>
-                    {# {{ geoCity.reservedTransitDelta }} #}
+                    {# {{ geoCity.reservedDelta ?: '' }} #}
                 </td>
                 <td>
-                    {# {{ geoCity.issuedDelta }} #}
+                    {# {{ geoCity.reservedAssembledDelta ?: '' }} #}
                 </td>
                 <td>
-                    {# {{ geoCity.issuedTransitDelta }} #}
+                    {# {{ geoCity.reservedTransitDelta ?: '' }} #}
+                </td>
+                <td>
+                    {# {{ geoCity.issuedDelta ?: '' }} #}
+                </td>
+                <td>
+                    {# {{ geoCity.issuedTransitDelta ?: '' }} #}
                 </td>
             </tr>
             {% for geoPointId in geoCity.geoPointIds %}
@@ -72,51 +91,63 @@
                         <span title="{{ geoPoint.handmadePricetagDate|date('d.m.Y H:i') }}, {{ geoPoint.handmadePricetagCreator }}">{{ geoPoint.handmadePricetag|price_format }}</span>
                     </td>
                     <td>
-                        {# {{ geoPoint.freeDelta }} #}
+                        {# {{ geoPoint.freeDelta ?: '' }} #}
                     </td>
                     <td>
-                        {# {{ geoPoint.freeReservedDelta }} #}
+                        {# {{ geoPoint.freeReservedDelta ?: '' }} #}
                     </td>
                     <td>
-                        {# {{ geoPoint.freeTransitDelta }} #}
+                        {# {{ geoPoint.freeAssembledDelta ?: '' }} #}
                     </td>
                     <td>
-                        {# {{ geoPoint.reservedDelta }} #}
+                        {# {{ geoPoint.freeTransitDelta ?: '' }} #}
                     </td>
                     <td>
-                        {# {{ geoPoint.reservedTransitDelta }} #}
+                        {# {{ geoPoint.reservedDelta ?: '' }} #}
                     </td>
                     <td>
-                        {# {{ geoPoint.issuedDelta }} #}
+                        {# {{ geoPoint.reservedAssembledDelta ?: '' }} #}
                     </td>
                     <td>
-                        {# {{ geoPoint.issuedTransitDelta }} #}
+                        {# {{ geoPoint.reservedTransitDelta ?: '' }} #}
+                    </td>
+                    <td>
+                        {# {{ geoPoint.issuedDelta ?: '' }} #}
+                    </td>
+                    <td>
+                        {# {{ geoPoint.issuedTransitDelta ?: '' }} #}
                     </td>
                 </tr>
                 {% for geoRoomId in geoPoint.geoRoomIds %}
                     {% set geoRoom = reserves.geoRooms[geoRoomId] %}
                     <tr class="room">
                         <td>{{ geoRoom.name }}</td>
-                        <td>
-                            {{ geoRoom.freeDelta }}
+                        <td{% if geoRoom.freeDelta %} class="free"{% endif %}>
+                            {{ geoRoom.freeDelta ?: '' }}
                         </td>
-                        <td>
-                            {{ geoRoom.freeReservedDelta }}
+                        <td{% if geoRoom.freeReservedDelta %} class="free"{% endif %}>
+                            {{ geoRoom.freeReservedDelta ?: '' }}
                         </td>
-                        <td>
-                            {{ geoRoom.freeTransitDelta }}
+                        <td{% if geoRoom.freeAssembledDelta %} class="free"{% endif %}>
+                            {{ geoRoom.freeAssembledDelta ?: '' }}
                         </td>
-                        <td>
-                            {{ geoRoom.reservedDelta }}
+                        <td{% if geoRoom.freeTransitDelta %} class="free"{% endif %}>
+                            {{ geoRoom.freeTransitDelta ?: '' }}
                         </td>
-                        <td>
-                            {{ geoRoom.reservedTransitDelta }}
+                        <td{% if geoRoom.reservedDelta %} class="reserved"{% endif %}>
+                            {{ geoRoom.reservedDelta ?: '' }}
                         </td>
-                        <td>
-                            {{ geoRoom.issuedDelta }}
+                        <td{% if geoRoom.reservedAssembledDelta %} class="reserved"{% endif %}>
+                            {{ geoRoom.reservedAssembledDelta ?: '' }}
                         </td>
-                        <td>
-                            {{ geoRoom.issuedTransitDelta }}
+                        <td{% if geoRoom.reservedTransitDelta %} class="reserved"{% endif %}>
+                            {{ geoRoom.reservedTransitDelta ?: '' }}
+                        </td>
+                        <td{% if geoRoom.issuedDelta %} class="issued"{% endif %}>
+                            {{ geoRoom.issuedDelta ?: '' }}
+                        </td>
+                        <td{% if geoRoom.issuedTransitDelta %} class="issued"{% endif %}>
+                            {{ geoRoom.issuedTransitDelta ?: '' }}
                         </td>
                     </tr>
                     {% for supply in geoRoom.supplies %}
@@ -126,25 +157,31 @@
                                 {% if 1 != supply.supplyId %}<a href="/admin/supplies/{{ supply.supplyId }}">{% endif %}{{ supply.supplierCode }}-{{ supply.supplyNumber }} от {{ supply.supplyCreatedAt|date('d.m.Y') }}{% if 1 != supply.supplyId %}</a>{% endif %}
                             </td>
                             <td>
-                                {{ supply.freeDelta }}
+                                {{ supply.freeDelta ?: '' }}
                             </td>
                             <td>
-                                {{ supply.freeReservedDelta }}
+                                {{ supply.freeReservedDelta ?: '' }}
                             </td>
                             <td>
-                                {{ supply.freeTransitDelta }}
+                                {{ supply.freeAssembledDelta ?: '' }}
                             </td>
                             <td>
-                                {{ supply.reservedDelta }}
+                                {{ supply.freeTransitDelta ?: '' }}
                             </td>
                             <td>
-                                {{ supply.reservedTransitDelta }}
+                                {{ supply.reservedDelta ?: '' }}
                             </td>
                             <td>
-                                {{ supply.issuedDelta }}
+                                {{ supply.reservedAssembledDelta ?: '' }}
                             </td>
                             <td>
-                                {{ supply.issuedTransitDelta }}
+                                {{ supply.reservedTransitDelta ?: '' }}
+                            </td>
+                            <td>
+                                {{ supply.issuedDelta ?: '' }}
+                            </td>
+                            <td>
+                                {{ supply.issuedTransitDelta ?: '' }}
                             </td>
                         </tr>
                     {% endfor %}

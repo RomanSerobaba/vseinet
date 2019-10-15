@@ -50,7 +50,7 @@ class GeoCityIdentity extends ContainerAware
         if ($data) {
             $session = $this->get('request_stack')->getMasterRequest()->getSession();
             $geoCity = $session->get('geo_city');
-            if ($geoCity->getId() !== $data['geoCityId']) {
+            if (empty($geoCity) || $geoCity->getId() !== $data['geoCityId']) {
                 $geoCity = $this->loadGeoCity($data['geoCityId']);
                 $session->set('geo_city', $geoCity);
             }
@@ -128,9 +128,11 @@ class GeoCityIdentity extends ContainerAware
 
         $q = $em->createQuery('
             SELECT r
-            FROM AppBundle:GeoPoint AS gp
+            FROM AppBundle:GeoCity AS gc
+            JOIN AppBundle:GeoCity AS ogc WITH gc.geoRegionId = ogc.geoRegionId
+            JOIN AppBundle:GeoPoint AS gp WITH gp.geoCityId = ogc.id
             INNER JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
-            WHERE gp.geoCityId = :geoCityId AND r.isActive = true
+            WHERE gc.id = :geoCityId AND r.isActive = true AND (r.hasRetail = TRUE OR r.hasDelivery = TRUE)
         ');
         $q->setParameter('geoCityId', $geoCity->getId());
         $geoCity->setGeoPoints($q->getResult());

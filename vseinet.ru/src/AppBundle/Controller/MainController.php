@@ -13,6 +13,8 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Competitor;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
+use AppBundle\Entity\OrderDoc;
+use AppBundle\Entity\OrderItem;
 
 class MainController extends Controller
 {
@@ -104,6 +106,70 @@ class MainController extends Controller
     }
 
     /**
+     * @VIA\Route(
+     *     name="cancel_request",
+     *     path="/cancel/request/",
+     *     methods={"GET", "POST"},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function cancelRequestAction(Request $request)
+    {
+        $command = new Command\CancelRequestCommand();
+
+        if ($request->isMethod('GET')) {
+            $command->id = $request->query->get('id');
+        }
+
+        $form = $this->createForm(Form\CancelRequestFormType::class, $command);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->get('command_bus')->handle($command);
+
+                    return $this->json([
+                        'notice' => 'Ваш запрос отправлен',
+                    ]);
+                } catch (ValidationException $e) {
+                    $this->addFormErrors($form, $e->getAsArray());
+                }
+            }
+
+            return $this->json([
+                'errors' => $this->getFormErrors($form),
+            ]);
+        }
+
+        return $this->json([
+            'html' => $this->renderView('Main/cancel_request_form.html.twig', [
+                'form' => $form->createView(),
+            ]),
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="repeat_order",
+     *     path="/order/{id}/repeat/",
+     *     requirements={"id"="\d+"},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function reorderAction(int $id)
+    {
+        foreach ($this->getDoctrine()->getManager()->getRepository(OrderItem::class)->findBy(['orderDid' => $id]) as $item) {
+            $this->get('command_bus')->handle(new \AppBundle\Bus\Cart\Command\AddCommand(['id' => $item->getBaseProductId(), 'quantity' => $item->getQuantity()]));
+        }
+
+        return  $this->json([
+            'status' => 200,
+        ]);
+    }
+
+    /**
      * @VIA\Get(
      *     name="credit_calculators",
      *     path="/credit/calculators/{id}/",
@@ -121,6 +187,36 @@ class MainController extends Controller
         return $this->json([
             'html' => $this->renderView('Main/credit_calculators.html.twig', [
                 'product' => $product,
+            ]),
+        ]);
+    }
+
+    /**
+     * @VIA\Get(
+     *     name="sberbank",
+     *     path="/sberbank/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function sberbankAction(Request $request)
+    {
+        $order = $this->getDoctrine()->getManager()->getRepository(OrderDoc::class)->find($request->query->get('id'));
+
+        if (!$order instanceof OrderDoc) {
+            throw new NotFoundHttpException();
+        }
+
+        // $api = $this->get('site.api.client');
+
+        // try {
+        //     $result = $api->get('/api/v1/orders/pdf/'.$order->getDId().'/invoice/file/');
+        // } catch (BadRequestHttpException $e) {
+        //     return null;
+        // }
+
+        return $this->json([
+            'html' => $this->renderView('Main/sberbank.html.twig', [
+                'number' => $order->getNumber(),
             ]),
         ]);
     }

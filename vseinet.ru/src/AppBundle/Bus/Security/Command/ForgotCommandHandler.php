@@ -48,7 +48,10 @@ class ForgotCommandHandler extends MessageHandler
 
         // Код 6 цифр
         while (true) {
-            $code = rand(100000, 999999);
+            $a = $c = rand(1, 9);
+            $b = rand(1, 9);
+            $d = rand(0, 9);
+            $code = $a.$b.$c.$d;
             $q = $em->createQuery('
                 SELECT ut.code
                 FROM AppBundle:UserToken AS ut
@@ -92,10 +95,27 @@ class ForgotCommandHandler extends MessageHandler
         $em->persist($token);
         $em->flush();
 
+        $api = $this->get('site.api.client');
+
         if (ContactTypeCode::MOBILE === $contact->getContactTypeCode()) {
-            // @todo отправка смс
+            try {
+                $api->post('/api/v1/password/message/', [], [
+                    'phone' => $contact->getValue(),
+                    'code' => $code,
+                ]);
+            } catch (BadRequestHttpException $e) {
+                return null;
+            }
         } else {
-            // @todo отправка email
+            try {
+                $api->post('/api/v1/password/message/', [], [
+                    'email' => $contact->getValue(),
+                    'code' => $code,
+                    'hash' => $hash,
+                ]);
+            } catch (BadRequestHttpException $e) {
+                return null;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Enum;
 
@@ -21,12 +21,14 @@ class OrderItemStatus
     const COMPLETED = 'completed';
     const ISSUED = 'issued';
     const REFUNDED = 'refunded';
+    const RESERVED = 'reserved';
 
     public static function getChoices(): array
     {
         return [
             self::CREATED => 'обрабатывается',
             self::LACK => 'обработан, нет в наличии',
+            self::RESERVED => 'зарезервирован',
             self::PREPAYABLE => 'обработан, ожидается предоплата',
             self::CALLABLE => 'обработан, зарезервирован',
             self::SHIPPING => 'отгружается',
@@ -105,9 +107,9 @@ class OrderItemStatus
                     $status => true,
                     self::RELEASABLE => false,
                     self::COMPLETED => false,
-                ];    
+                ];
 
-            default: 
+            default:
                 return [
                     $status => true,
                 ];

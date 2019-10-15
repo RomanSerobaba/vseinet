@@ -27,12 +27,24 @@ class Product
      */
     public $supplierAvailability;
 
-    public function __construct($id, $baseProductId, $availability, $supplierId, $supplierAvailability)
+    /**
+     * @Assert\Date
+     */
+    public $supplierDeliveryDate;
+
+    /**
+     * @Assert\Type("integer")
+     */
+    public $geoPointId;
+
+    public function __construct($id, $baseProductId, $availability, $supplierId, $supplierAvailability, $supplierDeliveryDate = null, $geoPointId = null)
     {
         $this->id = $id;
         $this->baseProductId = $baseProductId;
         $this->availability = $availability;
         $this->supplierId = $supplierId;
         $this->supplierAvailability = $supplierAvailability;
+        $this->supplierDeliveryDate = $supplierDeliveryDate;
+        $this->geoPointId = $geoPointId;
     }
 }

@@ -473,6 +473,27 @@ A.pricetag {
     color: #fff;
 }
 
+.point_reserve TH.free,
+.point_reserve TH.reserved,
+.point_reserve TH.issued {
+    color: #333;
+}
+
+.point_reserve TH.free,
+.point_reserve TD.free {
+    background: #9eff9e;
+}
+
+.point_reserve TH.reserved,
+.point_reserve TD.reserved {
+    background: #74e3f9;
+}
+
+.point_reserve TH.issued,
+.point_reserve TD.issued {
+    background: #ff8787;
+}
+
 .point_reserve TD {
     border: solid 1px #666;
     color: #222;

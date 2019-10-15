@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
+use AppBundle\Enum\GoodsConditionCode;
 
 class GetRemainsQueryHandler extends MessageHandler
 {
@@ -34,11 +35,12 @@ class GetRemainsQueryHandler extends MessageHandler
             FROM base_product AS bp
             INNER JOIN goods_reserve_register_current AS grrc ON grrc.base_product_id = bp.id
             INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
-            WHERE bp.id = :base_product_id
+            WHERE bp.id = :base_product_id AND grrc.goods_condition_code = :goodsConditionCode_FREE
             GROUP BY bp.name
         ', new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
+        $q->setParameter('goodsConditionCode_FREE', GoodsConditionCode::FREE);
         $remains = $q->getResult('DTOHydrator');
 
         $q = $em->createNativeQuery("
