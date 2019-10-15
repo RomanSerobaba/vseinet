@@ -20,6 +20,10 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('user_account');
+        }
+
         $helper = $this->get('security.authentication_utils');
 
         $form = $this->createForm(Form\LoginType::class, [
