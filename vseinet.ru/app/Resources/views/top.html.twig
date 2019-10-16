@@ -35,7 +35,7 @@
 
 <div class="auth">
     {% if app.user %}
-        <a href="{{ path('user_account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ logout_path() }}">Выйти</a>
+        <a href="{{ path('user_account') }}">{{ app.user.person.firstname }}</a> | <a href="{{ path('order_history') }}">Заказы</a> | <a href="{{ logout_path() }}">Выйти</a>
     {% else %}
         <a href="{{ path('login') }}" id="login-form-trigger">Вход</a> или <a href="{{ path('registr') }}">регистрация</a>
     {% endif %}
