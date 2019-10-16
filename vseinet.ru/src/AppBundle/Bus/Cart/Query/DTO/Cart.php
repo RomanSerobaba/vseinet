@@ -61,8 +61,8 @@ class Cart
         foreach ($products as $key => $product) {
             $this->total += $product->quantity;
             $this->amount += $product->quantity * $product->price;
-            $this->amountWithDiscount += $product->quantity * ($discountCodeId ? $product->priceWithDiscount : $product->price);
             $product->priceWithDiscount = $discountCodeId ? $product->priceWithDiscount : $product->price;
+            $this->amountWithDiscount += $product->quantity * $product->priceWithDiscount;
             $this->products[$key] = $product;
 
             if ($product->hasStroika) {

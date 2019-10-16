@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Favorite\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\Enum;
 
 class Product
 {
@@ -26,12 +27,23 @@ class Product
      */
     public $baseSrc;
 
+    /**
+     * @Enum("AppBundle\Enum\ProductAvailabilityCode")
+     */
+    public $availabilityCode;
 
-    public function __construct($id, $name, $price, $baseSrc)
+    /**
+     * @Assert\DateTime
+     */
+    public $updatedAt;
+
+    public function __construct($id, $name, $price, $baseSrc, $availabilityCode, $updatedAt)
     {
         $this->id = $id;
         $this->name = $name;
         $this->price = $price;
         $this->baseSrc = $baseSrc;
+        $this->availabilityCode = $availabilityCode;
+        $this->updatedAt = $updatedAt;
     }
 }

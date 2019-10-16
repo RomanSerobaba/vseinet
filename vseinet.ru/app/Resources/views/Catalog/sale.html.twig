@@ -7,8 +7,8 @@
         <div class="status on-order">Ожидается</div>
     {% else %}
         <div class="status on-order">
-            На заказ,<br/>
-            <span>{#$product.id|delivery_time:1:0#}</span>
+            На заказ{#,<br/>
+            <span>$product.id|delivery_time:1:0</span>#}
         </div>
     {% endif %}
 {% endmacro %}

@@ -203,6 +203,13 @@ class GetQueryHandler extends MessageHandler
             }
         }
 
+        foreach ($products as $product) {
+            if ($discountCodeId && $discountCodeObj->getPercent()) {
+                $product->discountAmount = (int) round($product->price * $discountCodeObj->getPercent() / 100, -2);
+                $product->priceWithDiscount = (int) round($product->price - $product->discountAmount, -2);
+            }
+        }
+
         return new DTO\Cart($products, $discountCode, $discountCodeId, $geoPointId);
     }
 }

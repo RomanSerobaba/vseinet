@@ -14,8 +14,6 @@ class GetSummaryQueryHandler extends MessageHandler
     public function handle(GetSummaryQuery $query)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-        $geoCity = $this->getGeoCity();
         $representative = $em->getRepository(Representative::class)->findOneBy(['geoPointId' => $query->geoPointId]);
         $paymentType = $em->getRepository(PaymentType::class)->findOneBy(['code' => $query->paymentTypeCode]);
         $products = $query->products;
