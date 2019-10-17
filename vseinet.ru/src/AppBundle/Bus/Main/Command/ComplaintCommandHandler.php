@@ -4,6 +4,7 @@ namespace AppBundle\Bus\Main\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\Complaint;
+use AppBundle\Bus\User\Command\IdentifyCommand;
 
 class ComplaintCommandHandler extends MessageHandler
 {
