@@ -42,7 +42,7 @@ class MainController extends Controller
 
         if (!$user->ipAddress || $user->ipAddress == $this->get('request_stack')->getMasterRequest()->getClientIp()) {
             $url = sprintf('/api/v1/work/%s/', null === $user->clockInTime ? 'start' : 'stop');
-            $this->get('user.api.client')->put($url);
+            $this->get('user.api.client')->put($url, [], ['checkIp' => false]);
             (new UserProvider($this->getDoctrine()->getManager(), $this->container))->refreshUser($user);
         }
 

@@ -82,7 +82,7 @@
             {#<meta itemprop="reviewCount" content="{{ baseProduct.countRreviews }}" />#}
         {% endif %}
     </div>
-    {% if baseProduct.minQuantity > 1 %}
+    {% if baseProduct.minQuantity > 1 and not isAvailable %}
         <div style="color: rgb(242, 108, 79); margin: {% if isAvailable %}4px 0{% else %}10px 0{% endif %};">
             Мин. количество для заказа: {{ baseProduct.minQuantity }}
         </div>

@@ -290,7 +290,7 @@ class QueryBuilder extends ContainerAware
         $cartInfo = $this->get('query_bus')->handle(new GetCartInfoQuery());
 
         foreach ($products as $id => $product) {
-            $product->quantityInCart = $cartInfo->products[$id] ?? 0;
+            $product->quantityInCart = $cartInfo->products[$product->id]->quantity ?? 0;
         }
 
         return $products;
