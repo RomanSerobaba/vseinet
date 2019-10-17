@@ -6,6 +6,7 @@ use AppBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Annotation as VIA;
+use AppBundle\Security\UserProvider;
 
 /**
  * @Security("is_granted('ROLE_EMPLOYEE')")
@@ -42,6 +43,7 @@ class MainController extends Controller
         if (!$user->ipAddress || $user->ipAddress == $this->get('request_stack')->getMasterRequest()->getClientIp()) {
             $url = sprintf('/api/v1/work/%s/', null === $user->clockInTime ? 'start' : 'stop');
             $this->get('user.api.client')->put($url);
+            (new UserProvider($this->getDoctrine()->getManager(), $this->container))->refreshUser($user);
         }
 
         return $this->redirect($request->headers->get('referer'));

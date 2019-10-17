@@ -103,47 +103,47 @@ class UserProvider implements UserProviderInterface
         if (null === $user->person) {
             $user->person = $this->em->getRepository(Person::class)->find($user->getPersonId());
             $user->financialCounteragent = $this->em->getRepository(FinancialCounteragent::class)->findOneBy(['userId' => $user->getId()]);
+        }
 
-            if ($user->isEmployee()) {
-                $stmt = $this->em->getConnection()->prepare('
-                    SELECT
-                        CASE WHEN EXISTS (
-                            SELECT 1
-                            FROM org_employment_history
-                            WHERE org_employee_user_id = oe.user_id AND fired_at IS NULL
-                        ) THEN false ELSE true END AS is_fired,
-                        oe.clock_in_time,
-                        r.ip
-                    FROM org_employee AS oe
-                    INNER JOIN org_employee_to_geo_room AS oe2gr ON oe.user_id = oe2gr.org_employee_user_id
-                    INNER JOIN geo_room AS gr ON gr.id = oe2gr.geo_room_id
-                    INNER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
-                    WHERE oe.user_id = :user_id AND oe2gr.is_main = true
-                ');
-                $stmt->execute(['user_id' => $user->getId()]);
-                $data = $stmt->fetch(\PDO::FETCH_ASSOC);
-                $user->isFired = (bool) $data['is_fired'];
-                $user->clockInTime = $data['clock_in_time'] ? new \DateTime($data['clock_in_time']) : null;
-                $user->ipAddress = $data['ip'];
+        if ($user->isEmployee()) {
+            $stmt = $this->em->getConnection()->prepare('
+                SELECT
+                    CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM org_employment_history
+                        WHERE org_employee_user_id = oe.user_id AND fired_at IS NULL
+                    ) THEN false ELSE true END AS is_fired,
+                    oe.clock_in_time,
+                    r.ip
+                FROM org_employee AS oe
+                INNER JOIN org_employee_to_geo_room AS oe2gr ON oe.user_id = oe2gr.org_employee_user_id
+                INNER JOIN geo_room AS gr ON gr.id = oe2gr.geo_room_id
+                INNER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
+                WHERE oe.user_id = :user_id AND oe2gr.is_main = true
+            ');
+            $stmt->execute(['user_id' => $user->getId()]);
+            $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $user->isFired = (bool) $data['is_fired'];
+            $user->clockInTime = $data['clock_in_time'] ? new \DateTime($data['clock_in_time']) : null;
+            $user->ipAddress = $data['ip'];
 
-                $stmt = $this->em->getConnection()->prepare('
-                    SELECT
-                        r.*,
-                        er.is_main,
-                        er.is_accountable
-                    FROM org_employee_to_geo_room AS er
-                    INNER JOIN geo_room AS r ON r.id = er.geo_room_id
-                    WHERE er.org_employee_user_id = :user_id
-                    ORDER BY er.is_main DESC
-                ');
-                $stmt->execute(['user_id' => $user->getId()]);
-                $user->geoRooms = $stmt->fetchAll();
+            $stmt = $this->em->getConnection()->prepare('
+                SELECT
+                    r.*,
+                    er.is_main,
+                    er.is_accountable
+                FROM org_employee_to_geo_room AS er
+                INNER JOIN geo_room AS r ON r.id = er.geo_room_id
+                WHERE er.org_employee_user_id = :user_id
+                ORDER BY er.is_main DESC
+            ');
+            $stmt->execute(['user_id' => $user->getId()]);
+            $user->geoRooms = $stmt->fetchAll();
 
-                if (count($user->geoRooms) > 0) {
-                    $defaultGeoRoom = reset($user->geoRooms);
-                    $user->defaultGeoPointId = $defaultGeoRoom['geo_point_id'];
-                    $user->defaultGeoRoomId = $defaultGeoRoom['id'];
-                }
+            if (count($user->geoRooms) > 0) {
+                $defaultGeoRoom = reset($user->geoRooms);
+                $user->defaultGeoPointId = $defaultGeoRoom['geo_point_id'];
+                $user->defaultGeoRoomId = $defaultGeoRoom['id'];
             }
         }
 
