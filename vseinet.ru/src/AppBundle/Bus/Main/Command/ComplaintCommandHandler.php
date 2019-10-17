@@ -16,6 +16,7 @@ class ComplaintCommandHandler extends MessageHandler
         $complaint->setManagerName($command->managerName);
         $complaint->setManagerPhone($command->managerPhone);
         $complaint->setText($command->text);
+        $command->userData = $this->get('command_bus')->handle(new IdentifyCommand(['userData' => $command->userData]));
         if (null !== $command->userData->userId) {
             $complaint->setUserId($command->userData->userId);
         } else {
