@@ -436,4 +436,20 @@ class OrderController extends Controller
             'data' => $counteragent,
         ]);
     }
+
+    /**
+     * @VIA\Get(
+     *     name="search_counteragent",
+     *     path="/counteragent/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function searchCounteragentAction(Request $request)
+    {
+        $counteragent = $this->get('query_bus')->handle(new Query\SearchCounteragentQuery($request->query->all()));
+
+        return $this->json([
+            'data' => $counteragent,
+        ]);
+    }
 }

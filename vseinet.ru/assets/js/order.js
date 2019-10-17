@@ -323,6 +323,48 @@ $(function() {
             $('[name="create_form[organizationDetails][bankName]"]').val('');
             $('[name="create_form[organizationDetails][bankId]"]').val('');
         }
+    }).on('change', '[name="create_form[organizationDetails][name]"]', function(e){
+        var cacheOrganizationDetailsNames = {};
+
+        var txt = $('[name="create_form[organizationDetails][name]"].autocomplete');
+
+        if (txt.length > 0) {
+            var txt = $('[name="create_form[organizationDetails][name]"].autocomplete').autocomplete({
+                create: function() {
+                    $(this).data('ui-autocomplete').widget().menu({
+                        focus: function(event, ui) {
+                            ui.item.addClass('ui-state-focus');
+                        },
+                        blur: function() {
+                            $(this).find('.ui-state-focus').removeClass('ui-state-focus');
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    $('[name="create_form[organizationDetails][name]"]').val(ui.item.id);
+                },
+                source: function(request, response) {
+                    var term = $.ui.autocomplete.escapeRegex(request.term);
+                    if (term in cacheOrganizationDetailsNames) {
+                        response(cacheOrganizationDetailsNames[term]);
+                        return false;
+                    }
+                    sp.post(Routing.generate('search_counteragent'), { q: request.term }).done(function(data) {
+                        var regexp = new RegExp('(' + term + ')', 'ig');
+                        cacheOrganizationDetailsNames[term] = $.map(data.geoStreets, function(item) {
+                            item.value = item.name;
+                            item.label = '<small>' + item.unit + '</small> ' + item.name.replace(regexp, '<b>$1</b>');
+                            return item;
+                        });
+                        response(cacheOrganizationDetailsNames[term]);
+                    });
+                }
+            })
+            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
+            };
+        }
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
         if ('' !== $(this).val()) {
             $.ajax({
