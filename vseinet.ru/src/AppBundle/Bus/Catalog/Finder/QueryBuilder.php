@@ -462,7 +462,7 @@ class QueryBuilder extends ContainerAware
      */
     public function getCriteriaAvailability(): string
     {
-        $availability = $this->getFilter()->availability;
+        $availability = $this->getFilter()->getAvailability();
         if (!$this->getUserIsEmployee()) {
             $availability = min($availability, Availability::ACTIVE);
         }
