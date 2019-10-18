@@ -9,6 +9,11 @@ class Counteragent
     /**
      * @Assert\Type(type="string")
      */
+    public $tin;
+
+    /**
+     * @Assert\Type(type="string")
+     */
     public $kpp;
 
     /**
@@ -41,7 +46,7 @@ class Counteragent
      */
     public $bankId;
 
-    public function __construct($kpp, $name, $legalAddress, $settlementAccount, $bic, $bankName, $bankId)
+    public function __construct($kpp, $name, $legalAddress, $settlementAccount, $bic, $bankName, $bankId, $tin)
     {
         $this->kpp = $kpp;
         $this->name = $name;
@@ -50,5 +55,6 @@ class Counteragent
         $this->bic = $bic;
         $this->bankName = $bankName;
         $this->bankId = $bankId;
+        $this->tin = $tin;
     }
 }

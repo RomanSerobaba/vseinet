@@ -438,18 +438,18 @@ class OrderController extends Controller
     }
 
     /**
-     * @VIA\Get(
+     * @VIA\Post(
      *     name="search_counteragent",
-     *     path="/counteragent/",
+     *     path="/counteragent/search/",
      *     condition="request.isXmlHttpRequest()"
      * )
      */
     public function searchCounteragentAction(Request $request)
     {
-        $counteragent = $this->get('query_bus')->handle(new Query\SearchCounteragentQuery($request->query->all()));
+        $counteragents = $this->get('query_bus')->handle(new Query\SearchCounteragentQuery($request->request->all()));
 
         return $this->json([
-            'data' => $counteragent,
+            'counteragents' => $counteragents,
         ]);
     }
 }
