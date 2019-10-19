@@ -35,7 +35,7 @@ class RegistrType extends AbstractType
             ->add('geoCityId', HiddenIntType::class)
             ->add('mobile', TextType::class, ['required' => false])
             ->add('phones', TextareaType::class, ['required' => false])
-            ->add('email', EmailType::class)
+            ->add('email', TextType::class)
             ->add('password', PasswordType::class)
             ->add('passwordConfirm', PasswordType::class)
             ->add('isMarketingSubscribed', CheckboxType::class, ['required' => false])
