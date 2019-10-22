@@ -39,7 +39,7 @@
                 <input
                     type="number"
                     class="cart-quantity"
-                    value="{{ product.minQuantity }}"
+                    value="{{ constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability ? 1 : product.minQuantity }}"
                     data-min-quantity="{{ product.minQuantity }}"
                     min="{{ product.minQuantity }}"
                 >
