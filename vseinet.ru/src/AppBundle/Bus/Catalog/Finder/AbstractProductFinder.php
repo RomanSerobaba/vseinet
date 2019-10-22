@@ -123,10 +123,10 @@ class AbstractProductFinder extends ContainerAware
         }
         arsort($brandId2count);
 
-        if (self::COUNT_GET_BRANDS < count($brandId2count)) {
-            $otherBrandId2Count = array_slice($brandId2count, self::COUNT_GET_BRANDS, null, true);
-            $brandId2count = array_slice($brandId2count, 0, self::COUNT_GET_BRANDS, true);
-        }
+        // if (self::COUNT_GET_BRANDS < count($brandId2count)) {
+        //     $otherBrandId2Count = array_slice($brandId2count, self::COUNT_GET_BRANDS, null, true);
+        //     $brandId2count = array_slice($brandId2count, 0, self::COUNT_GET_BRANDS, true);
+        // }
 
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
@@ -147,16 +147,16 @@ class AbstractProductFinder extends ContainerAware
         foreach ($brandId2count as $id => $count) {
             $brands[$id]->countProducts = $count;
         }
-        $brandId2count = array_slice($brandId2count, 0, self::COUNT_TOP_BRANDS, true);
+        // $brandId2count = array_slice($brandId2count, 0, self::COUNT_TOP_BRANDS, true);
         foreach ($brandId2count as $id => $count) {
             $brands[$id]->isTop = true;
         }
 
-        if (!empty($otherBrandId2Count)) {
-            $brands[-1] = new DTO\Brand(-1, 'Прочие');
-            $brands[-1]->countProducts = array_sum($otherBrandId2Count);
-            $brands[-1]->includeIds = array_keys($otherBrandId2Count);
-        }
+        // if (!empty($otherBrandId2Count)) {
+        //     $brands[-1] = new DTO\Brand(-1, 'Прочие');
+        //     $brands[-1]->countProducts = array_sum($otherBrandId2Count);
+        //     $brands[-1]->includeIds = array_keys($otherBrandId2Count);
+        // }
 
         return $brands;
     }

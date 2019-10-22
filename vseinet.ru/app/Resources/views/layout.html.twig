@@ -65,6 +65,18 @@
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="{{ asset('bundles/libs.js') }}"></script>
         <script src="{{ asset('bundles/scripts.js')}}"></script>
+        {% if app.userIsEmployee %}
+            <script>
+            $(function() {
+                $(document).on('click', '#clock-in-out', function(e){
+                    e.preventDefault();
+                    if (confirm($(this).hasClass('work') ? 'Выполнить выход?' : 'Выполнить вход?')) {
+                        window.location.href = $(this).prop('href');
+                    }
+                });
+            });
+            </script>
+        {% endif %}
         {% block javascripts %}{% endblock %}
         {% include 'profiler.html.twig' %}
     </body>

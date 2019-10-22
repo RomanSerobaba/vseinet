@@ -33,7 +33,7 @@ class History
         $this->total = $history['total'] ?? 0;
 
         foreach ($history['items'] as $item) {
-            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
+            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::SHIPPING, OrderItemStatus::PREPAYABLE, OrderItemStatus::CALLABLE, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
                 $this->canBePayed = true;
             }
         }

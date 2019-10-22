@@ -150,6 +150,8 @@ $(function() {
         minDate: "01.01.1900",
         yearRange: "1900:+0",
     });
+    Inputmask("+7 (999) 999-99-99").mask($('[name="registr[mobile]"]'));
+    Inputmask("email").mask($('[name="registr[email]"]'));
 });
 </script>
 {% endblock %}

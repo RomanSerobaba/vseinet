@@ -58,7 +58,7 @@ class RegistrCommand extends Message
 
     /**
      * @VIA\Description("Дополнительные телефонные номера")
-     * @Assert\Type("array")
+     * @Assert\Type("string")
      */
     public $phones;
 
