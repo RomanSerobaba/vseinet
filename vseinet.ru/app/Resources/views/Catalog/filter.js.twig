@@ -141,48 +141,42 @@ $(function() {
     {% endfor %}
 
     function updatefacets(data) {
-        if (data.price) {
-            elements.price.range('range', data.price.min, data.price.max);
-        }
-        if (data.categorieIds) {
-            $.map(elements.categories, function(category) {
-                var disabled = 'undefined' == typeof data.categories[category.dataset.id];
-                category.className = disabled ? 'disabled' : '';
-            });
-        }
-        if (data.brandIds) {
-            $.map(elements.brands, function(brand) {
-                var disabled = 'undefined' == typeof data.brandIds[brand.dataset.id];
-                brand.className = disabled ? 'disabled' : '';
-            });
-        }
-        if (data.sectionIds) {
-            $.map(elements.sections, function(section) {
-                var disabled = 'undefined' == typeof data.sectionIds[section.dataset.id];
-            });
-        }
-        if (data.details) {
-            $.each(elements.details, function(id, detail) {
-                if ('undefined' !== typeof data.details[id]) {
-                    switch (detail.type) {
-                        case 'boolean':
-                            detail.labels.each(function(index, label) {
-                                var disabled = 'undefined' == typeof data.details[id][label.dataset.value];
-                                label.className = disabled ? 'disabled' : '';
-                            });
-                            break;
-                        case 'number':
-                            detail.range.range('range', data.details[id].min, data.details[id].max);
-                            break;
-                        case 'enum':
-                            detail.labels.each(function(index, label) {
-                                var disabled = 'undefined' == typeof data.details[id][label.dataset.id];
-                                label.className = disabled ? 'disabled' : '';
-                            });
-                    }
-                }
-            });
-        }
+        var fprice = data.price || {};
+        elements.price.range('range', fprice.min, fprice.max);
+        var fcategoryIds = data.categoryIds || {};
+        $.map(elements.categories, function(category) {
+            var disabled = 'undefined' == typeof fcategoryIds[category.dataset.id];
+            category.className = disabled ? 'disabled' : '';
+        });
+        var fbrandIds = data.brandIds || {};
+        $.map(elements.brands, function(brand) {
+            var disabled = 'undefined' == typeof fbrandIds[brand.dataset.id];
+            brand.className = disabled ? 'disabled' : '';
+        });
+        var fsectionIds = data.sectionIds || {};
+        $.map(elements.sections, function(section) {
+            var disabled = 'undefined' == typeof fsectionIds[section.dataset.id];
+        });
+        var fdetails = data.details || {};
+        $.each(elements.details, function(id, detail) {
+            var fdetail = fdetails[id] || {};
+            switch (detail.type) {
+                case 'boolean':
+                    detail.labels.each(function(index, label) {
+                        var disabled = 'undefined' == typeof fdetail[label.dataset.value];
+                        label.className = disabled ? 'disabled' : '';
+                    });
+                    break;
+                case 'number':
+                    detail.range.range('range', fdetail.min, fdetail.max);
+                    break;
+                case 'enum':
+                    detail.labels.each(function(index, label) {
+                        var disabled = 'undefined' == typeof fdetail[label.dataset.id];
+                        label.className = disabled ? 'disabled' : '';
+                    });
+            }
+        });
     }
     var facets = {{ facets|json_encode|raw }};
     updatefacets(facets);

@@ -147,7 +147,7 @@ class AbstractProductFinder extends ContainerAware
         foreach ($brandId2count as $id => $count) {
             $brands[$id]->countProducts = $count;
         }
-        // $brandId2count = array_slice($brandId2count, 0, self::COUNT_TOP_BRANDS, true);
+        $brandId2count = array_slice($brandId2count, 0, self::COUNT_TOP_BRANDS, true);
         foreach ($brandId2count as $id => $count) {
             $brands[$id]->isTop = true;
         }
