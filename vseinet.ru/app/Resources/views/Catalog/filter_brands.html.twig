@@ -22,7 +22,7 @@
                         name="filter[brand][{{ brand.id }}]"
                         {% if filter.brandIds[brand.id] is defined %}checked{% endif %}
                     />
-                    {{ brand.name }}&nbsp;<small>({{ brand.countProducts }})</small>
+                    {{ brand.name }}{#&nbsp;<small>({{ brand.countProducts }})</small>#}
                 </label>
             </div>
         {% endfor %}

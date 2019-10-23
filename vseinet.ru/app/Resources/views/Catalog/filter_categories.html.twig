@@ -13,7 +13,7 @@
                             name="filter[category][{{ category.id }}]"
                             {% if filter.categoryIds[category.id] is defined %}checked{% endif %}
                         />
-                        {{ category.name }}&nbsp;<small>({{ category.countProducts }})</small>
+                        {{ category.name }}{#&nbsp;<small>({{ category.countProducts }})</small>#}
                     </label>
                 </div>
             {% endfor %}

@@ -13,7 +13,7 @@
                             name="filter[section][{{ section.id }}]"
                             {% if filter.sectionIds[section.id] is defined %}checked{% endif %}
                         />
-                        {{ section.name }}&nbsp;<small>({{ section.countProducts }})</small>
+                        {{ section.name }}{#&nbsp;<small>({{ section.countProducts }})</small>#}
                     </label>
                 {% endif %}
             {% endfor %}

@@ -12,7 +12,7 @@
                         novalidate="novalidate"
                         {% if filter.availability == id %}checked{% endif %}
                     />
-                    {{ title }}&nbsp;<small>({{ features.availability[id] }})</small>
+                    {{ title }}{#&nbsp;<small>({{ features.availability[id] }})</small>#}
                 </label><br />
             {% endif %}
         {% endfor %}
