@@ -63,7 +63,7 @@
     {% endif %}
     <div
         {% if isAvailable %}
-            style="padding: 15px 0 {% if baseProduct.minQuantity > 1 %}0{% else %}25px{% endif %} 60px"
+            style="padding: 15px 0 25px 60px"
         {% elseif baseProduct.minQuantity > 1 %}
             style="padding-bottom:0"
         {% endif %}
@@ -95,9 +95,9 @@
                 <input
                     type="number"
                     class="cart-quantity"
-                    value="{{ baseProduct.minQuantity }}"
-                    data-min-quantity="{{ baseProduct.minQuantity }}"
-                    min="{{ baseProduct.minQuantity }}"
+                    value="{{ isAvailable ? 1 : baseProduct.minQuantity }}"
+                    data-min-quantity="{{ isAvailable ? 1 : baseProduct.minQuantity }}"
+                    min="{{ isAvailable ? 1 : baseProduct.minQuantity }}"
                 >
             {% endif %}
             <a
