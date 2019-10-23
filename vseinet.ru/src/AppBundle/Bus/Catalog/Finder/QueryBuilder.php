@@ -47,12 +47,7 @@ class QueryBuilder extends ContainerAware
 
         // total, all filters
         $criteria = $this->criteria;
-        $criteria[] = $this->getCriteriaPrice();
-        $criteria[] = $this->getCriteriaAvailability();
-        if ($this->getUserIsEmployee()) {
-            $this->criteria[] = $this->getCriteriaNofilled();
-        }
-        $criteria = implode(' AND ', array_filter($criteria));
+        $criteria = implode(' AND ', array_filter($this->criteria));
         $query[] = "
             SELECT COUNT(*) AS total
             FROM product_index_{$this->getGeoCity()->getRealId()}
@@ -65,12 +60,7 @@ class QueryBuilder extends ContainerAware
         ";
 
         // availability
-        $criteria = $this->criteria;
-        $criteria[] = $this->getCriteriaPrice();
-        if ($this->getUserIsEmployee()) {
-            $this->criteria[] = $this->getCriteriaNofilled();
-        }
-        $criteria = implode(' AND ', array_filter($criteria));
+        $criteria = implode(' AND ', array_filter($this->criteria));
         $query[] = "
             SELECT COUNT(*) AS total
             FROM product_index_{$this->getGeoCity()->getRealId()}
@@ -81,10 +71,7 @@ class QueryBuilder extends ContainerAware
 
         // nofilled
         if ($this->getUserIsEmployee()) {
-            $criteria = $this->criteria;
-            $criteria[] = $this->getCriteriaPrice();
-            $criteria[] = $this->getCriteriaAvailability();
-            $criteria = implode(' AND ', array_filter($criteria));
+            $criteria = implode(' AND ', array_filter($this->criteria));
             $query[] = "
                 SELECT COUNT(*) AS total
                 FROM product_index_{$this->getGeoCity()->getRealId()}
@@ -96,13 +83,7 @@ class QueryBuilder extends ContainerAware
 
         $select = implode(', ', array_merge($this->select, ['COUNT(*) AS total']));
         $facets = implode(' ', $this->facets);
-        $criteria = $this->criteria;
-        $criteria[] = $this->getCriteriaPrice();
-        $criteria[] = $this->getCriteriaAvailability();
-        if ($this->getUserIsEmployee()) {
-            $this->criteria[] = $this->getCriteriaNofilled();
-        }
-        $criteria = implode(' AND ', array_filter($criteria));
+        $criteria = implode(' AND ', array_filter($this->criteria));
         $query[] = "
             SELECT {$select}
             FROM product_index_{$this->getGeoCity()->getRealId()}

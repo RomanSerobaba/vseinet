@@ -1,6 +1,6 @@
 {% if sorting %}
     <span class="sort_title">Сортировать по</span> <span class="sort_title hide">По</span>
-    <ul>   
+    <ul>
     {% for sort, options in sorting.options %}
             {% if sort == sorting.sort %}
                 <li class="sorted {{ sorting.sortDirection }}">
@@ -10,7 +10,7 @@
                             {% if constant('AppBundle\\Bus\\Catalog\\Enum\\Sort::RATING') != sort %}
                                 <span class="icon-{{ sorting.sortDirection }}"></span>
                             {% endif %}
-                        </a>    
+                        </a>
                     </span>
                 </li>
             {% else %}
@@ -22,4 +22,5 @@
             {% endif %}
         {% endfor %}
     </ul>
+    <input type="hidden" name="filter[sort]" form="ProductFilter" value="{{ sorting.sort }}-{{ sorting.sortDirection }}" />
 {% endif %}

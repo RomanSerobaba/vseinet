@@ -225,6 +225,10 @@ class Filter extends ContainerAware
                 case 'nofilled':
                     $query['f'] = $this->toSet($value);
                     break;
+
+                case 'sort':
+                    $query['how'] = (string) $value;
+                    break;
             }
         }
 

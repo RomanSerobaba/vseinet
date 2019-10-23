@@ -395,6 +395,8 @@ class CatalogController extends Controller
                 'paging' => $pagingHtml,
                 'showmore' => $showmoreHtml,
                 'sorting' => $sortingHtml,
+                'sort' => $filter->sort,
+                'sortDirection' => $filter->sortDirection,
             ]);
         }
 
