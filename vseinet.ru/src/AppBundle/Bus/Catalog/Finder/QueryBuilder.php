@@ -47,7 +47,8 @@ class QueryBuilder extends ContainerAware
 
         // total, all filters
         $criteria = $this->criteria;
-        $criteria = implode(' AND ', array_filter($this->criteria));
+        $criteria[] = $this->getCriteriaAvailability();
+        $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
             SELECT COUNT(*) AS total
             FROM product_index_{$this->getGeoCity()->getRealId()}
@@ -71,7 +72,9 @@ class QueryBuilder extends ContainerAware
 
         // nofilled
         if ($this->getUserIsEmployee()) {
-            $criteria = implode(' AND ', array_filter($this->criteria));
+            $criteria = $this->criteria;
+            $criteria[] = $this->getCriteriaAvailability();
+            $criteria = implode(' AND ', array_filter($criteria));
             $query[] = "
                 SELECT COUNT(*) AS total
                 FROM product_index_{$this->getGeoCity()->getRealId()}
@@ -83,7 +86,9 @@ class QueryBuilder extends ContainerAware
 
         $select = implode(', ', array_merge($this->select, ['COUNT(*) AS total']));
         $facets = implode(' ', $this->facets);
-        $criteria = implode(' AND ', array_filter($this->criteria));
+        $criteria = $this->criteria;
+        $criteria[] = $this->getCriteriaAvailability();
+        $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
             SELECT {$select}
             FROM product_index_{$this->getGeoCity()->getRealId()}

@@ -118,6 +118,9 @@ $(function() {
         }
         event.preventDefault();
     });
+    filter.on('click', '.availability input', function(event) {
+        filter.form('submit');
+    });
     var elements = {
         price: filter.find('.price.range'),
         categories: filter.find('.categories label'),

@@ -9,12 +9,14 @@
                 {% set hasOtherBrands = true %}
             {% endif %}
             <div class="{% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %}">
-                <a
-                    href="{#{ path('catalog_category_with_brand', { id: category.id, brandName: brand.name }) }#}"
-                    class="brand-page"
-                >
-                    &rarr;
-                </a>
+                {% if category is defined %}
+                    <a
+                        href="{{ path('catalog_category_with_brand', { id: category.id, brandName: brand.name }) }}"
+                        class="brand-page"
+                    >
+                        &rarr;
+                    </a>
+                {% endif %}
                 <label for="filter_brand_{{ brand.id }}" data-id="{{ brand.id }}">
                     <input
                         type="checkbox"
