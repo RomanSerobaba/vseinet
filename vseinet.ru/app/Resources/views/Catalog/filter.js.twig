@@ -148,13 +148,15 @@ $(function() {
         elements.price.range('range', fprice.min, fprice.max);
         var fcategoryIds = data.categoryIds || {};
         $.map(elements.categories, function(category) {
-            var disabled = 'undefined' == typeof fcategoryIds[category.dataset.id];
-            category.className = disabled ? 'disabled' : '';
+            var count = fcategoryIds[category.dataset.id];
+            category.className = 'undefined' == typeof count ? 'disabled' : '';
+            category.querySelector('small').textContent = '(' + (count || '0') + ')';
         });
         var fbrandIds = data.brandIds || {};
         $.map(elements.brands, function(brand) {
-            var disabled = 'undefined' == typeof fbrandIds[brand.dataset.id];
-            brand.className = disabled ? 'disabled' : '';
+            var count = fbrandIds[brand.dataset.id];
+            brand.className = 'undefined' == typeof count ? 'disabled' : '';
+            brand.querySelector('small').textContent = '(' + (count || '0') + ')';
         });
         var fsectionIds = data.sectionIds || {};
         $.map(elements.sections, function(section) {
