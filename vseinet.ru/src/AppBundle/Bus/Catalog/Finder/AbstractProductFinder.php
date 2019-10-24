@@ -96,7 +96,7 @@ class AbstractProductFinder extends ContainerAware
                 $tree[$id2]->countProducts += $categoryId2count[$id];
             }
             if (!empty($main)) {
-                $tree[0] = new DTO\Category(0, 'Каталог', 0, $main);
+                $tree[0] = new DTO\Category(0, 'Категории', 0, $main);
             }
             // @todo
             // if (!empty($tree)) {
