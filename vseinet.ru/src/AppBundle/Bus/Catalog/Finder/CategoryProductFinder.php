@@ -195,7 +195,7 @@ class CategoryProductFinder extends AbstractProductFinder
             }
         }
 
-        $facets->brandIds = array_fill_keys(array_keys($this->getBrands(array_shift($results))), 1);
+        $facets->brandIds = $this->getBrandId2Count(array_shift($results));
 
         if ($this->category->isTplEnabled) {
             $facets->categorySectionIds = array_fill_keys(array_keys($this->getCategorySections($results[1])), 1);

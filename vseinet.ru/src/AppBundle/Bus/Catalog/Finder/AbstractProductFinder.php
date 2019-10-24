@@ -40,16 +40,28 @@ class AbstractProductFinder extends ContainerAware
      *
      * @return array
      */
+    public function getCategoryId2Count(array $found): array
+    {
+        $categoryId2count = [];
+        foreach ($found as $row) {
+            $categoryId2count[$row['category_id']] = intval($row['count(*)']);
+        }
+
+        return $categoryId2count;
+    }
+
+    /**
+     * @param array $found
+     *
+     * @return array
+     */
     protected function getCategories(array $found): array
     {
         if (empty($found)) {
             return [];
         }
 
-        $categoryId2count = [];
-        foreach ($found as $row) {
-            $categoryId2count[$row['category_id']] = $row['count(*)'];
-        }
+        $categoryId2count = $this->getCategoryId2Count($found);
 
         $q = $this->getDoctrine()->getManager()->createQuery('
             SELECT
@@ -111,16 +123,28 @@ class AbstractProductFinder extends ContainerAware
      *
      * @return array
      */
+    public function getBrandId2Count(array $found): array
+    {
+        $brandId2count = [];
+        foreach ($found as $row) {
+            $brandId2count[$row['brand_id']] = intval($row['count(*)']);
+        }
+
+        return $brandId2count;
+    }
+
+    /**
+     * @param array $found
+     *
+     * @return array
+     */
     protected function getBrands(array $found): array
     {
         if (empty($found)) {
             return [];
         }
 
-        $brandId2count = [];
-        foreach ($found as $row) {
-            $brandId2count[$row['brand_id']] = $row['count(*)'];
-        }
+        $brandId2count = $this->getBrandId2Count($found);
         arsort($brandId2count);
 
         // if (self::COUNT_GET_BRANDS < count($brandId2count)) {

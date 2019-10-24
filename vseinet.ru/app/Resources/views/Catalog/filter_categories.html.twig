@@ -6,7 +6,7 @@
         <div class="sheet multi categories" style="display:block">
             {% for category in group.children %}
                 <div>
-                    <label for="filter_category_{{ category.id }}">
+                    <label for="filter_category_{{ category.id }}" data-id="{{ category.id }}">
                         <input
                             type="checkbox"
                             id="filter_category_{{ category.id }}"
