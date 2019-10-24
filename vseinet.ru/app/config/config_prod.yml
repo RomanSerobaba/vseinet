@@ -13,13 +13,10 @@ monolog:
             action_level: error
             handler: nested
         nested:
-            type: stream
+            type: rotating_file
             path: '%kernel.logs_dir%/%kernel.environment%.log'
-            level: debug
+            level: notice
+            max_files: 10
         console:
             type: console
             process_psr_3_messages: false
-        errors:
-            type: stream
-            path: '%kernel.logs_dir%/%kernel.environment%_errors.log'
-            level: error
