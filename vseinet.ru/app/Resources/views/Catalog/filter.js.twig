@@ -74,6 +74,9 @@ $(function() {
                     loadPage(data.filterUrl);
                     total.hide();
                 }, 1000);
+                if (data.title) {
+                    $('#category .category-title h1 span').text(data.title);
+                }
             });
         },
         delay: 750

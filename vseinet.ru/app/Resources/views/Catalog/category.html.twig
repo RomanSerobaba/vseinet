@@ -22,7 +22,7 @@
             {% endif %}
         </div>
         <div class="title category-title">
-            <h1>{{ category.name }}{% if brand %} "{{ brand.name }}"{% endif %}
+            <h1><span>{{ category.name }}{% if brand %} «{{ brand.name }}»</span>{% endif %}
             {% if app.userIsEmployee %}
                 <a
                     href="{{ path('authority', { targetUrl: ['/admin/productPricetags?listType=category&ids[]=', category.id]|join}) }}"
