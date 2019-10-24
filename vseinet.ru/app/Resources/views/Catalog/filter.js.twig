@@ -56,7 +56,7 @@ $(function() {
         $('#scroller').click();
     });
     sorting1.on('click', 'a', function(e) {
-        loadPage(e.target.href)
+        loadPage(this.href)
         e.preventDefault()
         $('#scroller').click()
     })
