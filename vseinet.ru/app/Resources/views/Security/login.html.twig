@@ -9,7 +9,13 @@
     <div class="block gray w40p">
         <div class="wrapper">
             {% if app.user %}
-                Вы уже авторизованы.
+                <h3>Вы уже авторизованы.</h3>
+                Быстрые ссылки:
+                <ul>
+                    <li><a href="{{ path('user_account') }}">Настройки аккаунта</a></li>
+                    <li><a href="{{ path('order_history') }}">История заказов</a></li>
+                    <li><a href="{{ path('favorite') }}">Избранное</a></li>
+                </ul>
             {% else %}
                 {% include 'Security/login_form.html.twig' %}
             {% endif %}
