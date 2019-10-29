@@ -1,12 +1,11 @@
-<div class="row h{% if errors.userData.fullname is defined %} error{% endif %}" style="position: relative">
+<div class="row h{% if errors[form.children.userData.children.fullname.vars.id] is defined %} error{% endif %}" style="position: relative">
     <label for="{{ form.userData.fullname.vars.id }}">
         Ф.И.О. <b>*</b>
     </label>
     {{ form_widget(form.userData.fullname, { attr: { class: 'txt' ~ (app.userIsEmployee ? ' autocomplete' : ''), placeholder: 'Фамилия Имя Отчество' }})  }}
-    <span id="lfsHelpUser" onclick="$('#{{ form.userData.fullname.vars.id }}').focus()">Фамилия Имя Отчество</span>
     <span class="status"></span>
-    {% if errors.userData.fullname is defined %}
-        <div class="error">{{ errors.userData.fullname.0 }}</div>
+    {% if errors[form.children.userData.children.fullname.vars.id] is defined %}
+        <div class="error">{{ errors[form.children.userData.children.fullname.vars.id].0 }}</div>
     {% endif %}
 </div>
 <div>
@@ -14,14 +13,14 @@
     {{ form_widget(form.userData.comuserId) }}
 </div>
 
-<div class="row h{% if errors.userData.phone is defined %} error{% endif %}">
+<div class="row h{% if errors[form.children.userData.children.phone.vars.id] is defined %} error{% endif %}">
     <label for="{{ form.userData.phone.vars.id }}">
         Телефон <b>*</b>
     </label>
     {{ form_widget(form.userData.phone, { attr: { class: 'txt phone' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
     <span class="status"></span>
-    {% if errors.userData.phone is defined %}
-        <div class="error">{{ errors.userData.phone.0 }}</div>
+    {% if errors[form.children.userData.children.phone.vars.id] is defined %}
+        <div class="error">{{ errors[form.children.userData.children.phone.vars.id].0 }}</div>
     {% endif %}
 </div>
 
