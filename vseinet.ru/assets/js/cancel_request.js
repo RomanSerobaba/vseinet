@@ -1,7 +1,7 @@
 $(function() {
     $('.cancel_request').ajaxcontent({
         dialog: {
-            title: 'Отмена заказа"',
+            title: 'Отмена заказа',
             minWidth: 400
         },
         load: function() {
