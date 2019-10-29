@@ -14,35 +14,35 @@
     {{ form_widget(form.userData.comuserId) }}
 </div>
 
-<div class="row h{% if error.userData.phone is defined %} error{% endif %}">
+<div class="row h{% if errors.userData.phone is defined %} error{% endif %}">
     <label for="{{ form.userData.phone.vars.id }}">
         Телефон <b>*</b>
     </label>
     {{ form_widget(form.userData.phone, { attr: { class: 'txt phone' ~ (app.userIsEmployee ? ' autocomplete' : '') }}) }}
     <span class="status"></span>
     {% if errors.userData.phone is defined %}
-        <div class="error">{{ errors.userName.phone.0 }}</div>
+        <div class="error">{{ errors.userData.phone.0 }}</div>
     {% endif %}
 </div>
 
 {% if form.userData.additionalPhone is defined %}
-    <div class="row h{% if error.userData.additionalPhone is defined %} error{% endif %}">
+    <div class="row h{% if errors.userData.additionalPhone is defined %} error{% endif %}">
         {{ form_label(form.userData.additionalPhone, 'Дополнительный телефон:') }}
         {{ form_widget(form.userData.additionalPhone, { attr: { class: 'txt' }}) }}
         <span class="status"></span>
         {% if errors.userData.additionalPhone is defined %}
-            <div class="error">{{ errors.userName.additionalPhone.0 }}</div>
+            <div class="error">{{ errors.userData.additionalPhone.0 }}</div>
         {% endif %}
     </div>
 {% endif %}
 
-<div class="row h{% if error.userData.email is defined %} error{% endif %}">
+<div class="row h{% if errors.userData.email is defined %} error{% endif %}">
     <label for="{{ form.userData.email.vars.id }}">
         Email {% if form.userData.email.vars.required %}<b>*</b>{% endif %}
     </label>
     {{ form_widget(form.userData.email, { attr: { class: 'txt' }}) }}
     <span class="status"></span>
     {% if errors.userData.email is defined %}
-        <div class="error">{{ errors.userName.email.0 }}</div>
+        <div class="error">{{ errors.userData.email.0 }}</div>
     {% endif %}
 </div>
