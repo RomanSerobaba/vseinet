@@ -77,7 +77,7 @@
                 {% for item in order.items %}
                     <tr>
                         <td class="text">
-                            {#<img src="{{ item|image:60 }}" alt="" />#}
+                            <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="">
                         </td>
                         <td class="text">
                             <h6>
