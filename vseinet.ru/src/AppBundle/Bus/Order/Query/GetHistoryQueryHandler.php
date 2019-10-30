@@ -16,7 +16,7 @@ class GetHistoryQueryHandler extends MessageHandler
             return new DTO\History(['items' => [], 'total' => 0]);
         }
 
-        $api = $this->get('user.api.client');
+        $api = $this->get('site.api.client');
         try {
             $parameters = [
                 'financialCounteragentId' => $counteragent->getId(),
