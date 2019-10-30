@@ -39,7 +39,11 @@ class GetHistoryQueryHandler extends MessageHandler
                 // $item['productAvailability'] = $this->get('query_bus')->handle(new GetProductAvailability(['baseProductId' => $item['productAvailability']]));
                 if ($order['id'] == $item['orderId']) {
                     foreach ($item['statuses'] as $status) {
-                        $order['items'][] = array_merge($item, ['statusCode' => $status['code'], 'statusCodeName' => $status['clientName']]);
+                        $order['items'][] = array_merge($item, [
+                            'statusCode' => $status['code'],
+                            'statusCodeName' => $status['clientName'],
+                            'deliveryDate' => $status['deliveryDate'] ?? null,
+                        ]);
                     }
                 }
             }

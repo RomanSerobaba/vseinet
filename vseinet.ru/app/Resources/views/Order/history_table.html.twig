@@ -92,8 +92,8 @@
                         <td class="price{{ cssclass }}">{{ item.retailPrice|price_format }} <span class="RUR">Р</span></td>
                         <td class="status">
                             <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
-                            {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)},<p class="code" style="color:#999">будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if} *</p>
-                            {/if#}
+                            {% if item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::TRANSIT') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::SHIPPING') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::CALLABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::PREPAYABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::RESERVED') %},<p class="code" style="color:#999">ожидаем {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }} *</p>
+                            {% endif %}
                         </td>
                         <td>
                         </td>
@@ -102,7 +102,7 @@
                         {foreach from=$position.price_changes item=change}
                             <tr>
                                 <td></td>
-                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
+                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone or $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
                                 <td></td>
                                 {if Model::factory('User')->isRole('USER_FRANCHISER')}
                                     <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}"></td>
