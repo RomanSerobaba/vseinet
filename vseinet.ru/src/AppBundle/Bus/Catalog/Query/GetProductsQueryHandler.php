@@ -62,13 +62,17 @@ class GetProductsQueryHandler extends MessageHandler
             $products[$product->id] = $product;
         }
 
-        $deliveryDates = $this->get('query_bus')->handle(new \AppBundle\Bus\Product\Query\GetDeliveryDateQuery(['baseProductIds' => array_keys(array_filter($products, function($product) {
+        $baseProductsIds = array_keys(array_filter($products, function($product) {
             return in_array($product->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT]);
-        }))]));
+        }));
 
-        if (!empty($deliveryDates)) {
-            foreach ($deliveryDates as $baseProductId => $deliveryDate) {
-                $products[$baseProductId]->deliveryDate = $deliveryDate->date;
+        if ($baseProductsIds) {
+            $deliveryDates = $this->get('query_bus')->handle(new \AppBundle\Bus\Product\Query\GetDeliveryDateQuery(['baseProductIds' => $baseProductsIds]));
+
+            if (!empty($deliveryDates)) {
+                foreach ($deliveryDates as $baseProductId => $deliveryDate) {
+                    $products[$baseProductId]->deliveryDate = $deliveryDate->date;
+                }
             }
         }
 
