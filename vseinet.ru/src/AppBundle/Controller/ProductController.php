@@ -78,7 +78,7 @@ class ProductController extends Controller
             $geoPoints = $this->get('query_bus')->handle(new Query\GetLocalAvailabilityQuery(['baseProductId' => $baseProduct->id]));
         }
         if (in_array($baseProduct->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT])) {
-            $delivery = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductId' => $baseProduct->id]));
+            $delivery = $this->get('query_bus')->handle(new Query\GetDeliveryDateQuery(['baseProductIds' => [$baseProduct->id]]))[$baseProduct->id];
         }
 
         $this->get('command_bus')->handle(new AddLastviewProductCommand(['baseProductId' => $baseProduct->id]));

@@ -9,7 +9,9 @@ class GetDeliveryDateQuery extends Message
 {
     /**
      * @Assert\NotBlank
-     * @Assert\Type(type="integer")
+     * @Assert\All(
+     *  @Assert\Type(type="integer")
+     * )
      */
-    public $baseProductId;
+    public $baseProductIds;
 }
