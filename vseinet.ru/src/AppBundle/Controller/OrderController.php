@@ -100,7 +100,7 @@ class OrderController extends Controller
      *         @VIA\Parameter(model="AppBundle\Bus\Order\Query\GetHistoryQuery")
      *     }
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function historyAction(Request $request)
     {
@@ -135,7 +135,7 @@ class OrderController extends Controller
      * @VIA\Route(
      *     name="order_receipts_of_product",
      *     path="/order/receiptsOfProduct/{id}/",
-     *     requirements={"id"="\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -201,7 +201,7 @@ class OrderController extends Controller
      * @VIA\Get(
      *     name="order_creation_credit",
      *     path="/order/credit/{id}/",
-     *     requirements={"id"="\d+"}
+     *     requirements={"id": "\d+"}
      * )
      */
     public function creationCreditAction(int $id)
@@ -259,7 +259,6 @@ class OrderController extends Controller
                         $data['client']['additionalPhone'] = implode(', ', $phones);
                     }
                 }
-
             }
         }
 
@@ -386,7 +385,7 @@ class OrderController extends Controller
      * @VIA\Get(
      *     name="order_created_page",
      *     path="/order/success/{id}/",
-     *     requirements={"id"="\d+"}
+     *     requirements={"id": "\d+"}
      * )
      */
     public function createdPageAction(int $id, Request $request)
