@@ -41,7 +41,7 @@ class GetStatusQueryHandler extends MessageHandler
                 $items[] = array_merge($item, [
                     'statusCode' => $status['code'],
                     'statusCodeName' => $status['clientName'],
-                    'deliveryDate' => $status['deliveryDate'],
+                    'deliveryDate' => $status['deliveryDate'] ?? null,
                 ]);
             }
         }
