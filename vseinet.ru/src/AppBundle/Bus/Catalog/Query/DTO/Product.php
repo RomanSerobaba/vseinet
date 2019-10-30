@@ -72,6 +72,11 @@ class Product
      */
     public $purchasePrice;
 
+    /**
+     * @Assert\Date
+     */
+    public $deliveryDate;
+
     public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice)
     {
         $this->id = $id;

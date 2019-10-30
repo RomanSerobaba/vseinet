@@ -37,6 +37,13 @@ class Product
      */
     public $geoPointId;
 
+    /**
+     * @Assert\All(
+     *  @Assert\Type("AppBundle\Bus\Product\Query\DTO\FreeReserve")
+     * )
+     */
+    public $reserves;
+
     public function __construct($id, $baseProductId, $availability, $supplierId, $supplierAvailability, $supplierDeliveryDate = null, $geoPointId = null)
     {
         $this->id = $id;

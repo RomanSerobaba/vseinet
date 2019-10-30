@@ -5,6 +5,7 @@ namespace AppBundle\Bus\Catalog\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
 use AppBundle\Enum\GoodsConditionCode;
+use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Enum\ProductPriceType;
 
 class GetProductsQueryHandler extends MessageHandler
@@ -59,6 +60,20 @@ class GetProductsQueryHandler extends MessageHandler
         foreach ($q->getResult('DTOHydrator') as $product) {
             $product->priceTypeName = ProductPriceType::getName($product->priceType);
             $products[$product->id] = $product;
+        }
+
+        $baseProductsIds = array_keys(array_filter($products, function($product) {
+            return in_array($product->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT]);
+        }));
+
+        if ($baseProductsIds) {
+            $deliveryDates = $this->get('query_bus')->handle(new \AppBundle\Bus\Product\Query\GetDeliveryDateQuery(['baseProductIds' => $baseProductsIds]));
+
+            if (!empty($deliveryDates)) {
+                foreach ($deliveryDates as $baseProductId => $deliveryDate) {
+                    $products[$baseProductId]->deliveryDate = $deliveryDate->date;
+                }
+            }
         }
 
         $sorted = [];

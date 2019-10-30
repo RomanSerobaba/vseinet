@@ -42,9 +42,9 @@
             <h2>
                 Заказ №
                 {% if app.userIsEmployee %}
-                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">{{ order.id }}</a>
+                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">{{ order.number }}</a>
                 {% else %}
-                    {{ order.id }}
+                    {{ order.number }}
                 {% endif %}
                 <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
             </h2>
@@ -78,7 +78,7 @@
                     </span>
 
                 {else#}
-                    <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
+                    <span{% if item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::TRANSIT') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::SHIPPING') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::CALLABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::PREPAYABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::RESERVED') %} title="ожидаем {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}"{% endif %} class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
                 {#/if#}
             </td>
         </tr>

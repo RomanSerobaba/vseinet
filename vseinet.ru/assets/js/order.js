@@ -157,6 +157,7 @@ $(function() {
 
                 sp.get(Routing.generate('user_search_autocomplete'), {q: q, field: fieldName}).done(function(data) {
                     var regexp = new RegExp('(' + $.ui.autocomplete.escapeRegex(request.term) + ')', 'ig');
+                    indicator.removeClass('loading').addClass('search_clear');
                     cacheUsers[term] = $.map(data.users||[], function(item) {
                         item.label = item.fullname.replace(regexp, '<b>$1</b>');
                         item.value = 'phone' == fieldName ? item.phone : item.fullname;
@@ -164,7 +165,6 @@ $(function() {
 
                         return item;
                     });
-                    indicator.removeClass('loading').addClass('search_clear');
                     response(cacheUsers[term]);
                 });
             }
