@@ -39,7 +39,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     SELECT r.geo_point_id
                     FROM representative AS r
                     INNER JOIN geo_point AS gp ON gp.id = r.geo_point_id
-                    WHERE gp.geo_city_id =1 AND r.is_active = TRUE AND r.is_central = TRUE
+                    WHERE gp.geo_city_id = :geoCityId AND r.is_active = TRUE AND r.is_central = TRUE
                 ), :defaultGeoPointId) as geo_point_id
 
             FROM base_product AS bp2
