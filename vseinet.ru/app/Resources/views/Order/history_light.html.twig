@@ -1,22 +1,32 @@
 <tbody class="order-history order-history-light">
     <tr class="wrapper block gray">
         <td colspan="4">
-            <h2>
-                Заказ №
-                {% if app.userIsEmployee %}
-                    <a href="{{ path('authority', { targetUrl: '/admin/orders/?id=' ~ order.id }) }}">{{ order.id }}</a>
-                {% else %}
-                    {{ order.id }}
+            <span class="info" style="float:right">
+                {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
+                    <div style="text-align: center;padding:2px 5px;margin-right:26px;background-color:yellow;color: green;font-size: 0.85em;font-weight:bold;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></div>
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
-            </h2>
-            <span class="info">
-                Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
-                {#if $order.discount}
-                    Скидка: {$order.discount|price_format} <span class="RUR">Р</span>
-                {/if#}
-            </span>
-            <span class="info">
+                {% if order.canBePayed %}
+                    <a
+                        data-url="{{ path('sberbank', { id: order.id }) }}"
+                        rel="nofollow"
+                        href="{{ path('sberbank', { id: order.id }) }}"
+                        class="bttn green sberbank"
+                        title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить</a>
+                {% elseif constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode  %}{# and order.available_sum #}
+                    <a href="javascript:void(0)" class="bttn green disabled" title="Внимание! Заказ можно будет оплатить после подтверждения менеджером наличия товара">Оплатить</a>
+                    <p style="color:red;margin-top:10px">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p>
+                {% endif %}
+                <a href="{{ path('repeat_order', { id: order.id }) }}" class="bttn blue repeat_order">Перезаказать</a>
+                {% if order.isCancelRequested and order.isCancelEnabled %}
+                    <p class="order-cancel-text">Ваш запрос на отмену заказа принят и будет обработан в ближайшее время</p>
+                {% elseif order.isCancelEnabled %}
+                    <a
+                        data-url="{{ path('cancel_request', { id: order.id }) }}"
+                        rel="nofollow"
+                        href="{{ path('cancel_request', { id: order.id }) }}"
+                        class="bttn coral cancel_request"
+                        title="Оплатить позиции, наличие которых подтверждено менеджером">Отменить</a>
+                {% endif %}
                 {#Доставка: {$order.delivery_type}{if $order.delivery_type=='Курьерская' && $order.city_id==299} до проходной{/if}
                 {if $order.delivery_type=='Транспортная компания'}
                     Название компании: {$order.trading}
@@ -27,6 +37,21 @@
                     Код груза: {$order.trading_code}
                 {elseif $order.delivery_type=='Курьерская' && $order.address}
                     Адрес: {$order.address}
+                {/if#}
+            </span>
+            <h2>
+                Заказ №
+                {% if app.userIsEmployee %}
+                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">{{ order.id }}</a>
+                {% else %}
+                    {{ order.id }}
+                {% endif %}
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
+            </h2>
+            <span class="info">
+                Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
+                {#if $order.discount}
+                    Скидка: {$order.discount|price_format} <span class="RUR">Р</span>
                 {/if#}
             </span>
         </td>

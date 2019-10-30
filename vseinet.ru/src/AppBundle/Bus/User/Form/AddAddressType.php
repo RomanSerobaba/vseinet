@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use AppBundle\FormType\HiddenIntType;
+use AppBundle\Form\Type\HiddenIntType;
 use AppBundle\Bus\User\Command\AddAddressCommand;
 
 class AddAddressType extends AbstractType

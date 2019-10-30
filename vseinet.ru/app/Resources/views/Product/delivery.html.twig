@@ -30,7 +30,7 @@
             <dd>&nbsp;</dd>
         {% else %}
             <dt content="preorder" class="status on-order">На заказ:</dt>
-            <dd><span>&nbsp;{{ delivery.date|date_format('%e %B')|replace({ 'ь': 'я', 'й': 'я', 'рт': 'рта', 'ст': 'ста' }) }}</span></dd>
+            <dd><span>&nbsp;{{ delivery.date|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span></dd>
         {% endif %}
     </dl>
 
