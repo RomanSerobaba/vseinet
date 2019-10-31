@@ -5,10 +5,10 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GeoIp
+ * GeoIp.
  *
  * @ORM\Table(name="geo_ip")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\GeoIpRepository")
+ * @ORM\Entity(repositoryClass="GeoBundle\Repository\GeoIpRepository")
  */
 class GeoIp
 {
@@ -20,6 +20,27 @@ class GeoIp
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_country_id", type="integer", nullable=true)
+     */
+    private $geoCountryId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_ip_city_id", type="integer", nullable=true)
+     */
+    private $geoIpCityId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ip_range", type="int8range")
+     */
+    private $ipRange;
 
     /**
      * @var string
@@ -36,42 +57,85 @@ class GeoIp
     private $ip2;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="long_ip1", type="integer")
-     */
-    private $longIp1;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="long_ip2", type="integer")
-     */
-    private $longIp2;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="city_id", type="integer")
-     */
-    private $cityId;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="geo_city_id", type="integer")
-     */
-    private $geoCityId;
-
-
-    /**
      * Get id.
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * Set geoCountryId.
+     *
+     * @param int $geoCountryId
+     *
+     * @return GeoIp
+     */
+    public function setGeoCountryId($geoCountryId): GeoIp
+    {
+        $this->geoCountryId = $geoCountryId ?: null;
+
+        return $this;
+    }
+
+    /**
+     * Get geoCountryId.
+     *
+     * @return int|null
+     */
+    public function getGeoCountryId(): ?int
+    {
+        return $this->geoCountryId;
+    }
+
+    /**
+     * Set geoIpCityId.
+     *
+     * @param int $geoIpCityId
+     *
+     * @return GeoIp
+     */
+    public function setGeoIpCityId($geoIpCityId): GeoIp
+    {
+        $this->geoIpCityId = $geoIpCityId > 0 ? $geoIpCityId : null;
+
+        return $this;
+    }
+
+    /**
+     * Get geoIpCityId.
+     *
+     * @return int|null
+     */
+    public function getGeoIpCityId(): ?int
+    {
+        return $this->geoIpCityId;
+    }
+
+    /**
+     * Set ipRange.
+     *
+     * @param string $ipRange
+     *
+     * @return GeoIp
+     */
+    public function setIpRange($ipRange): GeoIp
+    {
+        $this->ipRange = $ipRange;
+
+        return $this;
+    }
+
+    /**
+     * Get ipRange.
+     *
+     * @return string
+     */
+    public function getIpRange(): string
+    {
+        return $this->ipRange;
     }
 
     /**
@@ -81,7 +145,7 @@ class GeoIp
      *
      * @return GeoIp
      */
-    public function setIp1($ip1)
+    public function setIp1($ip1): GeoIp
     {
         $this->ip1 = $ip1;
 
@@ -93,7 +157,7 @@ class GeoIp
      *
      * @return string
      */
-    public function getIp1()
+    public function getIp1(): string
     {
         return $this->ip1;
     }
@@ -105,7 +169,7 @@ class GeoIp
      *
      * @return GeoIp
      */
-    public function setIp2($ip2)
+    public function setIp2($ip2): GeoIp
     {
         $this->ip2 = $ip2;
 
@@ -117,104 +181,8 @@ class GeoIp
      *
      * @return string
      */
-    public function getIp2()
+    public function getIp2(): string
     {
         return $this->ip2;
-    }
-
-    /**
-     * Set longIp1.
-     *
-     * @param int $longIp1
-     *
-     * @return GeoIp
-     */
-    public function setLongIp1($longIp1)
-    {
-        $this->longIp1 = $longIp1;
-
-        return $this;
-    }
-
-    /**
-     * Get longIp1.
-     *
-     * @return int
-     */
-    public function getLongIp1()
-    {
-        return $this->longIp1;
-    }
-
-    /**
-     * Set longIp2.
-     *
-     * @param int $longIp2
-     *
-     * @return GeoIp
-     */
-    public function setLongIp2($longIp2)
-    {
-        $this->longIp2 = $longIp2;
-
-        return $this;
-    }
-
-    /**
-     * Get longIp2.
-     *
-     * @return int
-     */
-    public function getLongIp2()
-    {
-        return $this->longIp2;
-    }
-
-    /**
-     * Set cityId.
-     *
-     * @param int $cityId
-     *
-     * @return GeoIp
-     */
-    public function setCityId($cityId)
-    {
-        $this->cityId = $cityId;
-
-        return $this;
-    }
-
-    /**
-     * Get cityId.
-     *
-     * @return int
-     */
-    public function getCityId()
-    {
-        return $this->cityId;
-    }
-
-    /**
-     * Set geoCityId.
-     *
-     * @param int $geoCityId
-     *
-     * @return GeoIp
-     */
-    public function setGeoCityId($geoCityId)
-    {
-        $this->geoCityId = $geoCityId;
-
-        return $this;
-    }
-
-    /**
-     * Get geoCityId.
-     *
-     * @return int
-     */
-    public function getGeoCityId()
-    {
-        return $this->geoCityId;
     }
 }

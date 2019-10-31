@@ -104,10 +104,10 @@ class GeoCityIdentity extends ContainerAware
             SELECT
                 gic.geoCityId
             FROM AppBundle:GeoIp AS gi
-            INNER JOIN AppBundle:GeoIpCity AS gic WITH gic.id = gi.geoCityId
-            WHERE :longIp BETWEEN gi.longIp1 AND gi.longIp2
+            INNER JOIN AppBundle:GeoIpCity AS gic WITH gic.id = gi.geoIpCityId
+            WHERE :ip BETWEEN gi.ip1 AND gi.ip2
         ');
-        $q->setParameter('longIp', ip2long($this->get('request_stack')->getMasterRequest()->getClientIp()));
+        $q->setParameter('ip', $this->get('request_stack')->getMasterRequest()->getClientIp());
         $q->setMaxResults(1);
         try {
             return $q->getSingleScalarResult();
