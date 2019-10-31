@@ -1,5 +1,6 @@
 parameters:
     const.payment.credit.threshold: 300000
     const.delivery.post.cost: 40000
-    const.delivery.transport_company.cost: 20000
+    const.delivery.transport_company.cost: 30000
+    const.delivery.courier.cost: 40000
     const.retail.financial_counteragent.id: 1
