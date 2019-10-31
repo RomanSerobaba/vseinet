@@ -3,10 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Brand
+ * Brand.
  *
  * @ORM\Table(name="brand")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BrandRepository")\
@@ -50,9 +49,15 @@ class Brand
      */
     private $isForbidden;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="canonical_id", type="integer", nullable=true)
+     */
+    private $canonicalId;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -62,7 +67,7 @@ class Brand
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -76,7 +81,7 @@ class Brand
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -86,7 +91,7 @@ class Brand
     }
 
     /**
-     * Set logo
+     * Set logo.
      *
      * @param string $logo
      *
@@ -100,7 +105,7 @@ class Brand
     }
 
     /**
-     * Get logo
+     * Get logo.
      *
      * @return string
      */
@@ -110,7 +115,7 @@ class Brand
     }
 
     /**
-     * Set url
+     * Set url.
      *
      * @param string url
      *
@@ -124,7 +129,7 @@ class Brand
     }
 
     /**
-     * Get url
+     * Get url.
      *
      * @return string
      */
@@ -134,9 +139,9 @@ class Brand
     }
 
     /**
-     * Set isForbidden
+     * Set isForbidden.
      *
-     * @param boolean $isForbidden
+     * @param bool $isForbidden
      *
      * @return Brand
      */
@@ -148,7 +153,7 @@ class Brand
     }
 
     /**
-     * Get isForbidden
+     * Get isForbidden.
      *
      * @return bool
      */
@@ -156,5 +161,28 @@ class Brand
     {
         return $this->isForbidden;
     }
-}
 
+    /**
+     * Set canonicalId.
+     *
+     * @param int $canonicalId
+     *
+     * @return Brand
+     */
+    public function setCanonicalId($canonicalId)
+    {
+        $this->canonicalId = $canonicalId;
+
+        return $this;
+    }
+
+    /**
+     * Get canonicalId.
+     *
+     * @return int
+     */
+    public function getCanonicalId()
+    {
+        return $this->canonicalId;
+    }
+}

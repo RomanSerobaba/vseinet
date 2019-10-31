@@ -14,7 +14,7 @@ class GetByNameQueryHandler extends MessageHandler
         $q = $em->createQuery("
             SELECT
                 NEW AppBundle\Bus\Brand\Query\DTO\Brand (
-                    b.id,
+                    b.canonicalId,
                     b.name,
                     b.url,
                     b.isForbidden
@@ -24,24 +24,9 @@ class GetByNameQueryHandler extends MessageHandler
         ");
         $q->setParameter('name', $query->name);
         $brand = $q->getOneOrNullResult();
+
         if (!$brand instanceof DTO\Brand) {
-            $q = $em->createQuery("
-                SELECT
-                    NEW AppBundle\Bus\Brand\Query\DTO\Brand (
-                        b.id,
-                        bp.name,
-                        b.url,
-                        b.isForbidden
-                    )
-                FROM AppBundle:Brand AS b
-                INNER JOIN AppBundle:BrandPseudo AS bp WITH bp.brandId = b.id
-                WHERE LOWER(bp.name) = LOWER(:name)
-            ");
-            $q->setParameter('name', $query->name);
-            $brand = $q->getOneOrNullResult();
-            if (!$brand instanceof DTO\Brand) {
-                throw new NotFoundHttpException();
-            }
+            throw new NotFoundHttpException();
         }
         if ($brand->isForbidden && !$this->getUserIsEmployee()) {
             throw new NotFoundHttpException();
