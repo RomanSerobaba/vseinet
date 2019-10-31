@@ -3,7 +3,7 @@
 namespace AdminBundle\Bus\Product\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class Product
 {
