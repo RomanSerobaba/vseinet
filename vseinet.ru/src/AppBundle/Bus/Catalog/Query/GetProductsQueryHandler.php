@@ -6,7 +6,7 @@ use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
 use AppBundle\Enum\GoodsConditionCode;
 use AppBundle\Enum\ProductAvailabilityCode;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class GetProductsQueryHandler extends MessageHandler
 {
