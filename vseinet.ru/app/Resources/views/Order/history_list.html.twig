@@ -10,7 +10,7 @@
                 {% else %}
                     {{ order.number }}
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'рт': 'рта', 'ст': 'ста' }) }}</span>
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
             </h2>
             <dl>
                 {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
@@ -138,7 +138,8 @@
                         <strong>
                             <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
                         </strong>
-                        {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)}, будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{elseif $position.delivery_date}{$position.product_id|delivery_time:0:0:$position.warehouse_id}{else}{$position.product_id|delivery_time:0}{/if} *{/if#}
+                        {% if item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::TRANSIT') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::SHIPPING') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::CALLABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::PREPAYABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::RESERVED') %},ожидаем {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }} *
+                        {% endif %}
                     </p>
                 </div>
             {% endfor %}

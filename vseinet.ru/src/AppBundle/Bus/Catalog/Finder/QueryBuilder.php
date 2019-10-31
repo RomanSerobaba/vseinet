@@ -47,11 +47,7 @@ class QueryBuilder extends ContainerAware
 
         // total, all filters
         $criteria = $this->criteria;
-        $criteria[] = $this->getCriteriaPrice();
         $criteria[] = $this->getCriteriaAvailability();
-        if ($this->getUserIsEmployee()) {
-            $this->criteria[] = $this->getCriteriaNofilled();
-        }
         $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
             SELECT COUNT(*) AS total
@@ -65,12 +61,7 @@ class QueryBuilder extends ContainerAware
         ";
 
         // availability
-        $criteria = $this->criteria;
-        $criteria[] = $this->getCriteriaPrice();
-        if ($this->getUserIsEmployee()) {
-            $this->criteria[] = $this->getCriteriaNofilled();
-        }
-        $criteria = implode(' AND ', array_filter($criteria));
+        $criteria = implode(' AND ', array_filter($this->criteria));
         $query[] = "
             SELECT COUNT(*) AS total
             FROM product_index_{$this->getGeoCity()->getRealId()}
@@ -82,7 +73,6 @@ class QueryBuilder extends ContainerAware
         // nofilled
         if ($this->getUserIsEmployee()) {
             $criteria = $this->criteria;
-            $criteria[] = $this->getCriteriaPrice();
             $criteria[] = $this->getCriteriaAvailability();
             $criteria = implode(' AND ', array_filter($criteria));
             $query[] = "
@@ -97,11 +87,7 @@ class QueryBuilder extends ContainerAware
         $select = implode(', ', array_merge($this->select, ['COUNT(*) AS total']));
         $facets = implode(' ', $this->facets);
         $criteria = $this->criteria;
-        $criteria[] = $this->getCriteriaPrice();
         $criteria[] = $this->getCriteriaAvailability();
-        if ($this->getUserIsEmployee()) {
-            $this->criteria[] = $this->getCriteriaNofilled();
-        }
         $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
             SELECT {$select}
@@ -246,7 +232,7 @@ class QueryBuilder extends ContainerAware
         if (Sort::PRICE === $filter->sort) {
             $sort = 'price_order ASC, price '.$sortDirection;
         } elseif (Sort::NOVELTY === $filter->sort) {
-            $sort = 'created_at '.$sortDirection;
+            $sort = 'created_at '.(SortDirection::ASC === $filter->sortDirection ? 'DESC' : 'ASC');
         } elseif (Sort::NAME === $filter->sort) {
             $sort = 'name '.$sortDirection;
         } elseif (Sort::MARGING === $filter->sort) {
@@ -290,7 +276,7 @@ class QueryBuilder extends ContainerAware
         $cartInfo = $this->get('query_bus')->handle(new GetCartInfoQuery());
 
         foreach ($products as $id => $product) {
-            $product->quantityInCart = $cartInfo->products[$id] ?? 0;
+            $product->quantityInCart = $cartInfo->products[$product->id]->quantity ?? 0;
         }
 
         return $products;
@@ -462,7 +448,7 @@ class QueryBuilder extends ContainerAware
      */
     public function getCriteriaAvailability(): string
     {
-        $availability = $this->getFilter()->availability;
+        $availability = $this->getFilter()->getAvailability();
         if (!$this->getUserIsEmployee()) {
             $availability = min($availability, Availability::ACTIVE);
         }
@@ -580,8 +566,8 @@ class QueryBuilder extends ContainerAware
      */
     public function escape(string $string): string
     {
-        $from = ['\\',   '(',  ')',  '|',  '-',  '!',  '@',  '~',  '"',  '&',  '/',  '^',  '$',  '='];
-        $to = ['\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', '\&', '\/', '\^', '\$', '\='];
+        $from = ['\\',   '(',  ')',  '|',  '-',  '!',  '@',  '~',  '"',  "'",  '&',  '/',  '^',  '$',  '='];
+        $to = ['\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', "\'", '\&', '\/', '\^', '\$', '\='];
 
         return str_replace($from, $to, $string);
     }

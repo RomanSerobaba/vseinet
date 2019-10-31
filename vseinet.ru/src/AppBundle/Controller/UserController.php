@@ -18,7 +18,7 @@ class UserController extends Controller
      *     name="user_account",
      *     path="/user/account/"
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function accountAction(Request $request)
     {
@@ -51,7 +51,7 @@ class UserController extends Controller
      *     path="/user/edit/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function editAction(Request $request)
     {
@@ -87,7 +87,7 @@ class UserController extends Controller
      * @VIA\Route(
      *     name="user_contact_edit",
      *     path="/user/contact/{id}/",
-     *     requirements={"id"="\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"}
      * )
      * @VIA\Route(
@@ -95,7 +95,7 @@ class UserController extends Controller
      *     path="/user/contact/add/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function addContactAction(int $id = 0, Request $request)
     {
@@ -161,9 +161,9 @@ class UserController extends Controller
      * @VIA\Get(
      *     name="user_contact_delete",
      *     path="/user/contact/{id}/delete/",
-     *     requirements={"id"="\d+"}
+     *     requirements={"id": "\d+"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function deleteContactAction(int $id, Request $request)
     {
@@ -186,7 +186,7 @@ class UserController extends Controller
      * @VIA\Route(
      *     name="user_address_edit",
      *     path="/user/address/{id}/",
-     *     requirements={"id"="\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"}
      * )
      * @VIA\Route(
@@ -194,7 +194,7 @@ class UserController extends Controller
      *     path="/user/address/add/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function addAddressAction(int $id = 0, Request $request)
     {
@@ -269,9 +269,9 @@ class UserController extends Controller
      * @VIA\Get(
      *     name="user_address_delete",
      *     path="/user/address/{id}/delete/",
-     *     requirements={"id"="\d+"}
+     *     requirements={"id": "\d+"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function deleteAddressAction(int $id, Request $request)
     {

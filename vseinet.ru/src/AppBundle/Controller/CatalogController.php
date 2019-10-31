@@ -75,9 +75,15 @@ class CatalogController extends Controller
             $filterUrl = $this->generateUrl($route, $filter->build(['id' => $id, 'brandName' => $brandName]));
 
             if ($request->isXmlHttpRequest()) {
+                $title = $category->name;
+                if (null !== $brandName) {
+                    $title .= ' «'.$brandName.'»';
+                }
+
                 return $this->json([
                     'facets' => $finder->getFacets(),
                     'filterUrl' => $filterUrl,
+                    'title' => $title,
                 ]);
             }
 
@@ -395,6 +401,8 @@ class CatalogController extends Controller
                 'paging' => $pagingHtml,
                 'showmore' => $showmoreHtml,
                 'sorting' => $sortingHtml,
+                'sort' => $filter->sort,
+                'sortDirection' => $filter->sortDirection,
             ]);
         }
 

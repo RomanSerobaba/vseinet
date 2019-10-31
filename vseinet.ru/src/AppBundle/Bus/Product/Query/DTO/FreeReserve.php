@@ -14,6 +14,11 @@ class FreeReserve
     /**
      * @Assert\Type(type="integer")
      */
+    public $baseProductId;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $destinationGeoPointId;
 
     /**

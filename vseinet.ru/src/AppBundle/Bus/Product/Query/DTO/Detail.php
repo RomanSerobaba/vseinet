@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query\DTO;
 
@@ -37,7 +37,6 @@ class Detail
      * @Assert\Type(type="string")
      */
     public $value;
-
 
     public function __construct($id, $name, $group, $typeCode, $unit, $value, $number, $memo)
     {

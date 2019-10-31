@@ -53,8 +53,8 @@ $.widget('sp.range', {
         return value.toNumber();
     },
     range: function(min, max) {
-        this.inputs[0].prop('placeholder', min);
-        this.inputs[1].prop('placeholder', max);
+        this.inputs[0].prop('placeholder', min || this.options.min);
+        this.inputs[1].prop('placeholder', max || this.options.max);
         this.slider.slider('option', 'values', [this._getValue(0), this._getValue(1)]);
         var left = (min - this.options.min) * this.multi;
         this.facets.css({

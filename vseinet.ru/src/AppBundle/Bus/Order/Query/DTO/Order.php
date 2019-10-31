@@ -166,11 +166,11 @@ class Order
             $codes[$item['statusCode']] = $item['statusCodeName'];
             ++$statuses[$item['statusCode']];
 
-            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED])) {
+            if (in_array($item['statusCode'], [OrderItemStatus::COURIER, OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED, OrderItemStatus::SHIPPING, OrderItemStatus::PREPAYABLE, OrderItemStatus::CALLABLE])) {
                 $this->canBePayed = true;
             }
 
-            if (in_array($item['statusCode'], [OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED, OrderItemStatus::CREATED])) {
+            if (in_array($item['statusCode'], [OrderItemStatus::TRANSIT, OrderItemStatus::RESERVED, OrderItemStatus::STATIONED, OrderItemStatus::ARRIVED, OrderItemStatus::CREATED, OrderItemStatus::SHIPPING, OrderItemStatus::PREPAYABLE, OrderItemStatus::CALLABLE])) {
                 $this->isCancelEnabled = true;
             }
         }

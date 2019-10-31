@@ -19,6 +19,7 @@ class GetInfoQueryHandler extends MessageHandler
                         COALESCE(p2.baseProductId, p.baseProductId),
                         COALESCE(p2.price, p.price),
                         bp.minQuantity,
+                        coalesce(p2.productAvailabilityCode, p.productAvailabilityCode),
                         c.quantity
                     )
                 FROM AppBundle:Cart AS c
@@ -39,7 +40,8 @@ class GetInfoQueryHandler extends MessageHandler
                         NEW AppBundle\Bus\Cart\Query\DTO\ProductInfo (
                             COALESCE(p2.baseProductId, p.baseProductId),
                             COALESCE(p2.price, p.price),
-                            bp.minQuantity
+                            bp.minQuantity,
+                            coalesce(p2.productAvailabilityCode, p.productAvailabilityCode)
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT JOIN AppBundle:Product AS p2 WITH p2.baseProductId = bp.canonicalId AND p2.geoCityId = :geoCityId

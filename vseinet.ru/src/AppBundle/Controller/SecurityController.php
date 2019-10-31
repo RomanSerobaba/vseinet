@@ -46,7 +46,7 @@ class SecurityController extends Controller
      *     name="logout",
      *     path="/logout"
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function logoutAction()
     {
@@ -191,7 +191,7 @@ class SecurityController extends Controller
      *     path="/change/password/",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function passwordAction(Request $request)
     {

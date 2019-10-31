@@ -9,6 +9,7 @@ use AppBundle\Bus\Cart\Query;
 use AppBundle\Bus\Cart\Command;
 use AppBundle\Bus\Favorite\Query\GetInfoQuery as GetFavoriteInfoQuery;
 use AppBundle\Bus\Favorite\Command\AddCommand as AddFavoriteCommand;
+use AppBundle\Enum\ProductAvailabilityCode;
 
 class CartController extends Controller
 {
@@ -108,7 +109,7 @@ class CartController extends Controller
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
         }
-        $request->query->set('quantity', $cart->products[$id]->quantity - $cart->products[$id]->minQuantity);
+        $request->query->set('quantity', $cart->products[$id]->quantity - (ProductAvailabilityCode::AVAILABLE === $cart->products[$id]->productAvailabilityCode ? 1 : $cart->products[$id]->minQuantity));
 
         return $this->setQuantityAction($id, $request);
     }
@@ -129,7 +130,7 @@ class CartController extends Controller
         if (!isset($cart->products[$id])) {
             throw new NotFoundHttpException();
         }
-        $request->query->set('quantity', $cart->products[$id]->quantity + $cart->products[$id]->minQuantity);
+        $request->query->set('quantity', $cart->products[$id]->quantity + (ProductAvailabilityCode::AVAILABLE === $cart->products[$id]->productAvailabilityCode ? 1 : $cart->products[$id]->minQuantity));
 
         return $this->setQuantityAction($id, $request);
     }

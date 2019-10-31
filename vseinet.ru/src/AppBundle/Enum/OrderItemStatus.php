@@ -72,7 +72,7 @@ class OrderItemStatus
                     self::PREPAYABLE => true,
                     self::SHIPPING => false,
                     self::TRANSIT => false,
-                    self::RELEASABLE => false,
+                    self::ARRIVED => false,
                     self::COMPLETED => false,
                 ];
 
@@ -84,7 +84,7 @@ class OrderItemStatus
                     self::CALLABLE => true,
                     self::SHIPPING => self::SHIPPING === $status || self::TRANSIT == $status,
                     self::TRANSIT => self::TRANSIT === $status,
-                    self::RELEASABLE => false,
+                    self::ARRIVED => false,
                     self::COMPLETED => false,
                 ];
 
@@ -94,7 +94,7 @@ class OrderItemStatus
                     self::CALLABLE => true,
                     self::STATIONED => true,
                     self::TRANSIT => false,
-                    self::RELEASABLE => false,
+                    self::ARRIVED => false,
                     self::COMPLETED => false,
                 ];
 
@@ -105,7 +105,7 @@ class OrderItemStatus
                     self::CREATED => true,
                     self::CALLABLE => true,
                     $status => true,
-                    self::RELEASABLE => false,
+                    self::ARRIVED => false,
                     self::COMPLETED => false,
                 ];
 

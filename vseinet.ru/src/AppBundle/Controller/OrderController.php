@@ -18,7 +18,9 @@ use AppBundle\ApiClient\ApiClientException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
+use AppBundle\Entity\Contact;
 use AppBundle\Entity\OrderItemStatus;
+use AppBundle\Enum\ContactTypeCode;
 
 class OrderController extends Controller
 {
@@ -98,7 +100,7 @@ class OrderController extends Controller
      *         @VIA\Parameter(model="AppBundle\Bus\Order\Query\GetHistoryQuery")
      *     }
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function historyAction(Request $request)
     {
@@ -133,7 +135,7 @@ class OrderController extends Controller
      * @VIA\Route(
      *     name="order_receipts_of_product",
      *     path="/order/receiptsOfProduct/{id}/",
-     *     requirements={"id"="\d+"},
+     *     requirements={"id": "\d+"},
      *     methods={"GET", "POST"},
      *     condition="request.isXmlHttpRequest()"
      * )
@@ -199,7 +201,7 @@ class OrderController extends Controller
      * @VIA\Get(
      *     name="order_creation_credit",
      *     path="/order/credit/{id}/",
-     *     requirements={"id"="\d+"}
+     *     requirements={"id": "\d+"}
      * )
      */
     public function creationCreditAction(int $id)
@@ -224,6 +226,40 @@ class OrderController extends Controller
             $this->get('session')->set('form.orderCreation', $data);
         } else {
             $data = $this->get('session')->get('form.orderCreation', []);
+            if ($this->getUser() && !$this->getUserIsEmployee()) {
+                if (empty($data['client']['fullname'])) {
+                    $person = $this->getUser()->person;
+                    $data['client']['fullname'] = implode(' ', [$person->getLastName(), $person->getFirstName(), $person->getSecondName()]);
+                }
+                if (empty($data['client']['phone'])) {
+                    $em = $this->getDoctrine()->getManager();
+                    $personId = $this->getUser()->getPersonId();
+                    $contact = $em->getRepository(Contact::class)->findOneBy(['personId' => $personId, 'contactTypeCode' => ContactTypeCode::MOBILE, 'isMain' => true]);
+                    if (!empty($contact)) {
+                        $data['client']['phone'] = $contact->getValue();
+                    }
+                }
+                if (empty($data['client']['email'])) {
+                    $em = $this->getDoctrine()->getManager();
+                    $personId = $this->getUser()->getPersonId();
+                    $contact = $em->getRepository(Contact::class)->findOneBy(['personId' => $personId, 'contactTypeCode' => ContactTypeCode::EMAIL, 'isMain' => true]);
+                    if (!empty($contact)) {
+                        $data['client']['email'] = $contact->getValue();
+                    }
+                }
+                if (empty($data['client']['additionalPhone'])) {
+                    $em = $this->getDoctrine()->getManager();
+                    $personId = $this->getUser()->getPersonId();
+                    $contacts = $em->getRepository(Contact::class)->findBy(['personId' => $personId, 'contactTypeCode' => [ContactTypeCode::MOBILE, ContactTypeCode::PHONE], 'isMain' => false]);
+                    if (!empty($contacts)) {
+                        $phones = [];
+                        foreach ($contacts as $contact) {
+                            $phones[$contact->getValue()] = $contact->getValue();
+                        }
+                        $data['client']['additionalPhone'] = implode(', ', $phones);
+                    }
+                }
+            }
         }
 
         $command = new Command\CreateCommand($data);
@@ -349,7 +385,7 @@ class OrderController extends Controller
      * @VIA\Get(
      *     name="order_created_page",
      *     path="/order/success/{id}/",
-     *     requirements={"id"="\d+"}
+     *     requirements={"id": "\d+"}
      * )
      */
     public function createdPageAction(int $id, Request $request)
@@ -397,6 +433,22 @@ class OrderController extends Controller
 
         return $this->json([
             'data' => $counteragent,
+        ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="search_counteragent",
+     *     path="/counteragent/search/",
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function searchCounteragentAction(Request $request)
+    {
+        $counteragents = $this->get('query_bus')->handle(new Query\SearchCounteragentQuery($request->request->all()));
+
+        return $this->json([
+            'counteragents' => $counteragents,
         ]);
     }
 }

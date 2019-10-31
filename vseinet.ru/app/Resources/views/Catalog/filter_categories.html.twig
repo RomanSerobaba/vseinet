@@ -1,0 +1,22 @@
+{% if features.categories is not null and features.categories|length %}
+    {% for group in features.categories %}
+        <div class="tab categoties expanded">
+            <span class="filter-titles">{{ group.name }}</span>
+        </div>
+        <div class="sheet multi categories" style="display:block">
+            {% for category in group.children %}
+                <div>
+                    <label for="filter_category_{{ category.id }}" data-id="{{ category.id }}">
+                        <input
+                            type="checkbox"
+                            id="filter_category_{{ category.id }}"
+                            name="filter[category][{{ category.id }}]"
+                            {% if filter.categoryIds[category.id] is defined %}checked{% endif %}
+                        />
+                        {{ category.name }}&nbsp;<small>({{ category.countProducts }})</small>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}

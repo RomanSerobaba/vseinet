@@ -29,6 +29,13 @@ class DiscountCode
     private $code;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="percent", type="float")
+     */
+    private $percent;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="since_date", type="datetime")
@@ -75,6 +82,30 @@ class DiscountCode
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Set percent
+     *
+     * @param string $percent
+     *
+     * @return DiscountCode
+     */
+    public function setPercent($percent)
+    {
+        $this->percent = $percent;
+
+        return $this;
+    }
+
+    /**
+     * Get percent
+     *
+     * @return string
+     */
+    public function getPercent()
+    {
+        return $this->percent;
     }
 
     /**

@@ -11,31 +11,40 @@
                 <div class="row clearfix" data-id="{{ product.id }}">
                     <div class="coll-md-6">
                         <div class="image">
-                            <img 
-                                src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}" 
-                                alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза" 
+                            <img
+                                src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
+                                alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
                             />
                         </div>
                         <div class="text">
                             <h6><a href="{{ url('catalog_product', { id: product.id }) }}">{{ product.name }}</a><h6>
                             <p class="code">Код товара: {{ product.id }}</p>
+                            {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %}
+                                <div class="status in-stock">Есть в наличии</div>
+                            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %}
+                                <div class="status not-available"{% if product.updatedAt %} style="cursor:help" title="Последний заход: {{ product.updatedAt|date('d.m.Y') }}"{% endif %}>Нет в продаже</div>
+                            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %}
+                                <div class="status on-order">Ожидается</div>
+                            {% else %}
+                                <div class="status on-order">На заказ</div>
+                            {% endif %}
                             {#% if points|length %}
                                 <p class="available">В наличии: {{ product.points }}</p>
                             {% if %#}
                         </div>
-                    </div>                    
+                    </div>
                     <div class="quantity coll-md-3">
                         <a href="{{ url('favorite_to_cart', { id: product.id }) }}" class="bttn green delete" data-favorite="{{ product.id }}">В корзину</a>
                     </div>
                     <div class="price coll-md-2">
                         {{ product.price|price_format }} <span class="RUR">Р</span>
-                    </div>                    
+                    </div>
                     <div class="delete coll-md-1">
-                        <a 
-                            href="{{ url('favorite_del', { id: product.id }) }}" 
-                            class="delete action" 
-                            title="Удалить" 
-                            tabindex="-1" 
+                        <a
+                            href="{{ url('favorite_del', { id: product.id }) }}"
+                            class="delete action"
+                            title="Удалить"
+                            tabindex="-1"
                             data-favorite="{{ product.id }}"
                         >
                             Удалить

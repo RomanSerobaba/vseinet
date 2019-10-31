@@ -86,7 +86,7 @@ class BrandProductFinder extends AbstractProductFinder
             $results = array_slice($results, 1);
         }
 
-        $facets->categoryIds = array_fill_keys(array_keys($this->getCategories($results[5])), 1);
+        $facets->categoryIds = $this->getCategoryId2Count($results[5]);
 
         return $facets;
     }

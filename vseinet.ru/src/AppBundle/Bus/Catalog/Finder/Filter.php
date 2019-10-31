@@ -47,7 +47,7 @@ class Filter extends ContainerAware
     /**
      * @var Availability
      */
-    public $availability = Availability::ACTIVE;
+    protected $availability;
 
     /**
      * @var Nofilled[]
@@ -131,7 +131,7 @@ class Filter extends ContainerAware
                     break;
 
                 case 'a':
-                    $this->availability = intval($this->parseEnum($value, Availability::class, Availability::ACTIVE));
+                    $this->availability = intval($this->parseEnum($value, Availability::class, $this->getDefaultAvailability()));
                     break;
 
                 case 'f':
@@ -225,6 +225,10 @@ class Filter extends ContainerAware
                 case 'nofilled':
                     $query['f'] = $this->toSet($value);
                     break;
+
+                case 'sort':
+                    $query['how'] = (string) $value;
+                    break;
             }
         }
 
@@ -271,7 +275,7 @@ class Filter extends ContainerAware
                 }
             }
         }
-        if (Availability::ACTIVE !== $this->availability) {
+        if ($this->getDefaultAvailability() !== $this->availability) {
             $query['a'] = $this->availability;
         }
         if ($this->nofilled) {
@@ -288,6 +292,11 @@ class Filter extends ContainerAware
         }
 
         return array_merge($query, $extra);
+    }
+
+    public function getAvailability(): int
+    {
+        return $this->availability ?? $this->getDefaultAvailability();
     }
 
     protected function getDetailTypes(array $ids): array
@@ -424,11 +433,20 @@ class Filter extends ContainerAware
         $this->categorySectionIds = [];
         // $this->q = null;
         $this->name = null;
-        $this->availability = Availability::ACTIVE;
+        $this->availability = $this->getDefaultAvailability();
         $this->nofilled = [];
         $this->page = 1;
         $this->sort = Sort::DEFAULT;
         $this->sortDirection = SortDirection::ASC;
         $this->details = [];
+    }
+
+    protected function getDefaultAvailability(): int
+    {
+        if ($this->getUserIsEmployee()) {
+            return Availability::FOR_ALL_TIME;
+        }
+
+        return Availability::ACTIVE;
     }
 }

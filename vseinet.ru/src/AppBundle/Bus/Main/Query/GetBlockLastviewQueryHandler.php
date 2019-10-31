@@ -3,7 +3,6 @@
 namespace AppBundle\Bus\Main\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
-use AppBundle\Enum\ProductAvailabilityCode;
 
 class GetBlockLastviewQueryHandler extends MessageHandler
 {

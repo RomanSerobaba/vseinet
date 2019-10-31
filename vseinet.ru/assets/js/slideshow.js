@@ -9,9 +9,9 @@ $.widget('sp.slideshow', {
         this.sheetsContainer = this.element.find('.sheets');
         this.sheets = this.sheetsContainer.children();
         this.sheetsContainer
-                .prepend(this.sheets.filter(':last').clone())
-                .css('left', '-100%')
-                .append(this.sheets.eq(0).clone());
+            .prepend(this.sheets.filter(':last').clone())
+            .css('left', '-100%')
+            .append(this.sheets.eq(0).clone());
 
         this.tabsContainer = this.element.find('.tabs');
 
@@ -29,10 +29,12 @@ $.widget('sp.slideshow', {
             $(window).on('resize.slideshow', $.proxy(function() {
                 this._calculate(this.index);
                 var width = this.element.width(), tabsFixedWidth = this.tabsFixed.length * this.tabWidth;
-                if ( ! this.tab.is('.fixed') && width - tabsFixedWidth < this.cursorPos - this.tabWidth)
+                if (!this.tab.is('.fixed') && width - tabsFixedWidth < this.cursorPos - this.tabWidth) {
                     this.tabsPos = tabsFixedWidth - this.index * this.tabWidth;
-                else if (width - this.tabsPos > this.tabsWidth)
+                }
+                else if (width - this.tabsPos > this.tabsWidth) {
                     this.tabsPos = width - this.tabsWidth;
+                }
                 this.tabsFixedPos = width - this.tabsWidth - this.tabsPos;
                 this.tabsContainer.css({left: this.tabsPos});
                 this.tabsFixed.css({left: this.tabsFixedPos});
@@ -52,16 +54,12 @@ $.widget('sp.slideshow', {
                 this.start();
                 this._move(event, true);
             },
-           // 'click a': function(event) {
-           //      event.stopPropagation();
-           //  },
+            'click a': function(event) {
+                event.preventDefault();
+            },
             'mousedown .sheets': function(event) {
-                var a = $(event.target).closest('a');
-                if (a.length) {
-                    event.stopPropagation();
-                } else {
-                    if (event.button == 0)
-                        this._hold(event);
+                if (event.button === 0) {
+                    this._hold(event);
                     event.preventDefault();
                 }
             },
@@ -70,17 +68,17 @@ $.widget('sp.slideshow', {
             },
             mouseup: function(event) {
                 if (this.x) {
-                    if (Math.abs(this._offset(event) - this.x) < 10) {
+                    if (Math.abs(this._offset(event).x - this.x) < 10) {
                         var a = $(event.target).closest('a');
                         if (a.length) {
-                            window.location = a.prop('href');
-                            return false;
+                            return window.location = a.prop('href');
                         }
                         this.x = null;
                         this.sheetsContainer.css({left: this.left});
                     }
-                    else
+                    else {
                         this._move(event, true);
+                    }
                 }
             }
         });
@@ -113,39 +111,29 @@ $.widget('sp.slideshow', {
     _hold: function(event) {
         var o = this._offset(event);
         this.x = o.x;
-        this.y = o.y;        
-        if (!o.touch) {
-            event.preventDefault();      
-        }
+        this.y = o.y;
         this.left = this.sheetsContainer.position().left;
     },
     _move: function(event, slide) {
-            if (this.x) {
-                var o = this._offset(event);
-                var dx = o.x - this.x;
-                var dy = o.y - this.y;
-                var a = $(event.target).closest('a');
-                
-                if (a.length && Math.abs(dx) < 5 && Math.abs(dy) < 5) {
-                    window.location = a.prop('href');
-                    event.preventDefault();
-                    return false;
-                }
-                else if (o.touch && Math.abs(dx) < 1.5 * Math.abs(dy)) {
-                    this.x = null;
-                } 
-                else {
-                    event.preventDefault();
-                    var w = this.element.width();
-                    if (dx < -w) dx = -w;
-                    else if (dx > w) dx = w;
-                    if (slide) {
-                        this[dx > 0 ? 'prev' : 'next'](150);
-                        this.x = null;
-                    }
-                    else this.sheetsContainer.css({left: this.left + dx});
-                }
+        if (this.x) {
+            var o = this._offset(event);
+            var dx = o.x - this.x;
+            var dy = o.y - this.y;
+
+            if (o.touch && Math.abs(dx) < 1.5 * Math.abs(dy)) {
+                this.x = null;
             }
+            else {
+                var w = this.element.width();
+                if (dx < -w) dx = -w;
+                else if (dx > w) dx = w;
+                if (slide) {
+                    this[dx > 0 ? 'prev' : 'next'](150);
+                    this.x = null;
+                }
+                else this.sheetsContainer.css({left: this.left + dx});
+            }
+        }
     },
     _offset: function(event) {
         var e = event.originalEvent;
@@ -155,7 +143,7 @@ $.widget('sp.slideshow', {
                 x: touch.pageX,
                 y: touch.pageY,
                 touch: true
-            }    
+            }
         }
         return {
             x: event.pageX,
@@ -171,16 +159,21 @@ $.widget('sp.slideshow', {
             index = 0;
             this.sheetIndex = this.sheets.length + 1;
         }
-        else this.sheetIndex = index + 1;
+        else {
+            this.sheetIndex = index + 1;
+        }
         if (this.tabs.length) {
             var tab = this.tabs.eq(index), tabPos = tab.position().left|0, width = this.element.width();
-            if (tab.is('.fixed'))
+            if (tab.is('.fixed')) {
                 this.cursorPos = tabPos;
+            }
             else if (this.tab.is('.fixed')) {
-                if (index == 0)
+                if (index == 0) {
                     this.tabsPos = 0;
-                if (tabPos > this.cursorPos)
+                }
+                if (tabPos > this.cursorPos) {
                     this.tabsPos = width - this.tabsWidth;
+                }
                 this.cursorPos = tabPos;
             }
             else {
@@ -188,10 +181,12 @@ $.widget('sp.slideshow', {
                     this.tabsPos -= this.tabWidth;
                 }
                 if (this.index > index && this.tabsPos < 0) {
-                    if (this.interval && index == 0)
+                    if (this.interval && index == 0) {
                         this.tabsPos = 0;
-                    else
+                    }
+                    else {
                         this.tabsPos += this.tabWidth;
+                    }
                 }
                 this.cursorPos = tabPos;
             }
@@ -211,13 +206,16 @@ $.widget('sp.slideshow', {
                 this.cursor.removeClass('slide').width(this.tab.width() - 8);
             }, this));
         }
-        if (typeof(duration) === 'undefined') duration = this.options.duration;
+        if (typeof duration === 'undefined') {
+            duration = this.options.duration;
+        }
         this.sheetsContainer.animate({left: (-100 * this.sheetIndex) + '%'}, duration, 'swing', $.proxy(function() {
-                if (this.sheetIndex == 0)
-                    this.sheetsContainer.css('left', (-100 * this.sheets.length) + '%');
-                else
-                if (this.sheetIndex == this.sheets.length + 1)
-                    this.sheetsContainer.css('left', '-100%');
+            if (this.sheetIndex == 0) {
+                this.sheetsContainer.css('left', (-100 * this.sheets.length) + '%');
+            }
+            else if (this.sheetIndex == this.sheets.length + 1) {
+                this.sheetsContainer.css('left', '-100%');
+            }
         }, this));
     },
     start: function() {
@@ -243,15 +241,15 @@ function setBcgPos() {
     var itemWidth = $('.sheet').width();
     $('.sheet .photoBlock').each(function (index) {
         var backgroundPos = parseInt($(this).attr('data-pos-x'));
-        if(itemWidth > 750){
+        if (itemWidth > 750) {
             var x = (845 - itemWidth) / 2;
             backgroundPos -= x;
             $(this).css('backgroundPositionX', backgroundPos + 'px');
-        } else if ((itemWidth < 750) && (itemWidth > 480)){
+        } else if ((itemWidth < 750) && (itemWidth > 480)) {
             var x = (750 - itemWidth) / 2;
             backgroundPos -= x;
             $(this).css('backgroundPositionX', backgroundPos + 'px');
-        } else if ((itemWidth < 480) && (itemWidth > 320)){
+        } else if ((itemWidth < 480) && (itemWidth > 320)) {
             var x = (480 - itemWidth) / 2;
             backgroundPos -= x;
             $(this).css('backgroundPositionX', backgroundPos + 'px');

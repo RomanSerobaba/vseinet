@@ -39,7 +39,8 @@ class GetReservesQueryHandler extends MessageHandler
             INNER JOIN any_doc AS a ON a.did = si.parent_did
             LEFT OUTER JOIN supply_doc AS sd ON sd.did = si.parent_did
             LEFT OUTER JOIN supplier AS s ON s.id = sd.supplier_id
-            WHERE grrc.base_product_id = :base_product_id
+            INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
+            WHERE bp.canonical_id = :base_product_id
         ", new DTORSM(DTO\Reserve::class, DTORSM::ARRAY_INDEX));
         $q->setParameter('base_product_id', $product->getId());
         $reserves = $q->getResult('DTOHydrator');

@@ -8,7 +8,7 @@
     {% else %}
         <div class="status on-order">
             На заказ,<br/>
-            <span>{#$product.id|delivery_time:1:0#}</span>
+            <span>доставка {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
         </div>
     {% endif %}
 {% endmacro %}
@@ -39,7 +39,7 @@
                 <input
                     type="number"
                     class="cart-quantity"
-                    value="{{ product.minQuantity }}"
+                    value="{{ constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability ? 1 : product.minQuantity }}"
                     data-min-quantity="{{ product.minQuantity }}"
                     min="{{ product.minQuantity }}"
                 >

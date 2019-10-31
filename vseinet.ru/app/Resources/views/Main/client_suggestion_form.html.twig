@@ -32,8 +32,8 @@
 <fieldset class="block">
     <div class="wrapper">
         <h2>Контактная информация</h2>
-        {% include 'User/user_data_form.html.twig' with { form: form } only %}
-        {% include 'User/is_human_form.html.twig' with { form: form } only %}
+        {% include 'User/user_data_form.html.twig' with { form: form, errors: errors } only %}
+        {% include 'User/is_human_form.html.twig' with { form: form, errors: errors } only %}
     </div>
 </fieldset>
 

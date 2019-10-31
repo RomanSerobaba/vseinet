@@ -85,7 +85,7 @@ DIV.order-history-light .Cart TD {
     margin-right: 15px;
 }
 .cart-table .text{
-    overflow: hidden;    
+    overflow: hidden;
 }
 .cart-table .cart-table-head{
     color: #999;
@@ -109,7 +109,7 @@ DIV.order-history-light .Cart TD {
 .cart-table .price {
     font-size: 16px;
     font-weight: 700;
-    padding-top: 12px;   
+    padding-top: 12px;
     position:relative;
 }
 
@@ -124,7 +124,7 @@ DIV.order-history-light .Cart TD {
 }
 .Cart .btns{
     padding-top: 12px;
-    text-align: center;    
+    text-align: center;
 }
 .Cart .action {
     border: none !important;
@@ -160,7 +160,7 @@ DIV.order-history-light .Cart TD {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAMAAADDoWbgAAAARVBMVEX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGX/gGUAAAD/gGUIbT4WAAAAFnRSTlMxvOzLX7crcoR8HnBPw5sK3vgGsf4ApPGmXAAAAG9JREFUeAE1jkcSgEAMw0KHZXvR/59KAoMujjM6WIaRXHrT2rp0+rK+LW18bElb46cN8VCimrGAlwah3v2uAZrMplSpDZilA/jhLYtkUO1QGbJEmFRrdYIou/0Ac3YZFz+XLTsKRjm+ne4MOZxOrwfxDQzQO4DzgQAAAABJRU5ErkJggg==);
 }
 .Cart .btns .action.favorite {
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAVFBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc29eqKJAAAAG3RSTlMhj+tQkBNGJVwvzQ5zyPPV+uN9g1UIpDcEdwDnVSjTAAAAVklEQVR4Xk3NRw7AMAgEQNJ73Avw/3/GxkqUvaxGCACqCUmqYbh+iAwfws0o8IjYMauzNCTDb0agIzaYWXZcRT+RoI2WArl1Wc0o8Npm2tQuWJP8cpkeBD4M7vVJi8IAAAAASUVORK5CYII=) 0 1px no-repeat;    
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAVFBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc29eqKJAAAAG3RSTlMhj+tQkBNGJVwvzQ5zyPPV+uN9g1UIpDcEdwDnVSjTAAAAVklEQVR4Xk3NRw7AMAgEQNJ73Avw/3/GxkqUvaxGCACqCUmqYbh+iAwfws0o8IjYMauzNCTDb0agIzaYWXZcRT+RoI2WArl1Wc0o8Npm2tQuWJP8cpkeBD4M7vVJi8IAAAAASUVORK5CYII=) 0 1px no-repeat;
     margin-left: 5px;
     display: inline-block;
     float: none;
@@ -188,8 +188,8 @@ DIV.order-history-light .Cart TD {
     padding-top: 10px;
     width: 160px;
 }
-.Cart .summary .cupon {    
-    margin-top: -4px;    
+.Cart .summary .cupon {
+    margin-top: -4px;
     position: relative;
     width:33.3333%;
     margin-left: 430px;
@@ -297,8 +297,6 @@ DIV.order-history-light .Cart TD {
     color: #7fad12;
     font-weight: normal;
     margin-bottom: 5px;
-}
-.Cart .conditioner {
 }
 .Cart .set_conditioner_label {
     margin-left: 5px;

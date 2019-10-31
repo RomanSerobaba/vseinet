@@ -33,7 +33,7 @@ class GeoCityIdentity extends ContainerAware
     /**
      * @param int $userId
      */
-    public function setEmployeeGeoCity($userId): void
+    public function setEmployeeGeoCity(int $userId): void
     {
         $data = $this->getDoctrine()->getManager()->createNativeQuery('
             SELECT
@@ -105,16 +105,12 @@ class GeoCityIdentity extends ContainerAware
                 gic.geoCityId
             FROM AppBundle:GeoIp AS gi
             INNER JOIN AppBundle:GeoIpCity AS gic WITH gic.id = gi.geoIpCityId
-            WHERE :longIp BETWEEN gi.longIp1 AND gi.longIp2
+            WHERE :ip BETWEEN gi.ip1 AND gi.ip2
         ');
-        $q->setParameter('longIp', ip2long($this->get('request_stack')->getMasterRequest()->getClientIp()));
+        $q->setParameter('ip', $this->get('request_stack')->getMasterRequest()->getClientIp());
         $q->setMaxResults(1);
-        try {
-            return $q->getSingleScalarResult();
-        } catch (\Exception $e) {
-        }
 
-        return $this->getParameter('default.geo_city_id');
+        return $q->getOneOrNullResult()['geoCityId'] ?? $this->getParameter('default.geo_city_id');
     }
 
     protected function loadGeoCity(int $geoCityId): GeoCity
@@ -128,9 +124,11 @@ class GeoCityIdentity extends ContainerAware
 
         $q = $em->createQuery('
             SELECT r
-            FROM AppBundle:GeoPoint AS gp
+            FROM AppBundle:GeoCity AS gc
+            JOIN AppBundle:GeoCity AS ogc WITH gc.geoRegionId = ogc.geoRegionId
+            JOIN AppBundle:GeoPoint AS gp WITH gp.geoCityId = ogc.id
             INNER JOIN AppBundle:Representative AS r WITH r.geoPointId = gp.id
-            WHERE gp.geoCityId = :geoCityId AND r.isActive = true
+            WHERE gc.id = :geoCityId AND r.isActive = true AND (r.hasRetail = TRUE OR r.hasDelivery = TRUE)
         ');
         $q->setParameter('geoCityId', $geoCity->getId());
         $geoCity->setGeoPoints($q->getResult());

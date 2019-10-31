@@ -36,7 +36,7 @@
             <label for="{{ form.organizationDetails.name.vars.id }}">
                 Наименование организации: <b>*</b>
             </label>
-            {{ form_widget(form.organizationDetails.name, { attr: { class: 'txt' }}) }}
+            {{ form_widget(form.organizationDetails.name, { attr: { class: 'txt autocomplete' }}) }}
             <span class="status"></span>
             {% if errors.organizationDetails.name is defined %}
                 <div class="error">{{ errors.organizationDetails.name.0 }}</div>

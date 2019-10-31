@@ -4,11 +4,11 @@
             <h2>
                 Заказ №
                 {% if app.userIsEmployee %}
-                    <a href="{{ path('authority', { targetUrl: '/admin/orders?id=' ~ order.id })}}" target="_blank">{{ order.id }}</a>
+                    <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}" target="_blank">{{ order.number }}</a>
                 {% else %}
-                    {{ order.id }}
+                    {{ order.number }}
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'ь': 'я', 'й': 'я', 'т': 'та' }) }}</span>
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
             </h2>
         </div>
         <div class="column">
@@ -21,6 +21,31 @@
             </dl>
         </div>
         <div class="column">
+            {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
+                <div style="text-align: center;padding:2px 5px;margin-right:26px;background-color:yellow;color: green;font-size: 0.85em;font-weight:bold;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></div>
+            {% endif %}
+            {% if order.canBePayed %}
+                <a
+                    data-url="{{ path('sberbank', { id: order.id }) }}"
+                    rel="nofollow"
+                    href="{{ path('sberbank', { id: order.id }) }}"
+                    class="bttn green sberbank"
+                    title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить</a>
+            {% elseif constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode  %}{# and order.available_sum #}
+                <a href="javascript:void(0)" class="bttn green disabled" title="Внимание! Заказ можно будет оплатить после подтверждения менеджером наличия товара">Оплатить</a>
+                <p style="color:red;margin-top:10px">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p>
+            {% endif %}
+            <a href="{{ path('repeat_order', { id: order.id }) }}" class="bttn blue repeat_order">Перезаказать</a>
+            {% if order.isCancelRequested and order.isCancelEnabled %}
+                <p class="order-cancel-text">Ваш запрос на отмену заказа принят и будет обработан в ближайшее время</p>
+            {% elseif order.isCancelEnabled %}
+                <a
+                    data-url="{{ path('cancel_request', { id: order.id }) }}"
+                    rel="nofollow"
+                    href="{{ path('cancel_request', { id: order.id }) }}"
+                    class="bttn coral cancel_request"
+                    title="Оплатить позиции, наличие которых подтверждено менеджером">Отменить</a>
+            {% endif %}
             {#<dl>
                 <dt>Способ доставки:</dt>
                 <dd>{$order.delivery_type}{if $order.delivery_type=='Курьерская' && $order.city_id==299} до проходной{/if}</dd>
@@ -52,7 +77,7 @@
                 {% for item in order.items %}
                     <tr>
                         <td class="text">
-                            {#<img src="{{ item|image:60 }}" alt="" />#}
+                            <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="">
                         </td>
                         <td class="text">
                             <h6>
@@ -67,15 +92,17 @@
                         <td class="price{{ cssclass }}">{{ item.retailPrice|price_format }} <span class="RUR">Р</span></td>
                         <td class="status">
                             <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
-                            {#if ($position.status_code=='IS_PROCESSED' || $position.status_code=='IS_PREPAYED' || $position.status_code=='IN_TRANSIT') && ($position.arriving_date || $position.delivery_date)},<p class="code" style="color:#999">будет {if $position.arriving_date}{$position.arriving_date|date_format:"%d %b"}{else}{$position.product_id|delivery_time:0}{/if} *</p>
-                            {/if#}
+                            {% if item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::TRANSIT') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::SHIPPING') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::CALLABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::PREPAYABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::RESERVED') %},<p class="code" style="color:#999">ожидаем {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }} *</p>
+                            {% endif %}
+                        </td>
+                        <td>
                         </td>
                     </tr>
                     {#if $position.price_changes}
                         {foreach from=$position.price_changes item=change}
                             <tr>
                                 <td></td>
-                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
+                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone or $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
                                 <td></td>
                                 {if Model::factory('User')->isRole('USER_FRANCHISER')}
                                     <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}"></td>
@@ -97,8 +124,9 @@
                     <td class="price" style="font-size: 24px;white-space: nowrap">
                         {{ order.amount|price_format }} <span class="RUR">Р</span>
                     </td>
-                    <td class="price" style="font-size: 24px;white-space: nowrap"></td>
-                    <td></td>
+                    <td colspan="2">
+
+                    </td>
                 </tr>
             </tbody>
         </table>
