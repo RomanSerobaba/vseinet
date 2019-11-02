@@ -2,7 +2,7 @@
 
 namespace AppBundle\Enum;
 
-class ProductPriceType
+class ProductPriceTypeCode
 {
     public const STANDARD = 'standard';
     public const PRICELIST = 'pricelist';

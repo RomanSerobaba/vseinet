@@ -3,7 +3,7 @@
 namespace AdminBundle\Bus\Product\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class Product
 {
@@ -18,7 +18,7 @@ class Product
     public $price;
 
     /**
-     * @Enum("AppBundle\Enum\ProductPriceType")
+     * @Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
     public $type;
 
@@ -32,6 +32,6 @@ class Product
         $this->id = $id;
         $this->price = $price;
         $this->type = $type;
-        $this->isManualPrice = in_array($type, [ProductPriceType::MANUAL, ProductPriceType::ULTIMATE, ProductPriceType::TEMPORARY]);
+        $this->isManualPrice = in_array($type, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
     }
 }

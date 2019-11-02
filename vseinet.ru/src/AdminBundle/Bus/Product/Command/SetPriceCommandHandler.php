@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 use Doctrine\ORM\AbstractQuery;
 
 class SetPriceCommandHandler extends MessageHandler
@@ -49,19 +49,19 @@ class SetPriceCommandHandler extends MessageHandler
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
         switch ($command->type) {
-            case ProductPriceType::MANUAL:
+            case ProductPriceTypeCode::MANUAL:
                 $product->setManualPrice($command->price);
                 $product->setManualPriceOperatedAt(new \DateTime());
                 $product->setManualPriceOperatedBy($this->getUser()->getId());
                 break;
 
-            case ProductPriceType::ULTIMATE:
+            case ProductPriceTypeCode::ULTIMATE:
                 $product->setUltimatePrice($command->price);
                 $product->setUltimatePriceOperatedAt(new \DateTime());
                 $product->setUltimatePriceOperatedBy($this->getUser()->getId());
                 break;
 
-            case ProductPriceType::TEMPORARY:
+            case ProductPriceTypeCode::TEMPORARY:
                 $product->setTemporaryPrice($command->price);
                 $product->setTemporaryPriceOperatedAt(new \DateTime());
                 $product->setTemporaryPriceOperatedBy($this->getUser()->getId());

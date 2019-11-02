@@ -5,7 +5,7 @@ namespace AppBundle\Bus\Product\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\GoodsConditionCode;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 
 class GetQueryHandler extends MessageHandler
 {
@@ -62,7 +62,7 @@ class GetQueryHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->id));
         }
 
-        $baseProduct->priceTypeName = ProductPriceType::getName($baseProduct->priceType);
+        $baseProduct->priceTypeName = ProductPriceTypeCode::getName($baseProduct->priceType);
 
         return $baseProduct;
     }

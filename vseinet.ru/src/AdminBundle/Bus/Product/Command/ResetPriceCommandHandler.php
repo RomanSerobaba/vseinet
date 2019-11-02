@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
-use AppBundle\Enum\ProductPriceType;
+use AppBundle\Enum\ProductPriceTypeCode;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -37,13 +37,13 @@ class ResetPriceCommandHandler extends MessageHandler
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
         if ($product->getTemporaryPrice()) {
-            $type = ProductPriceType::TEMPORARY;
+            $type = ProductPriceTypeCode::TEMPORARY;
             $product->setTemporaryPrice(null);
         } elseif ($product->getUltimatePrice()) {
-            $type = ProductPriceType::ULTIMATE;
+            $type = ProductPriceTypeCode::ULTIMATE;
             $product->setUltimatePrice(null);
         } elseif ($product->getManualPrice()) {
-            $type = ProductPriceType::MANUAL;
+            $type = ProductPriceTypeCode::MANUAL;
             $product->setManualPrice(null);
         } else {
             throw new BadRequestHttpException('У товара не задана ручная цена');

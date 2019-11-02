@@ -22,7 +22,7 @@ class SetPriceCommand extends Message
 
     /**
      * @Assert\NotBlank
-     * @Enum("AppBundle\Enum\ProductPriceType")
+     * @Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
     public $type;
 }
