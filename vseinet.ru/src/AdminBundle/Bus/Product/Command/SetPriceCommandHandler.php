@@ -8,6 +8,7 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceTypeCode;
+use AppBundle\Enum\UserRole;
 use Doctrine\ORM\AbstractQuery;
 
 class SetPriceCommandHandler extends MessageHandler
@@ -47,6 +48,11 @@ class SetPriceCommandHandler extends MessageHandler
         // }
 
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
+        $user = $this->security->getToken()->getUser();
+
+        if ($product->getPrice() > $command->price && !$user->isRoleIn([UserRole::ADMIN])) {
+            throw new BadRequeetsHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
+        }
 
         switch ($command->type) {
             case ProductPriceTypeCode::MANUAL:
