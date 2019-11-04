@@ -48,9 +48,8 @@ class SetPriceCommandHandler extends MessageHandler
         // }
 
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
-        $user = $this->security->getToken()->getUser();
 
-        if ($product->getPrice() > $command->price && !$user->isRoleIn([UserRole::ADMIN]) && ($baseProduct->getSupplierPrice() > $command->price || $user->getId() != 4980)) {
+        if ($product->getPrice() > $command->price && !$this->getUser()->isRoleIn([UserRole::ADMIN]) && ($baseProduct->getSupplierPrice() > $command->price || $this->getUser()->getId() != 4980)) {
             throw new BadRequeetsHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
         }
 
