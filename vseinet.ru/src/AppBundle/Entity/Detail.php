@@ -3,10 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Detail
+ * Detail.
  *
  * @ORM\Table(name="content_detail")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DetailRepository")
@@ -53,7 +52,7 @@ class Detail
     /**
      * @var int
      *
-     * @ORM\Column(name="content_detail_type_code", type="string")
+     * @ORM\Column(name="content_detail_type", type="string")
      */
     private $typeCode;
 
@@ -66,11 +65,10 @@ class Detail
 
     /**
      * @var array
-     * 
+     *
      * @ORM\Column(name="substitutions", type="json_array", nullable=true)
      */
     private $substitutions;
-    
 
     /**
      * @var int
@@ -79,9 +77,8 @@ class Detail
      */
     private $sortOrder;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -91,9 +88,9 @@ class Detail
     }
 
     /**
-     * Set sectionId
+     * Set sectionId.
      *
-     * @param integer $sectionId
+     * @param int $sectionId
      *
      * @return Detail
      */
@@ -105,7 +102,7 @@ class Detail
     }
 
     /**
-     * Get sectionId
+     * Get sectionId.
      *
      * @return int
      */
@@ -115,9 +112,9 @@ class Detail
     }
 
     /**
-     * Set groupId
+     * Set groupId.
      *
-     * @param integer $groupId
+     * @param int $groupId
      *
      * @return Detail
      */
@@ -129,7 +126,7 @@ class Detail
     }
 
     /**
-     * Get groupId
+     * Get groupId.
      *
      * @return int
      */
@@ -139,9 +136,9 @@ class Detail
     }
 
     /**
-     * Set pid
+     * Set pid.
      *
-     * @param integer $pid
+     * @param int $pid
      *
      * @return Detail
      */
@@ -153,7 +150,7 @@ class Detail
     }
 
     /**
-     * Get pid
+     * Get pid.
      *
      * @return int
      */
@@ -163,7 +160,7 @@ class Detail
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -177,7 +174,7 @@ class Detail
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -187,7 +184,7 @@ class Detail
     }
 
     /**
-     * Set typeCode
+     * Set typeCode.
      *
      * @param string $typeCode
      *
@@ -201,7 +198,7 @@ class Detail
     }
 
     /**
-     * Get typeCode
+     * Get typeCode.
      *
      * @return string
      */
@@ -211,9 +208,9 @@ class Detail
     }
 
     /**
-     * Set unitId
+     * Set unitId.
      *
-     * @param integer $unitId
+     * @param int $unitId
      *
      * @return Detail
      */
@@ -225,7 +222,7 @@ class Detail
     }
 
     /**
-     * Get unitId
+     * Get unitId.
      *
      * @return int
      */
@@ -235,7 +232,7 @@ class Detail
     }
 
     /**
-     * Set substitutions
+     * Set substitutions.
      *
      * @param array $substitutions
      *
@@ -249,7 +246,7 @@ class Detail
     }
 
     /**
-     * Get substitutions
+     * Get substitutions.
      *
      * @return array
      */
@@ -259,9 +256,9 @@ class Detail
     }
 
     /**
-     * Set sortOrder
+     * Set sortOrder.
      *
-     * @param integer $sortOrder
+     * @param int $sortOrder
      *
      * @return Detail
      */
@@ -273,7 +270,7 @@ class Detail
     }
 
     /**
-     * Get sortOrder
+     * Get sortOrder.
      *
      * @return int
      */
@@ -282,4 +279,3 @@ class Detail
         return $this->sortOrder;
     }
 }
-

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Category
+ * Category.
  *
  * @ORM\Table(name="category")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
@@ -38,63 +38,49 @@ class Category
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="alias_for_id", type="integer", nullable=true)
      */
     private $aliasForId;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="basename", type="string")
-     */
-    private $basename;
-
-    /**
      * @var bool
-     * 
+     *
      * @ORM\Column(name="use_exname", type="boolean")
      */
     private $useExname;
 
     /**
      * @var string
-     * 
-     * @ORM\Column(name="gender", type="string")
-     */
-    private $gender;
-
-    /**
-     * @var string
-     * 
+     *
      * @ORM\Column(name="tpl", type="string")
      */
     private $tpl;
 
     /**
      * @var bool
-     * 
+     *
      * @ORM\Column(name="is_tpl_enabled", type="boolean")
      */
     private $isTplEnabled;
 
     /**
      * @var bool
-     * 
+     *
      * @ORM\Column(name="is_risky", type="boolean")
      */
     private $isRisky;
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="count_products", type="integer")
      */
     private $countProducts;
 
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="rating", type="integer")
      */
     private $rating;
@@ -105,7 +91,7 @@ class Category
      * @ORM\Column(name="delivery_tax", type="integer")
      */
     private $deliveryTax;
-    
+
     /**
      * @var int
      *
@@ -115,14 +101,14 @@ class Category
 
     /**
      * @var Category[]
-     * 
+     *
      * @Assert\Type(type="array<Category>")
      */
     public $breadcrumbs;
 
     /**
      * @var CategorySeo
-     * 
+     *
      * @Assert\Type(type="CategorySeo")
      */
     public $seo;
@@ -135,23 +121,23 @@ class Category
     public $children;
 
     /**
-     * @var boolean
-     * 
+     * @var bool
+     *
      * @Assert\Type(type="boolean")
      */
     public $isLeaf;
 
     /**
      * @deprecated
+     *
      * @var BaseProduct[]
-     * 
+     *
      * @Assert\Type(type="array<BaseProduct>")
      */
     public $products;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -161,9 +147,9 @@ class Category
     }
 
     /**
-     * Set pid
+     * Set pid.
      *
-     * @param integer $pid
+     * @param int $pid
      *
      * @return Category
      */
@@ -175,7 +161,7 @@ class Category
     }
 
     /**
-     * Get pid
+     * Get pid.
      *
      * @return int
      */
@@ -185,7 +171,7 @@ class Category
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -199,7 +185,7 @@ class Category
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -209,10 +195,10 @@ class Category
     }
 
     /**
-     * Set aliasForId
-     * 
-     * @param integer $aliasForId
-     * 
+     * Set aliasForId.
+     *
+     * @param int $aliasForId
+     *
      * @return Category
      */
     public function setAliasForId($aliasForId)
@@ -223,8 +209,8 @@ class Category
     }
 
     /**
-     * Get aliasForId
-     * 
+     * Get aliasForId.
+     *
      * @return int
      */
     public function getAliasForId()
@@ -233,31 +219,7 @@ class Category
     }
 
     /**
-     * Set basename
-     *
-     * @param string $basename
-     *
-     * @return Category
-     */
-    public function setBasename($basename)
-    {
-        $this->basename = $basename;
-
-        return $this;
-    }
-
-    /**
-     * Get basename
-     *
-     * @return string
-     */
-    public function getBasename()
-    {
-        return $this->basename;
-    }
-
-    /**
-     * Set useExname
+     * Set useExname.
      *
      * @param string $useExname
      *
@@ -271,9 +233,9 @@ class Category
     }
 
     /**
-     * Get useExname
+     * Get useExname.
      *
-     * @return boolean
+     * @return bool
      */
     public function getUseExname()
     {
@@ -281,34 +243,10 @@ class Category
     }
 
     /**
-     * Set gender
-     * 
-     * @param string $gender
-     * 
-     * @return Category
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    /**
-     * Get gender
-     * 
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
-
-    /**
-     * Set tpl
-     * 
+     * Set tpl.
+     *
      * @param string $tpl
-     * 
+     *
      * @return Category
      */
     public function setTpl($tpl)
@@ -319,8 +257,8 @@ class Category
     }
 
     /**
-     * Get tpl
-     * 
+     * Get tpl.
+     *
      * @return string
      */
     public function getTpl()
@@ -329,7 +267,7 @@ class Category
     }
 
     /**
-     * Set isTplEnabled
+     * Set isTplEnabled.
      *
      * @param string $isTplEnabled
      *
@@ -343,9 +281,9 @@ class Category
     }
 
     /**
-     * Get isTplEnabled
+     * Get isTplEnabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsTplEnabled()
     {
@@ -353,7 +291,7 @@ class Category
     }
 
     /**
-     * Set isRisky
+     * Set isRisky.
      *
      * @param string $isRisky
      *
@@ -367,9 +305,9 @@ class Category
     }
 
     /**
-     * Get isRisky
+     * Get isRisky.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsRisky()
     {
@@ -377,9 +315,9 @@ class Category
     }
 
     /**
-     * Set countProducts
+     * Set countProducts.
      *
-     * @param integer $countProducts
+     * @param int $countProducts
      *
      * @return Category
      */
@@ -391,7 +329,7 @@ class Category
     }
 
     /**
-     * Get countProducts
+     * Get countProducts.
      *
      * @return int
      */
@@ -401,9 +339,9 @@ class Category
     }
 
     /**
-     * Set rating
+     * Set rating.
      *
-     * @param integer $rating
+     * @param int $rating
      *
      * @return Category
      */
@@ -415,7 +353,7 @@ class Category
     }
 
     /**
-     * Get rating
+     * Get rating.
      *
      * @return int
      */
@@ -425,9 +363,9 @@ class Category
     }
 
     /**
-     * Set deliveryTax
+     * Set deliveryTax.
      *
-     * @param integer $deliveryTax
+     * @param int $deliveryTax
      *
      * @return Category
      */
@@ -439,7 +377,7 @@ class Category
     }
 
     /**
-     * Get deliveryTax
+     * Get deliveryTax.
      *
      * @return int
      */
@@ -449,9 +387,9 @@ class Category
     }
 
     /**
-     * Set liftingTax
+     * Set liftingTax.
      *
-     * @param integer $liftingTax
+     * @param int $liftingTax
      *
      * @return Category
      */
@@ -463,7 +401,7 @@ class Category
     }
 
     /**
-     * Get liftingTax
+     * Get liftingTax.
      *
      * @return int
      */
@@ -472,4 +410,3 @@ class Category
         return $this->liftingTax;
     }
 }
-
