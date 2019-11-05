@@ -33,18 +33,20 @@ class RepresentativeIdentity extends ContainerAware
         $em = $this->getDoctrine()->getManager();
 
         $q = $em->createQuery("
-            SELECT r
-            FROM AppBundle:Representative AS r
-            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
-            INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId
+            SELECT r,
+                CASE WHEN gp.geoCityId = gc.id THEN 0 ELSE 1 END HIDDEN ORD
+            FROM AppBundle:GeoCity AS gc
+            JOIN AppBundle:GeoCity AS ogc WITH gc.geoRegionId = ogc.geoRegionId
+            JOIN AppBundle:GeoPoint AS gp WITH gp.geoCityId = ogc.id
+            JOIN AppBundle:Representative AS r WITH gp.id = r.geoPointId
             WHERE r.isActive = true AND gc.id = :geoCityId
-            ORDER BY r.isCentral DESC
+            ORDER BY ORD, r.isCentral DESC
         ");
         $q->setParameter('geoCityId', $geoCityId);
         $q->setMaxResults(1);
         $representative = $q->getSingleResult();
         if (!$representative instanceof Representative) {
-            throw new \RuntimeException('Representative not found');
+            throw new \RuntimeException('Представительство не найдено');
         }
 
         $q = $em->createQuery("
