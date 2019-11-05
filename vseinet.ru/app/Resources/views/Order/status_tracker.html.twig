@@ -25,7 +25,7 @@
                     rel="nofollow"
                     href="{{ path('sberbank', { id: order.id }) }}"
                     style="margin-left:15px;"
-                    class="bttn green sberbank">Оплатить</a>
+                    class="bttn green sberbank">Оплатить сейчас</a>
             {% endif %}
             {% if constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
                 <span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>

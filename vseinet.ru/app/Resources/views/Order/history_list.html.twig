@@ -79,7 +79,7 @@
                     rel="nofollow"
                     href="{{ path('sberbank', { id: order.id }) }}"
                     class="bttn green sberbank"
-                    title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить</a></div>
+                    title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить сейчас</a></div>
             {% elseif constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode  %}{# and order.available_sum #}
                 <div><a href="javascript:void(0)" class="bttn green disabled" title="Внимание! Заказ можно будет оплатить после подтверждения менеджером наличия товара">Оплатить</a>
                 <p style="color:red;margin-top:10px">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p></div>
