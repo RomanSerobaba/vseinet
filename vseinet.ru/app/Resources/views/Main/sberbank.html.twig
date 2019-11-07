@@ -12,7 +12,7 @@
             </ol><br/>
             <p><a href="{{ path('content_page', { slug: 'payment' }) }}">Подробная инструкция с картинками.</a></p><br/>
         </li>
-        <li><h4>Мобильное приложение &laquo;Сбербанк Онлайн&raquo;</h4>
+        {# <li><h4>Мобильное приложение &laquo;Сбербанк Онлайн&raquo;</h4>
             <ol>
                 <li>1. Откройте приложение "Сбербанк онлайн"</li>
                 <li>2. Откройте раздел "Платежи"</li>
@@ -20,14 +20,14 @@
                 <img src="/api/pay/qrcode/{{ id }}/?format=svg" width="150px" /><br/><br/></li>
                 <li>4. Оплатите</li>
             </ol><br/>
-        </li>
+        </li> #}
         {# <p style="font-style:italic;">Вы можете отправить QR-код на другое устройство, чтобы отсканировать его из приложения на своем смартфоне <br />
         <form id="sberbank-contact-form">
             Канал отправки: <select class="txt" id="sberbank-channel-select-{{ number }}" name="sberbank_channel" style="width: 239px;"><option value="" selected>Выбрать</option><option value="email">Электронная почта</option><option value="viber">Viber</option></select><br />
             <input placeholder="Контакт" class="txt" type="text" name="sberbank_contact" id="sberbank-contact-input-{{ number }}" size="10" style="width: 230px;" /> &nbsp;
             <button style="width: 100px;" class="bttn blue" name="sberbank_button" id="sberbank-contact-button-{{ number }}">Отправить</button>
         </form></p> #}
-        <li><h4>Терминал оплаты Сбербанка</h4>
+        <li><h4>Терминал (банкомат) оплаты Сбербанка</h4>
             <ol>
                 <li>1. Выберите в услугах организацию Vseinet.ru</li>
                 <li>2. Укажите номер заказа: <strong>{{ number }}</strong></li>
