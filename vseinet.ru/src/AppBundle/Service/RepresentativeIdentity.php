@@ -20,7 +20,7 @@ class RepresentativeIdentity extends ContainerAware
         }
 
         $representative = $session->get('representative');
-        if (null === $representative || $representative->geoCityId !== $geoCityId) {
+        if (null === $representative || $representative->getGeoCityId() !== $geoCityId) {
             $representative = $this->loadRepresentative($geoCityId);
             $session->set('representative', $representative);
         }
@@ -88,8 +88,6 @@ class RepresentativeIdentity extends ContainerAware
         $q->setParameter('representativeId', $representative->getGeoPointId());
         $schedule = $q->getSingleResult();
         $this->formatSchedule($representative, $schedule);
-
-        $representative->geoCityId = $geoCityId;
 
         return $representative;
     }

@@ -46,7 +46,7 @@ class BaseProduct
     /**
      * @VIC\Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
-    public $priceType;
+    public $priceTypeCode;
 
     /**
      * @Assert\Type("string")
@@ -121,7 +121,7 @@ class BaseProduct
         $brandId,
         $availability,
         $price,
-        $priceType,
+        $priceTypeCode,
         $minQuantity,
         $model,
         $manufacturerLink,
@@ -139,7 +139,7 @@ class BaseProduct
         $this->brandId = $brandId;
         $this->availability = $availability;
         $this->price = $price;
-        $this->priceType = $priceType;
+        $this->priceTypeCode = $priceTypeCode;
         $this->minQuantity = $minQuantity;
         $this->model = $model;
         $this->manufacturerLink = $manufacturerLink;
@@ -153,6 +153,6 @@ class BaseProduct
 
     public function isManualPrice()
     {
-        return in_array($this->priceType, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
+        return in_array($this->priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
     }
 }

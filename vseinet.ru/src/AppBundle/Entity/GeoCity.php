@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Enum\RepresentativeTypeCode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -355,7 +356,7 @@ class GeoCity
      *
      * @return int
      */
-    public function getCountNewGeoPoints(): int 
+    public function getCountNewGeoPoints(): int
     {
         $count = 0;
         $opening = new \DateTime('-2 month');
@@ -373,7 +374,7 @@ class GeoCity
      *
      * @return bool
      */
-    public function getHasRetail(): bool 
+    public function getHasRetail(): bool
     {
         foreach ($this->getGeoPoints() as $geoPoint) {
             if ($geoPoint->getHasRetail()) {
@@ -402,11 +403,19 @@ class GeoCity
 
     /**
      * Get realId
-     * 
+     *
      * @return int
      */
-    public function getRealId(): int 
+    public function getRealId(): int
     {
-        return $this->getCountGeoPoints() ? $this->id : 0;
+        if ($this->getCountGeoPoints()) {
+            foreach ($this->getGeoPoints() as $geoPoint) {
+                if ($geoPoint->getGeoCityId() === $this->id && $geoPoint->getHasRetail() && $geoPoint->getIsActive() && in_array($geoPoint->getType(), [RepresentativeTypeCode::OUR, RepresentativeTypeCode::PARTNER])) {
+                    return $this->id;
+                }
+            }
+        }
+
+        return 0;
     }
 }

@@ -53,7 +53,7 @@ class ResetPriceCommandHandler extends MessageHandler
         $log->setBaseProductId($baseProduct->getId());
         $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
         $log->setPrice(null);
-        $log->setPriceType($type);
+        $log->setPriceTypeCode($type);
         $log->setOperatedBy($this->getUser()->getId());
         $log->setOperatedAt(new \DateTime());
         $em->persist($log);

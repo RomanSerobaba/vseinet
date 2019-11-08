@@ -25,7 +25,7 @@ class GetProductsQueryHandler extends MessageHandler
                 bpi.basename AS base_src,
                 COALESCE ( p2.product_availability_code, p.product_availability_code ) AS availability,
                 COALESCE ( p2.price, p.price ) AS price,
-                COALESCE ( p2.price_type, p.price_type ) AS price_type,
+                COALESCE ( p2.price_type_code, p.price_type_code ) AS price_type_code,
                 bpd.short_description AS description,
                 b.min_quantity,
                 b.updated_at,
@@ -58,7 +58,7 @@ class GetProductsQueryHandler extends MessageHandler
         $products = [];
 
         foreach ($q->getResult('DTOHydrator') as $product) {
-            $product->priceTypeName = ProductPriceTypeCode::getName($product->priceType);
+            $product->priceTypeName = ProductPriceTypeCode::getName($product->priceTypeCode);
             $products[$product->id] = $product;
         }
 

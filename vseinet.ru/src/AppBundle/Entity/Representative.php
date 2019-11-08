@@ -24,6 +24,13 @@ class Representative
     /**
      * @var int
      *
+     * @ORM\Column(name="geo_city_id", type="integer")
+     */
+    private $geoCityId;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="org_department_id", type="integer")
      */
     private $departmentId;
@@ -120,11 +127,6 @@ class Representative
     private $hasTransit;
 
     /**
-     * @var integer
-     */
-    public $geoCityId;
-
-    /**
      * @var string
      */
     public $address;
@@ -177,6 +179,30 @@ class Representative
     public function getGeoPointId()
     {
         return $this->geoPointId;
+    }
+
+    /**
+     * Set geoCityId.
+     *
+     * @param int $geoCityId
+     *
+     * @return Representative
+     */
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = $geoCityId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoCityId.
+     *
+     * @return int
+     */
+    public function getGeoCityId()
+    {
+        return $this->geoCityId;
     }
 
     /**

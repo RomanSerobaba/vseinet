@@ -50,11 +50,11 @@ class Product
     private $price;
 
     /**
-     * @ORM\Column(name="price_type", type="string", length=255, nullable=true)
+     * @ORM\Column(name="price_type_code", type="string", length=255, nullable=true)
      *
      * @var string
      */
-    private $priceType;
+    private $priceTypeCode;
 
     /**
      * @ORM\Column(name="price_time", type="datetime")
@@ -286,27 +286,27 @@ class Product
     }
 
     /**
-     * Set priceType.
+     * Set priceTypeCode.
      *
-     * @param string $priceType
+     * @param string $priceTypeCode
      *
      * @return $this
      */
-    public function setPriceType($priceType): self
+    public function setPriceTypeCode($priceTypeCode): self
     {
-        $this->priceType = $priceType;
+        $this->priceTypeCode = $priceTypeCode;
 
         return $this;
     }
 
     /**
-     * Get priceType.
+     * Get priceTypeCode.
      *
      * @return string
      */
-    public function getPriceType(): string
+    public function getPriceTypeCode(): string
     {
-        return $this->priceType;
+        return $this->priceTypeCode;
     }
 
     /**
