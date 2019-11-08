@@ -61,7 +61,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
         }
         foreach ($products as $product) {
             if (!in_array($product->availability, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT])) {
-                throw new BadRequestHttpException(sprintf('Товар %d находится либо в наличии, либо отсутствует', $query->baseProductId));
+                throw new BadRequestHttpException(sprintf('Товар %d находится либо в наличии, либо отсутствует', $product->baseProductId));
             }
         }
 
