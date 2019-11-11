@@ -58,7 +58,7 @@ class GetSummaryQueryHandler extends MessageHandler
             $paymentTypeCode = $paymentType->getCode();
         }
 
-        if (in_array($query->deliveryTypeCode, [DeliveryTypeCode::COURIER, DeliveryTypeCode::EX_WORKS])) {
+        if (OrderType::RETAIL !== $query->orderTypeCode && in_array($query->deliveryTypeCode, [DeliveryTypeCode::COURIER, DeliveryTypeCode::EX_WORKS])) {
             if (RepresentativeTypeCode::PARTNER == $representative->getType() || 214 == $representative->getGeoPointId()) {
                 foreach ($products as $product) {
                     $amount = $product->price * $product->quantity;
