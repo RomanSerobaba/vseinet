@@ -35,7 +35,7 @@ class Product
     /**
      * @VIC\Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
-    public $priceType;
+    public $priceTypeCode;
 
     /**
      * @Assert\Type("string")
@@ -77,14 +77,14 @@ class Product
      */
     public $deliveryDate;
 
-    public function __construct($id, $name, $baseSrc, $availability, $price, $priceType, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice)
+    public function __construct($id, $name, $baseSrc, $availability, $price, $priceTypeCode, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice)
     {
         $this->id = $id;
         $this->name = $name;
         $this->baseSrc = $baseSrc;
         $this->availability = $availability;
         $this->price = $price;
-        $this->priceType = $priceType;
+        $this->priceTypeCode = $priceTypeCode;
         $this->description = $description;
         $this->minQuantity = $minQuantity;
         $this->updatedAt = $updatedAt;

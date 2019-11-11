@@ -39,6 +39,7 @@ class GetStatusQueryHandler extends MessageHandler
         foreach ($result['orderItems'] as $item) {
             foreach ($item['statuses'] as $status) {
                 $items[] = array_merge($item, [
+                    'quantity' => $status['quantity'],
                     'statusCode' => $status['code'],
                     'statusCodeName' => $status['clientName'],
                     'deliveryDate' => $status['deliveryDate'] ?? null,

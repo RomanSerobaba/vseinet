@@ -8,6 +8,7 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceTypeCode;
+use AppBundle\Enum\UserRole;
 use Doctrine\ORM\AbstractQuery;
 
 class SetPriceCommandHandler extends MessageHandler
@@ -48,6 +49,10 @@ class SetPriceCommandHandler extends MessageHandler
 
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
+        if ($product->getPrice() > $command->price && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && ($baseProduct->getSupplierPrice() > $command->price || !in_array($this->getUser()->getId(), [4980, 1501, 65621, 12538, 106265]))) {
+            throw new BadRequeetsHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
+        }
+
         switch ($command->type) {
             case ProductPriceTypeCode::MANUAL:
                 $product->setManualPrice($command->price);
@@ -77,7 +82,7 @@ class SetPriceCommandHandler extends MessageHandler
         $log->setBaseproductId($baseProduct->getId());
         $log->setGeoCityId(0/*$this->getGeoCity()->getId()*/);
         $log->setPrice($command->price);
-        $log->setPriceType($command->type);
+        $log->setPriceTypeCode($command->type);
         $log->setOperatedBy($this->getUser()->getId());
         $log->setOperatedAt(new \DateTime());
         $em->persist($log);

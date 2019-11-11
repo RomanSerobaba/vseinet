@@ -29,6 +29,6 @@ class GetQueryHandler extends MessageHandler
             ]);
         }
 
-        return new DTO\Product($product->getBaseProductId(), $product->getPrice(), $product->getPriceType());
+        return new DTO\Product($product->getBaseProductId(), $product->getPrice(), $product->getPriceTypeCode());
     }
 }

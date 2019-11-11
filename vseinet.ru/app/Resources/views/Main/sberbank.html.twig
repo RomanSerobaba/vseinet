@@ -1,24 +1,40 @@
 <div title="Оплата через &laquo;Сбербанк&raquo;" data-min-width="860">
     {# <div class="info">Сумма позиций, наличие которых подтверждено менеджером (итого к оплате): {$order.can_payed|price_format} <span class="RUR">Р</span>.</div> #}
     <h3>Варианты оплаты</h3>
-    <ol>
+    <ul>
         <li><h4>&laquo;Сбербанк Онлайн&raquo;</h4>
-            <p>выберите в разделе &laquo;Переводы и платежи &rarr; Оплата покупок и услуг &rarr; Товары и услуги&raquo; организацию Vseinet.ru (или найдите ее по ИНН 583502363760) и укажите в поле &laquo;Лицевой счет&raquo; № заказа: <strong>{{ number }}</strong></p>
-            <h2>Оплатить на сайте <a href="https://online.sberbank.ru/CSAFront/index.do" onclick="window.open(this.href);return false;"><img style="vertical-align:middle" src="/images/banks/sberbank-online.png"/></a></h2></li>
+            <ol>
+                <li>1. В приложении "Сбербанк Онлайн" Сверху в строке поиска введите "Vseinet"</li>
+                <li>2. Выберете из результатов поиска любой вариант</li>
+                <li>3. Введите номер заказа: <strong>{{ number }}</strong> и оплатите</li>
+            </ol><br/>
+            <p><a href="{{ path('content_page', { slug: 'payment' }) }}">Подробная инструкция с картинками.</a></p><br/>
+        </li>
         {# <li><h4>Мобильное приложение &laquo;Сбербанк Онлайн&raquo;</h4>
-            <p>отсканируйте приложением Qr-code через раздел &laquo;Платежи &rarr; Отсканировать штрих-код&raquo;<br/>или<br/>найдите в разделе &laquo;Платежи &rarr; Остальное&raquo; организацию Vseinet.ru и укажите № заказа: <strong>{{ number }}</strong></p>
-            <p><img src="/pay/qrCode/?orderId={$order.id}"/></p></li> #}
+            <ol>
+                <li>1. Откройте приложение "Сбербанк онлайн"</li>
+                <li>2. Откройте раздел "Платежи"</li>
+                <li>3. Отсканируйте приложением Qr-code<br/><br/>
+                <img src="/api/pay/qrcode/{{ id }}/?format=svg" width="150px" /><br/><br/></li>
+                <li>4. Оплатите</li>
+            </ol><br/>
+        </li> #}
         {# <p style="font-style:italic;">Вы можете отправить QR-код на другое устройство, чтобы отсканировать его из приложения на своем смартфоне <br />
         <form id="sberbank-contact-form">
             Канал отправки: <select class="txt" id="sberbank-channel-select-{{ number }}" name="sberbank_channel" style="width: 239px;"><option value="" selected>Выбрать</option><option value="email">Электронная почта</option><option value="viber">Viber</option></select><br />
             <input placeholder="Контакт" class="txt" type="text" name="sberbank_contact" id="sberbank-contact-input-{{ number }}" size="10" style="width: 230px;" /> &nbsp;
             <button style="width: 100px;" class="bttn blue" name="sberbank_button" id="sberbank-contact-button-{{ number }}">Отправить</button>
         </form></p> #}
-        <li><h4>Терминал оплаты Сбербанка</h4>
-            <p>выберите в услугах организацию Vseinet.ru и укажите № заказа: <strong>{{ number }}</strong></p></li>
+        <li><h4>Терминал (банкомат) оплаты Сбербанка</h4>
+            <ol>
+                <li>1. Выберите в услугах организацию Vseinet.ru</li>
+                <li>2. Укажите номер заказа: <strong>{{ number }}</strong></li>
+                <li>3. Оплатите</li>
+            </ol><br/>
+        </li>
         {# <li><h4>Отделение Сбербанка по счету</h4>
             <p><a class="btn btn-primary btn-labeled fa fa-print" href="/order/PrintInvoicePDF/{$order.id}" onclick="window.open(this.href);return false;">Распечатать счет</a></p></li> #}
-    </ol>
+    </ul>
 </div>
 {# <script type='text/javascript'>
     $(function () {

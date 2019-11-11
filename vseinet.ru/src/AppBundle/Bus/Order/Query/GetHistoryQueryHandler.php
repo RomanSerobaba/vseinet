@@ -40,6 +40,7 @@ class GetHistoryQueryHandler extends MessageHandler
                 if ($order['id'] == $item['orderId']) {
                     foreach ($item['statuses'] as $status) {
                         $order['items'][] = array_merge($item, [
+                            'quantity' => $status['quantity'],
                             'statusCode' => $status['code'],
                             'statusCodeName' => $status['clientName'],
                             'deliveryDate' => $status['deliveryDate'] ?? null,

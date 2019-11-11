@@ -25,7 +25,12 @@ class GetOrderQueryHandler extends MessageHandler
 
         foreach ($result['orderItems'] as $item) {
             foreach ($item['statuses'] as $status) {
-                $order['items'][] = array_merge($item, ['statusCode' => $status['code'], 'statusCodeName' => $status['clientName']]);
+                $order['items'][] = array_merge($item, [
+                    'quantity' => $status['quantity'],
+                    'statusCode' => $status['code'],
+                    'statusCodeName' => $status['clientName'],
+                    'deliveryDate' => $status['deliveryDate'] ?? null,
+                ]);
             }
         }
 

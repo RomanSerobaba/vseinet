@@ -217,6 +217,7 @@ class MainController extends Controller
         return $this->json([
             'html' => $this->renderView('Main/sberbank.html.twig', [
                 'number' => $order->getNumber(),
+                'id' => $order->getDId(),
             ]),
         ]);
     }

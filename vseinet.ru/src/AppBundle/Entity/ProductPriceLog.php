@@ -45,9 +45,9 @@ class ProductPriceLog
     /**
      * @var string
      *
-     * @ORM\Column(name="price_type", type="string", length=255)
+     * @ORM\Column(name="price_type_code", type="string", length=255)
      */
-    private $priceType;
+    private $priceTypeCode;
 
     /**
      * @var \DateTime
@@ -146,27 +146,27 @@ class ProductPriceLog
     }
 
     /**
-     * Set priceType.
+     * Set priceTypeCode.
      *
-     * @param string $priceType
+     * @param string $priceTypeCode
      *
      * @return ProductPriceLog
      */
-    public function setPriceType($priceType)
+    public function setPriceTypeCode($priceTypeCode)
     {
-        $this->priceType = $priceType;
+        $this->priceTypeCode = $priceTypeCode;
 
         return $this;
     }
 
     /**
-     * Get priceType.
+     * Get priceTypeCode.
      *
      * @return string
      */
-    public function getPriceType()
+    public function getPriceTypeCode()
     {
-        return $this->priceType;
+        return $this->priceTypeCode;
     }
 
     /**

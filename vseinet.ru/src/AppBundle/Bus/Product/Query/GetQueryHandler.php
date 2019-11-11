@@ -29,7 +29,7 @@ class GetQueryHandler extends MessageHandler
                     bp.brandId,
                     COALESCE(p.productAvailabilityCode, p0.productAvailabilityCode),
                     COALESCE(p.price, p0.price),
-                    COALESCE(p.priceType, p0.priceType),
+                    COALESCE(p.priceTypeCode, p0.priceTypeCode),
                     bp.minQuantity,
                     bpd.model,
                     bpd.manufacturerLink,
@@ -62,7 +62,7 @@ class GetQueryHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->id));
         }
 
-        $baseProduct->priceTypeName = ProductPriceTypeCode::getName($baseProduct->priceType);
+        $baseProduct->priceTypeName = ProductPriceTypeCode::getName($baseProduct->priceTypeCode);
 
         return $baseProduct;
     }
