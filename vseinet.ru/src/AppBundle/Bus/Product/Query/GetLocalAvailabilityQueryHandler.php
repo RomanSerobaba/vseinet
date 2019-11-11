@@ -29,8 +29,9 @@ class GetLocalAvailabilityQueryHandler extends MessageHandler
             FROM goods_reserve_register_current AS grrc
             INNER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
             INNER JOIN geo_point AS gp ON gp.id = gr.geo_point_id
+            INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
             LEFT OUTER JOIN geo_address AS ga ON ga.id = gp.geo_address_id
-            WHERE grrc.base_product_id = :base_product_id
+            WHERE bp.canonical_id = :base_product_id
                 AND grrc.goods_condition_code = 'free'::goods_condition_code
                 AND grrc.order_item_id IS NULL
             GROUP BY gp.id, ga.address
