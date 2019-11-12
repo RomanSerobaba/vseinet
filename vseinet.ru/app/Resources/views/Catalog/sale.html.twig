@@ -40,8 +40,8 @@
                     type="number"
                     class="cart-quantity"
                     value="{{ constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability ? 1 : product.minQuantity }}"
-                    data-min-quantity="{{ product.minQuantity }}"
-                    min="{{ product.minQuantity }}"
+                    data-min-quantity="{{ constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability ? 1 : product.minQuantity }}"
+                    min="{{ constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability ? 1 : product.minQuantity }}"
                 >
             {% endif %}
             <a
