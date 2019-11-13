@@ -7,7 +7,9 @@
                 text-align: left;
                 cursor:pointer;
                 margin-bottom: 10px;
-            ">1. &laquo;Сбербанк Онлайн&raquo;</h3>
+            ">
+                <span style="float:right;font-size: 16px;">▲</span>
+                1. &laquo;Сбербанк Онлайн&raquo;</h3>
             <ol class='sberbank-option'>
                 <li>1. В приложении "Сбербанк Онлайн" Сверху в строке поиска введите "Vseinet"</li>
                 <li>2. Выберете из результатов поиска любой вариант</li>
@@ -20,7 +22,9 @@
                 text-align: left;
                 cursor:pointer;
                 margin-bottom: 10px;
-            ">2. QR код &laquo;Сбербанк Онлайн&raquo;</h3>
+            ">
+                <span style="float:right;font-size: 16px;">▼</span>
+                2. QR код &laquo;Сбербанк Онлайн&raquo;</h3>
             <ol class='sberbank-option' style='display: none'>
                 <li>1. В приложении "Сбербанк онлайн" откройте раздел платежи.</li>
                 <li>2. Отсканируйте QR код.<br/><br/>
@@ -39,7 +43,9 @@
                 text-align: left;
                 cursor:pointer;
                 margin-bottom: 10px;
-            ">3. Терминал (банкомат) оплаты Сбербанка</h3>
+            ">
+                <span style="float:right;font-size: 16px;">▼</span>
+                3. Терминал (банкомат) оплаты Сбербанка</h3>
             <ol class='sberbank-option' style='display: none'>
                 <li>1. Выберите в услугах организацию Vseinet.ru</li>
                 <li>2. Укажите номер заказа: <strong>{{ number }}</strong></li>
@@ -54,7 +60,9 @@
     $(function () {
         $(document).on("click", "#sberbank-instruction h3", function (e) {
             $('#sberbank-instruction .sberbank-option').hide();
+            $('#sberbank-instruction h3 span').html('▼');
             $(this).next('.sberbank-option').show();
+            $(this).find('span').html('▲');
         });
     });
 </script>
