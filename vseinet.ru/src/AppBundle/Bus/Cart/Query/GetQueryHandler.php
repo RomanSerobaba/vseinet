@@ -101,7 +101,8 @@ class GetQueryHandler extends MessageHandler
                                 SUM(grrc.delta)
                             FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
                             JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
-                            WHERE grrc.baseProductId = bp.id AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
+                            JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
+                            WHERE bp2.canonicalId = bp.canonicalId AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
                         ),
                         (
                             SELECT

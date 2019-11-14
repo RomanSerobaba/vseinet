@@ -41,8 +41,9 @@ class GetQueryHandler extends MessageHandler
                     COALESCE(FIRST(
                         SELECT ROUND(SUM(grrc.delta * (si.purchasePrice - si.bonusAmount)) / SUM(grrc.delta))
                         FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
-                        INNER JOIN AppBundle:SupplyItem AS si WITH si.id = grrc.supplyItemId
-                        WHERE grrc.baseProductId = bp.id AND grrc.goodsConditionCode = :goodsConditionCode_FREE
+                        JOIN AppBundle:SupplyItem AS si WITH si.id = grrc.supplyItemId
+                        JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
+                        WHERE bp2.canonicalId = bp.canonicalId AND grrc.goodsConditionCode = :goodsConditionCode_FREE
                     ), bp.supplierPrice)
                 )
             FROM AppBundle:BaseProduct AS bp
