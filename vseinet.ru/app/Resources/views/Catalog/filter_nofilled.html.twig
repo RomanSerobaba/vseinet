@@ -4,7 +4,8 @@
         {% for id, title in nofilledChoices %}
             {% if features.nofilled[id] is defined %}
                 <label for="filter_nofilled_{{ id }}">
-                    <input type="checkbox" id="filter_nofilled_{{ id }}" name="filter[nofilled][{{ id }}]" />
+                    <input type="checkbox" id="filter_nofilled_{{ id }}" name="filter[nofilled][{{ id }}]"
+                            {% if filter.nofilled[id] is defined %}checked{% endif %} />
                     {{ title }}&nbsp;<small>({{ features.nofilled[id] }})</small>
                 </label>
             {% endif %}
