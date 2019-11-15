@@ -115,7 +115,7 @@ class QueryBuilder extends ContainerAware
         $criteria[] = $this->getCriteriaPrice();
         $criteria[] = $this->getCriteriaAvailability();
         if ($this->getUserIsEmployee()) {
-            $criteria[] = $this->getCriteriaNofilled();
+            $this->criteria[] = $this->getCriteriaNofilled();
         }
         $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
@@ -129,7 +129,7 @@ class QueryBuilder extends ContainerAware
         $criteria = $this->criteria;
         $criteria[] = $this->getCriteriaAvailability();
         if ($this->getUserIsEmployee()) {
-            $criteria[] = $this->getCriteriaNofilled();
+            $this->criteria[] = $this->getCriteriaNofilled();
         }
         $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
@@ -143,7 +143,7 @@ class QueryBuilder extends ContainerAware
         $criteria = $this->criteria;
         $criteria[] = $this->getCriteriaPrice();
         if ($this->getUserIsEmployee()) {
-            $criteria[] = $this->getCriteriaNofilled();
+            $this->criteria[] = $this->getCriteriaNofilled();
         }
         $criteria = implode(' AND ', array_filter($criteria));
         $query[] = "
@@ -177,7 +177,7 @@ class QueryBuilder extends ContainerAware
             $criteria[] = $this->getCriteriaPrice();
             $criteria[] = $this->getCriteriaAvailability();
             if ($this->getUserIsEmployee()) {
-                $criteria[] = $this->getCriteriaNofilled();
+                $this->criteria[] = $this->getCriteriaNofilled();
             }
             $criteria = implode(' AND ', array_filter($criteria));
             $query[] = "
@@ -196,7 +196,7 @@ class QueryBuilder extends ContainerAware
             $criteria[] = $this->getCriteriaPrice();
             $criteria[] = $this->getCriteriaAvailability();
             if ($this->getUserIsEmployee()) {
-                $criteria[] = $this->getCriteriaNofilled();
+                $this->criteria[] = $this->getCriteriaNofilled();
             }
             $criteria = implode(' AND ', array_filter($criteria));
             $query[] = "
@@ -214,7 +214,7 @@ class QueryBuilder extends ContainerAware
     /**
      * @return array
      */
-    public function getProducts($isSearch = false): array
+    public function getProducts(): array
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
@@ -238,7 +238,7 @@ class QueryBuilder extends ContainerAware
         } elseif (Sort::MARGING === $filter->sort) {
             $sort = 'availability ASC, profit DESC';
         } else {
-            $sort = $isSearch ? 'weight DESC' : 'availability ASC, weight DESC';
+            $sort = 'availability ASC, weight DESC';
         }
 
         $page = min($filter->page, ceil(self::MAX_MATCHES / self::PER_PAGE));
