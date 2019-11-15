@@ -214,7 +214,7 @@ class QueryBuilder extends ContainerAware
     /**
      * @return array
      */
-    public function getProducts(): array
+    public function getProducts($isSearch = false): array
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
@@ -238,7 +238,7 @@ class QueryBuilder extends ContainerAware
         } elseif (Sort::MARGING === $filter->sort) {
             $sort = 'availability ASC, profit DESC';
         } else {
-            $sort = 'availability ASC, weight DESC';
+            $sort = $isSearch ? 'weight DESC' : 'availability ASC, weight DESC';
         }
 
         $page = min($filter->page, ceil(self::MAX_MATCHES / self::PER_PAGE));

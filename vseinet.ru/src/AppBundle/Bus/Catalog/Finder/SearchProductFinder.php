@@ -103,7 +103,7 @@ class SearchProductFinder extends AbstractProductFinder
             return [];
         }
 
-        $products = $qb->getProducts();
+        $products = $qb->getProducts(true);
 
         return $products;
     }
