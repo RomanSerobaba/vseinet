@@ -238,14 +238,14 @@ class QueryBuilder extends ContainerAware
         } elseif (Sort::MARGING === $filter->sort) {
             $sort = 'availability ASC, profit DESC';
         } else {
-            $sort = $isSearch ? 'weight DESC' : 'availability ASC, weight DESC';
+            $sort = $isSearch ? 'weight DESC, availability ASC' : 'availability ASC, weight DESC';
         }
 
         $page = min($filter->page, ceil(self::MAX_MATCHES / self::PER_PAGE));
         $offset = ($page - 1) * self::PER_PAGE;
 
         // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
-        $options = 'ranker=expr(\'sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 5 + lcs * 5 + exact_hit * 5) + if(availability < 4, 1, 0) * 20 + IF(price > 5000, 10, price / 500)\'), max_matches='.self::MAX_MATCHES;
+        $options = 'ranker=expr(\'sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 5 + lcs * 5 + exact_hit * 5) + if(availability < 4, 1, 0) * 20 + IF(price > 2000, 5, price / 400) + IF(price > 50000, 5, price / 10000)\'), max_matches='.self::MAX_MATCHES;
 
         $query = "
             SELECT
