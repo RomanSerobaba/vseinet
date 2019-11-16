@@ -82,12 +82,13 @@ class AutocompleteFinder extends AbstractProductFinder
         $query = "
             SELECT
                 id,
-                WEIGHT() AS weight
+                WEIGHT() AS weight,
+                LENGTH(name) AS name_len
             FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AND availability <= {$availability}
             ORDER BY weight DESC, availability ASC, rating DESC
             LIMIT ".self::COUNT_PRODUCTS."
-            OPTION ranker=expr('sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 5 + lcs * 5 + exact_hit * 5) + if(availability < 4, 1, 0) * 10 +  IF(price < 2000, 0, IF(price < 10000, 1, 2)) * 3')
+            OPTION ranker=expr('sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 5 + lcs * 5 + exact_hit * 5) + if(availability < 4, 1, 0) * 10')
             ;
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
