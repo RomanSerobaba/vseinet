@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CategorySeo
+ * CategorySeo.
  *
  * @ORM\Table(name="category_seo")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CategorySeoRepository")
@@ -38,14 +38,14 @@ class CategorySeo
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="text", nullable=true)
+     * @ORM\Column(name="meta_title", type="text", nullable=true)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="meta_description", type="text", nullable=true)
      */
     private $description;
 
@@ -63,9 +63,8 @@ class CategorySeo
      */
     private $pageDescription;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -75,9 +74,9 @@ class CategorySeo
     }
 
     /**
-     * Set categoryId
+     * Set categoryId.
      *
-     * @param integer $categoryId
+     * @param int $categoryId
      *
      * @return CategorySeo
      */
@@ -89,7 +88,7 @@ class CategorySeo
     }
 
     /**
-     * Get categoryId
+     * Get categoryId.
      *
      * @return int
      */
@@ -99,9 +98,9 @@ class CategorySeo
     }
 
     /**
-     * Set brandId
+     * Set brandId.
      *
-     * @param integer $brandId
+     * @param int $brandId
      *
      * @return CategorySeo
      */
@@ -113,7 +112,7 @@ class CategorySeo
     }
 
     /**
-     * Get brandId
+     * Get brandId.
      *
      * @return int
      */
@@ -122,9 +121,8 @@ class CategorySeo
         return $this->brandId;
     }
 
-
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -138,7 +136,7 @@ class CategorySeo
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -148,7 +146,7 @@ class CategorySeo
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -162,7 +160,7 @@ class CategorySeo
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -172,7 +170,7 @@ class CategorySeo
     }
 
     /**
-     * Set pageTitle
+     * Set pageTitle.
      *
      * @param string $pageTitle
      *
@@ -186,7 +184,7 @@ class CategorySeo
     }
 
     /**
-     * Get pageTitle
+     * Get pageTitle.
      *
      * @return string
      */
@@ -196,7 +194,7 @@ class CategorySeo
     }
 
     /**
-     * Set pageDescription
+     * Set pageDescription.
      *
      * @param string $pageDescription
      *
@@ -210,7 +208,7 @@ class CategorySeo
     }
 
     /**
-     * Get pageDescription
+     * Get pageDescription.
      *
      * @return string
      */
@@ -219,4 +217,3 @@ class CategorySeo
         return $this->pageDescription;
     }
 }
-
