@@ -82,8 +82,7 @@ class AutocompleteFinder extends AbstractProductFinder
         $query = "
             SELECT
                 id,
-                WEIGHT() AS weight,
-                LENGTH(name) AS name_len
+                WEIGHT() AS weight
             FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AND availability <= {$availability}
             ORDER BY weight DESC, availability ASC, rating DESC
