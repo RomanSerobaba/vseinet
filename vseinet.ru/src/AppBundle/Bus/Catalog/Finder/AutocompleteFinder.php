@@ -37,7 +37,7 @@ class AutocompleteFinder extends AbstractProductFinder
             WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
-            OPTION ranker=expr('sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25')
+            OPTION ranker=expr('sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 5 + lcs * 5 + exact_hit * 5) + if(availability < 4, 1, 0) * 20 + IF(price > 5000, 10, price / 500)')
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
         if (!empty($results[0])) {
@@ -87,7 +87,7 @@ class AutocompleteFinder extends AbstractProductFinder
             WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AND availability <= {$availability}
             ORDER BY availability ASC, weight DESC, rating DESC
             LIMIT ".self::COUNT_PRODUCTS."
-            OPTION ranker=expr('sum((4*lcs+2*(min_hit_pos==1)+exact_hit)*user_weight)*1000+bm25')
+            OPTION ranker=expr('sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 5 + lcs * 5 + exact_hit * 5) + if(availability < 4, 1, 0) * 20 + IF(price > 5000, 10, price / 500)')
             ;
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
