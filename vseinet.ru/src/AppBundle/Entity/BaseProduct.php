@@ -129,13 +129,6 @@ class BaseProduct
     /**
      * @var int
      *
-     * @ORM\Column(name="old_id", type="integer")
-     */
-    private $oldId;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="vat", type="integer")
      */
     private $vat;
@@ -515,30 +508,6 @@ class BaseProduct
     public function getCanonicalId()
     {
         return $this->canonicalId;
-    }
-
-    /**
-     * Set oldId.
-     *
-     * @param int $oldId
-     *
-     * @return BaseProduct
-     */
-    public function setOldId($oldId)
-    {
-        $this->oldId = $oldId;
-
-        return $this;
-    }
-
-    /**
-     * Get oldId.
-     *
-     * @return int
-     */
-    public function getOldId()
-    {
-        return $this->oldId;
     }
 
     /**
