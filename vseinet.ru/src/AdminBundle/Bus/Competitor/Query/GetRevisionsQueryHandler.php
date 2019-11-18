@@ -37,7 +37,7 @@ class GetRevisionsQueryHandler extends MessageHandler
             INNER JOIN product AS p ON p.base_product_id = bp.canonical_id AND p.geo_city_id = 0
             INNER JOIN competitor AS c ON c.id = cp.competitor_id
             inner join competitor_to_geo_city as c2c on c2c.competitor_id = c.id
-            WHERE bp.canonical_id = :base_product_id AND c2c.geo_city_id = :geo_city_id AND c.is_active = true and (c.is_common_pricing =true and cp.geo_city_id = 0 or c.is_common_pricing =true and cp.geo_city_id = :geo_city_id)
+            WHERE bp.canonical_id = :base_product_id AND c2c.geo_city_id = :geo_city_id AND c.is_active = true and (c.is_common_pricing =true and cp.geo_city_id = 0 or c.is_common_pricing = false and cp.geo_city_id = :geo_city_id)
             ORDER BY cp.completed_at
         ", new DTORSM(DTO\Revision::class));
         $q->setParameter('base_product_id', $product->getId());
