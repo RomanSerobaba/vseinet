@@ -21,9 +21,6 @@ class AddViewHistoryCategoryCommandHandler extends MessageHandler
                 (category_id, geo_city_id, user_id, viewed_at, ip)
 
                 VALUES(:category_id, :geo_city_id, :user_id, :viewed_at, :ip)
-                SELECT oi.id, :expires_at
-                FROM order_item AS oi
-                WHERE oi.order_did = :id
             ', new ResultSetMapping());
             $q->setParameter('category_id', $command->categoryId);
             $q->setParameter('geo_city_id', $this->getGeoCity()->getRealId());
