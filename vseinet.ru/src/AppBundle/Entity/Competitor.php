@@ -42,6 +42,13 @@ class Competitor
      */
     private $isActive;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_common_pricing", type="boolean")
+     */
+    private $isCommonPricing;
+
 
     /**
      * Get id
@@ -123,6 +130,30 @@ class Competitor
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set isCommonPricing.
+     *
+     * @param bool $isCommonPricing
+     *
+     * @return Competitor
+     */
+    public function setIsCommonPricing($isCommonPricing)
+    {
+        $this->isCommonPricing = $isCommonPricing;
+
+        return $this;
+    }
+
+    /**
+     * Get isCommonPricing.
+     *
+     * @return bool
+     */
+    public function getIsCommonPricing()
+    {
+        return $this->isCommonPricing;
     }
 }
 
