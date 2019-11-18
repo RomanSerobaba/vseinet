@@ -265,7 +265,8 @@ class OrderController extends Controller
         $command = new Command\CreateCommand($data);
         $cart = $this->get('query_bus')->handle(new \AppBundle\Bus\Cart\Query\GetQuery([
             'discountCode' => $this->get('session')->get('discountCode'),
-            'geoPointId' => $this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null,
+            'geoCityId' => $command->geoCityId ?? $this->getGeoCity()->getRealId(),
+            'geoPointId' => $command->geoPointId ?? ($this->getUserIsEmployee() ? $this->getUser()->defaultGeoPointId : null),
         ]));
 
         if ($cart->hasStroika && in_array($command->typeCode, [OrderType::NATURAL, OrderType::LEGAL])) {
