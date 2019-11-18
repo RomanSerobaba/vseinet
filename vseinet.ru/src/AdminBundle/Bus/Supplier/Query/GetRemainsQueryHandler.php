@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
+use AppBundle\Enum\BaseProductHistoryObject;
 use AppBundle\Enum\GoodsConditionCode;
 
 class GetRemainsQueryHandler extends MessageHandler
@@ -46,17 +47,17 @@ class GetRemainsQueryHandler extends MessageHandler
         $q = $em->createNativeQuery("
             WITH transfer_info AS (
                 SELECT
-                    sptl.transfered_at,
+                    bph.added_at as transfered_at,
                     CONCAT(p.lastname, ' ', p.firstname, ' ', p.secondname) AS transfered_by,
-                    sptl.supplier_product_id
+                    CAST(bph.new_value AS int) as supplier_product_id
                 FROM
-                    supplier_product_transfer_log AS sptl
-                    LEFT OUTER JOIN org_employee AS oe ON oe.user_id = sptl.transfered_by
+                    base_product_history AS bph
+                    LEFT OUTER JOIN org_employee AS oe ON oe.user_id = bph.user_id
                     LEFT OUTER JOIN \"user\" AS u ON u.id = oe.user_id
                     LEFT OUTER JOIN person AS p ON p.id = u.person_id
-                    LEFT OUTER JOIN supplier_product_transfer_log AS sptl2 ON sptl2.base_product_id = sptl.base_product_id AND (sptl.transfered_at < sptl2.transfered_at OR sptl.transfered_at = sptl2.transfered_at AND sptl.id < sptl2.id)
+                    LEFT OUTER JOIN base_product_history AS bph2 ON bph2.base_product_id = bph.base_product_id AND bph2.object = :baseProductHistoryObject_SUPPLIER_PRODUCT AND (bph.added_at < bph2.added_at OR bph.added_at = bph2.added_at AND bph.id < bph2.id)
                 WHERE
-                    sptl.base_product_id = :base_product_id AND sptl2.id IS NULL
+                    bph.base_product_id = :base_product_id AND bph2.id IS NULL AND bph.object = :baseProductHistoryObject_SUPPLIER_PRODUCT
             )
             SELECT
                 sp.id,
@@ -77,6 +78,7 @@ class GetRemainsQueryHandler extends MessageHandler
             ORDER BY sp.product_availability_code DESC, sp.price, sp.updated_at DESC
         ", new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
+        $q->setParameter('baseProductHistoryObject_SUPPLIER_PRODUCT', BaseProductHistoryObject::SUPPLIER_PRODUCT);
         $remains = array_merge($remains, $q->getResult('DTOHydrator'));
 
         return $remains;
