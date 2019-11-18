@@ -13,6 +13,7 @@ use AppBundle\Bus\Catalog\Sorting;
 use AppBundle\Bus\Catalog\Enum\Availability;
 use AppBundle\Bus\Catalog\Enum\Nofilled;
 use AppBundle\Bus\Catalog\Enum\Sort;
+use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
 
 class CatalogController extends Controller
@@ -115,6 +116,8 @@ class CatalogController extends Controller
         } else {
             $category->description = null;
         }
+
+        $this->get('command_bus')->handle(new AddViewHistoryCategoryCommand(['categoryId' => $category->id]));
 
         return $this->show('category', $finder, $request, ['category' => $category, 'brand' => $brand], ['id' => $id, 'brandName' => $brandName]);
     }

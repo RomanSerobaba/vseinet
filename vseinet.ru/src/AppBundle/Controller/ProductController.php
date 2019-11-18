@@ -13,6 +13,7 @@ use AppBundle\Bus\Brand\Query\GetByIdQuery as GetBrandByIdQuery;
 use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
 use AppBundle\Bus\Favorite\Query\GetInfoQuery as GetFavoriteInfoQuery;
 use AppBundle\Bus\Main\Command\AddLastviewProductCommand;
+use AppBundle\Bus\Main\Command\AddViewHistoryProductCommand;
 use AppBundle\Enum\DetailType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Enum\ProductAvailabilityCode;
@@ -82,6 +83,7 @@ class ProductController extends Controller
         }
 
         $this->get('command_bus')->handle(new AddLastviewProductCommand(['baseProductId' => $baseProduct->id]));
+        $this->get('command_bus')->handle(new AddViewHistoryProductCommand(['baseProductId' => $baseProduct->id]));
         $cookie = new Cookie('products_lastview', $request->cookies->get('products_lastview'), time() + 3600 * 24 * 7);
         $response = new Response();
         $response->headers->setCookie($cookie);

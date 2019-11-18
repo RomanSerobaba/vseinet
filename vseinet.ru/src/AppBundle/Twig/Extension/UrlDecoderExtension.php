@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Twig\Extension;
 
@@ -19,6 +19,6 @@ class UrlDecoderExtension extends AbstractExtension
 
     public function urlDecode($value)
     {
-        return urldecode($value);
+        return rawurldecode($value);
     }
 }
