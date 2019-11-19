@@ -23,7 +23,7 @@
         <div class="row v">
             <label for="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}">
                 {{ choice.label }}
-                <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %}{% if cart.hasStroika && constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') != choice.value %} disabled="disabled" title="Внимание! Самовывоз стройматериалов возможен только из города Пенза."{% endif %} novalidate="novalidate" />
+                <input type="radio" id="{{ form.deliveryTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.deliveryTypeCode.vars.full_name }}" value="{{ choice.value }}"{% if (choice.value == form.deliveryTypeCode.vars.value)  %} checked="checked"{% endif %}{% if cart.hasStroika and constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') != choice.value %} disabled="disabled" title="Внимание! Самовывоз стройматериалов возможен только из города Пенза."{% endif %} novalidate="novalidate" />
             </label>
         </div>
 
