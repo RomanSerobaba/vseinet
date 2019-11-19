@@ -34,7 +34,7 @@ class AutocompleteFinder extends AbstractProductFinder
                 id,
                 WEIGHT() AS weight
             FROM category
-            WHERE MATCH('".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."')
+            WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
             OPTION ranker=expr('sum((4*lcs+2*(min_hit_pos==1)+exact_hit*5)*user_weight)*1000')

@@ -223,7 +223,7 @@ class QueryBuilder extends ContainerAware
             $this->criteria[] = $this->getCriteriaNofilled();
         }
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".$this->escape($this->escape(implode(' ', $this->match)))."')";
+            $this->criteria[] = "MATCH('".$this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))))."')";
         }
         $criteria = implode(' AND ', array_filter($this->criteria));
 
@@ -570,5 +570,24 @@ class QueryBuilder extends ContainerAware
         $to = ['\\\\', '\(', '\)', '\|', '\-', '\!', '\@', '\~', '\"', "\'", '\&', '\/', '\^', '\$', '\='];
 
         return str_replace($from, $to, $string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function rankingExactWords(string $string): string
+    {
+        $pieces = explode(' ', $string);
+        $result = [];
+
+        foreach ($pieces as $piece) {
+            if (strlen($piece)) {
+                $result[] = '('.$piece.'^100|*'.$piece.'*)';
+            }
+        }
+
+        return implode(' ', $result);
     }
 }
