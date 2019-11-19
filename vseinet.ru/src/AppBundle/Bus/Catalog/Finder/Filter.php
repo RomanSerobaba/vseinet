@@ -373,7 +373,7 @@ class Filter extends ContainerAware
 
     protected function parseStr(string $value): ?string
     {
-        $str = preg_replace('/\p{C}+/u', '', urldecode(trim($value))) ?: null;
+        $str = preg_replace('/\p{C}+/u', '', rawurldecode(trim($value))) ?: null;
         if (empty($str) || 2 > mb_strlen($str)) {
             return null;
         }
