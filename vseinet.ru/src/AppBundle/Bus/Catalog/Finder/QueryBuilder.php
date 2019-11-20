@@ -245,7 +245,7 @@ class QueryBuilder extends ContainerAware
         $offset = ($page - 1) * self::PER_PAGE;
 
         // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
-        $options = 'ranker=expr(\'sum(IF(5 - min_best_span_pos > 0, 5 - min_best_span_pos, 0) * 4 + lcs * 5 + exact_hit * 5 + exact_order * 5) + if(availability < 4, 4 - availability, 0) * 6\'), max_matches='.self::MAX_MATCHES;
+        $options = 'ranker=expr(\'sum(sum_idf*100 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 10 + if(category_average_price > 500000, 2, if(category_average_price > 80000, 1, 0)) + if(popularity > 50, 10, 0)\'), max_matches='.self::MAX_MATCHES;
 
         $query = "
             SELECT
@@ -584,7 +584,7 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                $result[] = '(='.$piece.'^50|'.$piece.'*^10|*'.$piece.'*)';
+                $result[] = '(='.$piece.'^5|'.$piece.'*^2|*'.$piece.'*)';
             }
         }
 
