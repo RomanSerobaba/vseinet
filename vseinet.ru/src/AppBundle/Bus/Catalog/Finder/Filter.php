@@ -294,9 +294,9 @@ class Filter extends ContainerAware
         return array_merge($query, $extra);
     }
 
-    public function getAvailability($isSearch = false): int
+    public function getAvailability(): int
     {
-        return $this->availability ?? $this->getDefaultAvailability($isSearch);
+        return $this->availability ?? $this->getDefaultAvailability();
     }
 
     protected function getDetailTypes(array $ids): array
@@ -441,9 +441,10 @@ class Filter extends ContainerAware
         $this->details = [];
     }
 
-    protected function getDefaultAvailability($isSearch = false): int
+    protected function getDefaultAvailability(): int
     {
-        if ($this->getUserIsEmployee() && $isSearch) {
+        $path = parse_url($_SERVER['REQUEST_URI'])['path'];
+        if ($this->getUserIsEmployee() && preg_match('~\/search\/$~isu', $path)) {
             return Availability::FOR_ALL_TIME;
         }
 
