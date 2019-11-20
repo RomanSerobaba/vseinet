@@ -218,7 +218,7 @@ class QueryBuilder extends ContainerAware
     {
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
-        $this->criteria[] = $this->getCriteriaAvailability();
+        $this->criteria[] = $this->getCriteriaAvailability($isSearch);
         if ($this->getUserIsEmployee()) {
             $this->criteria[] = $this->getCriteriaNofilled();
         }
@@ -446,9 +446,9 @@ class QueryBuilder extends ContainerAware
     /**
      * @return string
      */
-    public function getCriteriaAvailability(): string
+    public function getCriteriaAvailability($isSearch = false): string
     {
-        $availability = $this->getFilter()->getAvailability();
+        $availability = $this->getFilter()->getAvailability($isSearch);
         if (!$this->getUserIsEmployee()) {
             $availability = min($availability, Availability::ACTIVE);
         }

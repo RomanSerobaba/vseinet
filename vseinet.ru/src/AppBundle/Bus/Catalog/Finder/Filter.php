@@ -294,9 +294,9 @@ class Filter extends ContainerAware
         return array_merge($query, $extra);
     }
 
-    public function getAvailability(): int
+    public function getAvailability($isSearch = false): int
     {
-        return $this->availability ?? $this->getDefaultAvailability();
+        return $this->availability ?? $this->getDefaultAvailability($isSearch);
     }
 
     protected function getDetailTypes(array $ids): array
@@ -441,9 +441,9 @@ class Filter extends ContainerAware
         $this->details = [];
     }
 
-    protected function getDefaultAvailability(): int
+    protected function getDefaultAvailability($isSearch = false): int
     {
-        if ($this->getUserIsEmployee()) {
+        if ($this->getUserIsEmployee() && $isSearch) {
             return Availability::FOR_ALL_TIME;
         }
 
