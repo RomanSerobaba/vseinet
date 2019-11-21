@@ -216,6 +216,7 @@ class QueryBuilder extends ContainerAware
      */
     public function getProducts($isSearch = false): array
     {
+        $idCriteria = $this->criteria;
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
         $this->criteria[] = $this->getCriteriaAvailability();
@@ -266,7 +267,12 @@ class QueryBuilder extends ContainerAware
             $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
         }
         if (1 === count($this->match) and is_numeric($this->match[0])) {
-            $idCriteria = $criteria . " AND id = " . intval($this->match[0]);
+            $idCriteria[] = $this->getCriteriaIsAlive();
+            if ($this->getUserIsEmployee()) {
+                $idCriteria[] = $this->getCriteriaNofilled();
+            }
+            $idCriteria[] = 'id = ' . intval($this->match[0]);
+            $idCriteria = implode(' AND ', array_filter($idCriteria));
             $query = "
                 SELECT id
                 FROM product_index_{$this->getGeoCity()->getRealId()}
