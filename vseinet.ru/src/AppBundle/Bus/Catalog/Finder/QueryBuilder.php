@@ -245,7 +245,7 @@ class QueryBuilder extends ContainerAware
         $offset = ($page - 1) * self::PER_PAGE;
 
         // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
-        $options = 'ranker=expr(\'sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(category_average_price > 500000, 2, if(category_average_price > 80000, 1, 0)) * 10 + if(popularity > 50, 10, 0)\'), max_matches='.self::MAX_MATCHES;
+        $options = 'ranker=expr(\'sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(category_average_price > 500000, 2, if(category_average_price > 80000, 1, 0)) * 10 + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)\'), max_matches='.self::MAX_MATCHES;
 
         $query = "
             SELECT
