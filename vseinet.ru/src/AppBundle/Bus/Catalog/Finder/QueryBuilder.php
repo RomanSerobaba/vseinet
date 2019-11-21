@@ -266,7 +266,19 @@ class QueryBuilder extends ContainerAware
             $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
         }
         if (1 === count($this->match) and is_numeric($this->match[0])) {
-            $ids = array_merge([intval($this->match[0])], $ids);
+            $idCriteria = $criteria . " AND id = " . intval($this->match[0]);
+            $query = "
+                SELECT id
+                FROM product_index_{$this->getGeoCity()->getRealId()}
+                WHERE {$idCriteria}
+                ;
+            ";
+
+            $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
+
+            if (!empty($results[0])) {
+                $ids = array_merge([intval($this->match[0])], $ids);
+            }
         }
         if (empty($ids)) {
             return [];
