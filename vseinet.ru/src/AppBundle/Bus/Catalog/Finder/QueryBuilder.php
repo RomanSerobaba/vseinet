@@ -217,6 +217,7 @@ class QueryBuilder extends ContainerAware
     public function getProducts($isSearch = false): array
     {
         $idCriteria = $this->criteria;
+        $expression = $this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))));
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
         $this->criteria[] = $this->getCriteriaAvailability();
@@ -224,7 +225,7 @@ class QueryBuilder extends ContainerAware
             $this->criteria[] = $this->getCriteriaNofilled();
         }
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".$this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))))."')";
+            $this->criteria[] = "MATCH('{$expression}')";
         }
         $criteria = implode(' AND ', array_filter($this->criteria));
 
@@ -253,7 +254,7 @@ class QueryBuilder extends ContainerAware
                 id,
                 WEIGHT() AS weight".
                 ($isSearch ? "
-                , SNIPPET(name, '".$this->escape($this->escape(implode(' ', $this->match)))."') AS label" : "")
+                , SNIPPET(name, '{$expression}') AS label" : "")
                 ."
             FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$criteria}

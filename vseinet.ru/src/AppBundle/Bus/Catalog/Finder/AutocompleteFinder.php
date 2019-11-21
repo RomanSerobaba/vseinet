@@ -29,13 +29,14 @@ class AutocompleteFinder extends AbstractProductFinder
         $em = $this->getDoctrine()->getManager();
         $result = [];
 
+        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
         $query = "
             SELECT
                 id,
                 WEIGHT() AS weight,
-                SNIPPET(name, '".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AS label
+                SNIPPET(name, '{$expression}') AS label
             FROM category
-            WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."')
+            WHERE MATCH('{$expression}')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
             OPTION ranker=expr('sum(sum_idf * 100 + exact_hit * 5) + if(is_accessories == 1, 0, 5) + if(average_price > 500000, 5, 0)')
@@ -87,14 +88,15 @@ class AutocompleteFinder extends AbstractProductFinder
         }
 
         $availability = $this->getUserIsEmployee() ? Availability::FOR_ALL_TIME : Availability::ACTIVE;
+        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
 
         $query = "
             SELECT
                 id,
                 WEIGHT() AS weight,
-                SNIPPET(name, '".$this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q))."') AS label
+                SNIPPET(name, '{$expression}') AS label
             FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."') AND availability <= {$availability}
+            WHERE MATCH('{$expression}') AND availability <= {$availability}
             ORDER BY weight DESC, availability ASC, rating DESC, price ASC
             LIMIT ".self::COUNT_PRODUCTS."
             OPTION ranker=expr('sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(is_accessories == 1, 0, 10) + if(category_average_price > 500000, 10, 0) + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)')
