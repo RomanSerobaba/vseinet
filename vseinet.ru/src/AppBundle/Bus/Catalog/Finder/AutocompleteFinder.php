@@ -38,7 +38,7 @@ class AutocompleteFinder extends AbstractProductFinder
             WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
-            OPTION ranker=expr('sum(sum_idf * 100 + exact_hit * 5) + if(is_accessories == 1, 0, 5) + if(category_average_price > 500000, 5, 0)')
+            OPTION ranker=expr('sum(sum_idf * 100 + exact_hit * 5) + if(is_accessories == 1, 0, 5) + if(average_price > 500000, 5, 0)')
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
         if (!empty($results[0])) {
