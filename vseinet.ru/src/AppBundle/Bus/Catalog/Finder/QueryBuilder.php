@@ -602,7 +602,7 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                $result[] = '(='.$piece.'^10|'.$piece.'*^2|*'.$piece.'*)';
+                $result[] = '(*'.$piece.'*|'.$piece.'*^2|='.$piece.'^10)';
             }
         }
 
