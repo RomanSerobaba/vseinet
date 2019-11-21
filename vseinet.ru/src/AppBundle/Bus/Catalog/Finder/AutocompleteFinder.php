@@ -85,7 +85,7 @@ class AutocompleteFinder extends AbstractProductFinder
                 WEIGHT() AS weight
             FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."') AND availability <= {$availability}
-            ORDER BY weight DESC, availability ASC, rating DESC
+            ORDER BY weight DESC, availability ASC, rating DESC, price ASC
             LIMIT ".self::COUNT_PRODUCTS."
             OPTION ranker=expr('sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(category_average_price > 500000, 2, if(category_average_price > 80000, 1, 0)) * 10 + if(popularity > 50, 10, 0)')
             ;
