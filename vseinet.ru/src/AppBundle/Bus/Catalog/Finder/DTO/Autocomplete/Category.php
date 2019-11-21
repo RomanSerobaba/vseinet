@@ -31,6 +31,11 @@ class Category
      */
     public $type = 'category';
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $label;
+
 
     public function __construct($id, $name, $pid) {
         $this->id = $id;

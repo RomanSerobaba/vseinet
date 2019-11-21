@@ -1,11 +1,11 @@
 $(function() {
-    var search = $('#header .search'), 
-        input = search.find('.txt'), 
-        indicator = search.find('.indicator'), 
-        cache = {}, 
-        renderCategories, 
+    var search = $('#header .search'),
+        input = search.find('.txt'),
+        indicator = search.find('.indicator'),
+        cache = {},
+        renderCategories,
         renderProducts;
-    
+
     input.on('input', function() {
         indicator.toggleClass('search_clear', '' == input.val());
     });
@@ -14,7 +14,7 @@ $(function() {
         input.val('').trigger('change');
         indicator.removeClass('search_clear');
     });
-    
+
     input.autocomplete({
         create: function() {
             $(this).data('ui-autocomplete').widget().menu({
@@ -40,7 +40,7 @@ $(function() {
                 indicator.removeClass('search_clear').addClass('loading');
                 sp.get(Routing.generate('catalog_search_autocomplete'), {q: request.term}).done(function(data) {
                     cache[term] = $.map(data.result||[], function(item) {
-                        item.label = item.value = item.name;
+                        item.value = item.name;
                         if (item.type == 'product') {
                             item.label += ', <small>код товара: <b>' + item.id + '</b></small>';
                         }
