@@ -16,7 +16,7 @@ class Categories
      */
     public $tree;
 
-    public function __construct($main, $tree)
+    public function __construct($main = [], $tree = [])
     {
         $this->main = $main;
         $this->tree = $tree;

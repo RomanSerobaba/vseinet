@@ -85,6 +85,9 @@ class AbstractProductFinder extends ContainerAware
         ');
         $q->setParameter('ids', array_keys($categoryId2count));
         $categories = $q->getResult('IndexByHydrator');
+        if (count($categories) <= 1) {
+            return new DTO\Categories();
+        }
 
         foreach ($categories as $id => $category) {
             $category->countProducts = $categoryId2count[$id];
