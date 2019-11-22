@@ -29,15 +29,17 @@ class AutocompleteFinder extends AbstractProductFinder
         $em = $this->getDoctrine()->getManager();
         $result = [];
 
+        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
         $query = "
             SELECT
                 id,
-                WEIGHT() AS weight
+                WEIGHT() AS weight,
+                SNIPPET(name, '{$expression}') AS label
             FROM category
-            WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."')
+            WHERE MATCH('{$expression}')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
-            OPTION ranker=expr('sum(sum_idf * 100 + exact_hit * 5) + if(average_price > 500000, 2, IF(average_price > 80000, 1, 0)) * 5')
+            OPTION ranker=expr('sum(sum_idf * 100 + exact_hit * 5) + if(is_accessories == 1, 0, 5) + if(average_price > 500000, 5, 0)')
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
         if (!empty($results[0])) {
@@ -66,6 +68,15 @@ class AutocompleteFinder extends AbstractProductFinder
                     }
                     $result[$id] = clone $categories[$id];
                     $result[$id]->breadcrumbs = array_reverse($breadcrumbs);
+                    $result[$id]->label = $result[$id]->name;
+
+                    if (!empty($results['0'])) {
+                        foreach ($results[0] as $elem) {
+                            if ($elem['id'] == $id) {
+                                $result[$id]->label = $elem['label'];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -73,21 +84,25 @@ class AutocompleteFinder extends AbstractProductFinder
         if (is_numeric($filter->q)) {
             $product = $em->getRepository(BaseProduct::class)->find($filter->q);
             if ($product instanceof BaseProduct) {
-                $result[] = new DTO\Autocomplete\Product($product->getCanonicalId(), $product->getName());
+                $p = new DTO\Autocomplete\Product($product->getCanonicalId(), $product->getName());
+                $p->label = $p->name;
+                $result[] = $p;
             }
         }
 
         $availability = $this->getUserIsEmployee() ? Availability::FOR_ALL_TIME : Availability::ACTIVE;
+        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
 
         $query = "
             SELECT
                 id,
-                WEIGHT() AS weight
+                WEIGHT() AS weight,
+                SNIPPET(name, '{$expression}') AS label
             FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE MATCH('".$this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)))."') AND availability <= {$availability}
+            WHERE MATCH('{$expression}') AND availability <= {$availability}
             ORDER BY weight DESC, availability ASC, rating DESC, price ASC
             LIMIT ".self::COUNT_PRODUCTS."
-            OPTION ranker=expr('sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(category_average_price > 500000, 2, if(category_average_price > 80000, 1, 0)) * 10 + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)')
+            OPTION ranker=expr('sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0) + if(exact_order == 1, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(is_accessories == 1, 0, 5) + if(category_average_price > 500000, 5, 0) + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)')
             ;
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
@@ -95,7 +110,18 @@ class AutocompleteFinder extends AbstractProductFinder
             $productIds = array_map(function ($row) { return intval($row['id']); }, $results[0]);
             $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $productIds]));
             foreach ($products as $product) {
-                $result[] = new DTO\Autocomplete\Product($product->id, $product->name);
+                $p = new DTO\Autocomplete\Product($product->id, $product->name);
+                $p->label = $p->name;
+
+                if (!empty($results['0'])) {
+                    foreach ($results[0] as $elem) {
+                        if ($elem['id'] == $product->id) {
+                            $p->label = $elem['label'];
+                        }
+                    }
+                }
+
+                $result[] = $p;
             }
         }
 

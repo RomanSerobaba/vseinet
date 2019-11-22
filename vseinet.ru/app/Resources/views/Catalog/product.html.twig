@@ -8,7 +8,7 @@
     <div class="details">
         <div class="title">
             <a href="{{ path('catalog_product', { id: product.id }) }}" class="title">
-                {{ product.name }}
+                {{ product.name|raw }}
             </a>
             <small>Код товара:
                 <b class="sku">{{ product.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (product.price - product.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}

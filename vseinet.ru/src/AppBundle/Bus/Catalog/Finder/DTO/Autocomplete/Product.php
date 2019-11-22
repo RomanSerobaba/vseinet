@@ -21,6 +21,11 @@ class Product
      */
     public $type = 'product';
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $label;
+
 
     public function __construct($id, $name) {
         $this->id = $id;

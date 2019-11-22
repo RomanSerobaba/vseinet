@@ -217,6 +217,7 @@ class QueryBuilder extends ContainerAware
     public function getProducts($isSearch = false): array
     {
         $idCriteria = $this->criteria;
+        $expression = $this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))));
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
         $this->criteria[] = $this->getCriteriaAvailability();
@@ -224,7 +225,7 @@ class QueryBuilder extends ContainerAware
             $this->criteria[] = $this->getCriteriaNofilled();
         }
         if (!empty($this->match)) {
-            $this->criteria[] = "MATCH('".$this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))))."')";
+            $this->criteria[] = "MATCH('{$expression}')";
         }
         $criteria = implode(' AND ', array_filter($this->criteria));
 
@@ -246,12 +247,15 @@ class QueryBuilder extends ContainerAware
         $offset = ($page - 1) * self::PER_PAGE;
 
         // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
-        $options = 'ranker=expr(\'sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(category_average_price > 500000, 2, if(category_average_price > 80000, 1, 0)) * 10 + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)\'), max_matches='.self::MAX_MATCHES;
+        $options = 'ranker=expr(\'sum(sum_idf * 10 + if(min_best_span_pos < 5, 5, 0) + if(exact_order == 1, 5, 0)) + if(availability < 4, 4 - availability, 0) * 4 + if(is_accessories == 1, 0, 5) + if(category_average_price > 500000, 5, 0) + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)\'), max_matches='.self::MAX_MATCHES;
 
         $query = "
             SELECT
                 id,
-                WEIGHT() AS weight
+                WEIGHT() AS weight".
+                ($isSearch ? "
+                , SNIPPET(name, '{$expression}') AS label" : "")
+                ."
             FROM product_index_{$this->getGeoCity()->getRealId()}
             WHERE {$criteria}
             ORDER BY {$sort}
@@ -280,9 +284,9 @@ class QueryBuilder extends ContainerAware
                 ;
             ";
 
-            $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
+            $idResults = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
 
-            if (!empty($results[0])) {
+            if (!empty($idResults[0])) {
                 $ids = array_merge([intval($this->match[0])], $ids);
             }
         }
@@ -293,8 +297,17 @@ class QueryBuilder extends ContainerAware
         $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $ids]));
         $cartInfo = $this->get('query_bus')->handle(new GetCartInfoQuery());
 
-        foreach ($products as $id => $product) {
+        foreach ($products as $product) {
             $product->quantityInCart = $cartInfo->products[$product->id]->quantity ?? 0;
+            $product->label = $product->name;
+
+            if ($isSearch && !empty($results['0'])) {
+                foreach ($results[0] as $result) {
+                    if ($result['id'] == $product->id) {
+                        $product->name = $result['label'];
+                    }
+                }
+            }
         }
 
         return $products;
@@ -602,7 +615,7 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                $result[] = '(='.$piece.'^10|'.$piece.'*^2|*'.$piece.'*)';
+                $result[] = '(*'.$piece.'*|'.$piece.'*^2|='.$piece.'^10)';
             }
         }
 

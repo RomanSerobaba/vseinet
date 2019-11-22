@@ -112,7 +112,7 @@
     line-height: inherit;
 }
 #category .product .title A B {
-    background: #ffc;
+    background: #ffea00ab;
 }
 #category .product .title SMALL {
     position: static;
