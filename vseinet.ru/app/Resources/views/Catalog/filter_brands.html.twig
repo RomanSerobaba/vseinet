@@ -3,33 +3,52 @@
         <span class="filter-titles">Производитель</span>
     </div>
     <div class="sheet multi brands" style="display:block">
+        <div class="search-box">
+            <input type="text" class="txt" />
+        </div>
         {% set hasOtherBrands = false %}
-        {% for brand in features.brands %}
-            {% if not (brand.isTop or filter.brandIds[brand.id] is defined) %}
-                {% set hasOtherBrands = true %}
-            {% endif %}
-            <div class="{% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %}">
-                {% if category is defined %}
-                    <a
-                        href="{{ path('catalog_category_with_brand', { id: category.id, brandName: brand.name }) }}"
-                        class="brand-page"
-                    >
-                        &rarr;
-                    </a>
+        <div class="brands-box">
+            {% for brand in features.brands %}
+                {% if not (brand.isTop or filter.brandIds[brand.id] is defined) %}
+                    {% set hasOtherBrands = true %}
                 {% endif %}
-                <label for="filter_brand_{{ brand.id }}" data-id="{{ brand.id }}">
-                    <input
-                        type="checkbox"
-                        id="filter_brand_{{ brand.id }}"
-                        name="filter[brand][{{ brand.id }}]"
-                        {% if filter.brandIds[brand.id] is defined %}checked{% endif %}
-                    />
-                    {{ brand.name }}&nbsp;<small>({{ brand.countProducts }})</small>
-                </label>
-            </div>
-        {% endfor %}
+                <div class="brand {% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %}{% if filter.brandIds[brand.id] is defined %} checked{% endif %}">
+                    {% if category is defined %}
+                        <a
+                            href="{{ path('catalog_category_with_brand', { id: category.id, brandName: brand.name }) }}"
+                            class="brand-page"
+                        >
+                            &rarr;
+                        </a>
+                    {% endif %}
+                    <label for="filter_brand_{{ brand.id }}" data-id="{{ brand.id }}">
+                        <input
+                            type="checkbox"
+                            id="filter_brand_{{ brand.id }}"
+                            name="filter[brand][{{ brand.id }}]"
+                            {% if filter.brandIds[brand.id] is defined %}checked{% endif %}
+                        />
+                        <span class="name">{{ brand.name }}</span>&nbsp;<small>({{ brand.countProducts }})</small>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
         {% if hasOtherBrands %}
             <a href="javascript:void(0)" class="toggle-other ajax gray r">показать все</a>
         {% endif %}
     </div>
 {% endif %}
+<style>
+.sheet.brands .search-box {
+    display: none;
+}
+.sheet.brands.show-all .search-box {
+    display: block;
+    padding: 0 19px 12px 0;
+}
+.sheet.brands.show-all .brands-box {
+    display: block;
+    max-height: 168px;
+    overflow: auto;
+}
+</style>

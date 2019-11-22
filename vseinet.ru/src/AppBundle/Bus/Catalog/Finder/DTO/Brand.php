@@ -19,6 +19,11 @@ class Brand
     /**
      * @Assert\Type(type="integer")
      */
+    public $rating;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $countProducts;
 
     /**
@@ -31,9 +36,10 @@ class Brand
      */
     public $includeIds;
 
-
-    public function __construct($id, $name) {
+    public function __construct($id, $name, $rating)
+    {
         $this->id = $id;
         $this->name = $name;
+        $this->rating = $rating;
     }
 }

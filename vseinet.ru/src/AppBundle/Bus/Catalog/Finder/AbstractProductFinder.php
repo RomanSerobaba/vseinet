@@ -145,18 +145,17 @@ class AbstractProductFinder extends ContainerAware
         }
 
         $brandId2count = $this->getBrandId2Count($found);
-        arsort($brandId2count);
-
-        // if (self::COUNT_GET_BRANDS < count($brandId2count)) {
-        //     $otherBrandId2Count = array_slice($brandId2count, self::COUNT_GET_BRANDS, null, true);
-        //     $brandId2count = array_slice($brandId2count, 0, self::COUNT_GET_BRANDS, true);
-        // }
 
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\Catalog\Finder\DTO\Brand (
                     b.id,
-                    b.name
+                    b.name,
+                    COALESCE(FIRST(
+                        SELECT COUNT(h)
+                        FROM AppBundle:ViewHistoryBrand AS h
+                        WHERE h.brandId = b.id AND h.viewedAt >= :lastMonth
+                    ), 0)
                 ),
                 CASE WHEN b.id > 0 THEN 1 ELSE 2 END AS HIDDEN ORD
             FROM AppBundle:Brand AS b
@@ -164,23 +163,25 @@ class AbstractProductFinder extends ContainerAware
             ORDER BY ORD, b.name
         ");
         $q->setParameter('ids', array_keys($brandId2count));
+        $q->setParameter('lastMonth', new \DateTime('-1 month'));
         $brands = $q->getResult('IndexByHydrator');
 
-        $brandId2count = array_intersect_key($brandId2count, $brands);
-
-        foreach ($brandId2count as $id => $count) {
-            $brands[$id]->countProducts = $count;
+        if (isset($brandId2count[0])) {
+            $brands[0] = new DTO\Brand(0, 'Без бренда', 0);
         }
-        $brandId2count = array_slice($brandId2count, 0, self::COUNT_TOP_BRANDS, true);
-        foreach ($brandId2count as $id => $count) {
+        foreach ($brands as $id => $brand) {
+            $brand->countProducts = $brandId2count[$id];
+        }
+
+        $rating = [];
+        foreach ($brands as $id => $brand) {
+            $rating[$id] = $brand->rating;
+        }
+        arsort($rating);
+        $rating = array_slice($rating, 0, self::COUNT_TOP_BRANDS, true);
+        foreach ($rating as $id => $_) {
             $brands[$id]->isTop = true;
         }
-
-        // if (!empty($otherBrandId2Count)) {
-        //     $brands[-1] = new DTO\Brand(-1, 'Прочие');
-        //     $brands[-1]->countProducts = array_sum($otherBrandId2Count);
-        //     $brands[-1]->includeIds = array_keys($otherBrandId2Count);
-        // }
 
         return $brands;
     }

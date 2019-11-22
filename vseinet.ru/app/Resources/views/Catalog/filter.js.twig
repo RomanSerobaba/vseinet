@@ -109,17 +109,32 @@ $(function() {
         tab.next('.sheet')[tab.is('.expanded') ? 'slideDown' : 'slideUp'](250);
         total.hide();
     });
-    filter.on('click', '.toggle-other', function(event) {
-        var a = $(this), other = a.closest('.sheet').find('.other');
-        if (other.is(':hidden')) {
-            a.text('свернуть');
-            other.slideDown(250);
-        }
-        else {
+    filter.on('click', '.toggle-other', function(e) {
+        var a = $(this), sheet = a.closest('.sheet');
+        if (sheet.is('.show-all')) {
             a.text('показать все');
-            other.slideUp(250);
+            var show = sheet.find('.brand.main, .brand.checked').slideDown(250);
+            sheet.find('.brand').not(show).slideUp(250, function() {
+                sheet.removeClass('show-all');
+            });
+        } else {
+            a.text('свернуть');
+            sheet.find('.brand:hidden').slideDown(250, function() {
+                sheet.find('input.txt').focus().val('');
+            });
+            sheet.addClass('show-all');
         }
-        event.preventDefault();
+        e.preventDefault();
+    });
+    var brandList = filter.find('.sheet.brands .brand');
+    filter.on('keyup', '.sheet.brands .search-box input', function(e) {
+        var r = new RegExp(e.target.value, 'i');
+        brandList.each(function(i, b) {
+            $(b)[b.querySelector('.name').textContent.match(r) ? 'slideDown' : 'slideUp'](4);
+        });
+    });
+    filter.find('.sheet.brands .brands-box').on('click', 'input', function(e) {
+        $(e.target).closest('.brand').toggleClass('checked', e.target.checked);
     });
     filter.on('click', '.availability input', function(event) {
         filter.form('submit');
