@@ -84,7 +84,9 @@ class AutocompleteFinder extends AbstractProductFinder
         if (is_numeric($filter->q)) {
             $product = $em->getRepository(BaseProduct::class)->find($filter->q);
             if ($product instanceof BaseProduct) {
-                $result[] = new DTO\Autocomplete\Product($product->getCanonicalId(), $product->getName());
+                $p = new DTO\Autocomplete\Product($product->getCanonicalId(), $product->getName());
+                $p->label = $p->name;
+                $result[] = $p;
             }
         }
 
