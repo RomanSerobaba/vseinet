@@ -36,6 +36,9 @@
                 {% endif %}
             </nav>
             <div class="wrapper">
+                <div id="main-categories">
+                    {% include 'Catalog/filter_main_categories.html.twig' %}
+                </div>
                 {% include 'Catalog/products.html.twig' %}
             </div>
         </div>

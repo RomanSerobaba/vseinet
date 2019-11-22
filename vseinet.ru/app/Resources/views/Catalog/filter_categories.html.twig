@@ -1,5 +1,5 @@
-{% if features.categories is not null and features.categories|length %}
-    {% for group in features.categories %}
+{% if features.categories is not null and features.categories.tree|length %}
+    {% for group in features.categories.tree %}
         <div class="tab categoties expanded">
             <span class="filter-titles">{{ group.name }}</span>
         </div>

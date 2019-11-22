@@ -2438,6 +2438,7 @@
 	}
 	#category #nav{
 		margin-bottom: 0;
+		min-height: 0;
 	}
 	#category{
 		padding-top: 40px;

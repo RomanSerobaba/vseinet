@@ -19,6 +19,26 @@ class Category
     /**
      * @Assert\Type(type="integer")
      */
+    public $id2;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $name2;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $id1;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $name1;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $countProducts;
 
     /**
@@ -26,10 +46,24 @@ class Category
      */
     public $children;
 
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isActive = false;
 
-    public function __construct($id, $name, $countProducts = 0, $children = []) {
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $url;
+
+    public function __construct($id, $name, $id2 = null, $name2 = null, $id1 = null, $name1 = null, $countProducts = 0, $children = [])
+    {
         $this->id = $id;
         $this->name = $name;
+        $this->id2 = $id2;
+        $this->name2 = $name2;
+        $this->id1 = $id1;
+        $this->name1 = $name1;
         $this->countProducts = $countProducts;
         $this->children = $children;
     }

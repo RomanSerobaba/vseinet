@@ -55,67 +55,100 @@ class AbstractProductFinder extends ContainerAware
      *
      * @return array
      */
-    protected function getCategories(array $found): array
+    protected function getCategories(array $found): DTO\Categories
     {
         if (empty($found)) {
             return [];
         }
 
         $categoryId2count = $this->getCategoryId2Count($found);
+        arsort($categoryId2count);
 
         $q = $this->getDoctrine()->getManager()->createQuery('
             SELECT
-                c.id,
-                c.name,
-                c.isTplEnabled,
-                c2.id AS id2,
-                c2.name AS name2,
-                CASE WHEN c.isTplEnabled = true THEN 1 ELSE 2 END AS HIDDEN ORD1,
-                CASE WHEN c.isTplEnabled = true THEN c.name ELSE c2.name END AS HIDDEN ORD2
-            FROM AppBundle:Category c
-            INNER JOIN AppBundle:CategoryPath cp WITH cp.id = c.id AND cp.plevel = 2
-            INNER JOIN AppBundle:Category c2 WITH c2.id = cp.pid
-            WHERE c.id IN (:ids)
-            ORDER BY ORD1, ORD2, c.name
+                NEW AppBundle\Bus\Catalog\Finder\DTO\Category (
+                    c.id,
+                    c.name,
+                    c2.id,
+                    c2.name,
+                    c1.id,
+                    c1.name
+                ),
+                CASE WHEN cs.isAccessories = false THEN 1 ELSE 2 END AS HIDDEN ORD
+            FROM AppBundle:Category AS c
+            INNER JOIN AppBundle:CategoryStats AS cs WITH cs.categoryId = c.id
+            INNER JOIN AppBundle:CategoryPath AS cp2 WITH cp2.id = c.id AND cp2.plevel = 2
+            INNER JOIN AppBundle:Category AS c2 WITH c2.id = cp2.pid
+            INNER JOIN AppBundle:Category AS c1 WITH c1.id = c2.pid
+            WHERE c.id IN (:ids) AND c.id != 7562 AND c.aliasForId IS NULL
+            ORDER BY cs.popularity DESC, ORD, c.name
         ');
         $q->setParameter('ids', array_keys($categoryId2count));
-        $categories = $q->getResult();
+        $categories = $q->getResult('IndexByHydrator');
 
-        $main = [];
-        $tree = [];
-        foreach ($categories as $category) {
-            $id = $category['id'];
-            if ($category['isTplEnabled']) {
-                $main[$id] = new DTO\Category($id, $category['name'], $categoryId2count[$id]);
-            } else {
-                $id2 = $category['id2'];
-                if (empty($tree[$id2])) {
-                    $tree[$id2] = new DTO\Category($id2, $category['name2']);
-                }
-                $tree[$id2]->children[$id] = new DTO\Category($id, $category['name'], $categoryId2count[$id]);
-                $tree[$id2]->countProducts += $categoryId2count[$id];
-            }
-            if (!empty($main)) {
-                $tree[0] = new DTO\Category(0, 'Категории', 0, $main);
-            }
-            // @todo
-            // if (!empty($tree)) {
-            //     if (20 < count($tree)) {
-            //         $other = new Category(-1, 'Прочие');
-            //         foreach ($tree as $id2 => $cat2) {
-            //             if (1 == count($cat2->children)) {
-            //                 $cat2->name .= ' » '.reset($cat2->children)->name;
-            //                 $other->children[$cat2->id] = $cat2;
-            //             }
-            //         }
-            //         if (!empty($other->children)) {
-            //             $tree[-1] = $other;
-            //         }
-            //     }
-            // }
+        foreach ($categories as $id => $category) {
+            $category->countProducts = $categoryId2count[$id];
         }
 
-        return $tree;
+        $groups = [];
+        foreach ($categories as $category) {
+            if ($category->id === $category->id2 || isset($groups[$category->id1])) {
+                if (!isset($groups[$category->id1])) {
+                    $groups[$category->id1] = ['categories' => [], 'frequency' => 0];
+                }
+                $groups[$category->id1]['categories'][] = $category;
+                $groups[$category->id1]['frequency'] += $category->countProducts;
+            } else {
+                if (!isset($groups[$category->id2])) {
+                    $groups[$category->id2] = ['categories' => [], 'frequency' => 0];
+                }
+                $groups[$category->id2]['categories'][] = $category;
+                $groups[$category->id2]['frequency'] += $category->countProducts;
+            }
+        }
+
+        usort($groups, function ($g1, $g2) {
+            return $g1['frequency'] < $g2['frequency'];
+        });
+
+        $categories = array_reduce($groups, function ($carry, $group) {
+            return array_merge($carry, $group['categories']);
+        }, []);
+
+        $main = array_slice($categories, 0, 3, true);
+        if (count($main)) {
+            $filter = $this->getFilter();
+            foreach ($main as $category) {
+                $category->isActive = !empty($filter->categoryIds[$category->id]);
+                $category->url = '?'.http_build_query($filter->build(['c' => $category->id]));
+            }
+            $all = new DTO\Category(0, 'Все');
+            $all->isActive = empty($filter->categoryIds);
+            $all->url = '?'.http_build_query($filter->build(['c' => null]));
+            array_unshift($main, $all);
+        }
+        $categories = array_slice($categories, 3, count($categories), true);
+        $tree = [];
+        foreach ($categories as $category) {
+            if (!isset($tree[$category->id2])) {
+                if (5 === count($tree)) {
+                    break;
+                }
+                $tree[$category->id2] = new DTO\Category($category->id2, $category->name2);
+            }
+            $tree[$category->id2]->children[] = $category;
+        }
+        $tree = array_values($tree);
+        $total = 15;
+        foreach ($tree as $index => $category) {
+            $total -= count($category->children);
+            if ($total <= 0) {
+                break;
+            }
+        }
+        $tree = array_slice($tree, 0, $index + 1);
+
+        return new DTO\Categories($main, $tree);
     }
 
     /**

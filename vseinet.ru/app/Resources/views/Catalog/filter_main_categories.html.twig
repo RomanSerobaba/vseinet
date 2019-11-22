@@ -1,0 +1,11 @@
+{% if features.categories is not null and features.categories.main|length %}
+    {% for category in features.categories.main %}
+        {% if category.isActive == true %}
+            <span class="bttn blue">{{ category.name }}</span>
+        {% elseif category.id == 0 or facets.categoryIds[category.id] is defined %}
+            <a href="{{ category.url }}" class="bttn light">{{ category.name }}</a>
+        {% else %}
+            <span class="bttn light">{{ category.name }}</span>
+        {% endif %}
+    {% endfor %}
+{% endif %}

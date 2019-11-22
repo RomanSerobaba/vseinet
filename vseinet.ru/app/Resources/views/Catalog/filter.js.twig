@@ -4,9 +4,9 @@ window.onload = function() {
         setTimeout(function() {
             window.onpopstate = function (e) {
                 e.preventDefault()
-                window.location.reload()
+                window.location.reload();
             }
-        }, 4)
+        }, 4);
     }
 }
 
@@ -15,6 +15,7 @@ $(function() {
     var sorting1 = $('#sorting');
     var paging1 = $('#upper-paging');
     var showmore1 = $('#showmore-container');
+    var mainCategories = $('#main-categories');
 
     $(document).on('click', '.showmore', function(e) {
         this.innerHTML = '';
@@ -23,10 +24,11 @@ $(function() {
             window.history.pushState({}, null, this.dataset.url);
         }
         sp.get(this.dataset.url, {t: Date.now()}).done(function(response) {
-            productList.append(response.products)
-            sorting1.html(response.sorting)
-            paging1.html(response.paging)
-            showmore1.html(response.showmore)
+            productList.append(response.products);
+            sorting1.html(response.sorting);
+            paging1.html(response.paging);
+            showmore1.html(response.showmore);
+            mainCategories.html(response.mainCategories);
         });
         e.preventDefault();
     });
@@ -36,29 +38,35 @@ $(function() {
             window.history.pushState({}, null, url);
         }
         if (!supportsTransitions) {
-            productList.stop().fadeOut(500)
+            productList.stop().fadeOut(500);
         }
         productList.addClass('in')
         sp.get(url, {t: Date.now()}).then(function(data) {
             if (!supportsTransitions) {
-                productList.stop().fadeIn(250)
+                productList.stop().fadeIn(250);
             }
-            productList.html(data.products).removeClass('in')
-            sorting1.html(data.sorting)
-            paging1.html(data.paging)
-            showmore1.html(data.showmore)
+            productList.html(data.products).removeClass('in');
+            sorting1.html(data.sorting);
+            paging1.html(data.paging);
+            showmore1.html(data.showmore);
+            mainCategories.html(data.mainCategories);
         });
         filter.prop('action', url)
     }
+    mainCategories.on('click', 'a', function(e) {
+        loadPage(e.target.href);
+        e.preventDefault();
+        mainCategories.find('.blue').add(this).toggleClass('blue light');
+    });
     $(document).on('click', '.paging a', function(e) {
         loadPage(e.target.href);
         e.preventDefault();
         $('#scroller').click();
     });
     sorting1.on('click', 'a', function(e) {
-        loadPage(this.href)
-        e.preventDefault()
-        $('#scroller').click()
+        loadPage(this.href);
+        e.preventDefault();
+        $('#scroller').click();
     })
     var timer = null;
     var filter = $('#ProductFilter').form({

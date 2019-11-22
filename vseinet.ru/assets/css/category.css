@@ -232,3 +232,18 @@
 .status-mobile-screens{
     display: none;
 }
+
+#main-categories {
+    overflow: hidden;
+}
+#main-categories .bttn {
+    border-radius: 14px;
+    float: left;
+    margin: 0 12px 12px 0;
+    font-size: 13px;
+    height: 28px;
+    line-height: 28px;
+}
+#main-categories SPAN.bttn.light {
+    color: #999 !important;
+}

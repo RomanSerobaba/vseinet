@@ -398,12 +398,18 @@ class CatalogController extends Controller
             $sortingHtml = $this->renderView('Catalog/sorting.html.twig', [
                 'sorting' => $sorting,
             ]);
+            $mainCategoriesHtml = $this->renderView('Catalog/filter_main_categories.html.twig', [
+                'features' => $finder->getFeatures(),
+                'filter' => $filter,
+                'facets' => $facets,
+            ]);
 
             return $this->json([
                 'products' => $productsHtml,
                 'paging' => $pagingHtml,
                 'showmore' => $showmoreHtml,
                 'sorting' => $sortingHtml,
+                'mainCategories' => $mainCategoriesHtml,
                 'sort' => $filter->sort,
                 'sortDirection' => $filter->sortDirection,
             ]);
