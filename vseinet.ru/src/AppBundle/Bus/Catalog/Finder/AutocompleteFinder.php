@@ -68,6 +68,7 @@ class AutocompleteFinder extends AbstractProductFinder
                     }
                     $result[$id] = clone $categories[$id];
                     $result[$id]->breadcrumbs = array_reverse($breadcrumbs);
+                    $result[$id]->label = $result[$id]->name;
 
                     if (!empty($results['0'])) {
                         foreach ($results[0] as $elem) {
@@ -108,6 +109,7 @@ class AutocompleteFinder extends AbstractProductFinder
             $products = $this->get('query_bus')->handle(new GetProductsQuery(['ids' => $productIds]));
             foreach ($products as $product) {
                 $p = new DTO\Autocomplete\Product($product->id, $product->name);
+                $p->label = $p->name;
 
                 if (!empty($results['0'])) {
                     foreach ($results[0] as $elem) {

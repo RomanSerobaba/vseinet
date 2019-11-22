@@ -299,6 +299,7 @@ class QueryBuilder extends ContainerAware
 
         foreach ($products as $product) {
             $product->quantityInCart = $cartInfo->products[$product->id]->quantity ?? 0;
+            $product->label = $product->name;
 
             if ($isSearch && !empty($results['0'])) {
                 foreach ($results[0] as $result) {
