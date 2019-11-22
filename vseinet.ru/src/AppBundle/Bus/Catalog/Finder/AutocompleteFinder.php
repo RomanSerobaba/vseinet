@@ -29,8 +29,8 @@ class AutocompleteFinder extends AbstractProductFinder
         $em = $this->getDoctrine()->getManager();
         $result = [];
 
-        $expression = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
-        $snippet = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
+        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
+        $snippet = $this->getQueryBuilder()->snippetWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
         $query = "
             SELECT
                 id,
@@ -92,8 +92,8 @@ class AutocompleteFinder extends AbstractProductFinder
         }
 
         $availability = $this->getUserIsEmployee() ? Availability::FOR_ALL_TIME : Availability::ACTIVE;
-        $expression = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
-        $snippet = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
+        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
+        $snippet = $this->getQueryBuilder()->snippetWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
 
         $query = "
             SELECT

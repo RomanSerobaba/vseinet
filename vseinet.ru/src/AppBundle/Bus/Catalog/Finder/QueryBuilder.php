@@ -217,8 +217,8 @@ class QueryBuilder extends ContainerAware
     public function getProducts($isSearch = false): array
     {
         $idCriteria = $this->criteria;
-        $expression = $this->escape($this->escape(implode(' ', $this->match)));
-        $snippet = $this->escape($this->escape(implode(' ', $this->match)));
+        $expression = $this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))));
+        $snippet = $this->snippetWords($this->escape($this->escape(implode(' ', $this->match))));
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
         $this->criteria[] = $this->getCriteriaAvailability();
@@ -616,11 +616,7 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                if (strlen($piece) > 1) {
-                    $result[] = '(*'.$piece.'*|'.$piece.'*^100|='.$piece.'^1000)';
-                } else {
-                    $result[] = '('.$piece.'|='.$piece.'^1000)';
-                }
+                $result[] = '(='.$piece.'|'.$piece.')';
             }
         }
 
@@ -639,11 +635,7 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                if (strlen($piece) > 1) {
-                    $result[] = '(*'.$piece.'*|'.$piece.'*|='.$piece.')';
-                } else {
-                    $result[] = '('.$piece.'|='.$piece.')';
-                }
+                $result[] = '(='.$piece.'|'.$piece.')';
             }
         }
 
