@@ -616,7 +616,11 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                $result[] = '(*'.$piece.'*|'.$piece.'*^100|='.$piece.'^1000)';
+                if (strlen($piece) > 1) {
+                    $result[] = '(*'.$piece.'*|'.$piece.'*^100|='.$piece.'^1000)';
+                } else {
+                    $result[] = '('.$piece.'|='.$piece.'^1000)';
+                }
             }
         }
 
@@ -635,7 +639,11 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece)) {
-                $result[] = '(*'.$piece.'*|'.$piece.'*|='.$piece.')';
+                if (strlen($piece) > 1) {
+                    $result[] = '(*'.$piece.'*|'.$piece.'*|='.$piece.')';
+                } else {
+                    $result[] = '('.$piece.'|='.$piece.')';
+                }
             }
         }
 
