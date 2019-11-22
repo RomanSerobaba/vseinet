@@ -29,8 +29,8 @@ class AutocompleteFinder extends AbstractProductFinder
         $em = $this->getDoctrine()->getManager();
         $result = [];
 
-        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
-        $snippet = $this->getQueryBuilder()->snippetWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
+        $expression = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
+        $snippet = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
         $query = "
             SELECT
                 id,
@@ -40,7 +40,7 @@ class AutocompleteFinder extends AbstractProductFinder
             WHERE MATCH('{$expression}')
             ORDER BY weight DESC, rating DESC
             LIMIT ".self::COUNT_CATEGORIES."
-            OPTION ranker=expr('sum(if(sum_idf / 10 > 10, 10, sum_idf / 10) + exact_hit * 5) + if(is_accessories == 1, 0, 5) + if(average_price > 500000, 5, 0)')
+            OPTION ranker=expr('sum(exact_hit * 5) + (1 - is_accessories) * 5 + if(average_price > 500000, 5, 0)')
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();
         if (!empty($results[0])) {
@@ -92,8 +92,8 @@ class AutocompleteFinder extends AbstractProductFinder
         }
 
         $availability = $this->getUserIsEmployee() ? Availability::FOR_ALL_TIME : Availability::ACTIVE;
-        $expression = $this->getQueryBuilder()->rankingExactWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
-        $snippet = $this->getQueryBuilder()->snippetWords($this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q)));
+        $expression = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
+        $snippet = $this->getQueryBuilder()->escape($this->getQueryBuilder()->escape($filter->q));
 
         $query = "
             SELECT
@@ -104,7 +104,7 @@ class AutocompleteFinder extends AbstractProductFinder
             WHERE MATCH('{$expression}') AND availability <= {$availability}
             ORDER BY weight DESC, availability ASC, rating DESC, price ASC
             LIMIT ".self::COUNT_PRODUCTS."
-            OPTION ranker=expr('sum(if(sum_idf / 10 > 10, 10, sum_idf / 10) + if(min_best_span_pos < 5, 5, 0) + if(exact_order == 1, 5, 0)) + if(availability < 4, 4 - availability, 0) * 2 + if(is_accessories == 1, 0, 5) + if(category_average_price > 500000, 5, 0) + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)')
+            OPTION ranker=expr('sum(exact_hit * 5 + if(min_best_span_pos < 5, 5 - min_best_span_pos, 0) + exact_order * 5) + if(availability < 4, 4 - availability, 0) * 2 + (1 - is_accessories) * 5 + if(category_average_price > 500000, 5, 0) + if(popularity > 50, 10, 0) + if(name_length < 120, 10, 0)')
             ;
         ";
         $results = $this->get('sphinx')->createQuery()->setQuery($query)->getResults();

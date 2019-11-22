@@ -217,8 +217,8 @@ class QueryBuilder extends ContainerAware
     public function getProducts($isSearch = false): array
     {
         $idCriteria = $this->criteria;
-        $expression = $this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))));
-        $snippet = $this->snippetWords($this->escape($this->escape(implode(' ', $this->match))));
+        $expression = $this->escape($this->escape(implode(' ', $this->match)));
+        $snippet = $this->escape($this->escape(implode(' ', $this->match)));
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
         $this->criteria[] = $this->getCriteriaAvailability();
@@ -248,7 +248,7 @@ class QueryBuilder extends ContainerAware
         $offset = ($page - 1) * self::PER_PAGE;
 
         // $options = 'ranker=expr(\'sum((word_count + IF(5-min_best_span_pos > 0, 1, 0)) * user_weight) * 100 + bm25 + availability * 10\'), max_matches='.self::MAX_MATCHES;
-        $options = 'ranker=expr(\'sum(if(sum_idf / 10 > 10, 10, sum_idf / 10) + if(min_best_span_pos < 5, 5, 0) + if(exact_order == 1, 5, 0)) + if(availability < 4, 4 - availability, 0) * 2 + if(is_accessories == 1, 0, 5) + if(category_average_price > 500000, 5, 0) + if(popularity > 50, 10, 0) + if(name_length < 150, 10, 0)\'), max_matches='.self::MAX_MATCHES;
+        $options = 'ranker=expr(\'sum(exact_hit * 5 + if(min_best_span_pos < 5, 5 - min_best_span_pos, 0) + exact_order * 5) + if(availability < 4, 4 - availability, 0) * 2 + (1 - is_accessories) * 5 + if(category_average_price > 500000, 5, 0) + if(popularity > 50, 10, 0) + if(name_length < 120, 10, 0)\'), max_matches='.self::MAX_MATCHES;
 
         $query = "
             SELECT
