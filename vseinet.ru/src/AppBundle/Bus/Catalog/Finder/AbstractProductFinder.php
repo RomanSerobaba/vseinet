@@ -167,7 +167,7 @@ class AbstractProductFinder extends ContainerAware
         $brands = $q->getResult('IndexByHydrator');
 
         if (isset($brandId2count[0])) {
-            $brands[0] = new DTO\Brand(0, 'Без бренда', 0);
+            $brands[0] = new DTO\Brand(0, 'Прочее', 0);
         }
         foreach ($brands as $id => $brand) {
             $brand->countProducts = $brandId2count[$id];
