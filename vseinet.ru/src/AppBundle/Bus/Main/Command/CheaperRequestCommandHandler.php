@@ -45,7 +45,7 @@ class CheaperRequestCommandHandler extends MessageHandler
             $urlFragments['host'] = $urlFragments['path'];
         }
 
-        $competitors = $this->getDoctrine()->getManager()->getRepository(Competitor::class)->getActive();
+        $competitors = $this->getDoctrine()->getManager()->getRepository(Competitor::class)->findBy(['isActive' => true, 'channel' => 'site', 'parseStrategy' => 'product']);
         foreach ($competitors as $competitor) {
             $competitorUrlFragments = parse_url($competitor->getLink());
             if (empty($competitorUrlFragments['host'])) {

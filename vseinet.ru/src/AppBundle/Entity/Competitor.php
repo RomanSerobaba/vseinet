@@ -31,6 +31,20 @@ class Competitor
     /**
      * @var string
      *
+     * @ORM\Column(name="channel", type="string")
+     */
+    private $channel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="parse_strategy", type="string")
+     */
+    private $parseStrategy;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="link", type="string")
      */
     private $link;
@@ -82,6 +96,54 @@ class Competitor
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set channel
+     *
+     * @param string $channel
+     *
+     * @return Competitor
+     */
+    public function setChannel($channel)
+    {
+        $this->channel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * Get channel
+     *
+     * @return string
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
+     * Set parseStrategy
+     *
+     * @param string $parseStrategy
+     *
+     * @return Competitor
+     */
+    public function setParseStrategy($parseStrategy)
+    {
+        $this->parseStrategy = $parseStrategy;
+
+        return $this;
+    }
+
+    /**
+     * Get parseStrategy
+     *
+     * @return string
+     */
+    public function getParseStrategy()
+    {
+        return $this->parseStrategy;
     }
 
     /**

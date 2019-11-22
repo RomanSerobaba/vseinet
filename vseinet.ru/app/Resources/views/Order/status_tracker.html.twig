@@ -67,10 +67,11 @@
                     </tr>
                     <tr>
                         {% for statusCode, isActive in item.tracker %}
-                            <th>{% if statusCode == item.statusCode %}&uarr;
-                            {% elseif statusCode == constant('AppBundle\\Enum\\OrderItemStatus::ARRIVED') %}
-                                {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
-                            {% endif %}</th>
+                            <th>
+                                {% if statusCode == item.statusCode %}&uarr;{% endif %}
+                                {% if statusCode == constant('AppBundle\\Enum\\OrderItemStatus::ARRIVED') %}
+                                    {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
+                                {% endif %}</th>
                         {% endfor %}
                         {% for i in [item.tracker|length..6] %}
                             <th></th>
