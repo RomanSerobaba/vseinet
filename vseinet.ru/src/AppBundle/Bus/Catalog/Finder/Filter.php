@@ -62,7 +62,7 @@ class Filter extends ContainerAware
     /**
      * @var Sort
      */
-    public $sort = Sort::DEFAULT;
+    public $sort = Sort::RATING;
 
     /**
      * @var SortDirection

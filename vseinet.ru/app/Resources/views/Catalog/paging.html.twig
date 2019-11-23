@@ -15,7 +15,7 @@
             <a href="{{ url }}" class="page">{{ page }}</a>
         {% endfor %}
         {% if paging.last %}
-            <span>...</span>
+            <span class="ellipsis">...</span>
             <a href="{{ paging.last }}" class="page">{{ paging.count }}</a>
         {% endif %}
         {% if paging.next %}

@@ -377,7 +377,7 @@ class CatalogController extends Controller
             'total' => $facets->total,
             'page' => $filter->page,
             'perpage' => $finder->getQueryBuilder()::PER_PAGE,
-            'lines' => 8,
+            'lines' => 4,
             'baseUrl' => $baseUrl,
             'resetUrl' => $resetUrl,
             'attributes' => $attributes,
