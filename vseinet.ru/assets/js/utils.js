@@ -127,8 +127,8 @@ sp.declension = function(count, forms) {
     return forms[2];
 }
 
-Number.prototype.declension = function(forms) {
-    return this + ' ' + sp.declension(this, forms);
+Number.prototype.declension = function(forms, suffix) {
+    return this + (suffix || '') + ' ' + sp.declension(this, forms);
 }
 
 Number.prototype.formatMoney = function(decimals, decPoint, thousandsSep) {

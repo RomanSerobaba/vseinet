@@ -74,10 +74,12 @@ $(function() {
             clearTimeout(timer);
             xhr.done(function(data) {
                 updatefacets(data.facets);
+
                 var t = +data.facets.total,
-                    html = '<small>Найдено:</small> <b>' + t + '</b><i/>';
+                    plus = t === 10000 ? '+' : '',
+                    html = '<small>Найдено:</small> <b>' + t + plus + '</b><i/>';
                 total.html(html + (t ? ' Показать' : '')).css('top', top).show().prop('disabled', !t);
-                titleTotal.html(t.declension('товар;товара;товаров'));
+                titleTotal.html(t.declension('товар;товара;товаров', plus));
                 timer = setTimeout(function() {
                     loadPage(data.filterUrl);
                     total.hide();

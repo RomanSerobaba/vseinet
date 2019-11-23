@@ -19,11 +19,6 @@ class Brand
     /**
      * @Assert\Type(type="integer")
      */
-    public $rating;
-
-    /**
-     * @Assert\Type(type="integer")
-     */
     public $countProducts;
 
     /**
@@ -31,15 +26,9 @@ class Brand
      */
     public $isTop;
 
-    /**
-     * @Assert\All(@Assert\Type(type="integer"))
-     */
-    public $includeIds;
-
-    public function __construct($id, $name, $rating)
+    public function __construct($id, $name)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->rating = $rating;
     }
 }

@@ -8,7 +8,6 @@ use AppBundle\Bus\Catalog\Enum\Nofilled;
 
 class AbstractProductFinder extends ContainerAware
 {
-    public const COUNT_GET_BRANDS = 50;
     public const COUNT_TOP_BRANDS = 7;
 
     /**
@@ -62,7 +61,6 @@ class AbstractProductFinder extends ContainerAware
         }
 
         $categoryId2count = $this->getCategoryId2Count($found);
-        arsort($categoryId2count);
 
         $q = $this->getDoctrine()->getManager()->createQuery('
             SELECT
@@ -182,41 +180,40 @@ class AbstractProductFinder extends ContainerAware
 
         $brandId2count = $this->getBrandId2Count($found);
 
+        if (count($brandId2count) > self::COUNT_TOP_BRANDS) {
+            arsort($brandId2count);
+            $q = $this->getDoctrine()->getManager()->createQuery('
+                SELECT b.id, s.popularity
+                FROM AppBundle:Brand AS b
+                INNER JOIN AppBundle:BrandStats AS s WITH s.brandId = b.id
+                WHERE b.id IN (:ids)
+                ORDER BY s.popularity DESC
+            ');
+            $q->setParameter('ids', array_slice(array_keys($brandId2count), 0, self::COUNT_TOP_BRANDS));
+            $top = $q->getResult('ListHydrator');
+        } else {
+            $top = $brandId2count;
+        }
+
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\Catalog\Finder\DTO\Brand (
                     b.id,
-                    b.name,
-                    COALESCE(FIRST(
-                        SELECT COUNT(h)
-                        FROM AppBundle:ViewHistoryBrand AS h
-                        WHERE h.brandId = b.id AND h.viewedAt >= :lastMonth
-                    ), 0)
-                ),
-                CASE WHEN b.id > 0 THEN 1 ELSE 2 END AS HIDDEN ORD
+                    b.name
+                )
             FROM AppBundle:Brand AS b
             WHERE b.id IN (:ids)
-            ORDER BY ORD, b.name
+            ORDER BY b.name
         ");
         $q->setParameter('ids', array_keys($brandId2count));
-        $q->setParameter('lastMonth', new \DateTime('-1 month'));
         $brands = $q->getResult('IndexByHydrator');
 
         if (isset($brandId2count[0])) {
-            $brands[0] = new DTO\Brand(0, 'Прочее', 0);
+            $brands[0] = new DTO\Brand(0, 'Прочее');
         }
         foreach ($brands as $id => $brand) {
             $brand->countProducts = $brandId2count[$id];
-        }
-
-        $rating = [];
-        foreach ($brands as $id => $brand) {
-            $rating[$id] = $brand->rating;
-        }
-        arsort($rating);
-        $rating = array_slice($rating, 0, self::COUNT_TOP_BRANDS, true);
-        foreach ($rating as $id => $_) {
-            $brands[$id]->isTop = true;
+            $brand->isTop = isset($top[$id]);
         }
 
         return $brands;

@@ -14,6 +14,7 @@ use AppBundle\Bus\Catalog\Enum\Availability;
 use AppBundle\Bus\Catalog\Enum\Nofilled;
 use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
+use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
 
 class CatalogController extends Controller
@@ -118,6 +119,9 @@ class CatalogController extends Controller
         }
 
         $this->get('command_bus')->handle(new AddViewHistoryCategoryCommand(['categoryId' => $category->id]));
+        if (null !== $brand) {
+            $this->get('command_bus')->handle(new AddViewHistoryBrandCommand(['brandId' => $brand->id]));
+        }
 
         return $this->show('category', $finder, $request, ['category' => $category, 'brand' => $brand], ['id' => $id, 'brandName' => $brandName]);
     }
@@ -243,6 +247,8 @@ class CatalogController extends Controller
 
             return $this->redirect($filterUrl);
         }
+
+        $this->get('command_bus')->handle(new AddViewHistoryBrandCommand(['brandId' => $brand->id]));
 
         return $this->show('brand', $finder, $request, ['brand' => $brand], ['name' => $name]);
     }
