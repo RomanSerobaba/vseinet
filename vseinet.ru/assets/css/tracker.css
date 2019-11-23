@@ -44,9 +44,9 @@
 .status_tracker .status-issued {
     background-color: #C811C7;
 }
-.status_tracker .status-transport
-.status_tracker .status-post
-.status_tracker .status-courier { 
+.status_tracker .status-transport,
+.status_tracker .status-post,
+.status_tracker .status-courier {
     background-color: #4D92FF;
 }
 .status_tracker .status-stationed {
@@ -71,7 +71,7 @@
 }
 .status_tracker .product .price {
     float: right;
-    font-size: 12px; 
+    font-size: 12px;
     padding-left: 15px;
 }
 .status_tracker .product .RUR {
