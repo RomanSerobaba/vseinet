@@ -14,12 +14,14 @@
             {% set total = facets.total %}
             <small id="products-total">{{ total }}{% if total == 10000 %}+{% endif %} {{ total|declension('товар;товара;товаров') }}</small>
         </div>
-        <div class="mobile-filter-btn">
-            <a href="#" class="bttn light">Показать фильтры по параметрам <span class="hide">Показать фильтры</span></a>
+        <div class="mobile-filter-box">
+            <div class="mobile-filter-btn">
+                <a href="#" class="bttn light">Показать фильтры по параметрам <span class="hide">Показать фильтры</span></a>
+            </div>
+            <nav class="sort" id="sorting">
+                {% include 'Catalog/sorting.html.twig' %}
+            </nav>
         </div>
-        <nav class="sort" id="sorting">
-            {% include 'Catalog/sorting.html.twig' %}
-        </nav>
         <div id="category">
             <nav id="nav">
                 {% include 'Catalog/filter.html.twig' %}
