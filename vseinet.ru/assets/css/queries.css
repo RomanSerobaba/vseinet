@@ -397,10 +397,13 @@
 		display: none;
 
 	}
+	#ProductFilter.showfilter .filter .search .txt {
+		width: 212px;
+	}
 	#ProductFilter.showfilter .tab.last.apply .bttn.r{
 		display: block;
-		margin-left: 15px;
-		width: 215px;
+		margin-left: 19px;
+		width: 212px;
 		margin-top: 5px;
 		margin-bottom: 20px;
 		float: none;
@@ -408,30 +411,28 @@
 		padding-top: 2px;
 		font-size: 14px;
 	}
-	#ProductFilter.showfilter .close_mob_filter{
-		display: block;
-		margin-left: 15px;
-		margin-right: 15px;
-		margin-bottom: 20px;
-		float: none;
-		height: 50px;
-		padding-top: 5px;
-		font-size: 14px;
+	#ProductFilter.showfilter .mob-filter {
 		position: fixed;
-		width: 220px;
 		left: 0;
-		top: 10px;
+		top: 0;
 		z-index: 10;
+		width: 250px;
+		box-sizing: border-box;
+		padding: 15px 19px;
+	}
+	#ProductFilter.showfilter .close_mob_filter{
+		float: right;
+		display: block;
+    	height: 50px;
+    	line-height: 50px;
+    	font-size: 14px;
 	}
 	#ProductFilter.showfilter .mob_filter_reset{
 		display: block;
-		margin-left: 15px;
-		margin-right: 15px;
-		margin-bottom: 20px;
-		float: none;
-		height: 45px;
-		padding-top: 5px;
-		font-size: 13px;
+		height: 50px;
+		line-height: 50px;
+		padding-left: 35px;
+		font-size: 14px;
 		color: #000;
 		border-radius: 35px;
 		position: relative;
@@ -441,8 +442,8 @@
 		width: 20px;
 		height: 20px;
 		position: absolute;
-		left: 68px;
-		top: 12px;
+		left: 15px;
+		top: 14px;
 		display: block;
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAG1BMVEX/bEz/bEz/bEz/bEz/bEz/bEz/bEwAAAD/bEzqzt17AAAACHRSTlMbvRziv+QjAKTHVjIAAAA3SURBVHgBY1BJLy9zYvAwK09tZEhuToswYyizMG1OZyhP7jArh5BAEWOgCFDWwgykMrkRrMsBACskEnHDf3LzAAAAAElFTkSuQmCC) center no-repeat;
 	}
@@ -457,6 +458,10 @@
 		float: none;
 		margin-bottom: 15px;
 	}
+	.mobile.filter-box {
+		height: 50px;
+		position: relative;
+	}
 	.mobile-filter-btn{
 		display: block;
 		width: 50%;
@@ -466,10 +471,9 @@
 	}
 	.mobile-filter-btn .bttn{
 		width: 100%;
-		height: auto;
-		font-size: 14px;
+		font-size: 15px;
 		height: 50px;
-		padding-top: 6px;
+		line-height: 50px;
 	}
 	#category .wrapper{
 		float: none;
@@ -582,7 +586,9 @@
     visibility: visible;
     margin-left: 2%;
     line-height: 35px;
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
     border-radius: 4px;
     min-height: 50px;
     padding-top: 6px;
@@ -613,7 +619,7 @@
 		width: 140px;
 		text-align: left;
 	}
-	nav.sort ul li > a{
+	nav.sort ul li a{
 		color: inherit;
 		pointer-events: none;
 	}
@@ -623,15 +629,18 @@
 	nav.sort ul li{
 		display: block;
 	}
-	nav.sort ul li:not(:first-of-type){
+	nav.sort ul li:not(.sorted){
 		display: none;
 	}
-	nav.sort.choose-filt ul li:not(:first-of-type){
+	nav.sort.choose-filt ul li:not(.sorted){
 		display: block;
 		position: relative;
 		z-index: 10;
 	}
-	nav.sort li > span{
+	nav.sort li > span {
+		margin-left: 0;
+	}
+	nav.sort li.sorted > span{
 		padding-top: 0;
 		padding-bottom: 0;
 		line-height: 20px;
@@ -2319,6 +2328,10 @@
 		float: none;
 		margin-bottom: 15px;
 	}
+	.mobile-filter-box {
+		height: 50px;
+		position: relative;
+	}
 	.mobile-filter-btn{
 		display: block;
 		width: 50%;
@@ -2327,11 +2340,11 @@
 	}
 	.mobile-filter-btn .bttn{
 		width: 100%;
-		height: auto;
 		text-indent: -9999px;
 		text-align: center;
 		height: 50px;
-		padding-top: 5px;
+		line-height: 50px;
+		font-size: 15px;
 		position: relative;
 	}
 	.mobile-filter-btn .bttn .hide{
@@ -2342,7 +2355,7 @@
 		width: 100%;
 		position: absolute;
 		left: 0;
-		top: 5px;
+		top: 0;
 		text-align: center;
 	}
 	#category .wrapper{
@@ -2364,7 +2377,9 @@
     visibility: visible;
     margin-left: 2%;
     line-height: 35px;
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
     border-radius: 4px;
     min-height: 50px;
     padding-top: 5px;
@@ -2398,7 +2413,7 @@
 		display: inline-block;
 		text-align: left;
 	}
-	nav.sort ul li > a{
+	nav.sort ul li a{
 		color: inherit;
 		margin-left: 0px;
 		margin-right: 3px;
@@ -2410,20 +2425,24 @@
 	nav.sort ul li{
 		display: block;
 	}
-	nav.sort ul li:not(:first-of-type){
+	nav.sort ul li:not(.sorted){
 		display: none;
 	}
-	nav.sort.choose-filt ul li:not(:first-of-type){
+	nav.sort.choose-filt ul li:not(.sorted){
 		display: block;
 		position: relative;
 		z-index: 10;
 	}
-	nav.sort li > span{
+	nav.sort li > span {
+		margin-left: 0;
+	}
+	nav.sort li.sorted > span{
 		padding-top: 0;
 		padding-bottom: 0;
 		line-height: 20px;
-		margin-left: 0;
 		padding: 1px;
+		background: none;
+		box-shadow: none;
 	}
 	.representatives .city{
 		width: 100%;
@@ -2559,10 +2578,13 @@
 		display: none;
 
 	}
+	#ProductFilter.showfilter .filter .search .txt {
+		width: 212px;
+	}
 	#ProductFilter.showfilter .tab.last.apply .bttn.r{
 		display: block;
-		margin-left: 15px;
-		width: 215px;
+		margin-left: 19px;
+		width: 212px;
 		margin-top: 5px;
 		margin-bottom: 20px;
 		float: none;
@@ -2570,30 +2592,28 @@
 		padding-top: 2px;
 		font-size: 14px;
 	}
-	#ProductFilter.showfilter .close_mob_filter{
-		display: block;
-		margin-left: 15px;
-		margin-right: 15px;
-		margin-bottom: 20px;
-		float: none;
-		height: 50px;
-		padding-top: 5px;
-		font-size: 14px;
+	#ProductFilter.showfilter .mob-filter {
 		position: fixed;
-		width: 220px;
 		left: 0;
-		top: 10px;
+		top: 0;
 		z-index: 10;
+		width: 250px;
+		box-sizing: border-box;
+		padding: 15px 19px;
+	}
+	#ProductFilter.showfilter .close_mob_filter{
+		float: right;
+		display: block;
+    	height: 50px;
+    	line-height: 50px;
+    	font-size: 15px;
 	}
 	#ProductFilter.showfilter .mob_filter_reset{
 		display: block;
-		margin-left: 15px;
-		margin-right: 15px;
-		margin-bottom: 20px;
-		float: none;
-		height: 45px;
-		padding-top: 5px;
-		font-size: 13px;
+		height: 50px;
+		line-height: 50px;
+		padding-left: 30px;
+		font-size: 15px;
 		color: #000;
 		border-radius: 35px;
 		position: relative;
@@ -2603,8 +2623,8 @@
 		width: 20px;
 		height: 20px;
 		position: absolute;
-		left: 68px;
-		top: 12px;
+		left: 10px;
+		top: 14px;
 		display: block;
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAG1BMVEX/bEz/bEz/bEz/bEz/bEz/bEz/bEwAAAD/bEzqzt17AAAACHRSTlMbvRziv+QjAKTHVjIAAAA3SURBVHgBY1BJLy9zYvAwK09tZEhuToswYyizMG1OZyhP7jArh5BAEWOgCFDWwgykMrkRrMsBACskEnHDf3LzAAAAAElFTkSuQmCC) center no-repeat;
 	}

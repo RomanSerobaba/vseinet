@@ -23,7 +23,7 @@ $(function() {
         if (window.history.pushState) {
             window.history.pushState({}, null, this.dataset.url);
         }
-        sp.get(this.dataset.url, {t: Date.now()}).done(function(response) {
+        sp.get(this.dataset.url, {t: Date.now()}, window, true).done(function(response) {
             productList.append(response.products);
             sorting1.html(response.sorting);
             paging1.html(response.paging);
@@ -40,8 +40,8 @@ $(function() {
         if (!supportsTransitions) {
             productList.stop().fadeOut(500);
         }
-        productList.addClass('in')
-        sp.get(url, {t: Date.now()}).then(function(data) {
+        productList.addClass('in');
+        sp.get(url, {t: Date.now()}, window, true).then(function(data) {
             if (!supportsTransitions) {
                 productList.stop().fadeIn(250);
             }
@@ -64,9 +64,19 @@ $(function() {
         $('#scroller').click();
     });
     sorting1.on('click', 'a', function(e) {
+        var a = $(this), li = a.closest('li');
+        if (li.is('.sorted')) {
+            li.toggleClass('asc desc');
+        } else {
+            sorting1.find('.sorted').removeClass('sorted asc desc').find('a').toggleClass('black green');
+            li.addClass('sorted asc');
+            a.toggleClass('green black');
+        }
         loadPage(this.href);
         e.preventDefault();
+        e.stopPropagation();
         $('#scroller').click();
+        li.closest('nav').removeClass('choose-filt');
     })
     var timer = null;
     var filter = $('#ProductFilter').form({

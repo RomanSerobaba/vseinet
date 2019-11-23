@@ -12,20 +12,27 @@
 .sort ul li{
     display: inline;
 }
-.sort li > A {
+.sort li > SPAN {
     margin-left: 15px;
 }
-.sort li > SPAN {
+.sort li.sorted > SPAN {
     background: #f8f8f8;
     border-radius: 2px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.3) inset, 0 1px 0 rgba(0,0,0,0.08);
     color: #333;
     display: inline-block;
-    margin-left: 15px;
     padding: 1px 9px;
 }
 .sort A SPAN:before {
     color: #555;
     margin: 0 0 0 5px;
     top: 2px;
+    display: none;
 }
+.sort li.asc:not(.no-direction) A SPAN.icon-asc:before {
+    display: inherit;
+}
+.sort li.desc:not(.no-direction) A SPAN.icon-desc:before {
+    display: inherit;
+}
+

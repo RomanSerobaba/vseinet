@@ -1,25 +1,16 @@
 {% if sorting %}
     <span class="sort_title">Сортировать по</span> <span class="sort_title hide">По</span>
     <ul>
-    {% for sort, options in sorting.options %}
-            {% if sort == sorting.sort %}
-                <li class="sorted {{ sorting.sortDirection }}">
-                    <span>
-                        <a href="{{ options.url }}" class="ajax black" rel="nofollow">
-                            {{ options.title }}
-                            {% if constant('AppBundle\\Bus\\Catalog\\Enum\\Sort::RATING') != sort %}
-                                <span class="icon-{{ sorting.sortDirection }}"></span>
-                            {% endif %}
-                        </a>
-                    </span>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{{ options.url }}" class="ajax green" rel="nofollow">
+        {% for sort, options in sorting.options %}
+            <li class="{% if sort == sorting.sort %}sorted {{ sorting.sortDirection }}{% endif %}{% if constant('AppBundle\\Bus\\Catalog\\Enum\\Sort::RATING') == sort %} no-direction{% endif %}">
+                <span>
+                    <a href="{{ options.url }}" class="ajax {% if sort == sorting.sort %}black{% else %}green{% endif %}" rel="nofollow">
                         {{ options.title }}
+                        <span class="icon-asc"></span>
+                        <span class="icon-desc"></span>
                     </a>
-                </li>
-            {% endif %}
+                </span>
+            </li>
         {% endfor %}
     </ul>
     <input type="hidden" name="filter[sort]" form="ProductFilter" value="{{ sorting.sort }}-{{ sorting.sortDirection }}" />

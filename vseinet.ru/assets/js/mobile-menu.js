@@ -14,7 +14,7 @@ $(function(){
     $('nav.sort').click(function(e){
         e.preventDefault();
         if ($(window).width() < 992){
-            $(this).toggleClass('choose-filt');
+            $(this).addClass('choose-filt');
         }
     });
 

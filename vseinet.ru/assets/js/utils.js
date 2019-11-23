@@ -2,30 +2,44 @@ var sp = window.sp = {
     security: {
 
     },
-    _xhr: null,
-    get: function(url, data, context) {
-        return sp._xhr = $.ajax({
+    _xhr: {},
+    cancel(url) {
+        var a = document.createElement('a');
+        a.href = url;
+        var token = a.pathname;
+        if (sp._xhr[token]) {
+            var xhr = sp._xhr[token];
+            delete sp._xhr[token];
+            xhr.abort();
+        }
+        return token;
+    },
+    get: function(url, data, context, cancelable) {
+        var token = cancelable ? sp.cancel(url) : null;
+        var xhr = $.ajax({
             url: url,
             data: data || {},
             dataType: 'json',
             context: context || window
         });
+        if (token) {
+            sp._xhr[token] = xhr;
+        }
+        return xhr;
     },
-    post: function(url, data, context) {
-        return sp._xhr = $.ajax({
+    post: function(url, data, context, cancelable) {
+        var token = cancelable ? sp.cancel(url) : null;
+        var xhr = $.ajax({
             url: url,
             type: 'post',
             data: $.extend(data || {}, sp.security),
             dataType: 'json',
             context: context || window
         });
-    },
-    abort: function() {
-        if (sp._xhr) {
-            var xhr = sp._xhr;
-            sp._xhr = null;
-            xhr.abort();
+        if (token) {
+            sp._xhr[token] = xhr;
         }
+        return xhr;
     }
 };
 

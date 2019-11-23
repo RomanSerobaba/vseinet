@@ -1,6 +1,8 @@
 <form method="post" id="ProductFilter">
-    <a href="#" class="bttn light close_mob_filter">Закрыть фильтры</a>
-    <a href="{{ resetUrl }}" class="bttn light gray mob_filter_reset">Сброс</a>
+    <div class="mob-filter">
+        <a href="{{ resetUrl }}" class="bttn light gray mob_filter_reset">Сброс</a>
+        <a href="#" class="bttn blue close_mob_filter">Свернуть</a>
+    </div>
     <div class="filter">
         {% include 'Catalog/filter_price.html.twig' %}
         {% include 'Catalog/filter_brands.html.twig' %}

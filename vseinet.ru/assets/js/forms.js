@@ -66,7 +66,6 @@ $.widget('sp.form', {
         this.element.data('inputs', inputs);
     },
     _validate: function (submit) {
-        sp.abort();
         var form = this.element, callback;
         if (submit) {
             callback = this.options.submit;
@@ -85,7 +84,7 @@ $.widget('sp.form', {
             if (name)
                 data.push({name: name, value: 1});
         }
-        var xhr = sp.post(form.prop('action'), data);
+        var xhr = sp.post(form.prop('action'), data, window, true);
         callback.call(this.element, xhr);
         var inputs = this.element.data('inputs');
         var that = this;
