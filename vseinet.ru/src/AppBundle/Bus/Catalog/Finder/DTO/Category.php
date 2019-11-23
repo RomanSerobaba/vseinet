@@ -17,6 +17,11 @@ class Category
     public $name;
 
     /**
+     * @Assert\Type(type="string")
+     */
+    public $parentName;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $id2;
@@ -56,10 +61,11 @@ class Category
      */
     public $url;
 
-    public function __construct($id, $name, $id2 = null, $name2 = null, $id1 = null, $name1 = null, $countProducts = 0, $children = [])
+    public function __construct($id, $name, $parentName = null, $id2 = null, $name2 = null, $id1 = null, $name1 = null, $countProducts = 0, $children = [])
     {
         $this->id = $id;
         $this->name = $name;
+        $this->parentName = $parentName;
         $this->id2 = $id2;
         $this->name2 = $name2;
         $this->id1 = $id1;

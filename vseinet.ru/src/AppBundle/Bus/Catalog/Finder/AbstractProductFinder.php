@@ -67,6 +67,7 @@ class AbstractProductFinder extends ContainerAware
                 NEW AppBundle\Bus\Catalog\Finder\DTO\Category (
                     c.id,
                     c.name,
+                    p.name,
                     c2.id,
                     c2.name,
                     c1.id,
@@ -74,6 +75,7 @@ class AbstractProductFinder extends ContainerAware
                 ),
                 CASE WHEN cs.isAccessories = false THEN 1 ELSE 2 END AS HIDDEN ORD
             FROM AppBundle:Category AS c
+            INNER JOIN AppBundle:Category AS p WITH p.id = c.pid
             INNER JOIN AppBundle:CategoryStats AS cs WITH cs.categoryId = c.id
             INNER JOIN AppBundle:CategoryPath AS cp2 WITH cp2.id = c.id AND cp2.plevel = 2
             INNER JOIN AppBundle:Category AS c2 WITH c2.id = cp2.pid
@@ -119,9 +121,15 @@ class AbstractProductFinder extends ContainerAware
         $main = array_slice($categories, 0, 3, true);
         if (count($main)) {
             $filter = $this->getFilter();
-            foreach ($main as $category) {
+            foreach ($main as $index => $category) {
                 $category->isActive = !empty($filter->categoryIds[$category->id]);
                 $category->url = '?'.http_build_query($filter->build(['c' => $category->id]));
+                foreach ($main as $index2 => $category2) {
+                    if ($index !== $index2 && $category->name === $category2->name) {
+                        $category->name = $category->parentName.' / '.$category->name;
+                        $category2->name = $category2->parentName.' / '.$category2->name;
+                    }
+                }
             }
             $all = new DTO\Category(0, 'Все');
             $all->isActive = empty($filter->categoryIds);
