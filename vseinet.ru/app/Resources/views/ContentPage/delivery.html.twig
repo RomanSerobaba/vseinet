@@ -41,32 +41,28 @@
                 <th>Представительство</th>
                 <th>Стоимость доставки до вашего представительства (г. Пенза ул. Суворова, 225)</th>
             </tr>
-            {% for region in representatives %}
-                {% for type in region %}
-                    {% for representative in type %}
-                        <tr>
-                            <td>
-                                {% if representative.address %}
-                                    {{ representative.geoCityName }}, <br/>
-                                    <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
-                                        {{ representative.address }}
-                                    </a>
-                                {% else %}
-                                    <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
-                                        {{ representative.geoCityName }}
-                                    </a>
-                                {% endif %}
-                            </td>
-                            {% if constant('AppBundle\\Enum\\RepresentativeTypeCode::PARTNER') == representative.type %}
-                                <td>10%**</td>
-                            {% elseif representative.deliveryTax and ( not representative.isOur or not representative.hasRetail ) %}
-                                <td>от {{ representative.deliveryTax|price_format }} руб
-                            {% else %}
-                                <td style="color:red;font-weight:bold">бесплатно*</td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                {% endfor %}
+            {% for representative in representatives %}
+            <tr>
+                <td>
+                    {% if representative.address %}
+                        {{ representative.geoCityName }}, <br/>
+                        <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
+                            {{ representative.address }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
+                            {{ representative.geoCityName }}
+                        </a>
+                    {% endif %}
+                </td>
+                {% if constant('AppBundle\\Enum\\RepresentativeTypeCode::PARTNER') == representative.type %}
+                    <td>10%**</td>
+                {% elseif representative.deliveryTax and ( not representative.isOur or not representative.hasRetail ) %}
+                    <td>от {{ representative.deliveryTax|price_format }} руб
+                {% else %}
+                    <td style="color:red;font-weight:bold">бесплатно*</td>
+                {% endif %}
+            </tr>
             {% endfor %}
         </table><br/>
         <div id="delivery_explanation"><span style="color:red;font-weight: bold">*</span> &ndash; Кроме категорий, указанных в первой таблице.</div>
@@ -117,42 +113,42 @@
             bottomSpacing: 245
         });
 
-        $(window).scroll(function(){ 
-            if( $('.tabs').length > 0 ) { 
+        $(window).scroll(function(){
+            if( $('.tabs').length > 0 ) {
 
                 var offset_post = document.getElementById('post').getBoundingClientRect();
                 var offset_tk = document.getElementById('tk').getBoundingClientRect();
                 var offset_point = document.getElementById('point').getBoundingClientRect();
                 var offset_courier = document.getElementById('courier').getBoundingClientRect();
-                
+
                 if($('#post').is_on_screen() && offset_post.top<50) {
                     $('.tabs').find('li').removeClass('ui-tabs-active');
                     $('.tabs').find('li').removeClass('ui-state-active');
                     $('.tabs').find('#li_tabs_4').addClass('ui-tabs-active');
                     $('.tabs').find('#li_tabs_4').addClass('ui-state-active');
-                } 
-                
+                }
+
                 if($('#tk').is_on_screen() && offset_tk.top<50) {
                     $('.tabs').find('li').removeClass('ui-tabs-active');
                     $('.tabs').find('li').removeClass('ui-state-active');
                     $('.tabs').find('#li_tabs_3').addClass('ui-tabs-active');
                     $('.tabs').find('#li_tabs_3').addClass('ui-state-active');
-                } 
-                
+                }
+
                 if($('#point').is_on_screen() && offset_point.top<50) {
                     $('.tabs').find('li').removeClass('ui-tabs-active');
                     $('.tabs').find('li').removeClass('ui-state-active');
                     $('.tabs').find('#li_tabs_2').addClass('ui-tabs-active');
                     $('.tabs').find('#li_tabs_2').addClass('ui-state-active');
-                } 
-                
-                if($('#courier').is_on_screen() && offset_courier.top<50) { 
+                }
+
+                if($('#courier').is_on_screen() && offset_courier.top<50) {
                     $('.tabs').find('li').removeClass('ui-tabs-active');
                     $('.tabs').find('li').removeClass('ui-state-active');
                     $('.tabs').find('#li_tabs_1').addClass('ui-tabs-active');
                     $('.tabs').find('#li_tabs_1').addClass('ui-state-active');
                 }
-                
+
             }
         });
     });
