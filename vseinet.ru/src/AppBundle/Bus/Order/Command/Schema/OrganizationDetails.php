@@ -55,7 +55,7 @@ class OrganizationDetails extends Message
 
     public function setSettlementAccount($settlementAccount)
     {
-        $this->bankId = empty($settlementAccount) ? null : $settlementAccount;
+        $this->settlementAccount = empty($settlementAccount) ? null : $settlementAccount;
     }
 
     public function setTin($tin)

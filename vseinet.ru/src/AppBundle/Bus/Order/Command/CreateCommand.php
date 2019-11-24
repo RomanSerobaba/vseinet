@@ -185,7 +185,7 @@ class CreateCommand extends Message
 
     public function setWithVat($withVat)
     {
-        $this->withVat = null !== $withVat ? (bool) $withVat : $withVat;
+        $this->withVat = null !== $withVat ? (bool) $withVat : false;
     }
 
     public function setIsNotificationNeeded($isNotificationNeeded)
