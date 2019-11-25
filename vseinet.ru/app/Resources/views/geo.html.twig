@@ -1,0 +1,9 @@
+<aside id="geo" class="smpl-container hidden" data-geo-city-id="{% if app.user and app.user.geoCity %}{{ app.geoCity.id }}{% endif %}">
+    <div id="request-geo-city" class="block gray">
+        <div class="wrapper">
+            <span class="question">Ваш город {{ app.geoCity.name }}?</span>
+            <button type="button" class="bttn blue ok">Да</button>
+            <button type="button" class="bttn green select-city" data-id="City">Выбрать</button>
+        </div>
+    </div>
+</aside>

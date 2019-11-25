@@ -160,3 +160,40 @@ $(function() {
         }
     });
 });
+
+
+$(function() {
+    var geo = $('#geo');
+    if (!geo.data('geoCityId')) {
+        if (window.localStorage) {
+            var rcd = new Date(localStorage.getItem('request-city-date'));
+            var now = new Date();
+            rcd.setDate(rcd.getDate() + 1);
+            if (rcd.getTime() < now.getTime()) {
+                showRequest();
+            }
+        } else {
+            showRequest();
+        }
+        geo.on('click', 'button', function() {
+            if (window.localStorage) {
+                localStorage.setItem('request-city-date', now.toString());
+            }
+            hideRequest();
+        });
+    }
+    function showRequest() {
+        if ($(window).width() < 992) {
+            geo.slideDown(250);
+        } else {
+            $('#header .holder').append(geo.removeClass('hidden'));
+        }
+    }
+    function hideRequest() {
+        if ($(window).width() < 992) {
+            geo.slideUp(250);
+        } else {
+            geo.addClass('hidden');
+        }
+    }
+});

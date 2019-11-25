@@ -977,4 +977,17 @@
     #tree .mobile-all {
         display: none;
     }
+    #geo .block {
+        border-radius: 0;
+        margin: 0;
+    }
+    #geo .wrapper {
+        padding: 12px 12px 8px;
+    }
+    #geo .wrapper .question {
+        font-size: 18px;
+    }
+    #geo .wrapper .bttn {
+        margin-left: 12px;
+    }
 }

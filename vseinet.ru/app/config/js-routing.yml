@@ -14,6 +14,7 @@ fos_js_routing:
         - 'select_geo_city'
         - 'search_geo_city'
         - 'search_geo_street'
+        - 'request_geo_city'
         - 'get_bank'
         - 'get_counteragent'
         - 'search_counteragent'
