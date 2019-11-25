@@ -22,7 +22,7 @@ class GetQueryHandler extends MessageHandler
         $q = $em->createQuery("
             SELECT
                 NEW AppBundle\Bus\Product\Query\DTO\BaseProduct (
-                    bp.canonicalId,
+                    bp.id,
                     bp.name,
                     bpd.exname,
                     bp.categoryId,
@@ -36,23 +36,24 @@ class GetQueryHandler extends MessageHandler
                     bpd.manualLink,
                     d.description,
                     bp.estimate,
-                    bp.canonicalId,
+                    bp.id,
                     ppb.quantity,
                     COALESCE(FIRST(
                         SELECT ROUND(SUM(grrc.delta * (si.purchasePrice - si.bonusAmount)) / SUM(grrc.delta))
                         FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
                         JOIN AppBundle:SupplyItem AS si WITH si.id = grrc.supplyItemId
                         JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
-                        WHERE bp2.canonicalId = bp.canonicalId AND grrc.goodsConditionCode = :goodsConditionCode_FREE
+                        WHERE bp2.canonicalId = bp.id AND grrc.goodsConditionCode = :goodsConditionCode_FREE
                     ), bp.supplierPrice)
                 )
             FROM AppBundle:BaseProduct AS bp
+            INNER JOIN AppBundle:BaseProduct AS bpo WITH bpo.canonicalId = bp.id
             INNER JOIN AppBundle:BaseProductData AS bpd WITH bpd.baseProductId = bp.id
-            LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.canonicalId AND p.geoCityId = :geoCityId
-            INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.canonicalId AND p0.geoCityId = 0
+            LEFT JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId
+            INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0
             LEFT OUTER JOIN AppBundle:BaseProductDescription AS d WITH d.baseProductId = bp.id
-            LEFT OUTER JOIN AppBundle:ProductPricetagBuffer AS ppb WITH ppb.baseProductId = bp.canonicalId AND ppb.createdBy = :userId
-            WHERE bp.id = :id
+            LEFT OUTER JOIN AppBundle:ProductPricetagBuffer AS ppb WITH ppb.baseProductId = bp.id AND ppb.createdBy = :userId
+            WHERE bpo.id = :id
         ");
         $q->setParameter('id', $query->id);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
