@@ -38,7 +38,10 @@
 @import url('./css/sort.css');
 @import url('./css/tree.css');
 @import url('./css/map.css');
-@import url('./css/queries.css');
+@import url('./css/queries-media-0-768.css');
+@import url('./css/queries-media-768-991.css');
+@import url('./css/queries-media-992-1160.css');
+@import url('./css/queries-media-1160-infinity.css');
 @import url('./css/tracker.css');
 @import url('./css/compare.css');
 @import url('./css/filter-catalog.css');

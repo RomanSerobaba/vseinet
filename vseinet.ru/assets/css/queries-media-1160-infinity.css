@@ -1,0 +1,88 @@
+@media screen and (min-width: 1160px) {
+	.holder {
+		width: 1170px;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+    #tree {
+        width: 263px;
+    }
+    #tree > UL > LI > A {
+		background-position: 243px center;
+		padding: 8px 20px;
+    }
+    #populars .product.first {
+        padding-right: 80px;
+    }
+	#tree .subtree {
+		left: 263px;
+	}
+	#product TABLE.details TD.name DIV {
+		min-width: 360px;
+	}
+	#category #nav{
+		width: 263px;
+		padding-right: 0;
+		margin-right: 30px;
+	}
+	.coll-md-5{
+		width: 41.66666667%;
+		float: left;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.coll-md-3{
+		width: 25%;
+		float: left;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.coll-md-1{
+		width: 8.33333333%;
+		float: left;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	#product .sale{
+		width: 250px;
+	}
+	.product + .wrapper{
+    overflow: hidden;
+	}
+	#page-footer .contacts{
+		width: 256px;
+	}
+	#product .delivery + .help{
+		margin-bottom: -22px;
+	}
+	#product .ui-tabs-panel .column.details{
+		margin-right: 2%;
+	}
+	#specials h4{
+		margin-bottom: 2px;
+	}
+	#specials .product .price .old::after{
+		background: #f00;
+	}
+	#page-footer .socials{
+		margin-top: -12px;
+	}
+	#about .benifits{
+		max-width: 100%;
+	}
+	.benifits .benifit{
+		min-width: 20%;
+	}
+	.Cart .summary .cupon{
+		width: 300px;
+	}
+	#favorite .cart-table .row{
+		margin-bottom: 20px;
+	}
+	#product DIV.details H3:not(.garanty_title){
+		margin-bottom: 24px;
+	}
+	#Complaint .bttn.r , #Suggestion .bttn.r{
+		margin-bottom: 15px;
+	}
+}

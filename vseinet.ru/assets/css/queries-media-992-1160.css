@@ -1,0 +1,47 @@
+@media screen and (min-width: 992px) and (max-width: 1160px) {
+  .holder {
+    width: 970px;
+    padding-left: 15px;
+        padding-right: 15px;
+  }
+  #header .logo-area{
+    width: 15.5%;
+    margin-right: 0;
+  }
+  #product .image{
+    width: 300px;
+  }
+    #tree:not(.page_tree) {
+      width: 100%;
+  }
+  #tree .subtree{
+    left: 100%;
+  }
+  #specials .product{
+    padding-right: 30px;
+  }
+  #tree > UL > LI > A:not(.special){
+    background-position: 95% center !important;
+  }
+  .coll-md-5{
+    width: 41.66666667%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .coll-md-3{
+    width: 25%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .coll-md-1{
+    width: 8.33333333%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .filter .price .txt {
+    margin: 0;
+  }
+}
