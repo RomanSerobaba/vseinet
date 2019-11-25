@@ -30,6 +30,7 @@ class CheaperRequestCommandHandler extends MessageHandler
         $request->setCompetitorPrice($command->competitorPrice);
         $request->setCompetitorLink($command->competitorLink);
         $request->setComment($command->comment);
+        $request->setCreatedAt(new \DateTime());
 
         $em->persist($request);
         $em->flush();

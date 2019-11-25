@@ -18,10 +18,17 @@
                         </div>
                         <div class="text">
                             <h6><a href="{{ path('catalog_product', { id: product.id }) }}">{{ product.name }}</a><h6>
-                            <p class="code">Код товара: {{ product.id }}</p>
-                            {% if product.points is defined and product.points|length > 0 %}
-                                <p class="available">В наличии: {{ product.points }}</p>
-                            {% elseif 1 < product.minQuantity %}
+                            <p class="code">
+                                Код товара: {{ product.id }}
+                                <span style="height:auti;width:auto;margin-left:10px" class="status
+                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock">Есть в наличии
+                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available">Нет в продаже
+                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order">Ожидается
+                                    {% else %} on-order">На заказ, доставка {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
+                                    {% endif %}
+                                </span>
+                            </p>
+                            {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') != product.availabilityCode and 1 < product.minQuantity %}
                                 <p style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</p>
                             {% endif %}
                         </div>
@@ -58,7 +65,7 @@
             <span class="total">{{ cart.amount|price_format }}</span> <span class="RUR">Р</span>
         </del>
         <strong>Сумма покупки: <span class="total-discount">{{ cart.amountWithDiscount|price_format }}</span> <span class="RUR">Р</span></strong>
-        <label for="cart_discount_code">Код для получения скидки:</label>
+        <label for="cart_discount_code">Код для получения скидки: <span class="discount_error" style="color:red;display:none">Введен не верный код</span></label>
         <p>
             <input type="text" class="txt" name="discountCode" id="cart_discount_code" value="{{ cart.discountCode }}" />
             <button type="submit" class="bttn light">Пересчитать</button>

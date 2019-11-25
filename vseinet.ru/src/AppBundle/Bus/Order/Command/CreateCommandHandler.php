@@ -53,6 +53,7 @@ class CreateCommandHandler extends MessageHandler
             'organizationDetails' => $command->organizationDetails,
             'geoCityId' => $command->geoCityId,
             'geoPointId' => $command->geoPointId,
+            'withVat' => $command->withVat,
             'paymentTypeCode' => $command->paymentTypeCode,
             'creditDownPayment' => $command->creditDownPayment*100,
             'deliveryTypeCode' => $command->deliveryTypeCode,

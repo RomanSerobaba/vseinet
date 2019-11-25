@@ -37,6 +37,11 @@
         cart.done = function(response) {
             var total = response.cart.total, amount = 0, amountWithDiscount = 0;
             if (total) {
+                if ($('[name=discountCode]').val().length && !response.cart.discountCodeId) {
+                    $('.cupon .discount_error').css('display', 'inline');
+                } else {
+                    $('.cupon .discount_error').css('display', 'none');
+                }
                 $.each(cart.find('.cart-table-body .row'), function() {
                     var tr = $(this),
                         id = tr.data('id'),
@@ -46,6 +51,10 @@
                             tr.find('.price-amount').text(product.priceWithDiscount.formatPrice());
                             tr.find('.price-discount').html(product.price.formatPrice() + ' <span class="RUR">Р</span>');
                             tr.data('price', product.priceWithDiscount);
+                        } else {
+                            tr.find('.price-amount').text(product.price.formatPrice());
+                            tr.find('.price-discount').html('');
+                            tr.data('price', product.price);
                         }
                         tr.find('.quantity .txt').val(product.quantity);
                         amount += product.price * product.quantity;

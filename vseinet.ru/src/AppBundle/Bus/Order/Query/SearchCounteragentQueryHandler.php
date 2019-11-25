@@ -22,7 +22,7 @@ class SearchCounteragentQueryHandler extends MessageHandler
                 )
             FROM AppBundle:Counteragent AS c
             LEFT JOIN AppBundle:GeoAddress AS ga WITH ga.id = c.legalAddressId
-            LEFT JOIN AppBundle:SettlementAccount AS sa WITH sa.counteragentId = c.id
+            LEFT JOIN AppBundle:CounteragentSettlementAccount AS sa WITH sa.counteragentId = c.id
             LEFT JOIN AppBundle:Bank AS b WITH b.id = sa.bankId
             WHERE LOWER(c.name) LIKE LOWER(:name)
             ORDER BY c.name

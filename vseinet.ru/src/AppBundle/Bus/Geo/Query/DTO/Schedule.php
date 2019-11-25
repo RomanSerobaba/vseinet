@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Geo\Query\DTO;
 
@@ -21,7 +21,7 @@ class Schedule
     {
         $this->representativeId = $representativeId;
 
-        $days = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']; 
+        $days = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
         $blocks = [];
         $period = 0;
         $current = '';
@@ -34,13 +34,13 @@ class Schedule
             $blocks[$period]['days'][] = $day;
             $blocks[$period]['time'] = $time;
         }
-        $day = $days[date('N')];
+        $day = $days[date('w')];
         foreach ($blocks as $block) {
             $current = in_array($day, $block['days']);
             $period = array_shift($block['days']);
             if (count($block['days'])) {
                 $period .= '-'.array_pop($block['days']);
-            }  
+            }
             $this->blocks[] = new ScheduleBlock($period, $block['time'], $current);
         }
     }

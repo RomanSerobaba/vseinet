@@ -87,6 +87,10 @@ class Product
      */
     public $discountAmount;
 
+    /**
+     * @Assert\Type(type="datetime")
+     */
+    public $deliveryDate;
 
     public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $liftingCost, $quantity, $hasStroika, $discountAmount, $reserveQuantity, $storePricetag)
     {

@@ -38,6 +38,22 @@ class CartController extends Controller
             ]);
         }
 
+        if (!empty($cart->products)) {
+            $baseProductsIds = array_keys(array_filter($cart->products, function($product) {
+                return in_array($product->availabilityCode, [ProductAvailabilityCode::ON_DEMAND, ProductAvailabilityCode::IN_TRANSIT]);
+            }));
+
+            if ($baseProductsIds) {
+                $deliveryDates = $this->get('query_bus')->handle(new \AppBundle\Bus\Product\Query\GetDeliveryDateQuery(['baseProductIds' => $baseProductsIds]));
+
+                if (!empty($deliveryDates)) {
+                    foreach ($deliveryDates as $baseProductId => $deliveryDate) {
+                        $cart->products[$baseProductId]->deliveryDate = $deliveryDate->date;
+                    }
+                }
+            }
+        }
+
         return $this->render('Cart/index.html.twig', [
             'cart' => $cart,
         ]);
