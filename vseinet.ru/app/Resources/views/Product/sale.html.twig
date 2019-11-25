@@ -31,7 +31,7 @@
                 <a
                     href="{{ path('product_reset_price', { id: baseProduct.id }) }}"
                     class="icon reset-price"
-                    {% if not baseProduct.manualPrice %}style="display:none"{% endif %}
+                    {% if not baseProduct.isManualPrice %}style="display:none"{% endif %}
                     title="Сбросить ручную цену"
                 >
                 </a>
