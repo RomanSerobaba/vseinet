@@ -43,7 +43,7 @@ class GetQueryHandler extends MessageHandler
                         FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
                         JOIN AppBundle:SupplyItem AS si WITH si.id = grrc.supplyItemId
                         JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
-                        WHERE bp2.canonicalId = bp.canonicalId AND grrc.goodsConditionCode = :goodsConditionCode_FREE
+                        WHERE bp2.canonicalId = bp.id AND grrc.goodsConditionCode = :goodsConditionCode_FREE
                     ), bp.supplierPrice),
                     COALESCE(p.competitorPrice, p0.competitorPrice)
                 )
