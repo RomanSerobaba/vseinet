@@ -144,6 +144,9 @@ $(function() {
                 var c = $(e.target).closest('.city');
                 title.addClass('loading');
                 sp.post(Routing.generate('select_geo_city'), { id: c.data('id') }).then(function() {
+                    if (window.localStorage) {
+                        localStorage.setItem('city-id', c.data('id'));
+                    }
                     window.location.reload();
                 });
             });
@@ -153,6 +156,9 @@ $(function() {
                 select: function(e, ui) {
                     title.addClass('loading');
                     sp.post(Routing.generate('select_geo_city'), { id: ui.item.id }).then(function() {
+                        if (window.localStorage) {
+                            localStorage.setItem('city-id', ui.item.id);
+                        }
                         window.location.reload();
                     });
                 }
@@ -166,11 +172,15 @@ $(function() {
     var geo = $('#geo');
     if (!geo.data('geoCityId')) {
         if (window.localStorage) {
-            var rcd = new Date(localStorage.getItem('request-city-date'));
-            var now = new Date();
-            rcd.setDate(rcd.getDate() + 1);
-            if (rcd.getTime() < now.getTime()) {
-                showRequest();
+            var id = localStorage.getItem('city-id');
+            if (id) {
+                sp.post(Routing.generate('select_geo_city'), { id: id }).then(function() {
+                    window.location.reload();
+                }).catch(function() {
+                    checkRequest();
+                });
+            } else {
+                var now = checkRequest();
             }
         } else {
             showRequest();
@@ -178,9 +188,23 @@ $(function() {
         geo.on('click', 'button', function() {
             if (window.localStorage) {
                 localStorage.setItem('request-city-date', now.toString());
+                if ($(this).is('.ok')) {
+                    var id = geo.data('detectGeoCityId');
+                    sp.post(Routing.generate('select_geo_city'), { id: id });
+                    localStorage.setItem('city-id', id);
+                }
             }
             hideRequest();
         });
+    }
+    function checkRequest() {
+        var rcd = new Date(localStorage.getItem('request-city-date'));
+        var now = new Date();
+        rcd.setDate(rcd.getDate() + 1);
+        if (rcd.getTime() < now.getTime()) {
+            showRequest();
+        }
+        return now;
     }
     function showRequest() {
         if ($(window).width() < 992) {
