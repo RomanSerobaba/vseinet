@@ -20,13 +20,36 @@
     <div class="status-mobile-screens">
         {{ macro.availability(product) }}
     </div>
-    {% if isAvailable %}
-        <div class="price{% if app.userIsEmployee %} price-{{ product.priceTypeCode }}" title="{{ product.priceTypeName }}{% endif %}">
-            <b class="old">{{ product.price|discount_price|price_format }} <span class="RUR">Р</span></b>
-            <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
-        </div>
-    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != product.availability %}
-        <strong class="price"{% if product.price|default(0) %}>{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</strong>
+    {% if app.userIsEmployee %}
+        {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != product.availability or product.isManualPrice %}
+            <strong class="price"{% if product.price|default(0) %}>
+                    <a
+                        href="{{ path('product_set_price', { id: product.id }) }}"
+                        class="icon set-price"
+                        title="Установить ручную цену"
+                    >
+                    </a>
+                <span class="price-value price-{{ product.priceTypeCode }}" title="{{ product.priceTypeName }}">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
+                    <a
+                        href="{{ path('product_reset_price', { id: product.id }) }}"
+                        class="icon reset-price"
+                        {% if not product.isManualPrice %}style="display:none"{% endif %}
+                        title="Сбросить ручную цену"
+                    >
+                    </a>
+                </strong>
+        {% endif %}
+    {% else %}
+        {% if isAvailable %}
+            <div class="price">
+                <b class="old">{{ product.price|discount_price|price_format }} <span class="RUR">Р</span></b>
+                <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
+            </div>
+        {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != product.availability %}
+            <strong class="price"{% if product.price|default(0) %}>
+                <span class="price-value">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
+            </strong>
+        {% endif %}
     {% endif %}
     <div class="status-all-screens">
         {{ macro.availability(product) }}

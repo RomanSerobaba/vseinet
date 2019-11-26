@@ -281,7 +281,7 @@ $(function() {
                     sp.post(form.prop('action'), form.serializeArray()).then(function() {
                         dialog.dialog('close');
                         container.find('.price-wrapper').addClass('loading');
-                        setTimeout(getProduct, 4);
+                        setTimeout(getProduct, 100, container.is('#product-list') ? a.closest('.product') : container);
                     });
                 });
             }
@@ -312,14 +312,14 @@ $(function() {
         container.find('.price-wrapper').addClass('loading');
         var a = $(this);
         sp.post(a.prop('href')).then(function() {
-            setTimeout(getProduct, 4);
+            setTimeout(getProduct, 100, container.is('#product-list') ? a.closest('.product') : container);
         });
     });
-    function getProduct() {
-        sp.get(Routing.generate('product_get_price', { id: +container.data('id') })).then(function(response) {
-            container.find('.price-value').html(response.product.price.formatPrice());
-            container.find('.reset-price').css('display', response.product.isManualPrice ? 'inline-block' : 'none');
-            container.find('.price-wrapper').removeClass('loading');
+    function getProduct(product) {
+        sp.get(Routing.generate('product_get_price', { id: product.data('id') })).then(function(response) {
+            product.find('.price-value').html(response.product.price.formatPrice()).removeClass().addClass('price-value price-'+response.product.type);
+            product.find('.reset-price').css('display', response.product.isManualPrice ? 'inline-block' : 'none');
+            product.find('.price-wrapper').removeClass('loading');
         });
     }
 });

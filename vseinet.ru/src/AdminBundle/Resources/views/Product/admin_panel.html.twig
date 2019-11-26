@@ -9,7 +9,7 @@
             ></a>
             <a href="{{ path('admin_product_merge') }}" class="merge" title="Объединить"></a>
             <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
-            <a href="javascript:void(0)" title="Цены конкурентов" class="competitor"></a>
+            <a href="javascript:void(0)" title="Цены конкурентов" class="competitor{% if product.competitorPrice > 0 %} {% if product.competitorPrice < product.price %}warning{% else %}ice{% endif %}{% endif %}"></a>
             <a
                 href="{{ path('authority', { targetUrl: '/admin/orders?baseProduct[id]=' ~ product.id }) }}"
                 class="orders"

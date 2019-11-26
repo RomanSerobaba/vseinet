@@ -33,6 +33,11 @@ class Product
     public $price;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $competitorPrice;
+
+    /**
      * @VIC\Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
     public $priceTypeCode;
@@ -77,7 +82,12 @@ class Product
      */
     public $deliveryDate;
 
-    public function __construct($id, $name, $baseSrc, $availability, $price, $priceTypeCode, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice)
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isManualPrice;
+
+    public function __construct($id, $name, $baseSrc, $availability, $price, $priceTypeCode, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice, $competitorPrice)
     {
         $this->id = $id;
         $this->name = $name;
@@ -90,5 +100,6 @@ class Product
         $this->updatedAt = $updatedAt;
         $this->pricetagQuantity = $pricetagQuantity;
         $this->purchasePrice = $purchasePrice ?? null;
+        $this->competitorPrice = $competitorPrice ?? null;
     }
 }

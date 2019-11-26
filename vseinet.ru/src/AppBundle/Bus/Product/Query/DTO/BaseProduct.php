@@ -44,6 +44,11 @@ class BaseProduct
     public $price;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $competitorPrice;
+
+    /**
      * @VIC\Enum("AppBundle\Enum\ProductPriceTypeCode")
      */
     public $priceTypeCode;
@@ -113,6 +118,11 @@ class BaseProduct
      */
     public $purchasePrice;
 
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isManualPrice;
+
     public function __construct(
         $id,
         $name,
@@ -130,7 +140,8 @@ class BaseProduct
         $estimate,
         $canonicalId,
         $pricetagQuantity,
-        $purchasePrice
+        $purchasePrice,
+        $competitorPrice
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -149,10 +160,7 @@ class BaseProduct
         $this->canonicalId = $canonicalId;
         $this->pricetagQuantity = $pricetagQuantity;
         $this->purchasePrice = $purchasePrice;
-    }
-
-    public function isManualPrice()
-    {
-        return in_array($this->priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
+        $this->competitorPrice = $competitorPrice;
+        $this->isManualPrice = in_array($priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
     }
 }

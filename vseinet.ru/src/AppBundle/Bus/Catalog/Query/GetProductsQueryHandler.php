@@ -35,7 +35,8 @@ class GetProductsQueryHandler extends MessageHandler
                     FROM goods_reserve_register_current AS grrc
                     INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
                     WHERE grrc.base_product_id = b.id AND grrc.goods_condition_code = :goodsConditionCode_FREE
-                ), b.supplier_price) AS purchase_price
+                ), b.supplier_price) AS purchase_price,
+                COALESCE(p2.competitor_price, p.competitor_price) AS competitor_price
             FROM
                 base_product AS b
                 INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )
@@ -59,6 +60,7 @@ class GetProductsQueryHandler extends MessageHandler
 
         foreach ($q->getResult('DTOHydrator') as $product) {
             $product->priceTypeName = ProductPriceTypeCode::getName($product->priceTypeCode);
+            $product->isManualPrice = in_array($product->priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
             $products[$product->id] = $product;
         }
 

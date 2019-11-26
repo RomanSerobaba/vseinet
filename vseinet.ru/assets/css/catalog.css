@@ -54,12 +54,12 @@
     top: 8px;
     width: 15px;
 }
-.sale .price.price-ultimate {color:#00980D;}
-.sale .price.price-manual {color:#C200BB;}
-.sale .price.price-compared.price-compared {color:blue;}
-.sale .price.price-temporary.price-temporary {color:#EA9B00;}
-.sale .price.price-recommended {color:lightseagreen;}
-.sale .price.price-pricelist {color:#C15300;}
-.sale .price.price-sellout {color:#F91D1D;}
-.sale .price.price-ordered {color:#B7CF10;}
-.sale .price.price-standard {color:black;}
+.sale .price-value.price-ultimate {color:#00980D;}
+.sale .price-value.price-manual {color:#C200BB;}
+.sale .price-value.price-compared.price-compared {color:blue;}
+.sale .price-value.price-temporary.price-temporary {color:#EA9B00;}
+.sale .price-value.price-recommended {color:lightseagreen;}
+.sale .price-value.price-pricelist {color:#C15300;}
+.sale .price-value.price-sellout {color:#F91D1D;}
+.sale .price-value.price-ordered {color:#B7CF10;}
+.sale .price-value.price-standard {color:black;}

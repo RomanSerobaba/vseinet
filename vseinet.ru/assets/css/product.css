@@ -210,16 +210,19 @@
 #product .sale.in-cart .bttn.green {
     border-radius: 0 0 2px 2px;
 }
+.product .icon,
 #product .icon {
     border: none;
     display: inline-block;
     height: 16px;
     width: 16px;
 }
+.product .set-price,
 #product .set-price {
     background: url('../images/edit_small.png');
     margin-right: 6px;
 }
+.product .reset-price,
 #product .reset-price {
     background: url('../images/delete.png');
 }
