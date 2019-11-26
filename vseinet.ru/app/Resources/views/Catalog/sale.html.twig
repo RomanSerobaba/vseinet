@@ -98,7 +98,7 @@
         {% endif %}
         {% if (isAvailable or isInTransit or isOnDemand) and product.price and app.geoCity.geoRegionId in [44, 59] %}
             <a
-                class="bttn orange cheaper"
+                class="bttn orange cheaper-request"
                 href="{{ path('cheaper_request', { id: product.id }) }}"
                 rel="nofollow"
             >
