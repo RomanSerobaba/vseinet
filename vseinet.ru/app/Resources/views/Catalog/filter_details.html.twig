@@ -8,7 +8,7 @@
                 {% if section.name is not empty %}
                     <label for="filter_section_{{ section.id }}" data-id="{{ section.id }}">
                         <input
-                            type="radio"
+                            type="checkbox"
                             id="filter_section_{{ section.id }}"
                             name="filter[section][{{ section.id }}]"
                             {% if filter.sectionIds[section.id] is defined %}checked{% endif %}
