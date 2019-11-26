@@ -173,14 +173,13 @@ $(function() {
     if (!geo.data('geoCityId')) {
         if (window.localStorage) {
             var id = localStorage.getItem('city-id');
-            if (id) {
-                sp.post(Routing.generate('select_geo_city'), { id: id }).then(function() {
-                    window.location.reload();
-                }).catch(function() {
-                    checkRequest();
-                });
-            } else {
-                var now = checkRequest();
+            if (!id) {
+                var rcd = new Date(localStorage.getItem('request-city-date'));
+                var now = new Date();
+                rcd.setDate(rcd.getDate() + 1);
+                if (rcd.getTime() < now.getTime()) {
+                    showRequest();
+                }
             }
         } else {
             showRequest();
@@ -189,22 +188,11 @@ $(function() {
             if (window.localStorage) {
                 localStorage.setItem('request-city-date', now.toString());
                 if ($(this).is('.ok')) {
-                    var id = geo.data('detectGeoCityId');
-                    sp.post(Routing.generate('select_geo_city'), { id: id });
-                    localStorage.setItem('city-id', id);
+                    localStorage.setItem('city-id', geo.data('detectGeoCityId'));
                 }
             }
             hideRequest();
         });
-    }
-    function checkRequest() {
-        var rcd = new Date(localStorage.getItem('request-city-date'));
-        var now = new Date();
-        rcd.setDate(rcd.getDate() + 1);
-        if (rcd.getTime() < now.getTime()) {
-            showRequest();
-        }
-        return now;
     }
     function showRequest() {
         if ($(window).width() < 992) {
