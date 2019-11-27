@@ -25,7 +25,7 @@
                 >
                 </a>
             {% endif %}
-            <span class="price-value{% if app.userIsEmployee %} price-{{ baseProduct.priceTypeCode }}" title="{{ baseProduct.priceTypeName }}{% endif %}">{{ baseProduct.price|price_format }}</span>
+            <span class="price-value{% if app.userIsEmployee %} price-{{ baseProduct.priceTypeCode }}" title="{{ baseProduct.priceTypeName }}{% if baseProduct.isManualPrice %}, {{ baseProduct.priceChangedAt|date_format('%d.%m.%Y') }} {{ baseProduct.priceChangedBy }}{% endif %}{% endif %}">{{ baseProduct.price|price_format }}</span>
             <span class="RUR">Р</span>
             {% if app.userIsEmployee %}
                 <a

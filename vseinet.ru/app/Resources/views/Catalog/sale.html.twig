@@ -29,7 +29,7 @@
                         title="Установить ручную цену"
                     >
                     </a>
-                <span class="price-value price-{{ product.priceTypeCode }}" title="{{ product.priceTypeName }}">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
+                <span class="price-value price-{{ product.priceTypeCode }}" title="{{ product.priceTypeName }}{% if product.isManualPrice %}, {{ product.priceChangedAt|date_format('%d.%m.%Y') }} {{ product.priceChangedBy }}{% endif %}">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
                     <a
                         href="{{ path('product_reset_price', { id: product.id }) }}"
                         class="icon reset-price"

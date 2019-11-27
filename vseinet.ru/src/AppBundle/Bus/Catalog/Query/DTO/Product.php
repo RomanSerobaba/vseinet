@@ -87,7 +87,19 @@ class Product
      */
     public $isManualPrice;
 
-    public function __construct($id, $name, $baseSrc, $availability, $price, $priceTypeCode, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice, $competitorPrice)
+    /**
+     * @Assert\DateTime
+     */
+    public $priceChangedAt;
+
+    /**
+     * @Assert\Type("string")
+     */
+    public $priceChangedBy;
+
+    public function __construct($id, $name, $baseSrc, $availability, $price, $priceTypeCode, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice, $competitorPrice,
+    $priceChangedAt,
+    $priceChangedBy)
     {
         $this->id = $id;
         $this->name = $name;
@@ -101,5 +113,7 @@ class Product
         $this->pricetagQuantity = $pricetagQuantity;
         $this->purchasePrice = $purchasePrice ?? null;
         $this->competitorPrice = $competitorPrice ?? null;
+        $this->priceChangedAt = $priceChangedAt;
+        $this->priceChangedBy = $priceChangedBy;
     }
 }

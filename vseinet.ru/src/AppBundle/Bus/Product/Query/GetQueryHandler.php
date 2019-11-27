@@ -45,7 +45,31 @@ class GetQueryHandler extends MessageHandler
                         JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
                         WHERE bp2.canonicalId = bp.id AND grrc.goodsConditionCode = :goodsConditionCode_FREE
                     ), bp.supplierPrice),
-                    COALESCE(p.competitorPrice, p0.competitorPrice)
+                    COALESCE(p.competitorPrice, p0.competitorPrice),
+                    FIRST(
+                        SELECT
+                            ppl.operatedAt
+                        FROM
+                            AppBundle:ProductPriceLog AS ppl
+                        WHERE
+                            ppl.baseProductId = bp.id
+                        ORDER BY
+                            ppl.operatedAt DESC
+                    ),
+                    FIRST(
+                        SELECT
+                            CONCAT_WS(' ', per.lastname, per.firstname, per.secondname)
+                        FROM
+                            AppBundle:ProductPriceLog AS ppl2
+                        INNER JOIN
+                            AppBundle:User AS u WITH ppl2.operatedBy = u.id
+                        INNER JOIN
+                            AppBundle:Person AS per WITH per.id = u.personId
+                        WHERE
+                            ppl2.baseProductId = bp.id
+                        ORDER BY
+                            ppl2.operatedAt DESC
+                    )
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProduct AS bpo WITH bpo.canonicalId = bp.id
