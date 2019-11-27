@@ -218,7 +218,7 @@ class QueryBuilder extends ContainerAware
     {
         $idCriteria = $this->criteria;
         $expression = $this->rankingExactWords($this->escape($this->escape(implode(' ', $this->match))));
-        $snippet = $this->snippetWords($this->escape($this->escape(implode(' ', $this->match))));
+        $snippet = $this->snippetWords($this->escape(implode(' ', $this->match)));
         $this->criteria[] = $this->getCriteriaIsAlive();
         $this->criteria[] = $this->getCriteriaPrice();
         $this->criteria[] = $this->getCriteriaAvailability();
