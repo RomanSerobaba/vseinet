@@ -614,7 +614,7 @@ class QueryBuilder extends ContainerAware
         $result = [];
 
         foreach ($pieces as $piece) {
-            if (strlen($piece)) {
+            if (strlen($piece) && preg_match('~[A-zА-я0-9]~isu', $piece)) {
                 $result[] = '(='.$piece.'|'.$piece.')';
             }
         }
