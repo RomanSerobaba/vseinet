@@ -18,6 +18,16 @@ class Revision
     public $name;
 
     /**
+     * @Assert\type(type="string")
+     */
+    public $code;
+
+    /**
+     * @Assert\type(type="string")
+     */
+    public $productName;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $url;
