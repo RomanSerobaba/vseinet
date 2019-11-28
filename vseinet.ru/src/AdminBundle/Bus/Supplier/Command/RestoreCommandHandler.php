@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Supplier\Command;
 
@@ -26,5 +26,10 @@ class RestoreCommandHandler extends MessageHandler
         $supplierProduct->setBaseProductId($baseProduct->getId());
         $em->persist($supplierProduct);
         $em->flush();
+
+        $q = $this->em->getConnection()->prepare("
+            SELECT supplier_pricelist_after_load({$command->baseProductId})
+        ");
+        $q->execute();
     }
 }

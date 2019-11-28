@@ -14,4 +14,12 @@ class CompetitorRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->findBy(['isActive' => true]);
     }
+
+    public function getEditable()
+    {
+        $competitors = $this->findBy(['isActive' => true, 'channel' => ['retail', 'site']]);
+        return array_filter($competitors, function($competitor){
+            return 'retail' === $competitor->getChannel() || 'site' === $competitor->getChannel() && 'product' === $competitor->getParseStrategy();
+        });
+    }
 }

@@ -15,6 +15,11 @@ class SetPriceCommandHandler extends MessageHandler
 {
     public function handle(SetPriceCommand $command)
     {
+        if (!$command->price) {
+            $this->get('command_bus')->handle(new ResetPriceCommand(['id' => $command->id]));
+
+            return;
+        }
         $em = $this->getDoctrine()->getManager();
 
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);

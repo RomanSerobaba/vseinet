@@ -28,7 +28,7 @@ class AddRevisionFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $competitors = $this->em->getRepository(Competitor::class)->getActive();
+        $competitors = $this->em->getRepository(Competitor::class)->getEditable();
         $competitorsChoice = [];
         foreach ($competitors as $competitor) {
             $competitorsChoice[$competitor->getName()] = $competitor->getId();

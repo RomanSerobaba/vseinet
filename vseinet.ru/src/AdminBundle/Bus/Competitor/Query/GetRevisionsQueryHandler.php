@@ -32,7 +32,7 @@ class GetRevisionsQueryHandler extends MessageHandler
                 cp.requested_at,
                 cp.status,
                 CASE WHEN COALESCE(cp.price, 0) = 0 OR c.period IS NOT NULL AND cp.completed_at + (c.period || ' day')::INTERVAL < NOW() OR cp.completed_at IS NULL THEN :void WHEN cp.price >= COALESCE(p2.price, p.price) THEN :ice ELSE :warning END AS state,
-                CASE WHEN c.channel = 'site' AND c.parse_strategy = 'product' THEN false ELSE true END AS read_only
+                CASE WHEN c.channel = 'site' AND c.parse_strategy = 'product' OR c.channel = 'retail' THEN false ELSE true END AS read_only
             FROM competitor_product AS cp
             INNER JOIN base_product AS bp ON bp.id = cp.base_product_id
             LEFT OUTER JOIN product AS p2 ON p2.base_product_id = bp.canonical_id AND p2.geo_city_id = cp.geo_city_id
