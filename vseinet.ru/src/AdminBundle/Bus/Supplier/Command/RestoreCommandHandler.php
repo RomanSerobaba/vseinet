@@ -28,7 +28,7 @@ class RestoreCommandHandler extends MessageHandler
         $em->flush();
 
         $q = $em->getConnection()->prepare("
-            SELECT supplier_pricelist_after_load({$command->baseProductId})
+            SELECT supplier_product_after_update({$command->baseProductId})
         ");
         $q->execute();
     }
