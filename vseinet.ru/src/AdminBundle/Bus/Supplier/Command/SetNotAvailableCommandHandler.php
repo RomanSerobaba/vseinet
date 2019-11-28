@@ -22,7 +22,7 @@ class SetNotAvailableCommandHandler extends MessageHandler
         $em->persist($supplierProduct);
         $em->flush();
 
-        $q = $this->em->getConnection()->prepare("
+        $q = $em->getConnection()->prepare("
             SELECT supplier_pricelist_after_load({$supplierProduct->getBaseProductId()})
         ");
         $q->execute();
