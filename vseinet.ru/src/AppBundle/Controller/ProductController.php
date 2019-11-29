@@ -102,7 +102,7 @@ class ProductController extends Controller
     /**
      * @VIA\Get(
      *     name="catalog_product_gallery",
-     *     path="/product/gallary/{id}/",
+     *     path="/product/gallery/{id}/",
      *     requirements={"id"="\d+"},
      *     parameters={
      *         @VIA\Parameter(name="id", type="integer"),
