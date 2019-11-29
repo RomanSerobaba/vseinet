@@ -36,7 +36,33 @@ class GetProductsQueryHandler extends MessageHandler
                     INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
                     WHERE grrc.base_product_id = b.id AND grrc.goods_condition_code = :goodsConditionCode_FREE
                 ), b.supplier_price) AS purchase_price,
-                COALESCE(p2.competitor_price, p.competitor_price) AS competitor_price
+                COALESCE(p2.competitor_price, p.competitor_price) AS competitor_price,
+                (
+                    SELECT
+                        ppl.operated_at
+                    FROM
+                        product_price_log AS ppl
+                    WHERE
+                        ppl.base_product_id = b.id
+                    ORDER BY
+                        ppl.operated_at DESC
+                    LIMIT 1
+                ) AS price_changed_at,
+                (
+                    SELECT
+                        CONCAT_WS(' ', per.lastname, per.firstname, per.secondname)
+                    FROM
+                        product_price_log AS ppl2
+                    INNER JOIN
+                        \"user\" AS u ON ppl2.operated_by = u.id
+                    INNER JOIN
+                        person AS per ON per.id = u.person_id
+                    WHERE
+                        ppl2.base_product_id = b.id
+                    ORDER BY
+                        ppl2.operated_at DESC
+                    LIMIT 1
+                ) AS price_changed_by
             FROM
                 base_product AS b
                 INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )

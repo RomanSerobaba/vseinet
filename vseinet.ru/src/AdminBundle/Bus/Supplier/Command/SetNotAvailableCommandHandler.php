@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Supplier\Command;
 
@@ -21,5 +21,10 @@ class SetNotAvailableCommandHandler extends MessageHandler
         $supplierProduct->setProductAvailabilityCode(ProductAvailabilityCode::OUT_OF_STOCK);
         $em->persist($supplierProduct);
         $em->flush();
+
+        $q = $em->getConnection()->prepare("
+            SELECT supplier_product_after_update({$supplierProduct->getBaseProductId()})
+        ");
+        $q->execute();
     }
 }

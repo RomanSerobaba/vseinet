@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Supplier\Command;
 
@@ -26,5 +26,10 @@ class UnlinkCommandHandler extends MessageHandler
         $supplierProduct->setBaseProductId(null);
         $em->persist($supplierProduct);
         $em->flush();
+
+        $q = $em->getConnection()->prepare("
+            SELECT supplier_product_after_update({$command->baseProductId})
+        ");
+        $q->execute();
     }
 }

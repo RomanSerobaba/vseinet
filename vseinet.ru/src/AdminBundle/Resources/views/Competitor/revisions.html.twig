@@ -7,16 +7,17 @@
                     {{ revision.name }}
                 </td>
                 <td style="word-break:break-all">
+                    {{ revision.productName }} {% if revision.code %} <span style='color:#a9a9a9'>Код: {{revision.code}}</span>{% endif %}<br/>
                     {% if not revision.readOnly and revision.url is not null %}
                         <a href="{{ revision.url }}" target="_blank">{{ revision.url }}</a>
                     {% endif %}
                 </td>
-                <td style="text-align:right;width:60px">
+                <td style="text-align:right;width:60px;white-space:nowrap">
                     {% if revision.price is not null %}
                         {{ revision.price|price_format }}
                     {% endif %}
                 </td>
-                <td style="text-align:center;width:120px">
+                <td style="text-align:center;width:120px;white-space:nowrap">
                     {% if revision.price is not null %}
                         {{ revision.completedAt|date('d.m.Y H:i') }}
                     {% endif %}

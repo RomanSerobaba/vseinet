@@ -15,6 +15,11 @@ class SetPriceCommandHandler extends MessageHandler
 {
     public function handle(SetPriceCommand $command)
     {
+        if (!$command->price) {
+            $this->get('command_bus')->handle(new ResetPriceCommand(['id' => $command->id]));
+
+            return;
+        }
         $em = $this->getDoctrine()->getManager();
 
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);
@@ -51,6 +56,10 @@ class SetPriceCommandHandler extends MessageHandler
 
         if ($product->getPrice() > $command->price && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && ($baseProduct->getSupplierPrice() > $command->price || !in_array($this->getUser()->getId(), [4980, 1501, 65621, 12538, 106265]))) {
             throw new BadRequeetsHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
+        }
+
+        if (in_array($command->type, [ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::MANUAL]) && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501])) {
+            throw new BadRequeetsHttpException(sprintf('У вас нет прав на установку фиксированной цены, обратитесь к уполномоченному'));
         }
 
         switch ($command->type) {
