@@ -35,7 +35,7 @@ class GetRevisionsQueryHandler extends MessageHandler
                 CASE WHEN c.channel = 'site' AND c.parse_strategy = 'product' OR c.channel = 'retail' THEN false ELSE true END AS read_only
             FROM competitor_product AS cp
             INNER JOIN base_product AS bp ON bp.id = cp.base_product_id
-            LEFT OUTER JOIN product AS p2 ON p2.base_product_id = bp.canonical_id AND p2.geo_city_id = cp.geo_city_id
+            LEFT OUTER JOIN product AS p2 ON p2.base_product_id = bp.canonical_id AND p2.geo_city_id = :geo_city_id
             INNER JOIN product AS p ON p.base_product_id = bp.canonical_id AND p.geo_city_id = 0
             INNER JOIN competitor AS c ON c.id = cp.competitor_id
             inner join competitor_to_geo_city as c2c on c2c.competitor_id = c.id
