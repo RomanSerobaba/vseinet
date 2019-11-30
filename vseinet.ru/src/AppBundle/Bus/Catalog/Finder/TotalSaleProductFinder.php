@@ -37,7 +37,7 @@ class TotalSaleProductFinder extends AbstractProductFinder
         }
         $features->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
         if ($this->getUserIsEmployee()) {
-            $features->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $features->nofilled = $this->getNofilled(array_splice($results, 5, 6));
             $results = array_slice($results, 1);
         }
         $features->categories = $this->getCategories($results[5]);
@@ -70,7 +70,7 @@ class TotalSaleProductFinder extends AbstractProductFinder
         }
         $facets->price = new DTO\Range($results[1][0]['min_price'], $results[1][0]['max_price']);
         if ($this->getUserIsEmployee()) {
-            $facets->nofilled = $this->getNofilled(array_splice($results, 5, 5));
+            $facets->nofilled = $this->getNofilled(array_splice($results, 5, 6));
             $results = array_slice($results, 1);
         }
 
