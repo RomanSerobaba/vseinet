@@ -20,7 +20,7 @@ class GetByNameQueryHandler extends MessageHandler
                     b.isForbidden
                 )
             FROM AppBundle:Brand AS b
-            WHERE LOWER(b.name) = LOWER(:name)
+            WHERE LOWER(b.name) = LOWER(:name) AND b.id = b.canonicalId
         ");
         $q->setParameter('name', $query->name);
         $brand = $q->getOneOrNullResult();
