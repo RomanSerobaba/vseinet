@@ -10,6 +10,7 @@ use AppBundle\Entity\ProductPriceLog;
 use AppBundle\Enum\ProductPriceTypeCode;
 use AppBundle\Enum\UserRole;
 use Doctrine\ORM\AbstractQuery;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class SetPriceCommandHandler extends MessageHandler
 {
@@ -55,11 +56,11 @@ class SetPriceCommandHandler extends MessageHandler
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
 
         if ($product->getPrice() > $command->price && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && ($baseProduct->getSupplierPrice() > $command->price || !in_array($this->getUser()->getId(), [4980, 1501, 65621, 12538, 106265]))) {
-            throw new BadRequeetsHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
+            throw new BadRequestHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
         }
 
         if (in_array($command->type, [ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::MANUAL]) && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501])) {
-            throw new BadRequeetsHttpException(sprintf('У вас нет прав на установку фиксированной цены, обратитесь к уполномоченному'));
+            throw new BadRequestHttpException(sprintf('У вас нет прав на установку фиксированной цены, обратитесь к уполномоченному'));
         }
 
         switch ($command->type) {
@@ -82,7 +83,7 @@ class SetPriceCommandHandler extends MessageHandler
                 break;
 
             default:
-                throw new BadRequeetsHttpException(sprintf('Тип цены %s нельзя установить вручную', $command->type));
+                throw new BadRequestHttpException(sprintf('Тип цены %s нельзя установить вручную', $command->type));
         }
 
         $em->persist($product);
