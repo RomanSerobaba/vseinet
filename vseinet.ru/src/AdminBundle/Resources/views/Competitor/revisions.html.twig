@@ -1,5 +1,14 @@
 <h4><span>Сравнение цен</span></h4>
 <table style="width:100%">
+    <thead>
+        <tr>
+            <th>Конкурент</th>
+            <th>Наименование/код/ссылка</th>
+            <th>Цена</th>
+            <th title="Дата последней автоматической/ручной сверки">Последняя сверка</th>
+            <th title="Код статуса при парсинге с сайта конкурента (200 - успех, 102 - в процессе, 0 - ни разу не парсилось, прочее - неудача)">Код ответа</th>
+        </tr>
+    </thead>
     <tbody class="compare">
         {% for revision in revisions %}
             <tr class="revision {{ revision.state }} {{ revision.status }}">
