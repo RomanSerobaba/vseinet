@@ -42,7 +42,7 @@
             <a href="{{ path('admin_supplier_unlink') }}" class="supplier-unlink" data-id="{{ remain.id }}" title="Удалить"></a>
             <a href="{{ path('admin_supplier_restore') }}" class="supplier-restore" data-id="{{ remain.id }}" title="Восстановить" style="display:none"></a>
         {% endif %}
-        {% if remain.isCompetitor %}
+        {% if remain.isSupplier != true %}
             <span style="color:violet;font-weight:bold">Только конкурент!</span>
         {% endif %}
     </div>
