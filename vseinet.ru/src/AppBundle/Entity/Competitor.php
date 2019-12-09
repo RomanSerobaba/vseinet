@@ -63,6 +63,13 @@ class Competitor
      */
     private $isCommonPricing;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="supplier_id", type="integer")
+     */
+    private $supplierId;
+
 
     /**
      * Get id
@@ -216,6 +223,30 @@ class Competitor
     public function getIsCommonPricing()
     {
         return $this->isCommonPricing;
+    }
+
+    /**
+     * Set supplierId
+     *
+     * @param integer $supplierId
+     *
+     * @return Competitor
+     */
+    public function setSupplierId($supplierId)
+    {
+        $this->supplierId = $supplierId;
+
+        return $this;
+    }
+
+    /**
+     * Get supplierId
+     *
+     * @return int
+     */
+    public function getSupplierId()
+    {
+        return $this->supplierId;
     }
 }
 

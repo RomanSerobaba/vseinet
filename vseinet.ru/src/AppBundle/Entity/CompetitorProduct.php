@@ -113,6 +113,13 @@ class CompetitorProduct
     private $completedAt;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string")
+     */
+    private $code;
+
+    /**
      * Set defaults.
      */
     public function __construct()
@@ -443,5 +450,29 @@ class CompetitorProduct
     public function getCompletedAt()
     {
         return $this->completedAt;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return CompetitorProduct
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 }
