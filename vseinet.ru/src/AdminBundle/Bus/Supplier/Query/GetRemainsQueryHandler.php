@@ -69,13 +69,14 @@ class GetRemainsQueryHandler extends MessageHandler
                 sp.price,
                 sp.updated_at AS price_time,
                 ti.transfered_by,
-                ti.transfered_at
+                ti.transfered_at,
+                s.is_supplier
             FROM supplier_product AS sp
             INNER JOIN supplier AS s ON s.id = sp.supplier_id
             INNER JOIN base_product AS bp ON bp.id = sp.base_product_id
             LEFT OUTER JOIN transfer_info AS ti ON ti.supplier_product_id = sp.id
-            WHERE bp.canonical_id = :base_product_id AND s.is_supplier = true
-            ORDER BY sp.product_availability_code DESC, sp.price, sp.updated_at DESC
+            WHERE bp.canonical_id = :base_product_id
+            ORDER BY s.is_supplier DESC, sp.product_availability_code DESC, sp.price, sp.updated_at DESC
         ", new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('baseProductHistoryObject_SUPPLIER_PRODUCT', BaseProductHistoryObject::SUPPLIER_PRODUCT);

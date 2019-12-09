@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Supplier\Query\DTO;
 
@@ -56,4 +56,9 @@ class Remain
      * @Assert\Type(type="datetime")
      */
     public $transferedAt;
+
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isSupplier;
 }

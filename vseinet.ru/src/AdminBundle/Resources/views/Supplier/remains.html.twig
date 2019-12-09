@@ -7,9 +7,9 @@
             {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == remain.productAvailabilityCode %}
                 style="color:green" title="в наличии"
             {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == remain.productAvailabilityCode %}
-                style="color:blue" title="ожидается"        
+                style="color:blue" title="ожидается"
             {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == remain.productAvailabilityCode %}
-                style="color:red" title="отсутствует"        
+                style="color:red" title="отсутствует"
             {% else %}
                 style="color:#01c9ed" title="под заказ"
             {% endif %}
@@ -18,7 +18,7 @@
         </span>
         <b style="text-decoration:underline">
             {% if remain.supplierCode is null %}
-                Наши резервы    
+                Наши резервы
             {% else %}
                 {{ remain.supplierCode }}
             {% endif %}
@@ -35,12 +35,15 @@
             <span style="color:BlueViolet;font-weight:bold">Код поставщика:</span> <span>{{ remain.code }}</span>
         {% endif %}
         {% if remain.transferedAt is not null %}
-            <span style="color:BlueViolet;font-weight:bold">Перенёс:</span> 
+            <span style="color:BlueViolet;font-weight:bold">Перенёс:</span>
             <span>{{ remain.transferedBy }} {{ remain.transferedAt|date('d.m.Y') }}</span>
         {% endif %}
         {% if remain.supplierCode is not null %}
             <a href="{{ path('admin_supplier_unlink') }}" class="supplier-unlink" data-id="{{ remain.id }}" title="Удалить"></a>
             <a href="{{ path('admin_supplier_restore') }}" class="supplier-restore" data-id="{{ remain.id }}" title="Восстановить" style="display:none"></a>
+        {% endif %}
+        {% if remain.isCompetitor = true %}
+            <span style="color:violet;font-weight:bold">Только конкурент!</span>
         {% endif %}
     </div>
 {% endfor %}
