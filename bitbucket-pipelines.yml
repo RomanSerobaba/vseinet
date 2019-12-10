@@ -23,7 +23,7 @@ pipelines:
               variables:
                 SSH_USER: $USER
                 SERVER: $SERVER
-                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php72 bin/console cache:clear --no-warmup; php72 /usr/local/bin/composer -n install; php72 bin/console app:config:bus-services; php72 bin/console cache:clear; yarn build;'
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php72 bin/console cache:clear --no-warmup; php72 /usr/local/bin/composer -n install; php72 bin/console app:config:bus-services; php72 /usr/local/bin/composer dump-autoload --no-dev --classmap-authoritative; php72 bin/console cache:clear; php72 bin/console fos:js-routing:dump --format=json; yarn build;'
       - step:
           name: Production
           deployment: production
@@ -33,4 +33,4 @@ pipelines:
               variables:
                 SSH_USER: $USER
                 SERVER: $SERVER
-                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php bin/console cache:clear --no-warmup; composer -n install; php bin/console app:config:bus-services; php bin/console cache:clear; php bin/console fos:js-routing:dump --format=json; yarn build;'
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php bin/console cache:clear --no-warmup; composer -n install; php bin/console app:config:bus-services; composer dump-autoload --no-dev --classmap-authoritative; php bin/console cache:clear; php bin/console fos:js-routing:dump --format=json; yarn build;'
