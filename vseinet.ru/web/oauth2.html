@@ -1,0 +1,35 @@
+<html>
+<script type='text/javascript'>
+function isLocalStorage() {
+  try {
+      return 'localStorage' in window && window['localStorage'] !== null;
+  } catch (e) {
+      return false;
+  }
+}
+  
+var query = decodeURIComponent(document.location.hash + document.location.search),
+    result = /code=([-0-9a-zA-Z_]+)/.exec(query),
+    response = {};
+
+if (result === undefined || result === null) {
+  result = /(error)=([^&]+)(?:(?:&(?:(error_reason)=([^&]+)))*)(?:(?:&(?:(error_description)=([^&]+)))*)/.exec(query);
+  for(var index = 1; index < result.length; index += 2) {
+    response[result[index]] = result[index+1];
+  }
+} else {
+  response['code'] = result[1];
+}
+  
+  response = JSON.stringify(response); 
+
+if (isLocalStorage()) {
+  localStorage.setItem('__oAuth2', response);
+} else { //fallback for old browsers without LocalStorage AIP
+  document.cookie = '__oAuth2=' + response + '; path=/;';
+}
+
+window.close();
+</script>
+<body></body>
+</html>

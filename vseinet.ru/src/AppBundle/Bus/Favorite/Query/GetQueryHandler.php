@@ -34,14 +34,17 @@ class GetQueryHandler extends MessageHandler
                     bp.id,
                     bp.name,
                     COALESCE(p.price, p0.price),
-                    bpi.basename,
+                    FIRST(
+                        SELECT bpi.basename
+                        FROM AppBundle:BaseProductImage AS bpi 
+                        WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    ),
                     COALESCE(p.productAvailabilityCode, p0.productAvailabilityCode),
                     bp.updatedAt
                 )
             FROM AppBundle:BaseProduct AS bp
             LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.canonicalId AND p.geoCityId = :geoCityId
             INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.canonicalId AND p0.geoCityId = 0
-            LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
             WHERE bp.id IN (:ids)
             ORDER BY bp.name
         ");

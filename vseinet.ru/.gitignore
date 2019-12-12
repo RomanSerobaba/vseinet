@@ -17,7 +17,13 @@
 /web/*
 !/web/robots.txt
 !/web/images/
-!/web/sitemap.xml
+!/web/js/
+/web/js/fos_js_routes.json
+!/web/app.php
+!/web/app_dev.php
+!/web/oauth2.html
+!/web/favicon.ico
+!/web/.htaccess
 /.idea
 /nbproject
 /node_modules/*
