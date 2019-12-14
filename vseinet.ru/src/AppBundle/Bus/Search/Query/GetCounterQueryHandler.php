@@ -15,8 +15,9 @@ class GetCounterQueryHandler extends MessageHandler
         }
 
         $q = $this->getDoctrine()->getManager()->createQuery("
-            SELECT c.countProducts
+            SELECT cst.countProducts
             FROM AppBundle:Category c
+            INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
             WHERE c.id = 0
         ");
         try {

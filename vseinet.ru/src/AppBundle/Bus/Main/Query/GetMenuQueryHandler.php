@@ -30,7 +30,7 @@ class GetMenuQueryHandler extends MessageHandler
             FROM AppBundle:Category AS c
             INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = c.id AND cp.id = cp.pid
             LEFT OUTER JOIN AppBundle:CategoryStats AS cs WITH cs.categoryId = c.id
-            WHERE cp.level <= 3 AND c.id > 0 AND cp.pid != 7562 AND c.countProducts > 0
+            WHERE cp.level <= 3 AND c.id > 0 AND cp.pid != 7562 AND cs.countProducts > 0
             ORDER BY cp.plevel ASC, ORD ASC, cs.popularity DESC
         ");
         $categories = $q->getArrayResult();
