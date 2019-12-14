@@ -23,11 +23,10 @@ class GetSubcategoriesQueryHandler extends MessageHandler
                     c.id,
                     c.name,
                     c.aliasForId,
-                    cst.countProducts
+                    c.countProducts
                 )
             FROM AppBundle:Category c
-            INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
-            WHERE c.pid = :pid AND cst.countProducts > 0 AND c.id != 7562
+            WHERE c.pid = :pid AND c.countProducts > 0 AND c.id != 7562
             ORDER BY c.name
         ");
         $q->setParameter('pid', $query->pid);

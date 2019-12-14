@@ -18,7 +18,7 @@ class GetCategoryQueryHandler extends MessageHandler
                     c.id,
                     c.name,
                     c.aliasForId,
-                    cst.countProducts,
+                    c.countProducts,
                     CASE WHEN EXISTS (
                         SELECT 1
                         FROM AppBundle:Category cc
@@ -31,7 +31,6 @@ class GetCategoryQueryHandler extends MessageHandler
                     c.isTplEnabled
                 )
             FROM AppBundle:Category c
-            INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
             LEFT OUTER JOIN AppBundle:CategorySeo cs WITH cs.categoryId = c.id
             WHERE c.id = :id AND cs.brandId IS NULL
         ");
