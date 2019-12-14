@@ -24,6 +24,13 @@ class CategoryStats
     /**
      * @var int
      *
+     * @ORM\Column(name="count_products", type="integer")
+     */
+    private $countProducts;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="average_price", type="integer")
      */
     private $averagePrice;
@@ -71,6 +78,30 @@ class CategoryStats
     public function getCategoryId()
     {
         return $this->categoryId;
+    }
+
+    /**
+     * Set countProducts.
+     *
+     * @param int $countProducts
+     *
+     * @return CategoryStats
+     */
+    public function setCountProducts($countProducts)
+    {
+        $this->countProducts = $countProducts;
+
+        return $this;
+    }
+
+    /**
+     * Get countProducts.
+     *
+     * @return int
+     */
+    public function getCountProducts()
+    {
+        return $this->countProducts;
     }
 
     /**
