@@ -46,7 +46,7 @@ class GetSubcategoriesQueryHandler extends MessageHandler
                 FROM AppBundle:BaseProductImage bpi
                 INNER JOIN AppBundle:BaseProduct bp WITH bp.id = bpi.baseProductId
                 INNER JOIN AppBundle:CategoryPath cp WITH cp.id = bp.categoryId
-                WHERE cp.pid = :categoryId AND bp.supplierAvailabilityCode >= :productAvailabilityCode_AVAILABLE
+                WHERE cp.pid = :categoryId AND bp.supplierAvailabilityCode >= :productAvailabilityCode_AVAILABLE AND bpi.width > 0
             ');
             $q->setParameter('categoryId', $subcategory->id);
             $q->setParameter('productAvailabilityCode_AVAILABLE', ProductAvailabilityCode::AVAILABLE);

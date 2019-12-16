@@ -73,7 +73,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                             bpi.basename
                         )
                     FROM AppBundle:BaseProduct AS bp
-                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0
                     INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = :geoCityId AND p.productAvailabilityCode = :available AND p.price > 0
                     {$categoryJoinSpec}
                     WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec} AND bp.id = bp.canonicalId
@@ -96,7 +96,7 @@ class GetBlockSpecialsQueryHandler extends MessageHandler
                             bpi.basename
                         )
                     FROM AppBundle:BaseProduct AS bp
-                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                    INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0
                     INNER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.id AND p.geoCityId = 0 AND p.productAvailabilityCode = :on_demand AND p.price > 0
                     {$categoryJoinSpec}
                     WHERE bp.id >= :randomId {$excludeIdsSpec} {$categoryIdSpec} AND bp.id = bp.canonicalId

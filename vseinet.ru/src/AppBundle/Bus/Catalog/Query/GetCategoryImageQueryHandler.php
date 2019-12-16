@@ -14,7 +14,7 @@ class GetCategoryImageQueryHandler extends MessageHandler
                 bpi.id,
                 bpi.basename AS base_src
             FROM base_product AS bp
-            INNER JOIN base_product_image AS bpi ON bpi.base_product_id = bp.id AND bpi.sort_order = 1
+            INNER JOIN base_product_image AS bpi ON bpi.base_product_id = bp.id AND bpi.sort_order = 1 AND bpi.width > 0
             WHERE bp.category_id = :category_id AND bpi.id >= (
                 SELECT FLOOR(RANDOM() * (MAX(id) - MIN(id))) + MIN(id)
                 FROM base_product_image

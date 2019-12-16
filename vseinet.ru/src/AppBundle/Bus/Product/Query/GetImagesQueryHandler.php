@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Product\Query;
 
@@ -20,16 +20,16 @@ class GetImagesQueryHandler extends MessageHandler
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Product\Query\DTO\Image (
                     bpi.id,
                     bpi.basename,
                     bpi.width,
                     bpi.height
                 )
-            FROM AppBundle:BaseProductImage AS bpi 
-            WHERE bpi.baseProductId = :baseProductId
-            ORDER BY bpi.sortOrder 
+            FROM AppBundle:BaseProductImage AS bpi
+            WHERE bpi.baseProductId = :baseProductId AND bpi.width > 0
+            ORDER BY bpi.sortOrder
         ");
         $q->setParameter('baseProductId', $baseProduct->getId());
         $images = $q->getArrayResult();

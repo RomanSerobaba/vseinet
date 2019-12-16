@@ -68,7 +68,7 @@ class GetProductsQueryHandler extends MessageHandler
                 INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )
                 LEFT JOIN product AS p2 ON ( p2.base_product_id = b.ID AND p2.geo_city_id = :geoCityId )
                 INNER JOIN product AS p ON ( p.base_product_id = b.ID AND p.geo_city_id = 0 )
-                LEFT JOIN base_product_image AS bpi ON ( bpi.base_product_id = b.ID AND bpi.sort_order = 1 )
+                LEFT JOIN base_product_image AS bpi ON bpi.base_product_id = b.ID AND bpi.sort_order = 1 AND bpi.width > 0
                 LEFT JOIN product_pricetag_buffer AS ppb ON ( ppb.base_product_id = b.ID AND ppb.created_by = :userId )
                 JOIN UNNEST ( :ids::INT [] ) WITH ORDINALITY T ( ID, ord ) ON b.ID = T.ID
             WHERE

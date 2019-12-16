@@ -36,8 +36,8 @@ class GetQueryHandler extends MessageHandler
                     COALESCE(p.price, p0.price),
                     FIRST(
                         SELECT bpi.basename
-                        FROM AppBundle:BaseProductImage AS bpi 
-                        WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1
+                        FROM AppBundle:BaseProductImage AS bpi
+                        WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0
                     ),
                     COALESCE(p.productAvailabilityCode, p0.productAvailabilityCode),
                     bp.updatedAt
