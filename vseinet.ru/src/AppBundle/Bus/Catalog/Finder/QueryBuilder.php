@@ -619,7 +619,8 @@ class QueryBuilder extends ContainerAware
             }
         }
 
-        return implode(' ', $result);
+        return $string;
+        // return implode(' ', $result);
     }
 
     /**
@@ -638,6 +639,7 @@ class QueryBuilder extends ContainerAware
             }
         }
 
-        return implode(' ', $result);
+        return $string;
+        // return implode(' ', $result);
     }
 }
