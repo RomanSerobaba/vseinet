@@ -93,7 +93,7 @@ class CatalogController extends Controller
         }
 
         if (empty($category->pageTitle)) {
-            $category->pageTitle = sprintf('Купить %s в Пензе, цена"', $category->name);
+            $category->pageTitle = sprintf('Купить %s в Пензе, цена', $category->name);
         }
         if (empty($category->pageDescription)) {
             $category->pageDescription = sprintf('В каталоге %s вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!', $category->name);
