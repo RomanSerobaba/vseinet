@@ -24,6 +24,7 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt123123123
 
     cookie_secure: true
+    session.save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
 
     uploads.domain: ''
     uploads.dir: ''
@@ -39,8 +40,8 @@ parameters:
 
     catalog.page_limit: 25
 
-    admin.host: 'https://dev.vseinet.ru'
-    api.host: 'https://dev.vseinet.ru'
+    admin.host: 'https://vseinet.ru'
+    api.host: 'https://vseinet.ru'
     api.public_id: '10_2dn1xykyvjwgs4ok00wk888sgc0sg8skww0kwkswsswgk0kso8'
     api.secret: '24v1kfg5asu88g4k88wc408gc8g0osccokwcc8sc0kkc8cwkgo'
     slack_channel_errors_url: 'https://hooks.slack.com/services/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'
