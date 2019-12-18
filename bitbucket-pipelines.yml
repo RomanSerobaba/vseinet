@@ -33,4 +33,4 @@ pipelines:
               variables:
                 SSH_USER: $USER
                 SERVER: $SERVER
-                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php bin/console cache:clear --no-warmup; composer -n install; php bin/console app:config:bus-services; composer dump-autoload --no-dev --classmap-authoritative; php bin/console cache:clear; php bin/console fos:js-routing:dump --format=json; yarn build;'
+                COMMAND: 'cd $REMOTE_PATH; git pull origin master; cd vseinet.ru; php bin/console cache:clear --no-warmup -e prod; composer -n install; php bin/console app:config:bus-services; composer dump-autoload --no-dev --classmap-authoritative; php bin/console cache:clear -e prod; php bin/console fos:js-routing:dump --format=json; yarn build;'
