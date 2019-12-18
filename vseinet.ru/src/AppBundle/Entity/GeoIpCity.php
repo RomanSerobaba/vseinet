@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use VI\DoctrineExtensionBundle\DBAL\ValueObject\Point;
+use AppBundle\Doctrine\DBAL\ValueObject\Point;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
