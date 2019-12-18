@@ -125,7 +125,6 @@ class CompetitorProduct
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->requestedAt = new \DateTime();
         $this->isManualRequest = false;
         $this->status = 0;
     }

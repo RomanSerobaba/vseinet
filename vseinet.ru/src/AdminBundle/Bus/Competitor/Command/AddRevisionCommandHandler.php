@@ -48,7 +48,7 @@ class AddRevisionCommandHandler extends MessageHandler
         $revision->setBaseProductId($product->getBaseProductId());
         $revision->setGeoCityId(0);
         $revision->setUrl($command->url);
-        if ($command->price) {
+        if ($command->price && 'retail' === $competitor->getChannel()) {
             $revision->setPrice($command->price);
             $revision->setCompletedAt(new \DateTime());
         } elseif ($command->url) {
