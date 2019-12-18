@@ -38,28 +38,28 @@ class CategorySeo
     /**
      * @var string
      *
-     * @ORM\Column(name="meta_title", type="text", nullable=true)
+     * @ORM\Column(name="page_title", type="text", nullable=true)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="meta_description", type="text", nullable=true)
+     * @ORM\Column(name="page_description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="page_title", type="string", nullable=true)
+     * @ORM\Column(name="meta_title", type="string", nullable=true)
      */
     private $pageTitle;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="page_description", type="text", nullable=true)
+     * @ORM\Column(name="meta_description", type="text", nullable=true)
      */
     private $pageDescription;
 

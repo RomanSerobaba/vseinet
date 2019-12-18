@@ -2,9 +2,7 @@
 
 {% set title = command.id ? 'Редактирование контакта' : 'Добавление нового контакта' %}
 
-{% block pageTitle %}
-    {{ title }} 
-{% endblock %}
+{% block pageTitle %}{{ title }}{% endblock %}
 
 {% block content %}
     <h1>{{ title }}</h1>

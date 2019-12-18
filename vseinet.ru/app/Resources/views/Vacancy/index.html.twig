@@ -1,8 +1,6 @@
 {% extends "layout.html.twig" %}
 
-{% block pageTitle %}
-   Вакансии
-{% endblock %}
+{% block pageTitle %}Вакансии{% endblock %}
 
 {% block content %}
     {{ render(controller('AppBundle:Vacancy:getList')) }}
