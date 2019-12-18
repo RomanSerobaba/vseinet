@@ -24,12 +24,9 @@ class AddRevisionCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Конкурент %d не найден', $command->competitorId));
         }
 
-        $geoCityId = $competitor->getIsCommonPricing() ? 0 : $this->get('geo_city.identity')->getGeoCity()->getId();
-
         // @todo: check revision link by competitor link
         $product = $em->getRepository(Product::class)->findOneBy([
             'baseProductId' => $command->baseProductId,
-            'geoCityId' => [0, $geoCityId],
         ], [
             'geoCityId' => 'DESC',
         ]);
@@ -49,7 +46,7 @@ class AddRevisionCommandHandler extends MessageHandler
         $revision = new CompetitorProduct();
         $revision->setCompetitorId($competitor->getId());
         $revision->setBaseProductId($product->getBaseProductId());
-        $revision->setGeoCityId($geoCityId);
+        $revision->setGeoCityId(0);
         $revision->setUrl($command->url);
         if ($command->price) {
             $revision->setPrice($command->price);
