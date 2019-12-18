@@ -139,8 +139,9 @@
         {% endif %}
         {% if isAvailable or isOnDemand %}
             <a
-                href="{{ path('cheaper_request', { id: baseProduct.id }) }}"
+                data-url="{{ path('cheaper_request', { id: baseProduct.id }) }}"
                 class="bttn orange cheaper-request"
+                href="#"
                 rel="nofollow">
                 Нашли дешевле?
             </a>
