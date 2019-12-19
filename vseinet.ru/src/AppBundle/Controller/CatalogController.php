@@ -16,7 +16,9 @@ use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
 use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
+use AppBundle\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use AppBundle\Service\Transliterator;
 
 class CatalogController extends Controller
 {
@@ -45,15 +47,54 @@ class CatalogController extends Controller
      *         @VIA\Parameter(name="brandName", type="string")
      *     }
      * )
+     * @VIA\Route(
+     *     name="catalog_chpu_category",
+     *     path="/catalog/{categoryName}/",
+     *     requirements={"categoryName": "[^\/]*"},
+     *     methods={"GET", "POST"},
+     *     parameters={
+     *         @VIA\Parameter(name="categoryName", type="string")
+     *     }
+     * )
+     * @VIA\Route(
+     *     name="catalog_chpu_category_with_brand",
+     *     path="/catalog/{categoryName}/{brandName}/",
+     *     requirements={"categoryName": "[^\/]*", "brandName": "[^\/]*"},
+     *     methods={"GET", "POST"},
+     *     parameters={
+     *         @VIA\Parameter(name="categoryName", type="string"),
+     *         @VIA\Parameter(name="brandName", type="string")
+     *     }
+     * )
      */
-    public function showCategoryPageAction(int $id = 0, $brandName = null, Request $request)
+    public function showCategoryPageAction(int $id = 0, $categoryName = null, $brandName = null, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         if ($brandName) {
             $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
             $request->query->set('b', $brand->id);
         } else {
             $brand = null;
         }
+
+        if (!empty($id)) {
+            $t = new Transliterator();
+            $category = $em->getRepository(Category::class)->find($id);
+            if (!$category) {
+                $this->redirectToRoute('index', [], 301);
+            } elseif ($brandName) {
+                $this->redirectToRoute('catalog_chpu_category_with_brand', ['categoryName' => $t->toTranslit($category->getName()) . '-' . $id, 'brandName' => $brandName], 301);
+            }
+
+            $this->redirectToRoute('catalog_chpu_category', ['categoryName' => $t->toTranslit($category->getName() . '-' . $id)], 301);
+        }
+
+        if ($categoryName) {
+            $chunks = explode('-', $categoryName);
+            $id = count($chunks) ? (int) end($chunks) : 0;
+        }
+
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
@@ -91,13 +132,6 @@ class CatalogController extends Controller
             }
 
             return $this->redirect($filterUrl);
-        }
-
-        if (empty($category->pageTitle)) {
-            $category->pageTitle = sprintf('Купить %s в Пензе, цена', $category->name);
-        }
-        if (empty($category->pageDescription)) {
-            $category->pageDescription = sprintf('В каталоге %s вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!', $category->name);
         }
 
         if (!$category->isLeaf) {

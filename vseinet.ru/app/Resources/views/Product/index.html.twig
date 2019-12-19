@@ -1,6 +1,6 @@
 {% extends "layout.html.twig" %}
 
-{% block pageTitle %}Купить {{ baseProduct.name }} в Пензе, цена{% endblock %}
+{% block pageTitle %}Купить {{ baseProduct.name }} в г.{{ app.geoCity.name }}, цена{% endblock %}
 
 {% block pageDescription %}Купить недорого {{ baseProduct.name|slice(0, 70) }} в интернет-магазине vseinet.ru. Рассрочка и кредит.{% endblock %}
 
