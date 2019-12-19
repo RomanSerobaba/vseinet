@@ -18,7 +18,6 @@ use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
 use AppBundle\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use AppBundle\Service\Transliterator;
 
 class CatalogController extends Controller
 {
@@ -48,7 +47,7 @@ class CatalogController extends Controller
      *     }
      * )
      * @VIA\Route(
-     *     name="catalog_chpu_category",
+     *     name="catalog_category_chpu",
      *     path="/catalog/{categoryName}/",
      *     requirements={"categoryName": "[^\/]*"},
      *     methods={"GET", "POST"},
@@ -57,7 +56,7 @@ class CatalogController extends Controller
      *     }
      * )
      * @VIA\Route(
-     *     name="catalog_chpu_category_with_brand",
+     *     name="catalog_category_chpu_with_brand",
      *     path="/catalog/{categoryName}/{brandName}/",
      *     requirements={"categoryName": "[^\/]*", "brandName": "[^\/]*"},
      *     methods={"GET", "POST"},
@@ -79,20 +78,27 @@ class CatalogController extends Controller
         }
 
         if (!empty($id)) {
-            $t = new Transliterator();
             $category = $em->getRepository(Category::class)->find($id);
             if (!$category) {
-                $this->redirectToRoute('index', [], 301);
-            } elseif ($brandName) {
-                $this->redirectToRoute('catalog_chpu_category_with_brand', ['categoryName' => $t->toTranslit($category->getName()) . '-' . $id, 'brandName' => $brandName], 301);
-            }
+                return $this->redirectToRoute('index', [], 301);
+            } else {
+                $categoryName = $category->getChpuName() . '-' . $category->getId();
+                if ($brandName) {
+                    return $this->redirectToRoute('catalog_category_chpu_with_brand', ['categoryName' => $categoryName, 'brandName' => $brandName], 301);
+                }
 
-            $this->redirectToRoute('catalog_chpu_category', ['categoryName' => $t->toTranslit($category->getName() . '-' . $id)], 301);
+                return $this->redirectToRoute('catalog_category_chpu', ['categoryName' => $categoryName], 301);
+            }
         }
 
         if ($categoryName) {
             $chunks = explode('-', $categoryName);
             $id = count($chunks) ? (int) end($chunks) : 0;
+        }
+
+        $category = $em->getRepository(Category::class)->find($id);
+        if (!$category) {
+            return $this->redirectToRoute('index', [], 301);
         }
 
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
@@ -108,15 +114,16 @@ class CatalogController extends Controller
             $finder->handleRequest($request->request->get('filter'));
 
             $filter = $finder->getFilter();
+            $categoryName = $category->chpuName . '-' . $category->id;
             if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
                 $brandName = $brand->name;
-                $route = 'catalog_category_with_brand';
+                $route = 'catalog_category_chpu_with_brand';
             } else {
                 $brandName = null;
-                $route = 'catalog_category';
+                $route = 'catalog_category_chpu';
             }
-            $filterUrl = $this->generateUrl($route, $filter->build(['id' => $id, 'brandName' => $brandName]));
+            $filterUrl = $this->generateUrl($route, $filter->build(['categoryName' => $categoryName, 'brandName' => $brandName]));
 
             if ($request->isXmlHttpRequest()) {
                 $title = $category->name;
@@ -400,8 +407,8 @@ class CatalogController extends Controller
 
         $route = $request->attributes->get('_route');
         $baseUrl = $this->generateUrl($route, $attributes);
-        if ('catalog_category_with_brand' === $route) {
-            $route = 'catalog_category';
+        if ('catalog_category_chpu_with_brand' === $route) {
+            $route = 'catalog_category_chpu';
             unset($attributes['brandName']);
         }
         $resetUrl = $this->generateUrl($route, $attributes);

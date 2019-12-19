@@ -4,13 +4,13 @@
         <div id="lastview_content">
             {% for product in products %}
                 <div class="product">
-                    <a href="{{ url('catalog_product', { id: product.id }) }}" class="image">
+                    <a href="{{ url('catalog_product_chpu', { name: product.chpuName ~ product.id }) }}" class="image">
                         <img
                             src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
                             alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
                         />
                     </a>
-                    <h6><a href="{{ url('catalog_product', { id: product.id }) }}">{{ product.name }}</a></h6>
+                    <h6><a href="{{ url('catalog_product_chpu', { name: product.chpuName ~ product.id }) }}">{{ product.name }}</a></h6>
                     <strong class="price">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
                 </div>
             {% endfor %}

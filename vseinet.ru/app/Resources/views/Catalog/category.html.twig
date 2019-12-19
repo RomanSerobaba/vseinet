@@ -7,7 +7,7 @@
 {% block content %}
     <section id="category">
         <div class="breadcrumbs">
-            <a href="{{ path('catalog_category', { id: 0 }) }}">Каталог</a>
+            <a href="{{ path('catalog') }}">Каталог</a>
             {% for link in category.breadcrumbs %}
                 <span></span>
                 <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a>

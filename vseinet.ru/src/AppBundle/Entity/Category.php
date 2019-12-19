@@ -37,6 +37,13 @@ class Category
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="chpu_name", type="string")
+     */
+    private $chpuName;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="alias_for_id", type="integer", nullable=true)
@@ -192,6 +199,30 @@ class Category
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set chpuName.
+     *
+     * @param string $chpuName
+     *
+     * @return Category
+     */
+    public function setChpuName($chpuName)
+    {
+        $this->chpuName = $chpuName;
+
+        return $this;
+    }
+
+    /**
+     * Get chpuName.
+     *
+     * @return string
+     */
+    public function getChpuName()
+    {
+        return $this->chpuName;
     }
 
     /**

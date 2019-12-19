@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Main\Query\DTO;
 
@@ -15,6 +15,11 @@ class Product
      * @Assert\Type(type="string")
      */
     public $name;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $chpuName;
 
     /**
      * @Assert\Type(type="integer")
@@ -37,7 +42,7 @@ class Product
     public $baseSrc = false;
 
 
-    public function __construct($id, $name, $categoryId, $categoryName, $price, $baseSrc)
+    public function __construct($id, $name, $categoryId, $categoryName, $price, $baseSrc, $chpuName)
     {
         $this->id = $id;
         $this->name = $name;
@@ -45,5 +50,6 @@ class Product
         $this->categoryName = $categoryName;
         $this->price =  $price;
         $this->baseSrc = $baseSrc;
+        $this->chpuName = $chpuName;
     }
 }

@@ -29,6 +29,13 @@ class BaseProduct
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="chpu_name", type="string")
+     */
+    private $chpuName;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="category_id", type="integer")
@@ -172,6 +179,30 @@ class BaseProduct
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set chpuName.
+     *
+     * @param string $chpuName
+     *
+     * @return BaseProduct
+     */
+    public function setChpuName($chpuName)
+    {
+        $this->chpuName = $chpuName;
+
+        return $this;
+    }
+
+    /**
+     * Get chpuName.
+     *
+     * @return string
+     */
+    public function getChpuName()
+    {
+        return $this->chpuName;
     }
 
     /**

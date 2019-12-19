@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query\DTO;
 
@@ -15,6 +15,11 @@ class Category
      * @Assert\Type(type="string")
      */
     public $name;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $chpuName;
 
     /**
      * @Assert\Type(type="integer")
@@ -68,16 +73,17 @@ class Category
 
 
     public function __construct(
-        $id, 
-        $name, 
-        $aliasForId, 
-        $countProducts, 
-        $isLeaf, 
-        $title, 
-        $description, 
-        $pageTitle, 
-        $pageDescription, 
-        $isTplEnabled
+        $id,
+        $name,
+        $aliasForId,
+        $countProducts,
+        $isLeaf,
+        $title,
+        $description,
+        $pageTitle,
+        $pageDescription,
+        $isTplEnabled,
+        $chpuName
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -89,5 +95,6 @@ class Category
         $this->pageTitle = $pageTitle;
         $this->pageDescription = $pageDescription;
         $this->isTplEnabled = $isTplEnabled;
+        $this->chpuName = $chpuName;
     }
 }

@@ -14,6 +14,7 @@ use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
 use AppBundle\Bus\Favorite\Query\GetInfoQuery as GetFavoriteInfoQuery;
 use AppBundle\Bus\Main\Command\AddLastviewProductCommand;
 use AppBundle\Bus\Main\Command\AddViewHistoryProductCommand;
+use AppBundle\Entity\BaseProduct;
 use AppBundle\Enum\DetailType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Enum\ProductAvailabilityCode;
@@ -30,17 +31,48 @@ class ProductController extends Controller
      *     }
      * )
      * @VIA\Get(
-     *     name="catalog_product_with_category",
-     *     path="/product/{id}/{categoryId}/",
-     *     requirements={"id"="\d+", "categoryId"="\d+"},
+     *     name="catalog_product_chpu",
+     *     path="/product/{name}/",
+     *     requirements={"name"="[^\/]*"},
      *     parameters={
-     *         @VIA\Parameter(name="id", type="integer"),
-     *         @VIA\Parameter(name="categoryId", type="integer")
+     *         @VIA\Parameter(name="name", type="string")
      *     }
      * )
      */
-    public function indexAction(int $id, int $categoryId = null, Request $request)
+    public function indexAction(int $id = null, string $name = null, int $categoryId = null, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        if (!empty($id)) {
+            $product = $em->getRepository(BaseProduct::class)->find($id);
+            if (!$product) {
+                return $this->redirectToRoute('index', [], 301);
+            } else {
+                if ($product->getCanonicalId() != $product->getId()) {
+                    $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
+                }
+
+                $name = $product->getChpuName() . '-' . $product->getId();
+
+                return $this->redirectToRoute('catalog_product_chpu', ['name' => $name], 301);
+            }
+        }
+
+        if ($name) {
+            $chunks = explode('-', $name);
+            $id = count($chunks) ? (int) end($chunks) : 0;
+        }
+
+        $product = $em->getRepository(BaseProduct::class)->find($id);
+        if (!$product) {
+            return $this->redirectToRoute('index', [], 301);
+        } elseif ($product->getCanonicalId() != $product->getId()) {
+            $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
+            $name = $product->getChpuName() . '-' . $product->getId();
+
+            return $this->redirectToRoute('catalog_product_chpu', ['name' => $name], 301);
+        }
+
         $baseProduct = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));
 
         if (null === $categoryId) {

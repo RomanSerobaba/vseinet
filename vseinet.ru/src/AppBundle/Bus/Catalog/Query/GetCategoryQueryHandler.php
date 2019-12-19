@@ -28,7 +28,8 @@ class GetCategoryQueryHandler extends MessageHandler
                     cs.description,
                     cs.pageTitle,
                     cs.pageDescription,
-                    c.isTplEnabled
+                    c.isTplEnabled,
+                    c.chpuName
                 )
             FROM AppBundle:Category c
             INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
