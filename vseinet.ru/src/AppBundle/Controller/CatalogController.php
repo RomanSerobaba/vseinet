@@ -16,6 +16,7 @@ use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
 use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CatalogController extends Controller
 {
@@ -60,7 +61,7 @@ class CatalogController extends Controller
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
-                throw new BadRequestHttpException();
+                throw new BadRequestHttpException('Категория не содержит товары');
             }
 
             $finder->handleRequest($request->request->get('filter'));
