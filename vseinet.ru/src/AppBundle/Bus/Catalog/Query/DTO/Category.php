@@ -19,7 +19,7 @@ class Category
     /**
      * @Assert\Type(type="string")
      */
-    public $chpuName;
+    public $chpu;
 
     /**
      * @Assert\Type(type="integer")
@@ -83,7 +83,7 @@ class Category
         $pageTitle,
         $pageDescription,
         $isTplEnabled,
-        $chpuName
+        $chpu
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -95,6 +95,6 @@ class Category
         $this->pageTitle = $pageTitle;
         $this->pageDescription = $pageDescription;
         $this->isTplEnabled = $isTplEnabled;
-        $this->chpuName = $chpuName;
+        $this->chpu = $chpu;
     }
 }

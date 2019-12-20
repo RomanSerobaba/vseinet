@@ -32,14 +32,14 @@ class ProductController extends Controller
      * )
      * @VIA\Get(
      *     name="catalog_product_chpu",
-     *     path="/product/{name}/",
-     *     requirements={"name"="[^\/]*"},
+     *     path="/product/{slug}/",
+     *     requirements={"slug"=".+\-\d+$"},
      *     parameters={
-     *         @VIA\Parameter(name="name", type="string")
+     *         @VIA\Parameter(name="slug", type="string")
      *     }
      * )
      */
-    public function indexAction(int $id = null, string $name = null, int $categoryId = null, Request $request)
+    public function indexAction(int $id = null, string $slug = null, int $categoryId = null, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -52,14 +52,12 @@ class ProductController extends Controller
                     $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
                 }
 
-                $name = $product->getChpuName() . '-' . $product->getId();
-
-                return $this->redirectToRoute('catalog_product_chpu', ['name' => $name], 301);
+                return $this->redirectToRoute('catalog_product_chpu', ['slug' => $product->getChpu()], 301);
             }
         }
 
-        if ($name) {
-            $chunks = explode('-', $name);
+        if ($slug) {
+            $chunks = explode('-', $slug);
             $id = count($chunks) ? (int) end($chunks) : 0;
         }
 
@@ -68,9 +66,10 @@ class ProductController extends Controller
             return $this->redirectToRoute('index', [], 301);
         } elseif ($product->getCanonicalId() != $product->getId()) {
             $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
-            $name = $product->getChpuName() . '-' . $product->getId();
 
-            return $this->redirectToRoute('catalog_product_chpu', ['name' => $name], 301);
+            return $this->redirectToRoute('catalog_product_chpu', ['slug' => $product->getChpu()], 301);
+        } elseif ($product->getChpu() !== $slug) {
+            return $this->redirectToRoute('catalog_product_chpu', ['slug' => $product->getChpu()], 301);
         }
 
         $baseProduct = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));

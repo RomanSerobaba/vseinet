@@ -15,7 +15,8 @@ class GetByIdQueryHandler extends MessageHandler
                     b.id,
                     b.name,
                     b.url,
-                    b.isForbidden
+                    b.isForbidden,
+                    b.chpuName
                 )
             FROM AppBundle:Brand AS b
             WHERE b.id = :id

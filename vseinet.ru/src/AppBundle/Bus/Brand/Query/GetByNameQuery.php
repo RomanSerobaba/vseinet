@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Brand\Query;
 
@@ -11,5 +11,5 @@ class GetByNameQuery extends Message
      * @Assert\NotBlank
      * @Assert\Type(type="string")
      */
-    public $name;
+    public $chpuName;
 }

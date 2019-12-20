@@ -6,13 +6,13 @@
                 </div><div class="products">
             {% endif %}
             <div class="product">
-                <a href="{{ url('catalog_product_chpu', { name: product.chpuName ~ product.id }) }}" class="image">
+                <a href="{{ url('catalog_product_chpu', { slug: product.chpu }) }}" class="image">
                     <img
                         src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
                         alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
                     />
                 </a>
-                <h4><a href="{{ url('catalog_product_chpu', { name: product.chpuName ~ product.id }) }}">{{ product.name }}</a></h4>
+                <h4><a href="{{ url('catalog_product_chpu', { slug: product.chpu }) }}">{{ product.name }}</a></h4>
                 <strong class="discount">-{{ product.price|discount_percent }}%</strong>
                 <div class="price">
                     <del class="old">{{ product.price|discount_price|price_format }}<span class="RUR">Р</span></del>

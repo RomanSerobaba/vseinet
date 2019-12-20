@@ -48,30 +48,30 @@ class CatalogController extends Controller
      * )
      * @VIA\Route(
      *     name="catalog_category_chpu",
-     *     path="/catalog/{categoryName}/",
-     *     requirements={"categoryName": "[^\/]*"},
+     *     path="/catalog/{slug}/",
+     *     requirements={"slug": ".+\-\d+$"},
      *     methods={"GET", "POST"},
      *     parameters={
-     *         @VIA\Parameter(name="categoryName", type="string")
+     *         @VIA\Parameter(name="slug", type="string")
      *     }
      * )
      * @VIA\Route(
      *     name="catalog_category_chpu_with_brand",
-     *     path="/catalog/{categoryName}/{brandName}/",
-     *     requirements={"categoryName": "[^\/]*", "brandName": "[^\/]*"},
+     *     path="/catalog/{slug}/{brandName}/",
+     *     requirements={"slug": ".+\-\d+$*", "brandName": "[^\/]*"},
      *     methods={"GET", "POST"},
      *     parameters={
-     *         @VIA\Parameter(name="categoryName", type="string"),
+     *         @VIA\Parameter(name="slug", type="string"),
      *         @VIA\Parameter(name="brandName", type="string")
      *     }
      * )
      */
-    public function showCategoryPageAction(int $id = 0, $categoryName = null, $brandName = null, Request $request)
+    public function showCategoryPageAction(int $id = 0, $slug = null, $brandName = null, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
         if ($brandName) {
-            $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
+            $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['chpuName' => $brandName]));
             $request->query->set('b', $brand->id);
         } else {
             $brand = null;
@@ -82,23 +82,30 @@ class CatalogController extends Controller
             if (!$category) {
                 return $this->redirectToRoute('index', [], 301);
             } else {
-                $categoryName = $category->getChpuName() . '-' . $category->getId();
                 if ($brandName) {
-                    return $this->redirectToRoute('catalog_category_chpu_with_brand', ['categoryName' => $categoryName, 'brandName' => $brandName], 301);
+                    return $this->redirectToRoute('catalog_category_chpu_with_brand', ['slug' => $category->getChpu(), 'brandName' => $brandName], 301);
                 }
 
-                return $this->redirectToRoute('catalog_category_chpu', ['categoryName' => $categoryName], 301);
+                return $this->redirectToRoute('catalog_category_chpu', ['slug' => $category->getChpu()], 301);
             }
         }
 
-        if ($categoryName) {
-            $chunks = explode('-', $categoryName);
+        if ($slug) {
+            $chunks = explode('-', $slug);
             $id = count($chunks) ? (int) end($chunks) : 0;
         }
 
         $category = $em->getRepository(Category::class)->find($id);
         if (!$category) {
             return $this->redirectToRoute('index', [], 301);
+        }
+
+        if ($category->getChpu() !== $slug) {
+            if ($brandName) {
+                return $this->redirectToRoute('catalog_category_chpu_with_brand', ['slug' => $category->getChpu(), 'brandName' => $brandName], 301);
+            }
+
+            return $this->redirectToRoute('catalog_category_chpu', ['slug' => $category->getChpu()], 301);
         }
 
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
@@ -114,21 +121,20 @@ class CatalogController extends Controller
             $finder->handleRequest($request->request->get('filter'));
 
             $filter = $finder->getFilter();
-            $categoryName = $category->chpuName . '-' . $category->id;
             if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
-                $brandName = $brand->name;
+                $brandName = $brand->chpuName;
                 $route = 'catalog_category_chpu_with_brand';
             } else {
                 $brandName = null;
                 $route = 'catalog_category_chpu';
             }
-            $filterUrl = $this->generateUrl($route, $filter->build(['categoryName' => $categoryName, 'brandName' => $brandName]));
+            $filterUrl = $this->generateUrl($route, $filter->build(['slug' => $category->chpu, 'brandName' => $brandName]));
 
             if ($request->isXmlHttpRequest()) {
                 $title = $category->name;
-                if (null !== $brandName) {
-                    $title .= ' «'.$brandName.'»';
+                if (null !== $brand->name) {
+                    $title .= ' «'.$brand->name.'»';
                 }
 
                 return $this->json([
@@ -165,7 +171,7 @@ class CatalogController extends Controller
             $this->get('command_bus')->handle(new AddViewHistoryBrandCommand(['brandId' => $brand->id]));
         }
 
-        return $this->show('category', $finder, $request, ['category' => $category, 'brand' => $brand], ['id' => $id, 'brandName' => $brandName]);
+        return $this->show('category', $finder, $request, ['category' => $category, 'brand' => $brand], ['slug' => $slug, 'brandName' => $brandName]);
     }
 
     /**

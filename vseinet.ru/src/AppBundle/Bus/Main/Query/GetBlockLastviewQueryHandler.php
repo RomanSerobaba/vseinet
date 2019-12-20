@@ -39,7 +39,7 @@ class GetBlockLastviewQueryHandler extends MessageHandler
                     c.name,
                     COALESCE(p.price, p2.price),
                     bpi.basename,
-                    bp.chpuName
+                    bp.chpu
                 )
             FROM AppBundle:BaseProduct AS bp
             LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0

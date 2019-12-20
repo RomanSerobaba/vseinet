@@ -31,6 +31,13 @@ class Brand
     /**
      * @var string
      *
+     * @ORM\Column(name="chpu_name", type="string")
+     */
+    private $chpuName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="logo", type="string")
      */
     private $logo;
@@ -184,5 +191,29 @@ class Brand
     public function getCanonicalId()
     {
         return $this->canonicalId;
+    }
+
+    /**
+     * Set chpuName.
+     *
+     * @param string $chpuName
+     *
+     * @return Category
+     */
+    public function setChpuName($chpuName)
+    {
+        $this->chpuName = $chpuName;
+
+        return $this;
+    }
+
+    /**
+     * Get chpuName.
+     *
+     * @return string
+     */
+    public function getChpuName()
+    {
+        return $this->chpuName;
     }
 }

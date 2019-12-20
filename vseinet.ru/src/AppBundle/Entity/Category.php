@@ -39,9 +39,9 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="chpu_name", type="string")
+     * @ORM\Column(name="chpu", type="string")
      */
-    private $chpuName;
+    private $chpu;
 
     /**
      * @var int
@@ -202,27 +202,27 @@ class Category
     }
 
     /**
-     * Set chpuName.
+     * Set chpu.
      *
-     * @param string $chpuName
+     * @param string $chpu
      *
      * @return Category
      */
-    public function setChpuName($chpuName)
+    public function setChpu($chpu)
     {
-        $this->chpuName = $chpuName;
+        $this->chpu = $chpu;
 
         return $this;
     }
 
     /**
-     * Get chpuName.
+     * Get chpu.
      *
      * @return string
      */
-    public function getChpuName()
+    public function getChpu()
     {
-        return $this->chpuName;
+        return $this->chpu;
     }
 
     /**
