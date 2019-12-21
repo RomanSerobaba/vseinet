@@ -79,6 +79,7 @@
                     <div class="error">{{ errors.address.apartment.0 }}</div>
                 {% endif %}
             </div>
+            {% if form.needLifting.vars.attr.canBeLifted %}
             <div class="row subrow h">
                 <span class="col w140">
                     <label class="inline">
@@ -104,6 +105,7 @@
                     <div class="error">{{ errors.address.hasLift.0 }}</div>
                 {% endif %}
             </div>
+            {% endif %}
         {% endif %}
 
         {% if constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == choice.value and constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == form.deliveryTypeCode.vars.value %}
