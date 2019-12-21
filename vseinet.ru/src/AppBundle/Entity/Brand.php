@@ -31,9 +31,9 @@ class Brand
     /**
      * @var string
      *
-     * @ORM\Column(name="chpu_name", type="string")
+     * @ORM\Column(name="sef_name", type="string")
      */
-    private $chpuName;
+    private $sefName;
 
     /**
      * @var string
@@ -194,26 +194,26 @@ class Brand
     }
 
     /**
-     * Set chpuName.
+     * Set sefName.
      *
-     * @param string $chpuName
+     * @param string $sefName
      *
-     * @return Category
+     * @return Brand
      */
-    public function setChpuName($chpuName)
+    public function setSefName($sefName)
     {
-        $this->chpuName = $chpuName;
+        $this->sefName = $sefName;
 
         return $this;
     }
 
     /**
-     * Get chpuName.
+     * Get sefName.
      *
      * @return string
      */
-    public function getChpuName()
+    public function getSefName()
     {
-        return $this->chpuName;
+        return $this->sefName;
     }
 }

@@ -60,7 +60,7 @@
         <tr>
             <td class="text">
                 <h6>
-                    <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">
+                    <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">
                         {{ item.productName }}
                     </a>
                     <span style="font-size:0.9em">код товара {{ item.baseProductId }}</span>

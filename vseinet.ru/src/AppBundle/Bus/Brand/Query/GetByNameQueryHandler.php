@@ -18,12 +18,12 @@ class GetByNameQueryHandler extends MessageHandler
                     b.name,
                     b.url,
                     b.isForbidden,
-                    b.chpuName
+                    b.sefName
                 )
             FROM AppBundle:Brand AS b
-            WHERE b.chpuName = :chpuName AND b.id = b.canonicalId
+            WHERE b.sefName = :sefName AND b.id = b.canonicalId
         ");
-        $q->setParameter('chpuName', $query->chpuName);
+        $q->setParameter('sefName', $query->sefName);
         $brand = $q->getOneOrNullResult();
 
         if (!$brand instanceof DTO\Brand) {

@@ -15,7 +15,7 @@
                 <div class="brand {% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %}{% if filter.brandIds[brand.id] is defined %} checked{% endif %}">
                     {% if category is defined %}
                         <a
-                            href="{{ path('catalog_category_with_brand', { id: category.id, brandName: brand.name }) }}"
+                            href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl, brandName: brand.sefName }) }}{% else %}{{ path('catalog_category', { id: category.id, brandName: brand.sefName }) }}{% endif %}"
                             class="brand-page"
                         >
                             &rarr;

@@ -8,7 +8,7 @@
 
 {% block meta %}
     {% if not baseProduct.canonicalId != baseProduct.id %}
-        <link rel="canonical" href="{{ path('catalog_product', { id: baseProduct.canonicalId }) }}">
+        <link rel="canonical" href="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.canonicalId }) }}{% endif %}">
     {% endif %}
 {% endblock %}
 
@@ -16,14 +16,14 @@
     <div itemscope itemtype="http://schema.org/Product" class="product" data-id="{{ baseProduct.id }}" id="product-{{ baseProduct.id }}">
         <div class="breadcrumbs">
             {% for link in breadcrumbs %}
-                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a>
+                <a href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}">{{ link.name }}</a>
                 {% if not loop.last %}
                     <span></span>
                 {% endif %}
             {% endfor %}
             {% if brand %}
                 <span></span>
-                <a href="{{ path('catalog_category_with_brand', { id: baseProduct.categoryId, brandName: brand.name }) }}">{{ brand.name }}</a>
+                <a href="{% if baseProduct.categorySefUrl %}{{ path('catalog_category_sef', { slug: baseProduct.categorySefUrl, brandName: brand.sefName }) }}{% else %}{{ path('catalog_category', { id: baseProduct.categoryId, brandName: brand.sefName }) }}{% endif %}">{{ brand.name }}</a>
             {% endif %}
         </div>
         <div class="title">
@@ -216,7 +216,7 @@ $(function() {
         var YaShareInstance = new Ya.share({
             element: 'YaShare',
             l10n: 'ru',
-            link: "{{ url('catalog_product', { id: baseProduct.id }) }}",
+            link: "{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}",
             title: "{{ baseProduct.name|e('js') }}",
             description: "{{ baseProduct.description|autocut|e('js') }}",
             {% if images|length %}

@@ -17,7 +17,7 @@
                         />
                         </div>
                         <div class="text">
-                            <h6><a href="{{ path('catalog_product', { id: product.id }) }}">{{ product.name }}</a><h6>
+                            <h6><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a><h6>
                             <p class="code">
                                 Код товара: {{ product.id }}
                                 <span style="height:auti;width:auto;margin-left:10px" class="status
@@ -53,7 +53,7 @@
     </div>
 </div>
 <div class="summary">
-    <a href="{{ path('catalog_category') }}" class="bttn light prev">Продолжить покупки <span class="hide">К покупкам</span><i></i></a>
+    <a href="{{ path('catalog') }}" class="bttn light prev">Продолжить покупки <span class="hide">К покупкам</span><i></i></a>
     <div class="order{% if 0 == cart.total %} invisible{% endif %}">
         <a href="{{ path('order_creation_page') }}" class="bttn blue next"{# onclick="yaCounter13639594.reachGoal('order'); return true;"#}>
             Оформить заказ <span class="hide">Оформить</span>

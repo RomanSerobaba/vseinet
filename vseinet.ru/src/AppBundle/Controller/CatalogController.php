@@ -47,7 +47,7 @@ class CatalogController extends Controller
      *     }
      * )
      * @VIA\Route(
-     *     name="catalog_category_chpu",
+     *     name="catalog_category_sef",
      *     path="/catalog/{slug}/",
      *     requirements={"slug": ".+\-\d+$"},
      *     methods={"GET", "POST"},
@@ -56,7 +56,7 @@ class CatalogController extends Controller
      *     }
      * )
      * @VIA\Route(
-     *     name="catalog_category_chpu_with_brand",
+     *     name="catalog_category_sef_with_brand",
      *     path="/catalog/{slug}/{brandName}/",
      *     requirements={"slug": ".+\-\d+$*", "brandName": "[^\/]*"},
      *     methods={"GET", "POST"},
@@ -71,7 +71,7 @@ class CatalogController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($brandName) {
-            $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['chpuName' => $brandName]));
+            $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['sefName' => $brandName]));
             $request->query->set('b', $brand->id);
         } else {
             $brand = null;
@@ -81,12 +81,12 @@ class CatalogController extends Controller
             $category = $em->getRepository(Category::class)->find($id);
             if (!$category) {
                 return $this->redirectToRoute('index', [], 301);
-            } else {
+            } elseif ($category->getSefUrl()) {
                 if ($brandName) {
-                    return $this->redirectToRoute('catalog_category_chpu_with_brand', ['slug' => $category->getChpu(), 'brandName' => $brandName], 301);
+                    return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brandName], 301);
                 }
 
-                return $this->redirectToRoute('catalog_category_chpu', ['slug' => $category->getChpu()], 301);
+                return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
             }
         }
 
@@ -100,12 +100,12 @@ class CatalogController extends Controller
             return $this->redirectToRoute('index', [], 301);
         }
 
-        if ($category->getChpu() !== $slug) {
+        if ($category->getSefUrl() && $category->getSefUrl() !== $slug) {
             if ($brandName) {
-                return $this->redirectToRoute('catalog_category_chpu_with_brand', ['slug' => $category->getChpu(), 'brandName' => $brandName], 301);
+                return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brandName], 301);
             }
 
-            return $this->redirectToRoute('catalog_category_chpu', ['slug' => $category->getChpu()], 301);
+            return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
         }
 
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
@@ -123,13 +123,13 @@ class CatalogController extends Controller
             $filter = $finder->getFilter();
             if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
-                $brandName = $brand->chpuName;
-                $route = 'catalog_category_chpu_with_brand';
+                $brandName = $brand->sefName;
+                $route = 'catalog_category'.($category->sef ? '_sef' : '').'_with_brand';
             } else {
                 $brandName = null;
-                $route = 'catalog_category_chpu';
+                $route = 'catalog_category'.($category->sef ? '_sef' : '');
             }
-            $filterUrl = $this->generateUrl($route, $filter->build(['slug' => $category->chpu, 'brandName' => $brandName]));
+            $filterUrl = $this->generateUrl($route, $filter->build(['slug' => $category->sef, 'id' => $category->sef ? null : $category->id, 'brandName' => $brandName]));
 
             if ($request->isXmlHttpRequest()) {
                 $title = $category->name;
@@ -413,8 +413,11 @@ class CatalogController extends Controller
 
         $route = $request->attributes->get('_route');
         $baseUrl = $this->generateUrl($route, $attributes);
-        if ('catalog_category_chpu_with_brand' === $route) {
-            $route = 'catalog_category_chpu';
+        if ('catalog_category_sef_with_brand' === $route) {
+            $route = 'catalog_category_sef';
+            unset($attributes['brandName']);
+        } elseif ('catalog_category_with_brand' === $route) {
+            $route = 'catalog_category';
             unset($attributes['brandName']);
         }
         $resetUrl = $this->generateUrl($route, $attributes);

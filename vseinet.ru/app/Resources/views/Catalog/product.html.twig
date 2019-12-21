@@ -1,5 +1,5 @@
 <div id="product-{{ product.id }}" class="product clearfix" data-id="{{ product.id }}">
-    <a href="{{ path('catalog_product', { id: product.id }) }}" class="image">
+    <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}" class="image">
         <img
             src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
             alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
@@ -7,7 +7,7 @@
     </a>
     <div class="details">
         <div class="title">
-            <a href="{{ path('catalog_product', { id: product.id }) }}" class="title">
+            <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}" class="title">
                 {{ product.name|raw }}
             </a>
             <small>Код товара:

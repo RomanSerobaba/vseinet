@@ -110,11 +110,11 @@
                     </div><div class="row border">
                 {% endif %}
                 <div class="product{% if loop.index % 3 %} border{% endif %}">
-                    <a href="{{ path('catalog_product', { id: item.baseProductId }) }}" class="image">
+                    <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}" class="image">
                         <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="">
                     </a>
                     <p>
-                        <a href="{{ path('catalog_product', { id: item.baseProductId }) }}">
+                        <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">
                             {{ item.productName }}
                         </a>
                     </p>

@@ -29,14 +29,14 @@ class Brand
     /**
      * @Assert\Type(type="string")
      */
-    public $chpuName;
+    public $sefName;
 
 
-    public function __construct($id, $name, $url, $isForbidden, $chpuName = null) {
+    public function __construct($id, $name, $url, $isForbidden, $sefName = null) {
         $this->id = $id;
         $this->name = $name;
         $this->url = $url;
         $this->isForbidden = $isForbidden;
-        $this->chpuName = $chpuName;
+        $this->sefName = $sefName;
     }
 }

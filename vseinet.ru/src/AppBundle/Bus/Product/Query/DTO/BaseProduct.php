@@ -133,6 +133,11 @@ class BaseProduct
      */
     public $priceChangedBy;
 
+    /**
+     * @Assert\Type("string")
+     */
+    public $sefUrl;
+
     public function __construct(
         $id,
         $name,
@@ -153,7 +158,8 @@ class BaseProduct
         $purchasePrice,
         $competitorPrice,
         $priceChangedAt,
-        $priceChangedBy
+        $priceChangedBy,
+        $sefUrl= null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -176,5 +182,6 @@ class BaseProduct
         $this->isManualPrice = in_array($priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
         $this->priceChangedAt = $priceChangedAt;
         $this->priceChangedBy = $priceChangedBy;
+        $this->sefUrl = $sefUrl;
     }
 }

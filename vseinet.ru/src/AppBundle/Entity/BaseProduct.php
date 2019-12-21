@@ -31,9 +31,9 @@ class BaseProduct
     /**
      * @var string
      *
-     * @ORM\Column(name="chpu", type="string")
+     * @ORM\Column(name="sef_url", type="string")
      */
-    private $chpu;
+    private $sefUrl;
 
     /**
      * @var int
@@ -182,27 +182,27 @@ class BaseProduct
     }
 
     /**
-     * Set chpu.
+     * Set sefUrl.
      *
-     * @param string $chpu
+     * @param string $sefUrl
      *
      * @return BaseProduct
      */
-    public function setChpu($chpu)
+    public function setSefUrl($sefUrl)
     {
-        $this->chpuName = $chpu;
+        $this->sefUrl = $sefUrl;
 
         return $this;
     }
 
     /**
-     * Get chpu.
+     * Get sefUrl.
      *
      * @return string
      */
-    public function getChpu()
+    public function getSefUrl()
     {
-        return $this->chpu;
+        return $this->sefUrl;
     }
 
     /**

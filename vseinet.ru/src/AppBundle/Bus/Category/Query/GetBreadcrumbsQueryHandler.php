@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Category\Query;
 
@@ -18,14 +18,15 @@ class GetBreadcrumbsQueryHandler extends MessageHandler
         }
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 NEW AppBundle\Bus\Product\Query\DTO\Category (
                     c.id,
-                    c.name 
+                    c.name,
+                    c.sefUrl
                 )
-            FROM AppBundle:Category AS c 
-            INNER JOIN AppBundle:CategoryPath AS cp WITH cp.pid = c.id 
-            WHERE cp.id = :id 
+            FROM AppBundle:Category AS c
+            INNER JOIN AppBundle:CategoryPath AS cp WITH cp.pid = c.id
+            WHERE cp.id = :id
             ORDER BY cp.plevel
         ");
         $q->setParameter('id', $category->getId());

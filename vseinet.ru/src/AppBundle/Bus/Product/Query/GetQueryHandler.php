@@ -69,7 +69,8 @@ class GetQueryHandler extends MessageHandler
                             ppl2.baseProductId = bp.id
                         ORDER BY
                             ppl2.operatedAt DESC
-                    )
+                    ),
+                    bp.sefUrl
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:BaseProduct AS bpo WITH bpo.canonicalId = bp.id

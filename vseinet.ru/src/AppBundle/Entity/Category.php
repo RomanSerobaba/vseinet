@@ -39,9 +39,9 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="chpu", type="string")
+     * @ORM\Column(name="sef_url", type="string")
      */
-    private $chpu;
+    private $sefUrl;
 
     /**
      * @var int
@@ -202,27 +202,27 @@ class Category
     }
 
     /**
-     * Set chpu.
+     * Set sefUrl.
      *
-     * @param string $chpu
+     * @param string $sefUrl
      *
      * @return Category
      */
-    public function setChpu($chpu)
+    public function setSefUrl($sefUrl)
     {
-        $this->chpu = $chpu;
+        $this->sefUrl = $sefUrl;
 
         return $this;
     }
 
     /**
-     * Get chpu.
+     * Get sefUrl.
      *
      * @return string
      */
-    public function getChpu()
+    public function getSefUrl()
     {
-        return $this->chpu;
+        return $this->sefUrl;
     }
 
     /**

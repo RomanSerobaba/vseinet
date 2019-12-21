@@ -29,7 +29,7 @@ class GetCategoryQueryHandler extends MessageHandler
                     cs.pageTitle,
                     cs.pageDescription,
                     c.isTplEnabled,
-                    c.chpu
+                    c.sefUrl
                 )
             FROM AppBundle:Category c
             INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
@@ -48,7 +48,8 @@ class GetCategoryQueryHandler extends MessageHandler
                 SELECT
                     NEW AppBundle\Bus\Catalog\Query\DTO\Breadcrumb (
                         c.id,
-                        c.name
+                        c.name,
+                        c.sefUrl
                     ),
                     cp.plevel HIDDEN
                 FROM AppBundle:Category c

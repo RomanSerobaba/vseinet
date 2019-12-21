@@ -1,12 +1,12 @@
 {% macro render_product(product) %}
     <div class="product">
-        <a href="{{ url("catalog_product", { id: product.id }) }}" class="image">
+        <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}" class="image">
             <img
                 src="{{ product|image(constant("AppBundle\\Enum\\BaseProductImage::SIZE_MD")) }}"
                 alt="{{ product.name }}"
             />
         </a>
-        <h6><a href="{{ url("catalog_product", { id: product.id }) }}">{{ product.name }}</a></h6>
+        <h6><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h6>
         <strong class="price">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
         <span class="discount">Акция</span>
     </div>
@@ -20,7 +20,7 @@
         </li> #}
         {% for category1 in menu %}
             <li data-id="{{ category1.id }}">
-                <a href="{{ path('catalog_category', { id: category1.id}) }}"{% if category1.id == 33536 %} class="special service"{% elseif category1.id == 5086104 %} class="special on-order"{% endif %}>
+                <a href="{% if category1.sefUrl %}{{ path('catalog_category_sef', { slug: category1.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category1.id }) }}{% endif %}"{% if category1.id == 33536 %} class="special service"{% elseif category1.id == 5086104 %} class="special on-order"{% endif %}>
                     {{ category1.name }}
                     {% if category1.id == 7707 %}
                         <span class="new"></span>
@@ -36,7 +36,7 @@
                         <ul>
                             <li class="top">
                                 <h4>
-                                    <a href="{{ path('catalog_category', { id: category2.id }) }}">
+                                    <a href="{% if category2.sefUrl %}{{ path('catalog_category_sef', { slug: category2.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category2.id }) }}{% endif %}">
                                         {{ category2.name }}
                                         {% if category2.id == 4590 %}
                                             <span class="new"></span>
@@ -47,14 +47,14 @@
                             </li>
                             {% for category3 in category2.children %}
                                 <li>
-                                    <a href="{{ path('catalog_category', { id: category3.id }) }}">
+                                    <a href="{% if category3.sefUrl %}{{ path('catalog_category_sef', { slug: category3.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category3.id }) }}{% endif %}">
                                         {{ category3.name }}
                                     </a>
                                 </li>
                             {% endfor %}
                             {% if category2.isAll %}
                                 <li class="all">
-                                    <a href="{{ path('catalog_category', { id: category2.id }) }}">Все разделы</a>
+                                    <a href="{% if category2.sefUrl %}{{ path('catalog_category_sef', { slug: category2.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category2.id }) }}{% endif %}">Все разделы</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -64,7 +64,7 @@
                             {% for category in categories %}
                                 <li>
                                     <h4>
-                                        <a href="{{ path('catalog_category', { id: category.id }) }}">
+                                        <a href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category.id }) }}{% endif %}">
                                             {{ category.name }}
                                         </a>
                                     </h4>
@@ -76,7 +76,7 @@
                         <ul class="mobile-all">
                             <li class="top">
                                 <h4>
-                                    <a href="{{ path('catalog_category', { id: category1.id}) }}" class="all go-to-category">Все разделы</a>
+                                    <a href="{% if category1.sefUrl %}{{ path('catalog_category_sef', { slug: category1.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category1.id }) }}{% endif %}" class="all go-to-category">Все разделы</a>
                                 </h4>
                             </li>
                         </ul>

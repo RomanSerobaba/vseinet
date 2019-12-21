@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query\DTO;
 
@@ -16,10 +16,16 @@ class Breadcrumb
      */
     public $name;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $sefUrl;
 
-    public function __construct($id, $name)
+
+    public function __construct($id, $name, $sefUrl)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->sefUrl = $sefUrl;
     }
 }

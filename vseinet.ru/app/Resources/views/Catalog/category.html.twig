@@ -10,11 +10,11 @@
             <a href="{{ path('catalog') }}">Каталог</a>
             {% for link in category.breadcrumbs %}
                 <span></span>
-                <a href="{{ path('catalog_category', { id: link.id }) }}">{{ link.name }}</a>
+                <a href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}">{{ link.name }}</a>
             {% endfor %}
             {% if brand %}
                 <span></span>
-                <a href="{{ path('catalog_category', { id: category.id }) }}">{{ category.name }}</a>
+                <a href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category.id }) }}{% endif %}">{{ category.name }}</a>
             {% endif %}
         </div>
         <div class="title category-title">

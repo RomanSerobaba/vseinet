@@ -115,7 +115,7 @@
                                     </span>
                                 </div>
                                 <p>
-                                    <a class="btn-url urlBanner" href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                    <a class="btn-url urlBanner" href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.baseProductId }) }}{% endif %}">
                                         {{ banner.textUrlPc }}
                                     </a>
                                 </p>
@@ -148,7 +148,7 @@
                                     </span>
                                 </div>
                                 <p>
-                                    <a class="btn-url urlBanner" href="{{ url('catalog_product', { id: product.baseProductId}) }}">
+                                    <a class="btn-url urlBanner" href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProductId.id }) }}{% endif %}">
                                         {{ banner.textUrlTablet }}
                                     </a>
                                 </p>
@@ -181,7 +181,7 @@
                                     </span>
                                 </div>
                                 <p>
-                                    <a class="btn-url urlBanner" href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                    <a class="btn-url urlBanner" href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.baseProductId }) }}{% endif %}">
                                         {{ banner.textUrlPhone }}
                                     </a>
                                 </p>
@@ -210,7 +210,7 @@
                                 <div class="description">{{ banner.descriptionPc|raw }}</div>
                                 <div class="items">
                                     {% for product in productList %}
-                                        <a href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                        <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.baseProductId }) }}{% endif %}">
                                             <div class="item-product-element">
                                                 <div class="pricePhoto">
                                                     <div class="innerRelative">
@@ -237,7 +237,7 @@
                                 <div class="description">{{ banner.descriptionTablet|raw }}</div>
                                 <div class="items">
                                     {% for product in productList %}
-                                        <a href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                        <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.baseProductId }) }}{% endif %}">
                                             <div class="item-product-element">
                                                 <div class="pricePhoto">
                                                     <div class="innerRelative">
@@ -264,7 +264,7 @@
                                 <div class="description">{{ banner.descriptionPhone|raw }}</div>
                                 <div class="items">
                                     {% for product in productList %}
-                                        <a href="{{ url('catalog_product', { id: product.baseProductId }) }}">
+                                        <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.baseProductId }) }}{% endif %}">
                                             <div class="item-product-element">
                                                 <div class="pricePhoto">
                                                     <div class="innerRelative">

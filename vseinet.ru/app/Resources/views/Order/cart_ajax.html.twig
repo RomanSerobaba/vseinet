@@ -7,7 +7,7 @@
                 <p class="quantity">{{ product.quantity }} шт</p>
                 <strong class="price {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}from_pricetag{% endif %}">{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}{{ product.storePricetag|price_format }}{% else %}{{ product.price|price_format }}{% endif %} <span class="RUR">Р</span></strong>
             </div>
-            <a href="{{ path('catalog_product', { id: product.id }) }}">
+            <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">
                 <img src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="{{ product.name|e('html') }}. Интернет-магазин Vseinet.ru Пенза" />
                 {{ product.name|e('html') }}
             </a>

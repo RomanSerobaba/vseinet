@@ -11,5 +11,5 @@ class GetByNameQuery extends Message
      * @Assert\NotBlank
      * @Assert\Type(type="string")
      */
-    public $chpuName;
+    public $sefName;
 }

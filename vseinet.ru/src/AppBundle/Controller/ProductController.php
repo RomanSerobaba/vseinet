@@ -31,7 +31,7 @@ class ProductController extends Controller
      *     }
      * )
      * @VIA\Get(
-     *     name="catalog_product_chpu",
+     *     name="catalog_product_sef",
      *     path="/product/{slug}/",
      *     requirements={"slug"=".+\-\d+$"},
      *     parameters={
@@ -47,12 +47,12 @@ class ProductController extends Controller
             $product = $em->getRepository(BaseProduct::class)->find($id);
             if (!$product) {
                 return $this->redirectToRoute('index', [], 301);
-            } else {
-                if ($product->getCanonicalId() != $product->getId()) {
-                    $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
-                }
+            } elseif ($product->getCanonicalId() != $product->getId()) {
+                $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
+            }
 
-                return $this->redirectToRoute('catalog_product_chpu', ['slug' => $product->getChpu()], 301);
+            if ($product->getSefUrl()) {
+                return $this->redirectToRoute('catalog_product_sef', ['slug' => $product->getSefUrl()], 301);
             }
         }
 
@@ -67,9 +67,11 @@ class ProductController extends Controller
         } elseif ($product->getCanonicalId() != $product->getId()) {
             $product = $em->getRepository(BaseProduct::class)->find($product->getCanonicalId());
 
-            return $this->redirectToRoute('catalog_product_chpu', ['slug' => $product->getChpu()], 301);
-        } elseif ($product->getChpu() !== $slug) {
-            return $this->redirectToRoute('catalog_product_chpu', ['slug' => $product->getChpu()], 301);
+            if ($product->getSefUrl()) {
+                return $this->redirectToRoute('catalog_product_sef', ['slug' => $product->getSefUrl()], 301);
+            }
+        } elseif ($product->getSefUrl() && $product->getSefUrl() !== $slug) {
+            return $this->redirectToRoute('catalog_product_sef', ['slug' => $product->getSefUrl()], 301);
         }
 
         $baseProduct = $this->get('query_bus')->handle(new Query\GetQuery(['id' => $id]));

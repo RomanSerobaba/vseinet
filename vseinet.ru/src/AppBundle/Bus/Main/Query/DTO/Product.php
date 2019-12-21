@@ -19,7 +19,7 @@ class Product
     /**
      * @Assert\Type(type="string")
      */
-    public $chpu;
+    public $sefUrl;
 
     /**
      * @Assert\Type(type="integer")
@@ -42,7 +42,7 @@ class Product
     public $baseSrc = false;
 
 
-    public function __construct($id, $name, $categoryId, $categoryName, $price, $baseSrc, $chpu)
+    public function __construct($id, $name, $categoryId, $categoryName, $price, $baseSrc, $sefUrl)
     {
         $this->id = $id;
         $this->name = $name;
@@ -50,6 +50,6 @@ class Product
         $this->categoryName = $categoryName;
         $this->price =  $price;
         $this->baseSrc = $baseSrc;
-        $this->chpu = $chpu;
+        $this->sefUrl = $sefUrl;
     }
 }
