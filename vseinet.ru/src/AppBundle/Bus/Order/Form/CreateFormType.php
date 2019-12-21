@@ -464,7 +464,12 @@ class CreateFormType extends AbstractType
                 $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
                 $this->addAddressDataFields($builder, $options);
                 $builder
-                    ->add('needLifting', CheckBoxType::class, ['required' => false]);
+                    ->add('needLifting', CheckBoxType::class, [
+                        'required' => false,
+                        'attr' => [
+                            'canBeLifted' => $point->hasRising,
+                        ],
+                    ]);
             }
         } else {
             $q = $this->em->createQuery("
