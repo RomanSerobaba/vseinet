@@ -138,6 +138,11 @@ class BaseProduct
      */
     public $sefUrl;
 
+    /**
+     * @Assert\Type("string")
+     */
+    public $categorySefUrl;
+
     public function __construct(
         $id,
         $name,
@@ -159,7 +164,8 @@ class BaseProduct
         $competitorPrice,
         $priceChangedAt,
         $priceChangedBy,
-        $sefUrl= null
+        $sefUrl= null,
+        $categorySefUrl= null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -183,5 +189,6 @@ class BaseProduct
         $this->priceChangedAt = $priceChangedAt;
         $this->priceChangedBy = $priceChangedBy;
         $this->sefUrl = $sefUrl;
+        $this->categorySefUrl = $categorySefUrl;
     }
 }

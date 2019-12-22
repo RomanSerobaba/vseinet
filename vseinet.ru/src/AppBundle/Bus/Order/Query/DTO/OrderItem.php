@@ -66,6 +66,11 @@ class OrderItem
     public $baseSrc;
 
     /**
+     * @Assert\Type(type="string")
+     */
+    public $sefUrl;
+
+    /**
      * @Assert\Type("AppBundle\Bus\Order\Query\DTO\ProductAvailability")
      */
     public $productAvailability;
@@ -83,5 +88,6 @@ class OrderItem
         $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
         $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
         $this->baseSrc = $item['imageBasename'] ?? null;
+        $this->sefUrl = $item['sefUrl'] ?? null;
     }
 }

@@ -23,7 +23,8 @@ class GetSubcategoriesQueryHandler extends MessageHandler
                     c.id,
                     c.name,
                     c.aliasForId,
-                    cst.countProducts
+                    cst.countProducts,
+                    c.sefUrl
                 )
             FROM AppBundle:Category c
             INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id

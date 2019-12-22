@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog\Query\DTO;
 
@@ -31,12 +31,18 @@ class Subcategory
      */
     public $baseSrc;
 
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $sefUrl;
 
-    public function __construct($id, $name, $aliasForId, $countProducts) 
+
+    public function __construct($id, $name, $aliasForId, $countProducts, $sefUrl = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->aliasForId = $aliasForId;
         $this->countProducts = $countProducts;
+        $this->sefUrl = $sefUrl;
     }
 }

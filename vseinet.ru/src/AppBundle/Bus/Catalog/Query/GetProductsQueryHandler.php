@@ -62,7 +62,8 @@ class GetProductsQueryHandler extends MessageHandler
                     ORDER BY
                         ppl2.operated_at DESC
                     LIMIT 1
-                ) AS price_changed_by
+                ) AS price_changed_by,
+                b.sef_url
             FROM
                 base_product AS b
                 INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )

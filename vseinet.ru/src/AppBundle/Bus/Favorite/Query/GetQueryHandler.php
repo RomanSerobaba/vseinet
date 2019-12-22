@@ -40,7 +40,8 @@ class GetQueryHandler extends MessageHandler
                         WHERE bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0
                     ),
                     COALESCE(p.productAvailabilityCode, p0.productAvailabilityCode),
-                    bp.updatedAt
+                    bp.updatedAt,
+                    bp.sefUrl
                 )
             FROM AppBundle:BaseProduct AS bp
             LEFT OUTER JOIN AppBundle:Product AS p WITH p.baseProductId = bp.canonicalId AND p.geoCityId = :geoCityId

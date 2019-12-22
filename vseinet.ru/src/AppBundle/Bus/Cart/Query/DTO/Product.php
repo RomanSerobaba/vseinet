@@ -92,7 +92,12 @@ class Product
      */
     public $deliveryDate;
 
-    public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $liftingCost, $quantity, $hasStroika, $discountAmount, $reserveQuantity, $storePricetag)
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $sefUrl;
+
+    public function __construct($id, $name, $categoryId, $minQuantity, $baseSrc, $price, $availabilityCode, $deliveryTax, $liftingCost, $quantity, $hasStroika, $discountAmount, $reserveQuantity, $storePricetag, $sefUrl = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -110,5 +115,6 @@ class Product
         $this->discountAmount = $discountAmount;
         $this->reserveQuantity = (int) $reserveQuantity;
         $this->storePricetag = $storePricetag;
+        $this->sefUrl = $sefUrl;
     }
 }

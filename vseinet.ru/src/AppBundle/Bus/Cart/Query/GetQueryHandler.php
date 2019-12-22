@@ -109,7 +109,8 @@ class GetQueryHandler extends MessageHandler
                                 pp.price
                             FROM AppBundle:ProductPricetag AS pp
                             WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
-                        )
+                        ),
+                        bp.sefUrl
                     )
                 FROM AppBundle:Cart c
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = c.baseProductId
@@ -181,7 +182,8 @@ class GetQueryHandler extends MessageHandler
                                     pp.price
                                 FROM AppBundle:ProductPricetag AS pp
                                 WHERE pp.baseProductId = bp.id AND pp.geoPointId = :geoPointId
-                            )
+                            ),
+                            bp.sefUrl
                         )
                     FROM AppBundle:BaseProduct AS bp
                     LEFT OUTER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0

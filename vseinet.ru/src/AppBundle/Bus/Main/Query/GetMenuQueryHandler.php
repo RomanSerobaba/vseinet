@@ -20,7 +20,8 @@ class GetMenuQueryHandler extends MessageHandler
                     c.id,
                     c.pid,
                     c.name,
-                    cp.level
+                    cp.level,
+                    c.sefUrl
                 ),
                 CASE
                     WHEN c.id = 5086104 THEN 3

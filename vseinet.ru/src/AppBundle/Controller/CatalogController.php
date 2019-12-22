@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
 use AppBundle\Bus\Catalog\Query;
+use AppBundle\Bus\Brand\Query\GetBySefNameQuery as GetBrandBySefNameQuery;
 use AppBundle\Bus\Brand\Query\GetByNameQuery as GetBrandByNameQuery;
 use AppBundle\Bus\Brand\Query\GetByIdQuery as GetBrandByIdQuery;
 use AppBundle\Bus\Catalog\Paging;
@@ -47,31 +48,40 @@ class CatalogController extends Controller
      *     }
      * )
      * @VIA\Route(
-     *     name="catalog_category_sef",
-     *     path="/catalog/{slug}/",
-     *     requirements={"slug": ".+\-\d+$"},
-     *     methods={"GET", "POST"},
-     *     parameters={
-     *         @VIA\Parameter(name="slug", type="string")
-     *     }
-     * )
-     * @VIA\Route(
      *     name="catalog_category_sef_with_brand",
-     *     path="/catalog/{slug}/{brandName}/",
-     *     requirements={"slug": ".+\-\d+$*", "brandName": "[^\/]*"},
+     *     path="/catalog/{slug}/b/{brandName}/",
+     *     requirements={"slug": ".+-\d+$", "brandName": "[^\/]*"},
      *     methods={"GET", "POST"},
      *     parameters={
      *         @VIA\Parameter(name="slug", type="string"),
      *         @VIA\Parameter(name="brandName", type="string")
      *     }
      * )
+     * @VIA\Route(
+     *     name="catalog_category_sef",
+     *     path="/catalog/{slug}/",
+     *     requirements={"slug": ".+-\d+$"},
+     *     methods={"GET", "POST"},
+     *     parameters={
+     *         @VIA\Parameter(name="slug", type="string")
+     *     }
+     * )
      */
     public function showCategoryPageAction(int $id = 0, $slug = null, $brandName = null, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $needRedirect = false;
 
         if ($brandName) {
-            $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['sefName' => $brandName]));
+            $brand = $this->get('query_bus')->handle(new GetBrandBySefNameQuery(['sefName' => $brandName]));
+            if (!$brand) {
+                $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
+                if (!$brand) {
+                    return $this->redirectToRoute('catalog', [], 301);
+                } elseif ($brand->sefUrl) {
+                    $needRedirect = true;
+                }
+            }
             $request->query->set('b', $brand->id);
         } else {
             $brand = null;
@@ -80,29 +90,27 @@ class CatalogController extends Controller
         if (!empty($id)) {
             $category = $em->getRepository(Category::class)->find($id);
             if (!$category) {
-                return $this->redirectToRoute('index', [], 301);
+                return $this->redirectToRoute('catalog', [], 301);
             } elseif ($category->getSefUrl()) {
-                if ($brandName) {
-                    return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brandName], 301);
-                }
-
-                return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
+                $needRedirect = true;
             }
         }
 
         if ($slug) {
             $chunks = explode('-', $slug);
             $id = count($chunks) ? (int) end($chunks) : 0;
+
+            $category = $em->getRepository(Category::class)->find($id);
+            if (!$category) {
+                return $this->redirectToRoute('index', [], 301);
+            } elseif ($category->getSefUrl() && $category->getSefUrl() !== $slug) {
+                $needRedirect = true;
+            }
         }
 
-        $category = $em->getRepository(Category::class)->find($id);
-        if (!$category) {
-            return $this->redirectToRoute('index', [], 301);
-        }
-
-        if ($category->getSefUrl() && $category->getSefUrl() !== $slug) {
+        if ($needRedirect) {
             if ($brandName) {
-                return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brandName], 301);
+                return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brand->sefUrl], 301);
             }
 
             return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
@@ -157,7 +165,7 @@ class CatalogController extends Controller
         }
 
         if (0 === $category->countProducts && !$this->getUserIsEmployee()) {
-            throw new NotFoundHttpException('Категории не существует');
+            return $this->redirectToRoute('catalog', [], 302);
         }
 
         if (1 === $finder->getFilter()->page && !empty($category->description)) {

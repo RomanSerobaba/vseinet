@@ -37,7 +37,12 @@ class Product
      */
     public $updatedAt;
 
-    public function __construct($id, $name, $price, $baseSrc, $availabilityCode, $updatedAt)
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $sefUrl;
+
+    public function __construct($id, $name, $price, $baseSrc, $availabilityCode, $updatedAt, $sefUrl = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -45,5 +50,6 @@ class Product
         $this->baseSrc = $baseSrc;
         $this->availabilityCode = $availabilityCode;
         $this->updatedAt = $updatedAt;
+        $this->sefUrl = $sefUrl;
     }
 }

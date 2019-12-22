@@ -82,7 +82,8 @@ class GetBlockPopularsQueryHandler extends MessageHandler
                             bp.categoryId,
                             c.name,
                             p.price,
-                            bpi.basename
+                            bpi.basename,
+                            bp.sefUrl
                         )
                     FROM AppBundle:BaseProduct AS bp
                     INNER JOIN AppBundle:BaseProductImage AS bpi WITH bpi.baseProductId = bp.id AND bpi.sortOrder = 1 AND bpi.width > 0

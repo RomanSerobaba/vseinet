@@ -17,6 +17,11 @@ class Brand
     public $name;
 
     /**
+     * @Assert\Type(type="string")
+     */
+    public $sefName;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $countProducts;
@@ -26,9 +31,10 @@ class Brand
      */
     public $isTop;
 
-    public function __construct($id, $name)
+    public function __construct($id, $name, $sefName= null)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->sefName = $sefName;
     }
 }

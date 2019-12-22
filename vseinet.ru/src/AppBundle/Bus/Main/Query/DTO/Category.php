@@ -22,6 +22,11 @@ class Category
     public $name;
 
     /**
+     * @Assert\Type(type="string")
+     */
+    public $sefUrl;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $level;
@@ -47,11 +52,12 @@ class Category
     public $product;
 
 
-    public function __construct($id, $pid, $name, $level)
+    public function __construct($id, $pid, $name, $level, $sefUrl = null)
     {
         $this->id = $id;
         $this->pid = $pid;
         $this->name = $name;
         $this->level =  $level;
+        $this->sefUrl =  $sefUrl;
     }
 }

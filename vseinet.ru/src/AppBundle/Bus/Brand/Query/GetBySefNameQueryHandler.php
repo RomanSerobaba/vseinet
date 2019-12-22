@@ -5,9 +5,9 @@ namespace AppBundle\Bus\Brand\Query;
 use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GetByNameQueryHandler extends MessageHandler
+class GetBySefNameQueryHandler extends MessageHandler
 {
-    public function handle(GetByNameQuery $query)
+    public function handle(GetBySefNameQuery $query)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -21,9 +21,9 @@ class GetByNameQueryHandler extends MessageHandler
                     b.sefName
                 )
             FROM AppBundle:Brand AS b
-            WHERE b.name = :name AND b.id = b.canonicalId
+            WHERE b.sefName = :sefName AND b.id = b.canonicalId
         ");
-        $q->setParameter('name', $query->name);
+        $q->setParameter('sefName', $query->sefName);
         $brand = $q->getOneOrNullResult();
 
         if ($brand->isForbidden && !$this->getUserIsEmployee()) {

@@ -207,7 +207,8 @@ class AbstractProductFinder extends ContainerAware
             SELECT
                 NEW AppBundle\Bus\Catalog\Finder\DTO\Brand (
                     b.id,
-                    b.name
+                    b.name,
+                    b.sefName
                 )
             FROM AppBundle:Brand AS b
             WHERE b.id IN (:ids)
