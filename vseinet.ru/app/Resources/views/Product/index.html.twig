@@ -23,7 +23,7 @@
             {% endfor %}
             {% if brand %}
                 <span></span>
-                <a href="{% if baseProduct.categorySefUrl %}{{ path('catalog_category_sef', { slug: baseProduct.categorySefUrl, brandName: brand.sefName }) }}{% else %}{{ path('catalog_category', { id: baseProduct.categoryId, brandName: brand.sefName }) }}{% endif %}">{{ brand.name }}</a>
+                <a href="{% if baseProduct.categorySefUrl %}{{ path('catalog_category_sef_with_brand', { slug: baseProduct.categorySefUrl, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% else %}{{ path('catalog_category_with_brand', { id: baseProduct.categoryId, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% endif %}">{{ brand.name }}</a>
             {% endif %}
         </div>
         <div class="title">
