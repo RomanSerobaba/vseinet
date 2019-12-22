@@ -1,6 +1,6 @@
 {% extends "layout.html.twig" %}
 
-{% block pageTitle %}{% if category.pageTitle %}{{ category.pageTitle }}{% else %}Купить {{ category.name }} в г.{{ app.geoCity.name }}, цена{% endif %}{% endblock %}
+{% block pageTitle %}{% if category.pageTitle %}{{ category.pageTitle }}{% else %}Купить {{ category.name }} в г.{{ app.geoCity.name }}, цена{% endif %} в интернет-магазине Vseinet.ru{% endblock %}
 
 {% block pageDescription %}{% if category.pageDescription %}{{ category.pageDescription }}{% else %}В каталоге {{ category.name }} вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!{% endif %}{% endblock %}
 
