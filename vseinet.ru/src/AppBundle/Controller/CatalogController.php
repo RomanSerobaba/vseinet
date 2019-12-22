@@ -78,7 +78,7 @@ class CatalogController extends Controller
                 $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
                 if (!$brand) {
                     return $this->redirectToRoute('catalog', [], 301);
-                } elseif ($brand->sefUrl) {
+                } elseif ($brand->sefName) {
                     $needRedirect = true;
                 }
             }
@@ -109,11 +109,19 @@ class CatalogController extends Controller
         }
 
         if ($needRedirect) {
-            if ($brandName) {
-                return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brand->sefUrl], 301);
+            if ($category->getSefUrl()) {
+                if ($brandName) {
+                    return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brand->sefName ? : $brand->name], 301);
+                }
+
+                return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
             }
 
-            return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
+            if ($brandName) {
+                return $this->redirectToRoute('catalog_category_with_brand', ['id' => $category->getId(), 'brandName' => $brand->sefName ? : $brand->name], 301);
+            }
+
+            return $this->redirectToRoute('catalog_category', ['id' => $category->getId()], 301);
         }
 
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
