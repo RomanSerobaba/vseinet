@@ -1,6 +1,9 @@
 {% set snowflake %}
     {% if 'now'|date('m-d') >= '12-15' or 'now'|date('m-Y') == '01-15' %}
+    <picture>
+        <source srcset="/images/snowflake.webp" type="image/webp" />
         <img src="/images/snowflake.webp" style="width:12px;left:-7px;top:2px;" />
+    </picture>
         <img src="/images/snowflake.webp" style="width:8px;left:9px;top:13px;" />
         <img src="/images/snowflake.webp" style="width:6px;left:48px;top:-11px;" />
         <img src="/images/snowflake.webp" style="width:10px;left:38px;top:18px;" />
