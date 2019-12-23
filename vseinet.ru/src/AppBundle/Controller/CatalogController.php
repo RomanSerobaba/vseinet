@@ -111,17 +111,17 @@ class CatalogController extends Controller
         if ($needRedirect) {
             if ($category->getSefUrl()) {
                 if ($brandName) {
-                    return $this->redirectToRoute('catalog_category_sef_with_brand', ['slug' => $category->getSefUrl(), 'brandName' => $brand->sefName ? : $brand->name], 301);
+                    return $this->redirectToRoute('catalog_category_sef_with_brand', $request->query->all() + ['slug' => $category->getSefUrl(), 'brandName' => $brand->sefName ? : $brand->name], 301);
                 }
 
-                return $this->redirectToRoute('catalog_category_sef', ['slug' => $category->getSefUrl()], 301);
+                return $this->redirectToRoute('catalog_category_sef', $request->query->all() + ['slug' => $category->getSefUrl()], 301);
             }
 
             if ($brandName) {
-                return $this->redirectToRoute('catalog_category_with_brand', ['id' => $category->getId(), 'brandName' => $brand->sefName ? : $brand->name], 301);
+                return $this->redirectToRoute('catalog_category_with_brand', $request->query->all() + ['id' => $category->getId(), 'brandName' => $brand->sefName ? : $brand->name], 301);
             }
 
-            return $this->redirectToRoute('catalog_category', ['id' => $category->getId()], 301);
+            return $this->redirectToRoute('catalog_category', $request->query->all() + ['id' => $category->getId()], 301);
         }
 
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
