@@ -127,7 +127,7 @@ class CatalogController extends Controller
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
-        $finder->setFilterData($request->query->all(), $category, $brand);
+        $finder->setFilterData($request->query->all() + ['id' => $id, 'brandName' => $brand->name], $category, $brand);
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
