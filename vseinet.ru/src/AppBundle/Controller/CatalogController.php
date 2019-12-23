@@ -127,7 +127,7 @@ class CatalogController extends Controller
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
-        $finder->setFilterData($request->query->all() + ['id' => $id, 'brandName' => $brand->name], $category, $brand);
+        $finder->setFilterData($request->query->all() + ['id' => $id, 'brandName' => $brand->name ?? null], $category, $brand);
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
@@ -139,13 +139,13 @@ class CatalogController extends Controller
             $filter = $finder->getFilter();
             if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
-                $brandName = $brand->sefName;
-                $route = 'catalog_category'.($category->sef ? '_sef' : '').'_with_brand';
+                $brandName = $brand->sefName ?? $brand->name;
+                $route = 'catalog_category'.($category->sefUrl ? '_sef' : '').'_with_brand';
             } else {
                 $brandName = null;
-                $route = 'catalog_category'.($category->sef ? '_sef' : '');
+                $route = 'catalog_category'.($category->sefUrl ? '_sef' : '');
             }
-            $filterUrl = $this->generateUrl($route, $filter->build(['slug' => $category->sef, 'id' => $category->sef ? null : $category->id, 'brandName' => $brandName]));
+            $filterUrl = $this->generateUrl($route, $filter->build(['slug' => $category->sefUrl, 'id' => $category->sefUrl ? null : $category->id, 'brandName' => $brandName]));
 
             if ($request->isXmlHttpRequest()) {
                 $title = $category->name;
