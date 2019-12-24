@@ -6,7 +6,7 @@
                 {% if banner.type == 1 %}
                     <a rel="nofollow" href="{{ banner.url }}">
                         <picture>
-                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({'.jpg':'.webp'}) }}" type="image/webp" />
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
                             <img
                                 class="photoBlock blockPc"
                                 data-pos-x="{{ banner.posBackgroundPcX }}"
@@ -15,7 +15,7 @@
                             />
                         </picture>
                         <picture>
-                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({'.jpg':'.webp'}) }}" type="image/webp" />
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
                             <img
                                 class="photoBlock blockTablet"
                                 data-pos-x="{{ banner.posBackgroundTabletX }}"
@@ -24,7 +24,7 @@
                             />
                         </picture>
                         <picture>
-                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPhone)|replace({'.jpg':'.webp'}) }}" type="image/webp" />
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPhone)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
                             <img
                                 class="photoBlock blockPhone"
                                 data-pos-x="{{ banner.posBackgroundPhoneX }}"
