@@ -2,8 +2,9 @@
     <div class="product">
         <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}" class="image">
             <img
-                src="{{ product|image(constant("AppBundle\\Enum\\BaseProductImage::SIZE_MD")) }}"
+                data-src="{{ product|image(constant("AppBundle\\Enum\\BaseProductImage::SIZE_MD")) }}"
                 alt="{{ product.name }}"
+                class="lazyload"
             />
         </a>
         <h6><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h6>
