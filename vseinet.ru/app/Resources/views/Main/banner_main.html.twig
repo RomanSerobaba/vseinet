@@ -6,29 +6,14 @@
                 {% if banner.type == 1 %}
                     <a rel="nofollow" href="{{ banner.url }}">
                         <picture>
-                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
-                            <img
-                                class="photoBlock blockPc{% if loop.index > 1 %} lazyload{% endif %}"
-                                data-pos-x="{{ banner.posBackgroundPcX }}"
-                                style="max-width: 845px; width: 845px; height: 280px;"
-                                data-src="{{ asset(imagedir ~ banner.imgBackgroundPc) }}"
-                            />
-                        </picture>
-                        <picture>
-                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
-                            <img
-                                class="photoBlock blockTablet{% if loop.index > 1 %} lazyload{% endif %}"
-                                data-pos-x="{{ banner.posBackgroundTabletX }}"
-                                style="max-width: 750px; width: 750px; height: 280px;"
-                                data-src="{{ asset(imagedir ~ banner.imgBackgroundTablet) }}"
-                            />
-                        </picture>
-                        <picture>
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" media="(min-width: 1160px)" />
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({' ':'%20'}) }}" type="image/jpg" media="(min-width: 1160px)" />
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" media="(min-width: 481px)" />
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({' ':'%20'}) }}" type="image/jpg" media="(min-width: 481px)" />
                             <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPhone)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
                             <img
-                                class="photoBlock blockPhone{% if loop.index > 1 %} lazyload{% endif %}"
-                                data-pos-x="{{ banner.posBackgroundPhoneX }}"
-                                style="max-width: 750px; width: 750px; height: 280px;"
+                                class="photoBlock {% if loop.index > 1 %} lazyload{% endif %}"
+                                data-pos-x="0"
                                 data-src="{{ asset(imagedir ~ banner.imgBackgroundPhone) }}"
                             />
                         </picture>
