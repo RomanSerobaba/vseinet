@@ -5,27 +5,33 @@
             <div class="sheet">
                 {% if banner.type == 1 %}
                     <a rel="nofollow" href="{{ banner.url }}">
-                        <div
-                            class="photoBlock blockPc"
-                            data-pos-x="{{ banner.posBackgroundPcX }}"
-                            style="max-width: 845px; width: 845px; height: 280px;{% if banner.imgBackgroundPc %}
-                                background: url('{{ asset(imagedir ~ banner.imgBackgroundPc) }}') {{ banner.posBackgroundPcX }}px {{ banner.posBackgroundPcY }}px no-repeat;{% endif %}"
-                        >
-                        </div>
-                        <div
-                            class="photoBlock blockTablet"
-                            data-pos-x="{{ banner.posBackgroundTabletX }}"
-                            style="max-width: 750px; width: 750px; height: 280px;{% if banner.imgBackgroundTablet %}
-                                background: url('{{ asset(imagedir ~ banner.imgBackgroundTablet) }}') {{ banner.posBackgroundTabletX }}px {{ banner.posBackgroundTabletY }}px no-repeat;{% endif %}"
-                        >
-                        </div>
-                        <div
-                            class="photoBlock blockPhone"
-                            data-pos-x="{{ banner.posBackgroundPhoneX }}"
-                            style="max-width: 750px; width: 750px; height: 280px;{% if banner.imgBackgroundPhone %}
-                                background: url('{{ asset(imagedir ~ banner.imgBackgroundPhone) }}') {{ banner.posBackgroundPhoneX }}px {{ banner.posBackgroundPhoneY }}px no-repeat;{% endif %}"
-                        >
-                        </div>
+                        <picture>
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({'.jpg':'.webp'}) }}" type="image/webp" />
+                            <img
+                                class="photoBlock blockPc"
+                                data-pos-x="{{ banner.posBackgroundPcX }}"
+                                style="max-width: 845px; width: 845px; height: 280px;"
+                                src="{{ asset(imagedir ~ banner.imgBackgroundPc) }}"
+                            />
+                        </picture>
+                        <picture>
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({'.jpg':'.webp'}) }}" type="image/webp" />
+                            <img
+                                class="photoBlock blockTablet"
+                                data-pos-x="{{ banner.posBackgroundTabletX }}"
+                                style="max-width: 750px; width: 750px; height: 280px;"
+                                src="{{ asset(imagedir ~ banner.imgBackgroundTablet) }}"
+                            />
+                        </picture>
+                        <picture>
+                            <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPhone)|replace({'.jpg':'.webp'}) }}" type="image/webp" />
+                            <img
+                                class="photoBlock blockPhone"
+                                data-pos-x="{{ banner.posBackgroundPhoneX }}"
+                                style="max-width: 750px; width: 750px; height: 280px;"
+                                src="{{ asset(imagedir ~ banner.imgBackgroundPhone) }}"
+                            />
+                        </picture>
                     </a>
                 {% endif %}
                 {% if banner.type == 2 %}
