@@ -6,8 +6,9 @@
                 <div class="product">
                     <a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}" class="image">
                         <img
-                            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
+                            data-src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
                             alt="{{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            class="lazyload"
                         />
                     </a>
                     <h6><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h6>
