@@ -3,23 +3,29 @@
 @font-face {
     font-family: 'Intro Inline';
 	src: url('../fonts/Intro_Inline.eot');
-	src: url('../fonts/Intro_Inline.eot?#iefix') format('embedded-opentype'),
+    src: local('Times New Roman'), local('Arial'),
+        url('../fonts/Intro_Inline.eot?#iefix') format('embedded-opentype'),
    		 url('../fonts/Intro_Inline.woff') format('woff'),
          url('../fonts/Intro_Inline.otf') format('opentype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'Intro';
 	src: url('../fonts/Intro.eot');
-	src: url('../fonts/Intro.eot?#iefix') format('embedded-opentype'),
+    src: local('Times New Roman'), local('Arial'),
+        url('../fonts/Intro.eot?#iefix') format('embedded-opentype'),
     	 url('../fonts/Intro.woff') format('woff'),
          url('../fonts/Intro.otf') format('opentype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'Rouble';
 	src: url('../fonts/alsrubl-arial-regular.eot');
-	src: url('../fonts/alsrubl-arial-regular.eot?#iefix') format('embedded-opentype'),
+    src: local('Times New Roman'), local('Arial'),
+        url('../fonts/alsrubl-arial-regular.eot?#iefix') format('embedded-opentype'),
 		 url('../fonts/alsrubl-arial-regular.woff') format('woff'),
 		 url('../fonts/alsrubl-arial-regular.ttf') format('truetype');
+    font-display: swap;
 }
 
 /* misc
