@@ -24,6 +24,7 @@ class GetBySefNameQueryHandler extends MessageHandler
             WHERE b.sefName = :sefName AND b.id = b.canonicalId
         ");
         $q->setParameter('sefName', $query->sefName);
+        $q->setMaxResults(1);
         $brand = $q->getOneOrNullResult();
 
         if ($brand->isForbidden && !$this->getUserIsEmployee()) {

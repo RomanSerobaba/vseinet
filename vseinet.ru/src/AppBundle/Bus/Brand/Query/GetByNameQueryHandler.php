@@ -24,6 +24,7 @@ class GetByNameQueryHandler extends MessageHandler
             WHERE b.name = :name AND b.id = b.canonicalId
         ");
         $q->setParameter('name', $query->name);
+        $q->setMaxResults(1);
         $brand = $q->getOneOrNullResult();
 
         if ($brand->isForbidden && !$this->getUserIsEmployee()) {
