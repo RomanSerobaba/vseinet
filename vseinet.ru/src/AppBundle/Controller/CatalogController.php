@@ -172,7 +172,7 @@ class CatalogController extends Controller
             ]);
         }
 
-        if (0 === $category->countProducts && !$this->getUserIsEmployee()) {
+        if (empty($category->countProducts) && !$this->getUserIsEmployee()) {
             return $this->redirectToRoute('catalog', [], 302);
         }
 
