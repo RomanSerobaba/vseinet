@@ -29,7 +29,7 @@ class Category
     /**
      * @Assert\Type(type="integer")
      */
-    public $countProducts;
+    public $countProducts = 0;
 
     /**
      * @Assert\Type(type="boolean")

@@ -32,9 +32,9 @@ class GetCategoryQueryHandler extends MessageHandler
                     c.sefUrl
                 )
             FROM AppBundle:Category c
-            INNER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
-            LEFT OUTER JOIN AppBundle:CategorySeo cs WITH cs.categoryId = c.id
-            WHERE c.id = :id AND cs.brandId IS NULL
+            LEFT OUTER JOIN AppBundle:CategoryStats AS cst WITH cst.categoryId = c.id
+            LEFT OUTER JOIN AppBundle:CategorySeo cs WITH cs.categoryId = c.id AND cs.brandId IS NULL
+            WHERE c.id = :id
         ");
         $q->setParameter('id', $query->id);
         try {
