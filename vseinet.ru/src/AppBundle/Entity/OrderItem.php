@@ -116,6 +116,34 @@ class OrderItem
     public $isShipping = false;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="franchiser_purchase_price", type="integer", nullable=true)
+     */
+    public $franchiserPurchasePrice;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="initial_franchiser_purchase_price", type="integer", nullable=true)
+     */
+    public $initialFanchiserPurchasePrice;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="franchiser_purchase_price_updated_at", type="datetime", nullable=true)
+     */
+    public $franchiserPurchasePriceUpdatedAt;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="franchiser_purchase_price_updated_by", type="integer", nullable=true)
+     */
+    public $franchiserPurchasePriceUpdatedBy;
+
+    /**
      * Get id.
      *
      * @return int
@@ -435,5 +463,101 @@ class OrderItem
         $this->pid = $pid;
 
         return $this;
+    }
+
+    /**
+     * Set franchiserPurchasePrice.
+     *
+     * @param int|null $franchiserPurchasePrice
+     *
+     * @return OrderItem
+     */
+    public function setFranchiserPurchasePrice($franchiserPurchasePrice = null)
+    {
+        $this->franchiserPurchasePrice = $franchiserPurchasePrice;
+
+        return $this;
+    }
+
+    /**
+     * Get franchiserPurchasePrice.
+     *
+     * @return int|null
+     */
+    public function getFranchiserPurchasePrice()
+    {
+        return $this->franchiserPurchasePrice;
+    }
+
+    /**
+     * Set initialFranchiserPurchasePrice.
+     *
+     * @param int|null $initialFranchiserPurchasePrice
+     *
+     * @return OrderItem
+     */
+    public function setInitialFranchiserPurchasePrice($initialFranchiserPurchasePrice = null)
+    {
+        $this->initialFranchiserPurchasePrice = $initialFranchiserPurchasePrice;
+
+        return $this;
+    }
+
+    /**
+     * Get initialFranchiserPurchasePrice.
+     *
+     * @return int|null
+     */
+    public function getInitialFranchiserPurchasePrice()
+    {
+        return $this->initialFranchiserPurchasePrice;
+    }
+
+    /**
+     * Set franchiserPurchasePriceUpdatedAt.
+     *
+     * @param \DateTime|null $franchiserPurchasePriceUpdatedAt
+     *
+     * @return OrderItem
+     */
+    public function setFranchiserPurchasePriceUpdatedAt($franchiserPurchasePriceUpdatedAt = null)
+    {
+        $this->franchiserPurchasePriceUpdatedAt = $franchiserPurchasePriceUpdatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get franchiserPurchasePriceUpdatedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getFranchiserPurchasePriceUpdatedAt()
+    {
+        return $this->franchiserPurchasePriceUpdatedAt;
+    }
+
+    /**
+     * Set franchiserPurchasePriceUpdatedBy.
+     *
+     * @param int|null $franchiserPurchasePriceUpdatedBy
+     *
+     * @return OrderItem
+     */
+    public function setFranchiserPurchasePriceUpdatedBy($franchiserPurchasePriceUpdatedBy = null)
+    {
+        $this->franchiserPurchasePriceUpdatedBy = $franchiserPurchasePriceUpdatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get franchiserPurchasePriceUpdatedBy.
+     *
+     * @return int|null
+     */
+    public function getFranchiserPurchasePriceUpdatedBy()
+    {
+        return $this->franchiserPurchasePriceUpdatedBy;
     }
 }
