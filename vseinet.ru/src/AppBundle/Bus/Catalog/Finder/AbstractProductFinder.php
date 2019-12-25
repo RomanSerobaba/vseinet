@@ -180,7 +180,7 @@ class AbstractProductFinder extends ContainerAware
      *
      * @return array
      */
-    protected function getBrands(array $found): array
+    protected function getBrands(array $found, int $categoryId = null): array
     {
         if (empty($found)) {
             return [];
@@ -191,13 +191,17 @@ class AbstractProductFinder extends ContainerAware
         if (count($brandId2count) > self::COUNT_TOP_BRANDS) {
             arsort($brandId2count);
             $q = $this->getDoctrine()->getManager()->createQuery('
-                SELECT b.id, s.popularity
+                SELECT b.id, SUM(s.popularity) AS popularity
                 FROM AppBundle:Brand AS b
-                INNER JOIN AppBundle:BrandStats AS s WITH s.brandId = b.id
+                LEFT OUTER JOIN AppBundle:BrandByCategoryStats AS s WITH s.brandId = b.id'.($categoryId ? ' AND s.categoryId = :categoryId' : '').'
                 WHERE b.id IN (:ids)
-                ORDER BY s.popularity DESC
+                GROUP BY b.id
+                ORDER BY popularity DESC
             ');
             $q->setParameter('ids', array_slice(array_keys($brandId2count), 0, self::COUNT_TOP_BRANDS));
+            if ($categoryId) {
+                $q->setParameter('categoryId', $categoryId);
+            }
             $top = $q->getResult('ListHydrator');
         } else {
             $top = $brandId2count;

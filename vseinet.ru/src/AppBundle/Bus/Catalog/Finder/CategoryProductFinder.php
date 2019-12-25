@@ -97,7 +97,7 @@ class CategoryProductFinder extends AbstractProductFinder
             $results = array_slice($results, 1);
         }
 
-        $features->brands = $this->getBrands(array_shift($results));
+        $features->brands = $this->getBrands(array_shift($results), $this->category->id);
 
         if ($this->category->isTplEnabled) {
             $features->categorySections = $this->getCategorySections(array_shift($results));
