@@ -619,8 +619,8 @@ class QueryBuilder extends ContainerAware
             }
         }
 
-        return $string;
-        // return implode(' ', $result);
+        // return $string;
+        return implode(' ', $result);
     }
 
     /**
