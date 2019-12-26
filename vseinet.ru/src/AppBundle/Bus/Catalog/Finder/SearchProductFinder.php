@@ -46,7 +46,7 @@ class SearchProductFinder extends AbstractProductFinder
         }
 
         $features->categories = $this->getCategories($results[5]);
-        $features->brands = $this->getBrands($results[6]);
+        $features->brands = $this->getBrands($results[6], array_column($results[5], 'category_id') ?? []);
 
         return $features;
     }
