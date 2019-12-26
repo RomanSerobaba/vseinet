@@ -270,7 +270,7 @@ class QueryBuilder extends ContainerAware
         if (!empty($results[0])) {
             $ids = array_map(function ($row) { return intval($row['id']); }, $results[0]);
         }
-        if (1 === count($this->match) and is_numeric($this->match[0])) {
+        if (1 === count($this->match) and preg_match('~^[1-9]\d*$~isu', $this->match[0])) {
             $idCriteria[] = $this->getCriteriaIsAlive();
             if ($this->getUserIsEmployee()) {
                 $idCriteria[] = $this->getCriteriaNofilled();
