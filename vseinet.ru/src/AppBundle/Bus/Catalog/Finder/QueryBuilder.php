@@ -614,7 +614,7 @@ class QueryBuilder extends ContainerAware
         $result = [];
 
         foreach ($pieces as $piece) {
-            if (strlen($piece) && preg_match('~[a-zA-Zа-яА-Я0-9]~isu', $piece)) {
+            if (strlen($piece) && preg_match('~[a-zA-Zа-яёА-ЯЁ0-9]~isu', $piece)) {
                 $result[] = '(='.$piece.'|'.$piece.')';
             }
         }
@@ -630,11 +630,11 @@ class QueryBuilder extends ContainerAware
      */
     public function snippetWords(string $string): string
     {
-        $pieces = explode(' ', $string);
+        $pieces = explode(' ', preg_replace('~[^a-zA-Zа-яёА-ЯЁ0-9]+~isu', ' ', $string));
         $result = [];
 
         foreach ($pieces as $piece) {
-            if (strlen($piece) && preg_match('~[a-zA-Zа-яА-Я0-9]~isu', $piece)) {
+            if (strlen($piece) && preg_match('~[a-zA-Zа-яёА-ЯЁ0-9]~isu', $piece)) {
                 $result[] = '(*'.$piece.'*)';
             }
         }
