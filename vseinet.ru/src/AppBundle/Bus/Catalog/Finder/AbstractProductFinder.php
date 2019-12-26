@@ -191,18 +191,18 @@ class AbstractProductFinder extends ContainerAware
         if (count($brandId2count) > self::COUNT_TOP_BRANDS) {
             arsort($brandId2count);
             $q = $this->getDoctrine()->getManager()->createQuery('
-                SELECT b.id, SUM(s.popularity) AS popularity
+                SELECT b.id, COALESCE(SUM(s.popularity), 0) AS popularity
                 FROM AppBundle:Brand AS b
                 LEFT OUTER JOIN AppBundle:BrandByCategoryStats AS s WITH s.brandId = b.id'.($categoryId ? ' AND s.categoryId = :categoryId' : '').'
                 WHERE b.id IN (:ids)
                 GROUP BY b.id
                 ORDER BY popularity DESC
             ');
-            $q->setParameter('ids', array_slice(array_keys($brandId2count), 0, self::COUNT_TOP_BRANDS));
+            $q->setParameter('ids', array_keys($brandId2count));
             if ($categoryId) {
                 $q->setParameter('categoryId', $categoryId);
             }
-            $top = $q->getResult('ListHydrator');
+            $top = array_fill_keys(array_slice(array_keys($q->getResult('ListHydrator')), 0, self::COUNT_TOP_BRANDS), 0);
         } else {
             $top = $brandId2count;
         }
