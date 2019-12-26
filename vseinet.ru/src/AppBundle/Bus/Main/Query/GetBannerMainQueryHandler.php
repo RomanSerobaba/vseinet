@@ -25,8 +25,8 @@ class GetBannerMainQueryHandler extends MessageHandler
             FROM AppBundle:BannerMainData AS b
             WHERE
                 b.isVisible = true
-                AND (b.startVisibleDate IS NULL OR b.startVisibleDate >= CURRENT_TIMESTAMP())
-                AND (b.endVisibleDate IS NULL OR b.endVisibleDate <= CURRENT_TIMESTAMP())
+                AND (b.startVisibleDate IS NULL OR b.startVisibleDate <= CURRENT_TIMESTAMP())
+                AND (b.endVisibleDate IS NULL OR b.endVisibleDate >= CURRENT_TIMESTAMP())
             ORDER BY b.weight, b.id
         ");
         $banners = $q->getResult();

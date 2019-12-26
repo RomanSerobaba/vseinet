@@ -64,20 +64,6 @@ class GetSummaryQueryHandler extends MessageHandler
                     $amount = $product->price * $product->quantity;
                     $product->regionDeliveryTax = round((1000000 < $amount ? 100000 : $amount * .1) / $product->quantity, -3);
                 }
-            } elseif (RepresentativeTypeCode::FRANCHISER == $representative->getType()) {
-                $mostExpensive = reset($products);
-                $mostExpensiveKey = key($products);
-
-                foreach ($products as $key => $product) {
-                    if ($mostExpensive->price < $product->price) {
-                        $mostExpensive = $product;
-                        $mostExpensiveKey = $key;
-                    }
-
-                    $product->regionDeliveryTax = $product->deliveryTax;
-                }
-
-                $products[$mostExpensiveKey]->regionDeliveryTax += $representative->getDeliveryTax();
             }
         }
 

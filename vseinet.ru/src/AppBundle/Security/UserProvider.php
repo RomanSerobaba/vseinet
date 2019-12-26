@@ -88,7 +88,7 @@ class UserProvider implements UserProviderInterface
         ");
         $stmt->execute(['user_id' => $user->getId()]);
         $user->roles = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-        if (!array_intersect([UserRole::CLIENT, UserRole::FRANCHISER, UserRole::WHOLESALER, UserRole::FREELANCER], $user->roles)) {
+        if (!array_intersect([UserRole::CLIENT, UserRole::WHOLESALER, UserRole::FREELANCER], $user->roles)) {
             $user->roles[] = UserRole::EMPLOYEE;
         }
 
