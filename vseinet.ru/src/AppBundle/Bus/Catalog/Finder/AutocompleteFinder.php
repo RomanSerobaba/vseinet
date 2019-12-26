@@ -82,7 +82,7 @@ class AutocompleteFinder extends AbstractProductFinder
             }
         }
 
-        if (is_numeric($filter->q)) {
+        if (preg_match('~^[1-9]\d*$~isu', $filter->q)) {
             $product = $em->getRepository(BaseProduct::class)->find($filter->q);
             if ($product instanceof BaseProduct) {
                 $p = new DTO\Autocomplete\Product($product->getCanonicalId(), $product->getName());
