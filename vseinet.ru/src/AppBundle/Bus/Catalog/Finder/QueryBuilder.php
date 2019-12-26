@@ -635,11 +635,10 @@ class QueryBuilder extends ContainerAware
 
         foreach ($pieces as $piece) {
             if (strlen($piece) && preg_match('~[a-zA-Zа-яА-Я0-9]~isu', $piece)) {
-                $result[] = '(='.$piece.'|'.$piece.')';
+                $result[] = '(*'.$piece.'*)';
             }
         }
 
-        return $string;
-        // return implode(' ', $result);
+        return implode(' ', $result);
     }
 }
