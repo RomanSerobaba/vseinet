@@ -241,7 +241,7 @@ class QueryBuilder extends ContainerAware
         } elseif (Sort::MARGING === $filter->sort) {
             $sort = 'availability ASC, profit DESC';
         } else {
-            $sort = $isSearch ? 'weight DESC, availability ASC, rating DESC, price ASC' : 'availability ASC, weight DESC, rating DESC, price ASC';
+            $sort = $isSearch ? 'weight DESC, availability ASC, rating DESC, price ASC' : 'availability ASC, rating DESC, price ASC';
         }
 
         $page = min($filter->page, ceil(self::MAX_MATCHES / self::PER_PAGE));
