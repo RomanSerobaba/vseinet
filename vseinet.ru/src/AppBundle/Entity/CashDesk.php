@@ -44,13 +44,6 @@ class CashDesk
     private $deactivatedAt;
 
     /**
-     * @ORM\Column(name="our_seller_id", type="integer", nullable=false)
-     *
-     * @var int
-     */
-    private $ourSellerId;
-
-    /**
      * Get id.
      *
      * @return int
@@ -154,26 +147,6 @@ class CashDesk
     public function getDeactivatedAt(): ?\DateTime
     {
         return $this->deactivatedAt;
-    }
-
-    /**
-     * @param int $ourSellerId
-     *
-     * @return self
-     */
-    public function setOurSellerId(int $ourSellerId): self
-    {
-        $this->ourSellerId = $ourSellerId;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOurSellerId(): int
-    {
-        return $this->ourSellerId;
     }
 
     /**

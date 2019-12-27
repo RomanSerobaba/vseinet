@@ -273,9 +273,10 @@ class CreateFormType extends AbstractType
                     p.cashlessPercent
                 )
             FROM AppBundle:PaymentType AS p
-            WHERE p.isActive = TRUE AND p.code != :paymentTypeCode_BANKCARD
+            INNER JOIN AppBundle:RepresentativeToPaymentType AS r2pt WITH r2pt.paymentTypeCode = p.code
+            WHERE p.isActive = TRUE AND r2pt.representativeId = :pointId
             ORDER BY p.code
-        ")->setParameters(['paymentTypeCode_BANKCARD' => PaymentTypeCode::BANKCARD,]);
+        ")->setParameters(['pointId' => $options['data']->geoPointId,]);
         $paymentTypes = $q->getResult('IndexByHydrator');
 
         if (!is_object($user) || !$user->isEmployee()) {
@@ -283,19 +284,6 @@ class CreateFormType extends AbstractType
                 return !$val->isInternal;
             });
         }
-
-        $q = $this->em->createQuery("
-            SELECT
-                cd.id
-            FROM AppBundle:GeoRoom AS gr
-            JOIN AppBundle:CashDesk AS cd WITH cd.geoRoomId = gr.id
-            WHERE cd.deactivatedAt IS NULL AND cd.terminalId > 0 AND gr.geoPointId = :geoPointId
-        ")->setParameters(['geoPointId' => $options['data']->geoPointId,]);
-        $terminals = $q->getResult();
-
-        $paymentTypes = array_filter($paymentTypes, function ($val) use ($terminals) {
-            return PaymentTypeCode::TERMINAL != $val->code || !empty($terminals);
-        });
 
         if (in_array($options['data']->deliveryTypeCode, [DeliveryTypeCode::TRANSPORT_COMPANY, DeliveryTypeCode::POST])) {
             $paymentTypes = array_filter($paymentTypes, function ($val) {
