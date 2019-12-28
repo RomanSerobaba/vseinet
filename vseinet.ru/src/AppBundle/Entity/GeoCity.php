@@ -410,7 +410,7 @@ class GeoCity
     {
         if ($this->getCountGeoPoints()) {
             foreach ($this->getGeoPoints() as $geoPoint) {
-                if ($geoPoint->getGeoCityId() === $this->id && $geoPoint->getHasRetail() && $geoPoint->getIsActive() && in_array($geoPoint->getType(), [RepresentativeTypeCode::OUR, RepresentativeTypeCode::PARTNER])) {
+                if ($geoPoint->getGeoCityId() === $this->id && $geoPoint->getHasRetail() && $geoPoint->getIsActive() && in_array($geoPoint->getType(), [RepresentativeTypeCode::OUR, RepresentativeTypeCode::PARTNER, RepresentativeTypeCode::FRANCHISER])) {
                     return $this->id;
                 }
             }

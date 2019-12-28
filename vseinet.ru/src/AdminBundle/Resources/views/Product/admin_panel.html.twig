@@ -1,6 +1,7 @@
 {% if app.userIsEmployee %}
     <div class="admin-panel" data-id="{{ product.id }}">
         <div class="actions">
+        {% if app.representative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
             <a
                 href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}"
                 class="edit"
@@ -9,6 +10,7 @@
             ></a>
             <a href="{{ path('admin_product_merge') }}" class="merge" title="Объединить"></a>
             <a href="{{ path('admin_product_move', { id: product.id }) }}" class="move" title="Переместить"></a>
+        {% endif %}
             <a href="javascript:void(0)" title="Цены конкурентов" class="competitor{% if product.competitorPrice > 0 %} {% if product.competitorPrice < product.price %}warning{% else %}ice{% endif %}{% endif %}"></a>
             <a
                 href="{{ path('authority', { targetUrl: '/admin/orders?baseProduct[id]=' ~ product.id }) }}"
@@ -49,7 +51,9 @@
             {% endif %}
         </div>
         <div class="info-pane hidden">
-            <div class="supplier-remains loading competitors"></div>
+            {% if app.representative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
+                <div class="supplier-remains loading competitors"></div>
+            {% endif %}
             <div class="reserves loading competitors"></div>
             <div class="competitor-revisions loading competitors"></div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Bus\Reserves\Query\DTO;
 
+use AppBundle\Enum\ProductAvailabilityCode;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Reserves
@@ -71,6 +72,21 @@ class Reserves
      * @Assert\Type(type="integer")
      */
     public $issuedTransitDelta = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $remainsPurchasePrice = 0;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $supplierPurchasePrice = 0;
+
+    /**
+     * @Enum("AppBundle\Enum\ProductAvailabilityCode")
+     */
+    public $supplierProductAvailabilityCode;
 
 
     public function __construct(array $geoCities = [], array $geoPoints = [], array $geoRooms = [])

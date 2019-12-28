@@ -1,3 +1,21 @@
+{% if app.representative.type == constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
+    <br/>
+    {% if reserves.remainsPurchasePrice %}
+        <h3 title="Закупочная цена остатков">Остатки: {{ reserves.remainsPurchasePrice|price_format }}</h3>
+    {% endif %}
+    {% if reserves.supplierProductAvailabilityCode %}
+        <h3
+            {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == reserves.supplierProductAvailabilityCode %}
+                style="color:green" title="в наличии"
+            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == reserves.supplierProductAvailabilityCode %}
+                style="color:blue" title="ожидается"
+            {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == reserves.supplierProductAvailabilityCode %}
+                style="color:red" title="отсутствует"
+            {% else %}
+                style="color:#01c9ed" title="под заказ"
+            {% endif %}>Поставщик: {{ reserves.supplierPurchasePrice|price_format }}</h3>
+    {% endif %}
+{% endif %}
 <h4 class="part_title"><span>Резервы на точках</span></h4>
 <table class="point_reserve">
     <thead>

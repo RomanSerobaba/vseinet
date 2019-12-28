@@ -134,10 +134,20 @@ class CreateFormType extends AbstractType
             $clause .= ' AND p.id IN (:ids)';
             $parameters['ids'] = $points;
         } else {
-            $clause .= ' AND r.hasWarehouse = TRUE AND r.type IN (:representativeTypeCode_OUR, :representativeTypeCode_PARTNER, :representativeTypeCode_TORG)';
-            $parameters['representativeTypeCode_OUR'] = RepresentativeTypeCode::OUR;
-            $parameters['representativeTypeCode_PARTNER'] = RepresentativeTypeCode::PARTNER;
-            $parameters['representativeTypeCode_TORG'] = RepresentativeTypeCode::TORG;
+            $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->container->get('representative.identity')->getRepresentative()->getType();
+            $franchiserAgreementId = $this->container->get('representative.identity')->getRepresentative()->getCompanyAgreementFranchiseId();
+
+            if ($isFranchiser) {
+                $clause .= ' AND r.hasWarehouse = TRUE AND r.type = :representativeTypeCode_FRANCHISER AND r.companyAgreementFranchiseId = :companyAgreementFranchiseId';
+                $parameters['representativeTypeCode_FRANCHISER'] = RepresentativeTypeCode::FRANCHISER;
+                $parameters['companyAgreementFranchiseId'] = $franchiserAgreementId;
+
+            } else {
+                $clause .= ' AND r.hasWarehouse = TRUE AND r.type IN (:representativeTypeCode_OUR, :representativeTypeCode_PARTNER, :representativeTypeCode_TORG)';
+                $parameters['representativeTypeCode_OUR'] = RepresentativeTypeCode::OUR;
+                $parameters['representativeTypeCode_PARTNER'] = RepresentativeTypeCode::PARTNER;
+                $parameters['representativeTypeCode_TORG'] = RepresentativeTypeCode::TORG;
+            }
         }
 
         $q = $this->em->createQuery("
