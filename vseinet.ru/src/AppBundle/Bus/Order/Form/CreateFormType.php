@@ -277,7 +277,7 @@ class CreateFormType extends AbstractType
                 NEW AppBundle\Bus\Order\Query\DTO\PaymentType (
                     p.code,
                     p.name,
-                    p.isInternal,
+                    r2pt.isInternal,
                     p.isRemote,
                     p.description,
                     p.cashlessPercent
