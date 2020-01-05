@@ -62,7 +62,6 @@
                 {% include 'footer.html.twig' %}
             </div>
         </footer>
-        {% if app.environment is same as('prod') %}{% include 'counters.html.twig' %}{% endif %}
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
         <script src="{{ asset('js/router.min.js') }}"></script>
@@ -83,6 +82,7 @@
             </script>
         {% endif %}
         {% block javascripts %}{% endblock %}
+        {% if app.environment is same as('prod') %}{% include 'counters.html.twig' %}{% endif %}
         {% include 'profiler.html.twig' %}
     </body>
 </html>
