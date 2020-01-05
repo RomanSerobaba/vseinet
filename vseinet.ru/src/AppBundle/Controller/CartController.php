@@ -81,6 +81,10 @@ class CartController extends Controller
             ]);
         }
 
+        if ($request->query->get('turbo')) {
+            return $this->redirectToRoute('cart');
+        }
+
         return $this->redirect($request->headers->get('referer'));
     }
 
