@@ -1,4 +1,4 @@
-{% if app.representative.type == constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
+{% if app.employeeRepresentative.type == constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
     <br/>
     {% if reserves.remainsPurchasePrice %}
         <h3 title="Закупочная цена остатков">Остатки: {{ reserves.remainsPurchasePrice|price_format }}</h3>

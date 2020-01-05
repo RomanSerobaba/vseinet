@@ -24,8 +24,8 @@ class GetReservesQueryHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $query->baseProductId));
         }
 
-        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->get('representative.identity')->getRepresentative()->getType();
-        $franchiserAgreementId = $this->get('representative.identity')->getRepresentative()->getCompanyAgreementFranchiseId();
+        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->get('representative.identity')->getEmployeeRepresentative()->getType();
+        $franchiserAgreementId = $this->get('representative.identity')->getEmployeeRepresentative()->getCompanyAgreementFranchiseId();
 
         $q = $em->createNativeQuery("
             SELECT

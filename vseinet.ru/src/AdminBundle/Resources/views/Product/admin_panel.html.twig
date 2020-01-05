@@ -1,7 +1,7 @@
 {% if app.userIsEmployee %}
     <div class="admin-panel" data-id="{{ product.id }}">
         <div class="actions">
-        {% if app.representative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
+        {% if app.employeeRepresentative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
             <a
                 href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}"
                 class="edit"
@@ -51,7 +51,7 @@
             {% endif %}
         </div>
         <div class="info-pane hidden">
-            {% if app.representative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
+            {% if app.employeeRepresentative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
                 <div class="supplier-remains loading competitors"></div>
             {% endif %}
             <div class="reserves loading competitors"></div>

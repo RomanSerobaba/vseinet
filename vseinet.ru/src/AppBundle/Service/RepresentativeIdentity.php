@@ -8,6 +8,36 @@ use AppBundle\Enum\ContactTypeCode;
 
 class RepresentativeIdentity extends ContainerAware
 {
+    public function getEmployeeRepresentative(): ?Representative
+    {
+        $em = $this->getDoctrine()->getManager();
+        $token = $this->get('security.token_storage')->getToken();
+        if (null !== $token) {
+            $user = $token->getUser();
+            if (is_object($user) && $user->isEmployee()) {
+                $session = $this->get('request_stack')->getMasterRequest()->getSession();
+                $representative = $session->get('employeeRepresentative');
+                if (null === $representative) {
+                    $representative = $em->createQuery(/* @lang DQL */'
+                        SELECT r
+                        FROM AppBundle:EmployeeToGeoRoom AS oetgr
+                        JOIN AppBundle:GeoRoom AS gr WITH gr.id = oetgr.geoRoomId
+                        JOIN AppBundle:Representative AS r WITH r.geoPointId = gr.geoPointId
+                        WHERE oetgr.employeeId = :userId AND oetgr.isMain = true
+                    ')
+                    ->setParameter('userId', $user->getId())
+                    ->setMaxResults(1)
+                    ->getSingleResult();
+                    $session->set('employeeRepresentative', $representative);
+                }
+
+                return $representative;
+            }
+        }
+
+        return null;
+    }
+
     public function getRepresentative(): Representative
     {
         $session = $this->get('request_stack')->getMasterRequest()->getSession();

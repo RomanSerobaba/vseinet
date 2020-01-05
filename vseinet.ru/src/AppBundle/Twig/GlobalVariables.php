@@ -60,6 +60,16 @@ class GlobalVariables extends BaseGlobalVariables
     }
 
     /**
+     * Return true if current user is programmer.
+     *
+     * @return bool
+     */
+    public function getEmployeeRepresentative()
+    {
+        return $this->container->get('representative.identity')->getEmployeeRepresentative();
+    }
+
+    /**
      * Returns geoCity.
      *
      * @return AppBundle\Entity\GeoCity
