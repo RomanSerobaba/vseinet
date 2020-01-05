@@ -374,12 +374,12 @@ class MainController extends Controller
 
     /**
      * @VIA\Get(
-     *     name="disclaimer",
-     *     path="/disclaimer/"
+     *     name="agreement",
+     *     path="/agreement/"
      * )
      */
-    public function disclaimerAction()
+    public function agreementAction()
     {
-        return $this->render('Main/disclaimer.html.twig');
+        return $this->render('Main/agreement.html.twig');
     }
 }
