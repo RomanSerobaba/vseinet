@@ -371,4 +371,15 @@ class MainController extends Controller
             'products' => $products,
         ]);
     }
+
+    /**
+     * @VIA\Get(
+     *     name="disclaimer",
+     *     path="/disclaimer/"
+     * )
+     */
+    public function disclaimerAction()
+    {
+        return $this->render('Main/disclaimer.html.twig');
+    }
 }
