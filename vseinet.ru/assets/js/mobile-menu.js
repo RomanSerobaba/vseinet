@@ -53,6 +53,6 @@ $(function(){
     });
 
     if ($(window).width() < 768){
-        $('#category .product .sale .cart-add').html('В корзину');
+        $('#category .product .sale .cart-add').html('Купить');
     };
 });
