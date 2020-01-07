@@ -40,8 +40,9 @@
             <meta itemprop="priceCurrency" content="RUB" />
             <meta
                 itemprop="availability"
-                content="{% if isAvailable %}in_stock{% elseif isOnDemand %}preorder{% else %}out_of_stock{% endif %}"
+                content="https://schema.org/{% if isAvailable %}InStock{% elseif isOnDemand %}PreOrder{% else %}OutOfStock{% endif %}"
             >
+            <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
         </strong>
     {% else %}
         <strong
