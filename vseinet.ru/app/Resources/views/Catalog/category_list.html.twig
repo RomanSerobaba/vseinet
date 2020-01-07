@@ -31,13 +31,13 @@
                     <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}" class="image">
                         <img src="{{ subcategory|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="" />
                     </a>
-                    <h4>
+                    <h2>
                         <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}">{{ subcategory.name }}</a>
                         <small>
                             {{ subcategory.countProducts|number_format }}
                             {{ subcategory.countProducts|declension('товар;товара;товаров') }}
                         </small>
-                    </h4>
+                    </h2>
                 </div>
             {% endfor %}
         </div>

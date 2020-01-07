@@ -111,6 +111,9 @@
     font-weight: bold;
     line-height: inherit;
 }
+#category .product .title H2 {
+    display: inline;
+}
 #category .product .title A B {
     background: #ffea00ab;
 }
