@@ -37,12 +37,14 @@
                 </a>
             {% endif %}
             <meta itemprop="price" content="{{ baseProduct.price|price_format({ ts: '' }) }}" />
+            <meta itemprop="priceValidUntil" content="{{ "tomorrow"|date("Y-m-d") }}" />
             <meta itemprop="priceCurrency" content="RUB" />
             <meta
                 itemprop="availability"
                 content="https://schema.org/{% if isAvailable %}InStock{% elseif isOnDemand %}PreOrder{% else %}OutOfStock{% endif %}"
             >
             <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
+            <meta itemprop="url" content="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}" />
         </strong>
     {% else %}
         <strong
@@ -63,12 +65,14 @@
             {% endif %}
             ???
             <meta itemprop="price" content="0" />
+            <meta itemprop="priceValidUntil" content="{{ "tomorrow"|date("Y-m-d") }}" />
             <meta itemprop="priceCurrency" content="RUB" />
             <meta
                 itemprop="availability"
                 content="https://schema.org/{% if isAvailable %}InStock{% elseif isOnDemand %}PreOrder{% else %}OutOfStock{% endif %}"
             >
             <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
+            <meta itemprop="url" content="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}" />
         </strong>
     {% endif %}
     {% else %}
@@ -78,12 +82,14 @@
             itemtype="http://schema.org/Offer"
         >
             <meta itemprop="price" content="0" />
+            <meta itemprop="priceValidUntil" content="{{ "tomorrow"|date("Y-m-d") }}" />
             <meta itemprop="priceCurrency" content="RUB" />
             <meta
                 itemprop="availability"
                 content="https://schema.org/OutOfStock"
             >
             <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
+            <meta itemprop="url" content="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}" />
         </span>
     {% endif %}
     <div
