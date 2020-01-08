@@ -24,7 +24,7 @@ class GetBlockRelatedQueryHandler extends MessageHandler
                 )
             FROM AppBundle:BaseProduct AS bp1
             INNER JOIN AppBundle:OrderItem AS oi WITH oi.baseProductId = bp1.id
-            INNER JOIN AppBundle:OrderDoc AS o WITH o.dId = oi.orderDid
+            INNER JOIN AppBundle:OrderDoc AS o WITH o.DId = oi.orderDid
             INNER JOIN AppBundle:OrderItem AS oi2 WITH oi.orderDid = oi2.orderDid
             INNER JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = oi2.baseProductId
             INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = bp2.canonicalId

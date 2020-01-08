@@ -27,6 +27,13 @@ class OrderDoc
     private $createdAt;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="order_type_code", type="string", length=30, nullable=true)
+     */
+    public $orderTypeCode;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="number", type="integer")
@@ -93,5 +100,29 @@ class OrderDoc
     public function getIsCancelRequested()
     {
         return $this->isCancelRequested;
+    }
+
+    /**
+     * Set orderTypeCode.
+     *
+     * @param string $orderTypeCode
+     *
+     * @return OrderDoc
+     */
+    public function setOrderTypeCode($orderTypeCode)
+    {
+        $this->orderTypeCode = $orderTypeCode;
+
+        return $this;
+    }
+
+    /**
+     * Get orderTypeCode.
+     *
+     * @return string
+     */
+    public function getOrderTypeCode()
+    {
+        return $this->orderTypeCode;
     }
 }
