@@ -4,6 +4,7 @@ namespace AppBundle\Bus\Main\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\OrderTypeCode;
+use AppBundle\Enum\ProductAvailabilityCode;
 
 class GetBlockRelatedQueryHandler extends MessageHandler
 {
@@ -33,12 +34,13 @@ class GetBlockRelatedQueryHandler extends MessageHandler
             INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.canonicalId
             INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
             INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
-            WHERE bp1.canonicalId = :id AND bp2.canonicalId != :id AND p0.geoCityId = 0 AND o.orderTypeCode IN (:orderTypeCodes)
+            WHERE bp1.canonicalId = :id AND bp2.canonicalId != :id AND p0.geoCityId = 0 AND o.orderTypeCode IN (:orderTypeCodes) AND p0.productAvailabilityCode > :productAvailabilityCode_OUT_OF_STOCK
             GROUP BY bp.id, c.id, p.price, p0.price, bpi.id
         ");
         $q->setParameter('id', $query->baseProductId);
         $q->setParameter('orderTypeCodes', [OrderTypeCode::SITE, OrderTypeCode::SHOP, OrderTypeCode::LEGAL, OrderTypeCode::REQUEST]);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
+        $q->setParameter('productAvailabilityCode_OUT_OF_STOCK', ProductAvailabilityCode::OUT_OF_STOCK);
         $q->setMaxResults($query->count);
         $products = $q->getResult('IndexByHydrator');
 
