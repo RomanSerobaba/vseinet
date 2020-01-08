@@ -114,6 +114,7 @@
             </div>
         </div>
     </div>
+    {{ render(controller('AppBundle:Main:getBlockRelated', { baseProductId: baseProduct.id })) }}
 {% endblock %}
 
 {% block javascripts %}

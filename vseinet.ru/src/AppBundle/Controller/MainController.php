@@ -373,6 +373,18 @@ class MainController extends Controller
     }
 
     /**
+     * @internal
+     */
+    public function getBlockRelatedAction(int $baseProductId)
+    {
+        $products = $this->get('query_bus')->handle(new Query\GetBlockRelatedQuery(['baseProductId' => $baseProductId, 'count' => 6]));
+
+        return $this->render('Main/block_related.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
+    /**
      * @VIA\Get(
      *     name="agreement",
      *     path="/agreement/"
