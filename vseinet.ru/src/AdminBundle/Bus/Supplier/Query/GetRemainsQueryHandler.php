@@ -9,6 +9,7 @@ use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
 use AppBundle\Enum\BaseProductHistoryObject;
 use AppBundle\Enum\GoodsConditionCode;
+use AppBundle\Enum\RepresentativeTypeCode;
 
 class GetRemainsQueryHandler extends MessageHandler
 {
@@ -36,12 +37,15 @@ class GetRemainsQueryHandler extends MessageHandler
             FROM base_product AS bp
             INNER JOIN goods_reserve_register_current AS grrc ON grrc.base_product_id = bp.id
             INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
-            WHERE bp.canonical_id = :base_product_id AND grrc.goods_condition_code = :goodsConditionCode_FREE
+            LEFT OUTER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
+            LEFT OUTER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
+            WHERE bp.canonical_id = :base_product_id AND grrc.goods_condition_code = :goodsConditionCode_FREE AND r.type != :representativeTypeCode_FRANCHISER
             GROUP BY bp.name
         ', new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
         $q->setParameter('goodsConditionCode_FREE', GoodsConditionCode::FREE);
+        $q->setParameter('representativeTypeCode_FRANCHISER', RepresentativeTypeCode::FRANCHISER);
         $remains = $q->getResult('DTOHydrator');
 
         $q = $em->createNativeQuery("
