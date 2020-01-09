@@ -8,15 +8,15 @@
 </div>
 
 <h1>{{ representative.geoPointName }}</h1>
-{# {% if representative.geoPointId == 341 %}
+{ {% if representative.geoPointId == 341 %}
 <h3 style="color:blue">ВНИМАНИЕ!</h3>
 <p style="color:blue"> Интернет-магазин Vseinet.ru доставляет Ваши заказы, а также приемку товара на сервисное обслуживание, по субботам с 11.30 до 13.00 около магазина (машина-газель Vseinet.ru).</p><br/>
-{% endif %} #}
+{% endif %} }
 <h3>Адрес</h3>
 <p>{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}</p><br/>
 <h3>Телефон</h3>
 <p>
-    {# {% if representative.geoPointId == 341 %}Курьер: (8412) 220-212, 8(927)378-1743<br/>{% endif %} #}
+    { {% if representative.geoPointId == 341 %}Курьер: (8412) 220-212, 8(927)378-1743<br/>{% endif %} }
     {% for phone in representative.phones %}
         {{ phone.value }}{% if not loop.last %},{% endif %}
     {% endfor %}
