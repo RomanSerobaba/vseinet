@@ -7,11 +7,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
-use AppBundle\Entity\Representative;
 use AppBundle\Enum\ProductPriceTypeCode;
 use AppBundle\Enum\RepresentativeTypeCode;
 use AppBundle\Enum\UserRole;
-use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ResetPriceCommandHandler extends MessageHandler
@@ -19,6 +17,9 @@ class ResetPriceCommandHandler extends MessageHandler
     public function handle(ResetPriceCommand $command)
     {
         $em = $this->getDoctrine()->getManager();
+        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->get('representative.identity')->getEmployeeRepresentative()->getType();
+        $franchiserRepresentative = $this->get('representative.identity')->getEmployeeRepresentative();
+
         $representative = $this->get('representative.identity')->getRepresentative();
         if (!$representative || RepresentativeTypeCode::FRANCHISER !== $representative->getType()) {
             $geoCityId = 0;
@@ -31,36 +32,38 @@ class ResetPriceCommandHandler extends MessageHandler
 
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => $geoCityId,]);
 
-        if ($product->getTemporaryPrice()) {
-            $type = ProductPriceTypeCode::TEMPORARY;
-            $product->setTemporaryPrice(null);
-        } elseif ($product->getUltimatePrice()) {
-            if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501])) {
-                throw new BadRequestHttpException(sprintf('У вас нет прав на сброс фиксированной цены, обратитесь к уполномоченному'));
+        if ($product) {
+            if ($product->getTemporaryPrice()) {
+                $type = ProductPriceTypeCode::TEMPORARY;
+                $product->setTemporaryPrice(null);
+            } elseif ($product->getUltimatePrice()) {
+                if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || !$this->getUser()->isRoleIn([UserRole::FRANCHISER]) || $franchiserRepresentative->getGeoCityId() !== $geoCityId)) {
+                    throw new BadRequestHttpException(sprintf('У вас нет прав на сброс фиксированной цены, обратитесь к уполномоченному'));
+                }
+                $type = ProductPriceTypeCode::ULTIMATE;
+                $product->setUltimatePrice(null);
+            } elseif ($product->getManualPrice()) {
+                if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || !$this->getUser()->isRoleIn([UserRole::FRANCHISER]) || $franchiserRepresentative->getGeoCityId() !== $geoCityId)) {
+                    throw new BadRequestHttpException(sprintf('У вас нет прав на сброс фиксированной цены, обратитесь к уполномоченному'));
+                }
+                $type = ProductPriceTypeCode::MANUAL;
+                $product->setManualPrice(null);
+            } else {
+                $product->getTemporaryPrice($product->getPrice());
+                $em->flush($product);
+                $product->getTemporaryPrice(null);
+                return;
             }
-            $type = ProductPriceTypeCode::ULTIMATE;
-            $product->setUltimatePrice(null);
-        } elseif ($product->getManualPrice()) {
-            if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501])) {
-                throw new BadRequestHttpException(sprintf('У вас нет прав на сброс фиксированной цены, обратитесь к уполномоченному'));
-            }
-            $type = ProductPriceTypeCode::MANUAL;
-            $product->setManualPrice(null);
-        } else {
-            $product->getTemporaryPrice($product->getPrice());
-            $em->flush($product);
-            $product->getTemporaryPrice(null);
-            return;
-        }
 
-        $log = new ProductPriceLog();
-        $log->setBaseProductId($baseProduct->getId());
-        $log->setGeoCityId($geoCityId);
-        $log->setPrice(null);
-        $log->setPriceTypeCode($type);
-        $log->setOperatedBy($this->getUser()->getId());
-        $log->setOperatedAt(new \DateTime());
-        $em->persist($log);
-        $em->flush($log);
+            $log = new ProductPriceLog();
+            $log->setBaseProductId($baseProduct->getId());
+            $log->setGeoCityId($geoCityId);
+            $log->setPrice(null);
+            $log->setPriceTypeCode($type);
+            $log->setOperatedBy($this->getUser()->getId());
+            $log->setOperatedAt(new \DateTime());
+            $em->persist($log);
+            $em->flush($log);
+        }
     }
 }
