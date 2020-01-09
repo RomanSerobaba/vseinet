@@ -23,6 +23,8 @@ class ResetPriceCommandHandler extends MessageHandler
         $representative = $this->get('representative.identity')->getRepresentative();
         if (!$representative || RepresentativeTypeCode::FRANCHISER !== $representative->getType()) {
             $geoCityId = 0;
+        } else {
+            $geoCityId = $representative->getGeoCityId();
         }
 
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);
