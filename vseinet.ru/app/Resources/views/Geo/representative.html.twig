@@ -16,10 +16,10 @@
 <p>{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}</p><br/>
 <h3>Телефон</h3>
 <p>
-    {% if representative.geoPointId == 341 %}Курьер: (8412) 220-212, 8(927)378-1743<br/>{% endif %}
-    {% for phone in representative.phones %}
+    {% if representative.geoPointId == 341 %}Курьер: (8412) 220-212, 8(927)378-1743<br/><br/>{% endif %}
+    {% if representative.geoPointId == 341 %}Магазин: {% endif %}{% for phone in representative.phones %}
         {{ phone.value }}{% if not loop.last %},{% endif %}
-    {% endfor %}
+    {% endfor %}{% if representative.geoPointId == 341 %} (консультация по товару или заказу){% endif %}
 </p>
 <br/>
 
