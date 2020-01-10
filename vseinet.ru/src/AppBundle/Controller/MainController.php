@@ -13,6 +13,7 @@ use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Competitor;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
+use AppBundle\Entity\CompetitorToGeoCity;
 use AppBundle\Entity\OrderDoc;
 use AppBundle\Entity\OrderItem;
 
@@ -68,7 +69,14 @@ class MainController extends Controller
             throw new NotFoundHttpException();
         }
         $command->baseProductId = $baseProduct->getId();
-        $competitors = $em->getRepository(Competitor::class)->findBy(['isActive' => true, 'channel' => 'site', 'parseStrategy' => 'product']);
+        $competitorsToGeoCities = $em->getRepository(CompetitorToGeoCity::class)->findBy(['geoCityId' => $this->getGeoCity()->getId()]);
+        $competitorsIds = [];
+        if ($competitorsToGeoCities) {
+            foreach ($competitorsToGeoCities as $competitorToGeoCity) {
+                $competitorsIds[] = $competitorToGeoCity->getCompetitorId();
+            }
+        }
+        $competitors = $em->getRepository(Competitor::class)->findBy(['isActive' => true, 'channel' => ['site', 'pricelist'], 'id' => $competitorsIds], ['name' => 'asc']);
 
         if ($request->isMethod('GET')) {
             $command->userData = $this->get('query_bus')->handle(new GetUserDataQuery());
