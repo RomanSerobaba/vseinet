@@ -47,12 +47,12 @@
 <div class="content">
     <p>
         {% for photo in representative.photos %}
-            {% if not loop.first and loop.index % 2 == 0 %}
-                </p><p>
-            {% endif %}
             <img src="{{ uploads_domain }}/contacts/{{ photo.url }}" alt="" />
             {% if loop.index % 2 == 1 %}
                 &nbsp;
+            {% endif %}
+            {% if not loop.first and loop.index % 2 == 0 %}
+                </p><p>
             {% endif %}
         {% endfor %}
     </p>
