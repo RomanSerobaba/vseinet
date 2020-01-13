@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Geo\Query;
 
@@ -16,17 +16,17 @@ class GetRepresentativeQueryHandler extends MessageHandler
         $q = $em->createQuery("
             SELECT
                 NEW AppBundle\Bus\Geo\Query\DTO\Representative (
-                    gp.id, 
+                    gp.id,
                     gp.name,
                     CONCAT(gc.name, ' ', gc.unit),
                     ga.address,
                     r.hasRetail
                 )
-            FROM AppBundle:Representative AS r 
-            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId 
+            FROM AppBundle:Representative AS r
+            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
             INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId
             LEFT OUTER JOIN AppBundle:GeoAddress AS ga WITH ga.id = gp.geoAddressId
-            WHERE r.geoPointId = :geoPointId AND r.isActive = true  
+            WHERE r.geoPointId = :geoPointId AND r.isActive = true
         ");
         $q->setParameter('geoPointId', $query->geoPointId);
         $representative = $q->getSingleResult();
@@ -37,16 +37,16 @@ class GetRepresentativeQueryHandler extends MessageHandler
         $representative->photos = $em->getRepository(RepresentativePhoto::class)->findBy([
             'representativeId' => $query->geoPointId,
         ], [
-            'sortOrder' => 'ASC', 
+            'sortOrder' => 'ASC',
         ]);
 
         $q = $em->createQuery("
-            SELECT 
-                c.value, 
+            SELECT
+                c.value,
                 CASE WHEN c.isMain = true THEN 1 ELSE 2 END HIDDEN ORD
-            FROM AppBundle:RepresentativePhone rp 
+            FROM AppBundle:RepresentativePhone rp
             INNER JOIN AppBundle:Contact c WITH c.id = rp.contactId
-            WHERE rp.representativeId = :representativeId AND c.contactTypeCode = :phone 
+            WHERE rp.representativeId = :representativeId AND c.contactTypeCode = :phone
             ORDER BY ORD
         ");
         $q->setParameter('representativeId', $query->geoPointId);
@@ -54,7 +54,7 @@ class GetRepresentativeQueryHandler extends MessageHandler
         $representative->phones = $q->getArrayResult();
 
         $q = $em->createQuery("
-            SELECT 
+            SELECT
                 rs.s1, rs.t1,
                 rs.s2, rs.t2,
                 rs.s3, rs.t3,
@@ -68,7 +68,7 @@ class GetRepresentativeQueryHandler extends MessageHandler
         $q->setParameter('representativeId', $query->geoPointId);
         $schedules = $q->getSingleResult();
 
-        $days = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']; 
+        $days = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
         $blocks = [];
         $period = 0;
         $current = '';

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Geo\Query\DTO;
 
@@ -48,10 +48,10 @@ class Representative
 
 
     public function __construct(
-        $geoPointId, 
+        $geoPointId,
         $geoPointName,
-        $geoCityName, 
-        $address, 
+        $geoCityName,
+        $address,
         $hasRetail
     ) {
         $this->geoPointId = $geoPointId;
