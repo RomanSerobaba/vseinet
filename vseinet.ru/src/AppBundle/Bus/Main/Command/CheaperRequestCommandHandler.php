@@ -45,14 +45,16 @@ class CheaperRequestCommandHandler extends MessageHandler
             }
             $urlFragments['host'] = $urlFragments['path'];
         }
+        $urlFragments['host'] = preg_replace('~^www\.~isu', '', $urlFragments['host']);
 
-        $competitors = $this->getDoctrine()->getManager()->getRepository(Competitor::class)->findBy(['isActive' => true, 'channel' => 'site', 'parseStrategy' => 'product']);
+        $competitors = $this->getDoctrine()->getManager()->getRepository(Competitor::class)->findBy(['isActive' => true, 'channel' => ['site', 'pricelist']]);
         foreach ($competitors as $competitor) {
             $competitorUrlFragments = parse_url($competitor->getLink());
             if (empty($competitorUrlFragments['host'])) {
                 continue;
             }
             $host = implode('.', array_slice(explode('.', $competitorUrlFragments['host']), -2, 2));
+
             if (strtolower($urlFragments['host']) == strtolower($host)) {
                 return true;
             }
