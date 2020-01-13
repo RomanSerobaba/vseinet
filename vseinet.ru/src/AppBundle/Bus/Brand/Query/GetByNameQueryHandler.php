@@ -26,6 +26,9 @@ class GetByNameQueryHandler extends MessageHandler
         $q->setParameter('name', $query->name);
         $q->setMaxResults(1);
         $brand = $q->getOneOrNullResult();
+        if (!$brand instanceof DTO\Brand) {
+            return null;
+        }
 
         if ($brand->isForbidden && !$this->getUserIsEmployee()) {
             throw new NotFoundHttpException();

@@ -72,7 +72,7 @@ class CatalogController extends Controller
         $em = $this->getDoctrine()->getManager();
         $needRedirect = false;
 
-        if ($brandName && 'Прочее' !== $brandName) {
+        if ($brandName) {
             $brand = $this->get('query_bus')->handle(new GetBrandBySefNameQuery(['sefName' => $brandName]));
             if (!$brand) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
@@ -108,17 +108,17 @@ class CatalogController extends Controller
             }
         }
 
-        if ($needRedirect) {
+        if ($needRedirect && $request->isMethod('GET')) {
             if ($category->getSefUrl()) {
                 if ($brandName) {
-                    return $this->redirectToRoute('catalog_category_sef_with_brand', $request->query->all() + ['slug' => $category->getSefUrl(), 'brandName' => $brand ? ($brand->sefName ? : $brand->name) : $brandName], 301);
+                    return $this->redirectToRoute('catalog_category_sef_with_brand', $request->query->all() + ['slug' => $category->getSefUrl(), 'brandName' => $brand ? ($brand->sefName ?: $brand->name) : $brandName], 301);
                 }
 
                 return $this->redirectToRoute('catalog_category_sef', $request->query->all() + ['slug' => $category->getSefUrl()], 301);
             }
 
             if ($brandName) {
-                return $this->redirectToRoute('catalog_category_with_brand', $request->query->all() + ['id' => $category->getId(), 'brandName' => $brand ? ($brand->sefName ? : $brand->name) : $brandName], 301);
+                return $this->redirectToRoute('catalog_category_with_brand', $request->query->all() + ['id' => $category->getId(), 'brandName' => $brand ? ($brand->sefName ?: $brand->name) : $brandName], 301);
             }
 
             return $this->redirectToRoute('catalog_category', $request->query->all() + ['id' => $category->getId()], 301);
@@ -127,7 +127,7 @@ class CatalogController extends Controller
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
-        $finder->setFilterData($request->query->all() + ($brand ? ['b' => $brand->id] : ('Прочее' === $brandName ? ['b' => 0] : [])), $category, $brand);
+        $finder->setFilterData($request->query->all() + ($brand ? ['b' => $brand->id] : []), $category, $brand);
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
@@ -137,7 +137,7 @@ class CatalogController extends Controller
             $finder->handleRequest($request->request->get('filter'));
 
             $filter = $finder->getFilter();
-            if (!empty($filter->brandIds) && 1 === count($filter->brandIds)) {
+            if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
                 $brandName = $brand ? ($brand->sefName ?? $brand->name) : $brandName;
                 $route = 'catalog_category'.($category->sefUrl ? '_sef' : '').'_with_brand';
