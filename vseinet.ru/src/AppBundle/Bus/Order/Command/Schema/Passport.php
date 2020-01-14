@@ -29,8 +29,8 @@ class Passport extends Message
 
     public function setIssuedAt($issuedAt)
     {
-        if (!empty($issuedAt) && is_string($issuedAt) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', $issuedAt)) {
-            $this->issuedAt = new \Datetime(date('Y-m-d', strtotime($issuedAt)));
+        if (!empty($issuedAt) && is_string($issuedAt) && preg_match('~^[0-3]\d{1}.[0-1]\d{1}.\d{4}$~isu', trim($issuedAt))) {
+            $this->issuedAt = new \Datetime(date('Y-m-d', strtotime(trim($issuedAt))));
         } elseif (empty($issuedAt)) {
             $this->issuedAt = null;
         } else {

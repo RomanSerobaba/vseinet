@@ -24,7 +24,7 @@ class SearchCityQueryHandler extends MessageHandler
             WHERE LOWER(gc.name) LIKE LOWER(:name) AND gc.id > 0
             ORDER BY ORD, gc.AOLEVEL, gc.name
         ");
-        $q->setParameter('name', $query->q.'%');
+        $q->setParameter('name', trim($query->q).'%');
         $q->setMaxResults($query->limit);
         $geoCities = $q->getResult();
 
