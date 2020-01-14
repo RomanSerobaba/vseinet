@@ -286,7 +286,7 @@ class CreateFormType extends AbstractType
             INNER JOIN AppBundle:RepresentativeToPaymentType AS r2pt WITH r2pt.paymentTypeCode = p.code
             WHERE p.isActive = TRUE AND r2pt.representativeId = :pointId
             ORDER BY p.code
-        ")->setParameters(['pointId' => $options['data']->geoPointId,]);
+        ")->setParameters(['pointId' => $options['data']->geoPointId ?? $this->container->getParameter('default.point.id'),]);
         $paymentTypes = $q->getResult('IndexByHydrator');
 
         if (!is_object($user) || !$user->isEmployee()) {
