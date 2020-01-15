@@ -28,6 +28,9 @@ class RepresentativeIdentity extends ContainerAware
                     ->setParameter('userId', $user->getId())
                     ->setMaxResults(1)
                     ->getOneOrNullResult();
+                    if (!$representative) {
+                        $representative = $em->getRepository(Representative::class)->find($this->container->getParameter('default.point.id'));
+                    }
                     $session->set('employeeRepresentative', $representative);
                 }
 
