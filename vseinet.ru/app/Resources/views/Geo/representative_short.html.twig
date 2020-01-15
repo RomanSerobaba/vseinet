@@ -1,5 +1,5 @@
 <div class="representative">
-    <img src="{{ uploads_domain }}/contacts/{{ representative.geoPointId }}_p.jpg" alt="" />
+    <img src="{{ uploads_domain }}/contacts/{{ representative.geoPointId }}_p.jpg" alt="Превью точки в г.{{ contact.geoCityName }}" />
     <h2>{{ representative.geoPointName }}</h2>
     <h4>{% if representative.hasRetail %}точка самовывоза{% else %}курьерская доставка{% endif %}</h4>
     <p class="address">

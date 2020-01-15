@@ -20,11 +20,10 @@
                 <div class="holder">
                     {% include 'top.html.twig' %}
                 </div>
+                {% if not app.user or not app.user.geoCityId %}
+                    {% include 'geo.html.twig' %}
+                {% endif %}
             </aside>
-            {% if not app.user or not app.user.geoCityId %}
-                {% include 'geo.html.twig' %}
-            </aside>
-            {% endif %}
             <header id="header" class="smpl-container">
                 <div class="holder">
                     {% include 'header.html.twig' %}

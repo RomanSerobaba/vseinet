@@ -14,7 +14,9 @@
                             <img
                                 class="photoBlock {% if loop.index > 1 %} lazyload{% endif %}"
                                 data-pos-x="0"
+                                src="{{ asset(imagedir ~ banner.imgBackgroundPhone) }}"
                                 data-src="{{ asset(imagedir ~ banner.imgBackgroundPhone) }}"
+                                alt="{{ banner.title }}"
                             />
                         </picture>
                     </a>
@@ -36,7 +38,7 @@
                         {% if banner.imgPc %}
                             <img
                                 src="{{ asset(imagedir ~ banner.imgPc) }}"
-                                alt=""
+                                alt="{{ banner.title }}"
                                 style="right:{{ banner.imgPosPcX }}px; top:{{ banner.imgPosPcY }}px;"
                             />
                         {% endif %}
@@ -57,7 +59,7 @@
                         {% if banner.imgTablet %}
                             <img
                                 src="{{ url(imagedir ~ banner.imgTablet) }}"
-                                alt=""
+                                alt="{{ banner.title }}"
                                 style="right: {{ banner.imgPosTabletX }}px; top: {{ banner.imgPosTabletY }}px;"
                             />
                         {% endif %}
@@ -78,7 +80,7 @@
                         {% if banner.imgPhone %}
                             <img
                                 src="{{ asset(imagedir ~ banner.imgPhone) }}"
-                                alt=""
+                                alt="{{ banner.title }}"
                                 style="right: {{ banner.imgPosPhoneX }}px; top: {{ banner.imgPosPhoneY }}px;"
                             />
                         {% endif %}
@@ -113,7 +115,8 @@
                             </div>
                             <div class="pricePhoto">
                                 <div class="innerRelative">
-                                    <img src="{{ banner.imgPc }}" alt="" />
+                                    <img src="{{ banner.imgPc }}"
+                                        alt="{{ banner.title }}" />
                                     <div class="item-price">{{ product.price }} ₽</div>
                                     <div class="sale-price">{{ product.salePrice }} ₽</div>
                                     <div class="result-sale">ЭКОНОМИЯ<br />{{ product.salePrice - product.price }} ₽</div>
@@ -146,7 +149,8 @@
                             </div>
                             <div class="pricePhoto">
                                 <div class="innerRelative">
-                                    <img src="{{ banner.imgTablet }}" alt="" />
+                                    <img src="{{ banner.imgTablet }}"
+                                        alt="{{ banner.title }}" />
                                     <div class="item-price">{{ product.price }} ₽</div>
                                     <div class="sale-price">{{ product.salePrice }} ₽</div>
                                     <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
@@ -179,7 +183,8 @@
                             </div>
                             <div class="pricePhoto">
                                 <div class="innerRelative">
-                                    <img src="{{ banner.imgPhone }}" alt="" />
+                                    <img src="{{ banner.imgPhone }}"
+                                        alt="{{ banner.title }}" />
                                     <div class="item-price">{{ product.price }} ₽</div>
                                     <div class="sale-price">{{ product.salePrice }} ₽</div>
                                     <div class="result-sale">ЭКОНОМИЯ<br>{{ product.salePrice - product.price }} ₽</div>
@@ -205,7 +210,8 @@
                                             <div class="item-product-element">
                                                 <div class="pricePhoto">
                                                     <div class="innerRelative">
-                                                        <img src="{{ product.photoPc }}" alt="" />
+                                                        <img src="{{ product.photoPc }}"
+                                                            alt="{{ banner.title }}" />
                                                         <div class="price">{{ product.titlePc }}</div>
                                                         <div class="item-price">{{ product.price }} ₽</div>
                                                         <div class="sale-price">{{ product.salePrice }} ₽</div>
@@ -232,7 +238,8 @@
                                             <div class="item-product-element">
                                                 <div class="pricePhoto">
                                                     <div class="innerRelative">
-                                                        <img src="{{ product.photoTablet }}" alt="" />
+                                                        <img src="{{ product.photoTablet }}"
+                                                            alt="{{ banner.title }}" />
                                                         <div class="price">{{ product.titleTablet }}</div>
                                                         <div class="item-price">{{ product.price }} ₽</div>
                                                         <div class="sale-price">{{ product.salePrice }} ₽</div>
@@ -259,7 +266,8 @@
                                             <div class="item-product-element">
                                                 <div class="pricePhoto">
                                                     <div class="innerRelative">
-                                                        <img src="{{ product.photoPhone }}" alt="" />
+                                                        <img src="{{ product.photoPhone }}"
+                                                            alt="{{ banner.title }}" />
                                                         <div class="price">{{ product.titlePhone }}</div>
                                                         <div class="item-price">{{ product.price }} ₽</div>
                                                         <div class="sale-price">{{ product.salePrice }} ₽</div>
