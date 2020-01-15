@@ -135,12 +135,12 @@ class CreateFormType extends AbstractType
             $parameters['ids'] = $points;
         } else {
             $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->container->get('representative.identity')->getEmployeeRepresentative()->getType();
-            $franchiserAgreementId = $this->container->get('representative.identity')->getEmployeeRepresentative()->getCompanyAgreementFranchiseId();
+            $companyId = $this->container->get('representative.identity')->getEmployeeRepresentative()->getCompanyId();
 
             if ($isFranchiser) {
-                $clause .= ' AND r.hasWarehouse = TRUE AND r.type = :representativeTypeCode_FRANCHISER AND r.companyAgreementFranchiseId = :companyAgreementFranchiseId';
+                $clause .= ' AND r.hasWarehouse = TRUE AND r.type = :representativeTypeCode_FRANCHISER AND r.companyId = :companyId';
                 $parameters['representativeTypeCode_FRANCHISER'] = RepresentativeTypeCode::FRANCHISER;
-                $parameters['companyAgreementFranchiseId'] = $franchiserAgreementId;
+                $parameters['companyId'] = $companyId;
 
             } else {
                 $clause .= ' AND r.hasWarehouse = TRUE AND r.type IN (:representativeTypeCode_OUR, :representativeTypeCode_PARTNER, :representativeTypeCode_TORG)';

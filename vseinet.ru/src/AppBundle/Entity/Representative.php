@@ -108,9 +108,9 @@ class Representative
     /**
      * @var int|null
      *
-     * @ORM\Column(name="company_agreement_franchise_id", type="integer", nullable=true)
+     * @ORM\Column(name="company_id", type="integer", nullable=true)
      */
-    private $companyAgreementFranchiseId;
+    private $companyId;
 
     /**
      * @var boolean
@@ -471,27 +471,27 @@ class Representative
     }
 
     /**
-     * Set companyAgreementFranchiseId.
+     * Set companyId.
      *
-     * @param int|null $companyAgreementFranchiseId
+     * @param int|null $companyId
      *
      * @return Representative
      */
-    public function setCompanyAgreementFranchiseId($companyAgreementFranchiseId = null)
+    public function setCompanyId($companyId = null)
     {
-        $this->companyAgreementFranchiseId = $companyAgreementFranchiseId;
+        $this->companyId = $companyId;
 
         return $this;
     }
 
     /**
-     * Get companyAgreementFranchiseId.
+     * Get companyId.
      *
      * @return int|null
      */
-    public function getCompanyAgreementFranchiseId()
+    public function getCompanyId()
     {
-        return $this->companyAgreementFranchiseId;
+        return $this->companyId;
     }
 
     /**

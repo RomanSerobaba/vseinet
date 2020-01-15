@@ -39,13 +39,13 @@ class ResetPriceCommandHandler extends MessageHandler
                 $type = ProductPriceTypeCode::TEMPORARY;
                 $product->setTemporaryPrice(null);
             } elseif ($product->getUltimatePrice()) {
-                if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || $franchiserRepresentative->getCompanyAgreementFranchiseId() !== $representative->getCompanyAgreementFranchiseId())) {
+                if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || $franchiserRepresentative->getCompanyId() !== $representative->getCompanyId())) {
                     throw new BadRequestHttpException(sprintf('У вас нет прав на сброс фиксированной цены, обратитесь к уполномоченному'));
                 }
                 $type = ProductPriceTypeCode::ULTIMATE;
                 $product->setUltimatePrice(null);
             } elseif ($product->getManualPrice()) {
-                if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || $franchiserRepresentative->getCompanyAgreementFranchiseId() !== $representative->getCompanyAgreementFranchiseId())) {
+                if (!$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || $franchiserRepresentative->getCompanyId() !== $representative->getCompanyId())) {
                     throw new BadRequestHttpException(sprintf('У вас нет прав на сброс фиксированной цены, обратитесь к уполномоченному'));
                 }
                 $type = ProductPriceTypeCode::MANUAL;

@@ -53,7 +53,7 @@ class SetPriceCommandHandler extends MessageHandler
             throw new BadRequestHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
         }
 
-        if (in_array($command->type, [ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::MANUAL]) && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || $franchiserRepresentative->getCompanyAgreementFranchiseId() !== $representative->getCompanyAgreementFranchiseId())) {
+        if (in_array($command->type, [ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::MANUAL]) && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && !in_array($this->getUser()->getId(), [4980, 1501]) && (!$isFranchiser || $franchiserRepresentative->getCompanyId() !== $representative->getCompanyId())) {
             throw new BadRequestHttpException(sprintf('У вас нет прав на установку фиксированной цены, обратитесь к уполномоченному'));
         }
 
