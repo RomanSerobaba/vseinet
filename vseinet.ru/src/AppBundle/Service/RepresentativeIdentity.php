@@ -27,7 +27,7 @@ class RepresentativeIdentity extends ContainerAware
                     ')
                     ->setParameter('userId', $user->getId())
                     ->setMaxResults(1)
-                    ->getSingleResult();
+                    ->getOneOrNullResult();
                     $session->set('employeeRepresentative', $representative);
                 }
 
