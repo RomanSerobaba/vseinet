@@ -273,7 +273,7 @@
         margin-right: 0;
         right: 10px;
     }   */
-    #category.search .breadcrumbs {
+    section.search .breadcrumbs {
         display: none;
     }
     #category #slideshow{
