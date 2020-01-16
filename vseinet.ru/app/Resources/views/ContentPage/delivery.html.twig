@@ -33,7 +33,7 @@
                 <td style="color:red;font-weight: bold">бесплатно</td>
             </tr>
         </table><br/>
-        <div id="delivery_explanation">Если вы хотите забрать товар из другого представительства, узнать стоимость доставки до него из основного представительства можно из нижеприведенной таблицы. Итоговая стоимость доставки до вашего представительства вычисляется как сумма доставок из первой и второй таблицы.</div><br/>
+        <div class="delivery_explanation">Если вы хотите забрать товар из другого представительства, узнать стоимость доставки до него из основного представительства можно из нижеприведенной таблицы. Итоговая стоимость доставки до вашего представительства вычисляется как сумма доставок из первой и второй таблицы.</div><br/>
         <table class="tariff">
             <tr>
                 <th>Представительство</th>
@@ -63,8 +63,8 @@
             </tr>
             {% endfor %}
         </table><br/>
-        <div id="delivery_explanation"><span style="color:red;font-weight: bold">*</span> &ndash; Кроме категорий, указанных в первой таблице.</div>
-        <div id="delivery_explanation">** &ndash; От стоимости товара. При стоимости товара свыше 10 000 руб, стоимость доставки составляет 1 000 руб.</div>
+        <div class="delivery_explanation"><span style="color:red;font-weight: bold">*</span> &ndash; Кроме категорий, указанных в первой таблице.</div>
+        <div class="delivery_explanation">** &ndash; От стоимости товара. При стоимости товара свыше 10 000 руб, стоимость доставки составляет 1 000 руб.</div>
     </div>
     <div class="content w60p r text_page">
         {{ page.content|raw }}
@@ -150,7 +150,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-<style type="text/css">
+<style>
     #delivery .tabs {
         margin-top: -45px;
         background-color: #ffffff;
