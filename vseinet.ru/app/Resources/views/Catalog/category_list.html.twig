@@ -29,7 +29,7 @@
             {% for subcategory in subcategories %}
                 <div class="category">
                     <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}" class="image">
-                        <img src="{{ subcategory|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="" />
+                        <img src="{{ subcategory|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="Превью категории {{ subcategory.name }}" />
                     </a>
                     <h2>
                         <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}">{{ subcategory.name }}</a>

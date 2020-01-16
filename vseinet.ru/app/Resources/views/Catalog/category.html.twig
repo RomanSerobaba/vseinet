@@ -5,7 +5,7 @@
 {% block pageDescription %}{% if category.pageDescription %}{{ category.pageDescription }}{% else %}В каталоге {{ category.name }} вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!{% endif %}{% endblock %}
 
 {% block content %}
-    <section id="category">
+    <section>
         <div class="breadcrumbs">
             <a href="{{ path('catalog') }}">Каталог</a>
             {% for link in category.breadcrumbs %}

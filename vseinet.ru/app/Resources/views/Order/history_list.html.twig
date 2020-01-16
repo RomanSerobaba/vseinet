@@ -111,7 +111,7 @@
                 {% endif %}
                 <div class="product{% if loop.index % 3 %} border{% endif %}">
                     <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}" class="image">
-                        <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="">
+                        <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="Фото товара {{ item.productName }}">
                     </a>
                     <p>
                         <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">
@@ -152,7 +152,7 @@
         </div>
     </div>
 </div>
-<style type="text/css">
+<style>
     .sber-unpaid {
         margin: 20px 0;
     }

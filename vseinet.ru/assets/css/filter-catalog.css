@@ -93,3 +93,12 @@
 #product-list.in {
     opacity: 0;
 }
+.search-box {
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+.search-box .txt {
+    font-size: 13px;
+    font-weight: 400;
+    height: 22px;
+}

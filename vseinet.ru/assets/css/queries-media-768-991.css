@@ -651,7 +651,7 @@
         background: none;
         box-shadow: none;
     }
-    #category.search .breadcrumbs {
+    section.search .breadcrumbs {
         display: none;
     }
     .filter .tab{

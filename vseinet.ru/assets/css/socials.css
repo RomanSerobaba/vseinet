@@ -114,3 +114,10 @@
                 .socials .oauth .odnoklassniki {
 			background: #f38c00 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAUCAMAAABs8jdaAAAAflBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///9C2eZrAAAAKXRSTlPwf5hbaa2Zs9YvUKss7x7XYusq3hf5h8xTCMFmhOZuugp0JsbdSP4PAKFOQcsAAACZSURBVHheNcZXksIwFAXRN0PO0eCEnCTr9v43iFVAf3Qdk+LDZ/4RJdP9RMofJ6/41Mh6yKr7OYO9nWEp6R8qc1BP/gNnAXxUPEGw4gWvRVphykdSYy6T8gtwmUl2dNciVKG9ut7WMNRdPYC3G79uthm+LPcm9U/g2UuTO1Jd8nyEA+Bk24lNbGDc2g6GVm0JOwtWRkmxOYQ3dcgcxjqn4SAAAAAASUVORK5CYII=) center no-repeat;
                 }
+.instawidget {
+    background-color: transparent;
+    border:none;
+    overflow:hidden;
+    width:350px;
+    height: 490px
+}

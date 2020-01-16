@@ -29,7 +29,7 @@
                     <label for="filter_detail_{{ detail.id }}_1" data-value="1">
                         <input
                             type="radio"
-                            id="filter_detail_{{ detail.id }}"
+                            id="filter_detail_{{ detail.id }}_1"
                             name="filter[detail][{{ detail.id}}]"
                             value="1"
                             {% if filter.details[detail.id] is defined and filter.details[detail.id] == 1 %}checked{% endif %}
@@ -39,7 +39,7 @@
                     <label for="filter_detail_{{ detail.id }}_0" data-value="0">
                         <input
                             type="radio"
-                            id="filter_detail_{{ detail.id }}"
+                            id="filter_detail_{{ detail.id }}_0"
                             name="filter[detail][{{ detail.id}}]"
                             value="0"
                             {% if filter.details[detail.id] is defined and filter.details[detail.id] == 0 %}checked{% endif %}
@@ -84,7 +84,7 @@
                             name="filter[detail][{{ detail.id }}][min]"
                             class="txt"
                             value="{% if filter.details[detail.id] is defined and filter.details[detail.id].min != detail.values.min %}{{filter.details[detail.id].min }}{% endif %}"
-                            pceholder="{{ detail.values.min }}"
+                            placeholder="{{ detail.values.min }}"
                         />
                         <label for="filter_detail_{{ detail.id }}_max">до</label>
                         <input

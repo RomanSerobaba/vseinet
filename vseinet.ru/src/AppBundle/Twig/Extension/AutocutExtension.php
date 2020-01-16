@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Twig\Extension;
 
@@ -20,14 +20,14 @@ class AutocutExtension extends AbstractExtension
     public function autocut($text, array $parameters = [])
     {
         $limit = $parameters['limit'] ?? 300;
-        $endChar = $parameters['end_char'] ?? '…';     
+        $endChar = $parameters['end_char'] ?? '…';
 
         $text = preg_replace_callback("#(</?[a-z]+(?:>|\s[^>]*>)|[^<]+)#mi", function($matches) use ($limit, $endChar) {
             static $length = null;
             if (null === $length) {
                 $length = $limit;
             }
-            
+
             if ('<' === $matches[0][0]) {
                 return $matches[0];
             }
@@ -37,10 +37,10 @@ class AutocutExtension extends AbstractExtension
 
             $result = limitChars($matches[0], $length, $endChar);
             $length -= mb_strlen($result) + 1;
-            
+
             return $result;
         }, preg_replace("/<[br|hr|img|iframe][^>]+\>/i", '', $text));
-        
+
         while (preg_match("#<([a-z]+)[^>]*>\s*</\\1>#mi", $text)) {
             $text = preg_replace("#<([a-z]+)[^>]*>\s*</\\1>#mi", '', $text);
         }
@@ -63,5 +63,5 @@ function limitChars($text, $limit, $endChar)
         return $endChar;
     }
 
-    return rtrim($matches[0]).(mb_strlen($matches[0]) == mb_strlen($text) ? '' : $endChar);            
+    return rtrim($matches[0]).(mb_strlen($matches[0]) == mb_strlen($text) ? '' : $endChar);
 }

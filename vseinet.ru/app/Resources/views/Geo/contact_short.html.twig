@@ -6,7 +6,7 @@
 >
     <div class="wrapper">
         <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}" class="image">
-            <img src="{{ uploads_domain }}/contacts/{{ contact.geoPointId }}_p.jpg" alt="" />
+            <img src="{{ uploads_domain }}/contacts/{{ contact.geoPointId }}_p.jpg" alt="Превью точки в г.{{ contact.geoCityName }}" />
         </a>
         <h4>
             <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}">
@@ -19,9 +19,9 @@
         </h4>
         {% if contact.schedule %}
             {% for schedule in contact.schedule.blocks %}
-                <time class="point_time{% if schedule.current %} point_time_current{% endif %}">
+                <div class="point_time{% if schedule.current %} point_time_current{% endif %}">
                     {{ schedule.period }} {{ schedule.time }}
-                </time>
+                </div>
             {% endfor %}
         {% endif %}
         {% if contact.phones is not empty %}
