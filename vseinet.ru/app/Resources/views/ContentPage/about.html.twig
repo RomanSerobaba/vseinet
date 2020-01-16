@@ -107,7 +107,7 @@
                 {% for vacancy in vacancies %}
                     <div class="content">
                         <h4><a href="{{  path('vacancy', { id: vacancy.id }) }}">{{ vacancy.position }}</a></h4>
-                        {{ vacancy.description|autocut|raw }}
+                        {{ vacancy.description|autocut({limit:350})|raw }}
                     </div>
                     {% if loop.index % 3 == 0 and not loop.last %}
                         </div><div class="row">
