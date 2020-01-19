@@ -29,7 +29,7 @@ class GetRepresentativeQueryHandler extends MessageHandler
             WHERE r.geoPointId = :geoPointId AND r.isActive = true
         ");
         $q->setParameter('geoPointId', $query->geoPointId);
-        $representative = $q->getSingleResult();
+        $representative = $q->getOneOrNullResult();
         if (!$representative instanceof DTO\Representative) {
             throw new NotFoundHttpException();
         }

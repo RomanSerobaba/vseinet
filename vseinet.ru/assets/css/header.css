@@ -1,6 +1,6 @@
 /* header
 -------------------------------------------------------------------*/
-#header {    
+#header {
   padding-top: 36px;
   position: relative;
   padding-bottom: 40px;
@@ -29,7 +29,7 @@
     width: 100%;
     z-index: 2;
 }
-#header .logo-area {    
+#header .logo-area {
     width: 16.6667%;
     padding-right: 15px;
     margin-right: -14px;
@@ -104,7 +104,7 @@
 }
 
 #header .location {
-    float: right;    
+    float: right;
     width: 25%;
     padding-left: 23px;
     margin-top: 0px;
@@ -139,8 +139,8 @@
     font-size: 13px;
 }
 
-#header .skypeicq {
-    text-align: right; 
+#header .skype {
+    text-align: right;
     margin: -7px 33px 0px 0px;
 }
 
