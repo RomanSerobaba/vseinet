@@ -25,7 +25,7 @@ class GetReservesQueryHandler extends MessageHandler
         }
 
         $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->get('representative.identity')->getEmployeeRepresentative()->getType();
-        $franchiserAgreementId = $this->get('representative.identity')->getEmployeeRepresentative()->getCompanyAgreementFranchiseId();
+        $companyId = $this->get('representative.identity')->getEmployeeRepresentative()->getCompanyId();
 
         $q = $em->createNativeQuery("
             SELECT
@@ -48,12 +48,12 @@ class GetReservesQueryHandler extends MessageHandler
             INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
             INNER JOIN geo_room AS gr ON gr.id = COALESCE(grrc.geo_room_id, grrc.destination_geo_room_id)
             INNER JOIN representative AS rep ON rep.geo_point_id = gr.geo_point_id
-            WHERE bp.canonical_id = :base_product_id" . ($isFranchiser ? " AND rep.type = :type_code_FRANCHISER AND rep.company_agreement_franchise_id = :companyAgreementFranchiseId" : " AND rep.type != :type_code_FRANCHISER") . "
+            WHERE bp.canonical_id = :base_product_id" . ($isFranchiser ? " AND rep.type = :type_code_FRANCHISER AND rep.company_id = :companyId" : " AND rep.type != :type_code_FRANCHISER") . "
         ", new DTORSM(DTO\Reserve::class, DTORSM::ARRAY_INDEX));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('type_code_FRANCHISER', RepresentativeTypeCode::FRANCHISER);
         if ($isFranchiser) {
-            $q->setParameter('companyAgreementFranchiseId', $franchiserAgreementId);
+            $q->setParameter('companyId', $companyId);
         }
         $reserves = $q->getResult('DTOHydrator');
 
@@ -232,7 +232,7 @@ class GetReservesQueryHandler extends MessageHandler
                     INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
                     INNER JOIN geo_room AS gr ON gr.id = COALESCE(grrc.geo_room_id, grrc.destination_geo_room_id)
                     INNER JOIN representative AS rep ON rep.geo_point_id = gr.geo_point_id
-                    WHERE bp.canonical_id = :base_product_id  AND rep.type = :type_code_FRANCHISER AND grrc.goods_condition_code = :goodsConditionCode_FREE AND rep.company_agreement_franchise_id = :companyAgreementFranchiseId
+                    WHERE bp.canonical_id = :base_product_id  AND rep.type = :type_code_FRANCHISER AND grrc.goods_condition_code = :goodsConditionCode_FREE AND rep.company_id = :companyId
                 ),
                 supplier_data AS (
                     SELECT
@@ -249,7 +249,7 @@ class GetReservesQueryHandler extends MessageHandler
                     when sd.purchase_price > 0 then sd.purchase_price else bp.supplier_price end * caf.partner_share / 100) / 100) * 100 as supplier_purchase_price,
                     case when p.product_availability_code = :productAvailabilityCode_ON_DEMAND then :productAvailabilityCode_AVAILABLE when p.product_availability_code = :productAvailabilityCode_IN_TRANSIT then :productAvailabilityCode_ON_DEMAND else p.product_availability_code end as supplier_product_avilability_code
                 from base_product AS bp
-                    INNER JOIN company_agreement_franchise AS caf ON caf.id = :companyAgreementFranchiseId
+                    INNER JOIN company_agreement_franchise AS caf ON caf.company_id = :companyId
                     inner join product as p on p.base_product_id = bp.id and p.geo_city_id = 0
                 left outer join supplier_data as sd on 1 = 1
                 left outer join remains_data as rd on 1 = 1
@@ -262,7 +262,7 @@ class GetReservesQueryHandler extends MessageHandler
             $q->setParameter('productAvailabilityCode_ON_DEMAND', ProductAvailabilityCode::ON_DEMAND);
             $q->setParameter('productAvailabilityCode_IN_TRANSIT', ProductAvailabilityCode::IN_TRANSIT);
             $q->setParameter('productAvailabilityCode_OUT_OF_STOCK', ProductAvailabilityCode::OUT_OF_STOCK);
-            $q->setParameter('companyAgreementFranchiseId', $franchiserAgreementId);
+            $q->setParameter('companyId', $companyId);
             $a = $q->getResult('ListAssocHydrator')[0];
             $reservesDTO->remainsPurchasePrice = $a['remains_purchase_price'];
             $reservesDTO->supplierProductAvailabilityCode = $a['supplier_product_avilability_code'];
