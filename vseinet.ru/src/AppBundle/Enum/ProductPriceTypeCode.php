@@ -17,7 +17,7 @@ class ProductPriceTypeCode
     public static function getChoices()
     {
         return [
-            self::TEMPORARY => 'Временная цена',
+            self::TEMPORARY => 'Временная цена (на 30 - 45 мин)',
             self::ULTIMATE => 'До последнего',
             self::MANUAL => 'Ручная цена',
         ];
