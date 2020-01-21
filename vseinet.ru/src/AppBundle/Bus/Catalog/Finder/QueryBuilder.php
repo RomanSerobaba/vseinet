@@ -595,7 +595,7 @@ class QueryBuilder extends ContainerAware
      *
      * @return string
      */
-    public function escape(string $string = null): string
+    public function escape(string $string = null): ?string
     {
         if (is_null($string)) {
             return null;
