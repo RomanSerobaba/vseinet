@@ -18,8 +18,8 @@ class SetPriceCommandHandler extends MessageHandler
     public function handle(SetPriceCommand $command)
     {
         $em = $this->getDoctrine()->getManager();
-        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->get('representative.identity')->getEmployeeRepresentative()->getType();
         $franchiserRepresentative = $this->get('representative.identity')->getEmployeeRepresentative();
+        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $franchiserRepresentative->getType();
 
         $representative = $this->get('representative.identity')->getRepresentative();
         if (!$representative || RepresentativeTypeCode::FRANCHISER !== $representative->getType()) {

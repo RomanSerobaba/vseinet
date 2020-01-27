@@ -87,12 +87,7 @@
                 <tr>
                     <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
                     <td></td>
-                    {if Model::factory('User')->isRole('USER_FRANCHISER')}
-                        <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}"></td>
-                        <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $position.client_price|default:0!=0}{$change.amount|price_format} <span class="RUR">Р</span>{if $position.status_code!='IS_CANCELED'}{assign var=amount value=$amount+$change.amount}{/if}{/if}</td>
-                    {else}
-                        <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if !Model::factory('User')->isRole('USER_WHOLESALER')}{$change.amount|price_format} <span class="RUR">Р</span>{/if}</td>
-                    {/if}
+                    <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if !Model::factory('User')->isRole('USER_WHOLESALER')}{$change.amount|price_format} <span class="RUR">Р</span>{/if}</td>
                     <td class="status"></td>
                 </tr>
             {/foreach}
@@ -106,14 +101,4 @@
         </td>
         <td class="price" style="font-size: 14px;white-space: nowrap"></td>
     </tr>
-    {#if order.notice && Model::factory('User')->isRole('USER_FRANCHISER')}<tr><td>
-            <ul class="tabs r" style="float:left;background-color: #ffd589">
-                <li>Комментарии к заказу:</li>
-            </ul>
-            <br/>
-            {foreach from=$order.notice key=noticeKey item=notice}
-                {assign var=noticeInfo value=explode('_',$noticeKey)}
-                <p style="margin-left:200px"><span style="font-weight: bold">{$noticeInfo[0]|date_format:'%d %b, %Y'}:</span> {$notice}</p>
-            {/foreach}
-    </td></tr>{/if#}
 </tbody>

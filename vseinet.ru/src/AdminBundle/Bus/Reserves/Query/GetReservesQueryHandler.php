@@ -48,7 +48,7 @@ class GetReservesQueryHandler extends MessageHandler
             INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
             INNER JOIN geo_room AS gr ON gr.id = COALESCE(grrc.geo_room_id, grrc.destination_geo_room_id)
             INNER JOIN representative AS rep ON rep.geo_point_id = gr.geo_point_id
-            WHERE bp.canonical_id = :base_product_id" . ($isFranchiser ? " AND rep.type = :type_code_FRANCHISER AND rep.company_id = :companyId" : " AND rep.type != :type_code_FRANCHISER") . "
+            WHERE bp.canonical_id = :base_product_id" . ($isFranchiser ? " AND rep.type = :type_code_FRANCHISER AND rep.company_id = :companyId" : "") . "
         ", new DTORSM(DTO\Reserve::class, DTORSM::ARRAY_INDEX));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('type_code_FRANCHISER', RepresentativeTypeCode::FRANCHISER);
