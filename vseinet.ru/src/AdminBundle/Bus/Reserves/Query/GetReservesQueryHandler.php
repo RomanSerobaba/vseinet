@@ -233,27 +233,17 @@ class GetReservesQueryHandler extends MessageHandler
                     INNER JOIN geo_room AS gr ON gr.id = COALESCE(grrc.geo_room_id, grrc.destination_geo_room_id)
                     INNER JOIN representative AS rep ON rep.geo_point_id = gr.geo_point_id
                     WHERE bp.canonical_id = :base_product_id  AND rep.type = :type_code_FRANCHISER AND grrc.goods_condition_code = :goodsConditionCode_FREE AND rep.company_id = :companyId
-                ),
-                supplier_data AS (
-                    SELECT
-                            SUM((si.purchase_price - si.bonus_amount) * grrc.delta) / SUM (grrc.delta) AS purchase_price
-                    FROM goods_reserve_register_current AS grrc
-                    INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
-                    INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
-                    INNER JOIN geo_room AS gr ON gr.id = COALESCE(grrc.geo_room_id, grrc.destination_geo_room_id)
-                    INNER JOIN representative AS rep ON rep.geo_point_id = gr.geo_point_id
-                    WHERE bp.canonical_id = :base_product_id  AND rep.type != :type_code_FRANCHISER AND grrc.goods_condition_code = :goodsConditionCode_FREE
                 )
                 select rd.purchase_price as remains_purchase_price,
-                    ceil((p.price * (100 - caf.partner_share) / 100 +  case when sd.purchase_price > 0 and bp.supplier_availability_code > :productAvailabilityCode_OUT_OF_STOCK then greatest(sd.purchase_price, bp.supplier_price)
-                    when sd.purchase_price > 0 then sd.purchase_price else bp.supplier_price end * caf.partner_share / 100) / 100) * 100 as supplier_purchase_price,
-                    case when p.product_availability_code = :productAvailabilityCode_ON_DEMAND then :productAvailabilityCode_AVAILABLE when p.product_availability_code = :productAvailabilityCode_IN_TRANSIT then :productAvailabilityCode_ON_DEMAND else p.product_availability_code end as supplier_product_avilability_code
+                    ceil(bp.pricelist_supplier_price * (1 + coalesce(wc2s.trade_margin, wc.default_margin) / 100) / 100) * 100 as supplier_purchase_price,
+                    bp.supplier_availability_code as supplier_product_availability_code
                 from base_product AS bp
-                    INNER JOIN company_agreement_franchise AS caf ON caf.company_id = :companyId
+                    inner join company_to_financial_counteragent as c2fc on c2fc.company_id = :companyId
+                    INNER JOIN wholesale_contract AS wc ON wc.financial_counteragent_id = c2fc.financial_counteragent_id
+                    left outer join wholesale_contract_to_supplier as wc2s on wc2s.wholesale_contract_id = wc.id and wc2s.supplier_id = bp.supplier_id
                     inner join product as p on p.base_product_id = bp.id and p.geo_city_id = 0
-                left outer join supplier_data as sd on 1 = 1
-                left outer join remains_data as rd on 1 = 1
-                where bp.id = :base_product_id
+                    left outer join remains_data as rd on 1 = 1
+                where bp.id = :base_product_id and wc.terminated_at is null
             ", new ResultSetMapping());
             $q->setParameter('base_product_id', $product->getId());
             $q->setParameter('type_code_FRANCHISER', RepresentativeTypeCode::FRANCHISER);
@@ -265,7 +255,7 @@ class GetReservesQueryHandler extends MessageHandler
             $q->setParameter('companyId', $companyId);
             $a = $q->getResult('ListAssocHydrator')[0];
             $reservesDTO->remainsPurchasePrice = $a['remains_purchase_price'];
-            $reservesDTO->supplierProductAvailabilityCode = $a['supplier_product_avilability_code'];
+            $reservesDTO->supplierProductAvailabilityCode = $a['supplier_product_availability_code'];
             $reservesDTO->supplierPurchasePrice = $a['supplier_purchase_price'];
         }
 
