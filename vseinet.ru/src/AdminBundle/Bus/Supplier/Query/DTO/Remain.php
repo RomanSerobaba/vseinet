@@ -45,6 +45,11 @@ class Remain
     /**
      * @Assert\Type(type="integer")
      */
+    public $marginBasePrice;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $initialPrice;
 
     /**

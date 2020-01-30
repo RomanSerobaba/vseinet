@@ -27,7 +27,7 @@
             <a href="{{ path('admin_supplier_set_not_available') }}" class="supplier-set-not-available" data-id="{{ remain.id }}" title="Нет в наличии"></a>
         {% endif %}
         <span>{{ remain.name }}</span>
-        <b title='конечная закупка, с учетом всех бонусов и доставки' style="text-decoration:underline">{{ remain.price|price_format({ decimals: 2 }) }}</b>{% if remain.initialPrice %} <span title='закупка, от которой считается ценник' style='color: darkgoldenrod'>[{{ remain.initialPrice|price_format({ decimals: 2 }) }}]</span>{% endif %}
+        <b title='конечная закупка, с учетом всех бонусов и доставки' style="text-decoration:underline">{{ remain.price|price_format({ decimals: 2 }) }}</b>{% if remain.marginBasePrice %} <span title='закупка, от которой считается ценник' style='color: darkgreen'>[{{ remain.marginBasePrice|price_format({ decimals: 2 }) }}]</span>{% endif %}{% if remain.initialPrice %} <span title='цена по прайсу' style='color: darkgoldenrod'>[{{ remain.initialPrice|price_format({ decimals: 2 }) }}]</span>{% endif %}
         {% if remain.article is not null %}
             <span style="color:BlueViolet;font-weight:bold">Артикул:</span> <span>{{ remain.article }}</span>
         {% endif %}
