@@ -71,6 +71,7 @@ class GetRemainsQueryHandler extends MessageHandler
                 sp.name,
                 sp.product_availability_code,
                 sp.price,
+                sp.initial_price,
                 sp.updated_at AS price_time,
                 ti.transfered_by,
                 ti.transfered_at,

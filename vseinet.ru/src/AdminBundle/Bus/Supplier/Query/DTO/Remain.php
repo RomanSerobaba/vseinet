@@ -43,6 +43,11 @@ class Remain
     public $price;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $initialPrice;
+
+    /**
      * @Assert\Type(type="datetime")
      */
     public $priceTime;
