@@ -102,7 +102,7 @@ class GetQueryHandler extends MessageHandler
                             FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
                             JOIN AppBundle:GeoRoom AS gr WITH gr.id = grrc.geoRoomId
                             JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
-                            WHERE bp2.canonicalId = bp.canonicalId AND gr.geoPointId = :geoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
+                            WHERE bp2.canonicalId = bp.canonicalId AND gr.geoPointId = :defaultGeoPointId AND grrc.goodsConditionCode = :goodsConditionCode_FREE AND grrc.goodsPalletId IS NULL AND grrc.orderItemId IS NULL
                         ),
                         (
                             SELECT
@@ -124,6 +124,7 @@ class GetQueryHandler extends MessageHandler
                 'userId' => $user->getId(),
                 'geoCityId' => $geoCityId,
                 'geoPointId' => $geoPointId,
+                'defaultGeoPointId' => $user->defaultGeoPointId ?? null,
                 'stroikaCategoriesIds' => $stroikaCategoriesIds,
                 'goodsConditionCode_FREE' => GoodsConditionCode::FREE,
             ]);
