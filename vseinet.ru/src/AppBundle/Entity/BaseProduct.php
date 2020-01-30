@@ -106,6 +106,13 @@ class BaseProduct
     private $supplierPrice;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="pricelist_supplier_price", type="integer")
+     */
+    public $pricelistSupplierPrice;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="is_hidden", type="boolean")
@@ -443,6 +450,30 @@ class BaseProduct
     public function getSupplierPrice()
     {
         return $this->supplierPrice;
+    }
+
+    /**
+     * Set pricelistSupplierPrice.
+     *
+     * @param int $pricelistSupplierPrice
+     *
+     * @return BaseProduct
+     */
+    public function setPricelistSupplierPrice($pricelistSupplierPrice)
+    {
+        $this->pricelistSupplierPrice = $pricelistSupplierPrice;
+
+        return $this;
+    }
+
+    /**
+     * Get pricelistSupplierPrice.
+     *
+     * @return int
+     */
+    public function getPricelistSupplierPrice()
+    {
+        return $this->pricelistSupplierPrice;
     }
 
     /**

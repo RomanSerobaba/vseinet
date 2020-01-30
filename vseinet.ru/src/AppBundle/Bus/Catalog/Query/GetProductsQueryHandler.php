@@ -31,7 +31,7 @@ class GetProductsQueryHandler extends MessageHandler
                 b.updated_at,
                 ppb.quantity AS pricetag_quantity,
                 COALESCE((
-                    SELECT ROUND(SUM(grrc.delta * (si.purchase_price - si.bonus_amount)) / SUM(grrc.delta))
+                    SELECT ROUND(SUM(grrc.delta * (si.purchase_price - si.bonus_amount + si.charges)) / SUM(grrc.delta))
                     FROM goods_reserve_register_current AS grrc
                     INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
                     WHERE grrc.base_product_id = b.id AND grrc.goods_condition_code = :goodsConditionCode_FREE
