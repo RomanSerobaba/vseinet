@@ -57,6 +57,6 @@ class GetInfoQueryHandler extends MessageHandler
             }
         }
 
-        return new DTO\Info(...$products);
+        return new DTO\Info($products);
     }
 }
