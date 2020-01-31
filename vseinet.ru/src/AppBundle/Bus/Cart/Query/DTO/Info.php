@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Cart\Query\DTO;
 
@@ -25,7 +25,7 @@ class Info
     public $products;
 
 
-    public function __construct(ProductInfo ...$products)
+    public function __construct(iterable ...$products)
     {
         foreach ($products as $product) {
             $this->total += $product->quantity;
