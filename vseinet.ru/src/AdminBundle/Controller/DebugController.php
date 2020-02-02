@@ -48,6 +48,6 @@ class DebugController extends Controller
             $session->set('profiler.enabled', true);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('index');
     }
 }

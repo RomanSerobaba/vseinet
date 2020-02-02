@@ -46,6 +46,6 @@ class MainController extends Controller
             (new UserProvider($this->getDoctrine()->getManager(), $this->container))->refreshUser($user);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('index');
     }
 }

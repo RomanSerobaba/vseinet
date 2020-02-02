@@ -57,7 +57,7 @@ class FavoriteController extends Controller
             ]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('favorite');
     }
 
     /**
@@ -82,7 +82,7 @@ class FavoriteController extends Controller
             ]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('favorite');
     }
 
     /**
@@ -99,7 +99,7 @@ class FavoriteController extends Controller
             return $this->json([]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('favorite');
     }
 
     /**
@@ -127,7 +127,7 @@ class FavoriteController extends Controller
             ]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('favorite');
     }
 
     /**

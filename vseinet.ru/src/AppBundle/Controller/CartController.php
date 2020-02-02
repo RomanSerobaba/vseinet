@@ -85,7 +85,7 @@ class CartController extends Controller
             return $this->redirectToRoute('cart');
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('cart');
     }
 
     /**
@@ -110,7 +110,7 @@ class CartController extends Controller
             ]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('cart');
     }
 
     /**
@@ -177,7 +177,7 @@ class CartController extends Controller
             ]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('cart');
     }
 
     /**
@@ -193,7 +193,7 @@ class CartController extends Controller
             return $this->json([]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('cart');
     }
 
     /**
@@ -221,7 +221,7 @@ class CartController extends Controller
             ]);
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return !empty($request->headers->get('referer')) ? $this->redirect($request->headers->get('referer')) : $this->redirectToRoute('cart');
     }
 
     /**
