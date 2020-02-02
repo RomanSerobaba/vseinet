@@ -60,6 +60,13 @@ class SupplyItem
     /**
      * @var int
      *
+     * @ORM\Column(name="extra_discount_amount", type="integer", options={"default": 0})
+     */
+    public $extraDiscountAmount;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="charges", type="integer", options={"default": 0})
      */
     public $charges;
@@ -168,6 +175,30 @@ class SupplyItem
     public function getBonusAmount()
     {
         return $this->bonusAmount;
+    }
+
+    /**
+     * Set extraDiscountAmount;.
+     *
+     * @param int $extraDiscountAmount
+     *
+     * @return SupplyItem
+     */
+    public function setExtraDiscountAmount($extraDiscountAmount)
+    {
+        $this->extraDiscountAmount = $extraDiscountAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get extraDiscountAmount.
+     *
+     * @return int
+     */
+    public function getExtraDiscountAmount()
+    {
+        return $this->extraDiscountAmount;
     }
 
     /**

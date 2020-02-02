@@ -39,7 +39,7 @@ class GetQueryHandler extends MessageHandler
                     bp.id,
                     ppb.quantity,
                     COALESCE(FIRST(
-                        SELECT ROUND(SUM(grrc.delta * (si.purchasePrice - si.bonusAmount + si.charges)) / SUM(grrc.delta))
+                        SELECT ROUND(SUM(grrc.delta * (si.purchasePrice - si.bonusAmount - si.extraDiscountAmount + si.charges)) / SUM(grrc.delta))
                         FROM AppBundle:GoodsReserveRegisterCurrent AS grrc
                         JOIN AppBundle:SupplyItem AS si WITH si.id = grrc.supplyItemId
                         JOIN AppBundle:BaseProduct AS bp2 WITH bp2.id = grrc.baseProductId
