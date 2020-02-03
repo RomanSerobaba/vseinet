@@ -35,11 +35,12 @@ class GetRemainsQueryHandler extends MessageHandler
                 NULL AS transfered_by,
                 NULL AS transfered_at
             FROM base_product AS bp
-            INNER JOIN goods_reserve_register_current AS grrc ON grrc.base_product_id = bp.id
+            INNER JOIN base_product AS bp2 ON bp.id = bp2.canonical_id
+            INNER JOIN goods_reserve_register_current AS grrc ON grrc.base_product_id = bp2.id
             INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
             LEFT OUTER JOIN geo_room AS gr ON gr.id = grrc.geo_room_id
             LEFT OUTER JOIN representative AS r ON r.geo_point_id = gr.geo_point_id
-            WHERE bp.canonical_id = :base_product_id AND grrc.goods_condition_code = :goodsConditionCode_FREE AND r.type != :representativeTypeCode_FRANCHISER
+            WHERE bp.id = :base_product_id AND grrc.goods_condition_code = :goodsConditionCode_FREE AND r.type != :representativeTypeCode_FRANCHISER
             GROUP BY bp.name
         ', new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
