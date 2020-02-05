@@ -226,7 +226,7 @@ class GetReservesQueryHandler extends MessageHandler
             $q = $em->createNativeQuery("
                 with remains_data AS (
                     SELECT
-                            SUM((si.purchase_price - si.bonus_amount - si.discount_amount + si.charges) * grrc.delta) / SUM (grrc.delta) AS purchase_price
+                            SUM((si.purchase_price - si.bonus_amount - si.extra_discount_amount + si.charges) * grrc.delta) / SUM (grrc.delta) AS purchase_price
                     FROM goods_reserve_register_current AS grrc
                     INNER JOIN supply_item AS si ON si.id = grrc.supply_item_id
                     INNER JOIN base_product AS bp ON bp.id = grrc.base_product_id
