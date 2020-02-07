@@ -385,6 +385,16 @@ class User implements UserInterface
      *
      * @return bool
      */
+    public function isWholesaler()
+    {
+        return $this->isRole(UserRole::WHOLESALER);
+    }
+
+    /**
+     * Check is contenter.
+     *
+     * @return bool
+     */
     public function isContenter()
     {
         return $this->isRole(UserRole::CONTENTER);

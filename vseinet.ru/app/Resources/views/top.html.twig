@@ -30,6 +30,14 @@
         >
             ЛК сотрудника
         </a>
+    {% elseif app.userIsWholesaler %}
+        <a
+            href="{{ path('authority', { targetUrl: '/admin/catalog' }) }}"
+            class="employee-catalog"
+            title="Оптовый каталог"
+        >
+            Оптовый каталог
+        </a>
     {% endif %}
 </nav>
 

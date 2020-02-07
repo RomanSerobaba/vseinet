@@ -45,6 +45,21 @@ class GlobalVariables extends BaseGlobalVariables
     }
 
     /**
+     * Return true if current user is employee.
+     *
+     * @return bool
+     */
+    public function getUserIsWholesaler()
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return false;
+        }
+
+        return $user->isWholesaler();
+    }
+
+    /**
      * Return true if current user is programmer.
      *
      * @return bool

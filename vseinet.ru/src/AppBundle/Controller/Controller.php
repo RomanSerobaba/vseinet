@@ -67,4 +67,14 @@ class Controller extends BaseController
 
         return $user->isEmployee();
     }
+
+    public function getUserIsWholesaler()
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return false;
+        }
+
+        return $user->isWholesaler();
+    }
 }
