@@ -29,8 +29,8 @@ class GetRemainsQueryHandler extends MessageHandler
                 NULL AS article,
                 NULL AS code,
                 bp.name,
-                :available::product_availability_code AS product_availability_code,
-                ROUND(SUM(grrc.delta * (si.purchase_price - si.bonus_amount)) / SUM(grrc.delta)) AS price,
+                :productAvailabilityCode_AVAILABLE::product_availability_code AS product_availability_code,
+                ROUND(SUM(grrc.delta * (si.purchase_price - si.bonus_amount - si.extra_discount_amount + si.charges)) / SUM(grrc.delta)) AS price,
                 NULL AS price_time,
                 NULL AS transfered_by,
                 NULL AS transfered_at
@@ -44,7 +44,7 @@ class GetRemainsQueryHandler extends MessageHandler
             GROUP BY bp.name
         ', new DTORSM(DTO\Remain::class));
         $q->setParameter('base_product_id', $product->getId());
-        $q->setParameter('available', ProductAvailabilityCode::AVAILABLE);
+        $q->setParameter('productAvailabilityCode_AVAILABLE', ProductAvailabilityCode::AVAILABLE);
         $q->setParameter('goodsConditionCode_FREE', GoodsConditionCode::FREE);
         $q->setParameter('representativeTypeCode_FRANCHISER', RepresentativeTypeCode::FRANCHISER);
         $remains = $q->getResult('DTOHydrator');
