@@ -24,7 +24,7 @@
                                     {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock">Есть в наличии
                                     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available">Нет в продаже
                                     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order">Ожидается
-                                    {% else %} on-order">На заказ, доставка {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
+                                    {% else %} on-order">Доставим {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
                                     {% endif %}
                                 </span>
                             </p>
