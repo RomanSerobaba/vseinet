@@ -236,7 +236,8 @@ class GetReservesQueryHandler extends MessageHandler
                 )
                 select rd.purchase_price as remains_purchase_price,
                     ceil(bp.pricelist_supplier_price * (1 + coalesce(wc2s.trade_margin, wc.default_margin) / 100) / 100) * 100 as supplier_purchase_price,
-                    bp.supplier_availability_code as supplier_product_availability_code
+                    bp.supplier_availability_code as supplier_product_availability_code,
+                    (select price from product where product_availability_code > :productAvailabilityCode_OUT_OF_STOCK and base_product_id = bp.id and geo_city_id = 0) as site_price
                 from base_product AS bp
                     inner join company_to_financial_counteragent as c2fc on c2fc.company_id = :companyId
                     INNER JOIN wholesale_contract AS wc ON wc.financial_counteragent_id = c2fc.financial_counteragent_id
@@ -256,7 +257,7 @@ class GetReservesQueryHandler extends MessageHandler
             $a = $q->getResult('ListAssocHydrator')[0];
             $reservesDTO->remainsPurchasePrice = $a['remains_purchase_price'];
             $reservesDTO->supplierProductAvailabilityCode = $a['supplier_product_availability_code'];
-            $reservesDTO->supplierPurchasePrice = $a['supplier_purchase_price'];
+            $reservesDTO->supplierPurchasePrice = $a['supplier_purchase_price'] > $a['site_price'] ? $a['site_price'] : $a['supplier_purchase_price'];
         }
 
         return $reservesDTO;

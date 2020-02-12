@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductPriceLog;
+use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Enum\ProductPriceTypeCode;
 use AppBundle\Enum\RepresentativeTypeCode;
 use AppBundle\Enum\UserRole;
@@ -42,9 +43,13 @@ class SetPriceCommandHandler extends MessageHandler
         $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => $geoCityId,]);
 
         if (!$product) {
+            $product0 = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => 0,]);
             $product = new Product();
             $product->setBaseProductId($command->id);
             $product->setGeoCityId($geoCityId);
+            $product->setProductAvailabilityCode($product0->getProductAvailabilityCode());
+            $product->setPrice($product0->getPrice());
+            $product->setPriceTypeCode($product0->getPriceTypeCode());
             $em->persist($product);
             $em->flush();
         }
