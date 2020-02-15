@@ -24,6 +24,13 @@ class BaseProduct
     /**
      * @var string
      *
+     * @ORM\Column(name="state", type="string")
+     */
+    private $state;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="name", type="string")
      */
     private $name;
@@ -186,6 +193,30 @@ class BaseProduct
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set state.
+     *
+     * @param string $state
+     *
+     * @return BaseProduct
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state.
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 
     /**
