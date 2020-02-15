@@ -40,7 +40,7 @@ class GetBlockRelatedQueryHandler extends MessageHandler
             INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.canonicalId
             INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId
             WHERE bp1.canonicalId = :id AND bp2.canonicalId != :id AND p0.geoCityId = 0 AND o.orderTypeCode IN (:orderTypeCodes) AND p0.productAvailabilityCode > :productAvailabilityCode_OUT_OF_STOCK
-            GROUP BY bp.id, c.id, p.price, p0.price
+            GROUP BY bp.id, bp.state, c.id, p.price, p0.price
             ORDER BY ORD2 DESC, ORD DESC
         ");
         $q->setParameter('id', $query->baseProductId);

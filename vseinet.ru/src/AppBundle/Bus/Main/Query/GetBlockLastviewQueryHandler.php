@@ -48,7 +48,7 @@ class GetBlockLastviewQueryHandler extends MessageHandler
             INNER JOIN AppBundle:CategoryPath AS cp WITH cp.id = bp.categoryId
             INNER JOIN AppBundle:Category AS c WITH c.id = cp.id
             WHERE bp.id IN (:ids) AND p2.geoCityId = 0
-            GROUP BY bp.id, c.id, p.price, p2.price, bpi.id
+            GROUP BY bp.id, bp.state, c.id, p.price, p2.price, bpi.id
         ");
         $q->setParameter('ids', $productIds);
         $q->setParameter('geoCityId', $this->getGeoCity()->getRealId());
