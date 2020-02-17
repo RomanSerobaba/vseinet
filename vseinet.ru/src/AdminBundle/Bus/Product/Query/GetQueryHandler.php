@@ -2,7 +2,7 @@
 
 namespace AdminBundle\Bus\Product\Query;
 
-use AppBundle\bus\Message\MessageHandler;
+use AppBundle\Bus\Message\MessageHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\Product;
