@@ -25,6 +25,6 @@ class SetNotAvailableCommandHandler extends MessageHandler
         // $q = $em->getConnection()->prepare("
         //     SELECT supplier_product_after_update({$supplierProduct->getBaseProductId()})
         // ");
-        $q->execute();
+        // $q->execute();
     }
 }

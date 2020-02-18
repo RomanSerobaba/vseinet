@@ -47,6 +47,6 @@ class UnlinkCommandHandler extends MessageHandler
         // $q = $em->getConnection()->prepare("
         //     SELECT supplier_product_after_update({$command->baseProductId})
         // ");
-        $q->execute();
+        // $q->execute();
     }
 }
