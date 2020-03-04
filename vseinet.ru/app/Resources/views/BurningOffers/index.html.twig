@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="/burningOffers/fonts/flaticon/font/flaticon.css">
   <link rel="stylesheet" href="/burningOffers/css/aos.css">
   </head>
+  <body>
   <!-- Соц.сети -->
   <div class="top-bar py-3 bg-light" id="home-section">
       <div class="container">
@@ -23,9 +24,9 @@
 
           <div class="col-6 text-left">
             <ul class="social-media">
-              <li><a href="https://vk.com/vseinetru" target="_blank class=""><span class="icon-vk"></span></a></li>
-              <li><a href="https://www.instagram.com/vseinetru/"  target="_blank class=""><span class="icon-instagram"></span></a></li>
-              <li><a href="https://ok.ru/vseinetru"  target="_blank class=""><span class="icon-odnoklassniki"></span></a></li>
+              <li><a href="https://vk.com/vseinetru" target="_blank" class=""><span class="icon-vk"></span></a></li>
+              <li><a href="https://www.instagram.com/vseinetru/" target="_blank"><span class="icon-instagram"></span></a></li>
+              <li><a href="https://ok.ru/vseinetru" target="_blank" class=""><span class="icon-odnoklassniki"></span></a></li>
 
 			</ul>
           </div>
@@ -45,13 +46,13 @@
             <nav class="site-navigation position-relative text-right" role="navigation">
 
               <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
-			   <li><a href="https://vseinet.ru/" class="nav-link">В магазин</a></li>
-                <li><a href="https://vseinet.ru/about/" class="nav-link">О компании</a></li>
-                <li><a href="https://vseinet.ru/delivery/" class="nav-link">Доставка</a></li>
-                <li><a href="https://vseinet.ru/payment/" class="nav-link">Оплата</a></li>
-                <li><a href="https://vseinet.ru/garanty/" class="nav-link">Гарантия</a></li>
-                <li><a href="https://vseinet.ru/credit/" class="nav-link">Рассрочка и кредит</a></li>
-                <li><a href="https://vseinet.ru/contacts/" class="nav-link">Контакты</a></li>
+			   <li><a href="/" class="nav-link">В магазин</a></li>
+                <li><a href="/about/" class="nav-link">О компании</a></li>
+                <li><a href="/delivery/" class="nav-link">Доставка</a></li>
+                <li><a href="/payment/" class="nav-link">Оплата</a></li>
+                <li><a href="/garanty/" class="nav-link">Гарантия</a></li>
+                <li><a href="/credit/" class="nav-link">Рассрочка и кредит</a></li>
+                <li><a href="/contacts/" class="nav-link">Контакты</a></li>
                 <!-- <li><a href="#"class="icon-shopping-basket"  class="nav-link">&nbsp;Корзина пустая</a></li> -->
 			  </ul>
             </nav>
@@ -114,7 +115,7 @@
                   {% else %}
                   <a href="#" class="btn btn-gray mr-1 rounded-0">Продано</a>
                   {% endif %}
-                  <a href="https://vseinet.ru/product/{{ product.sefUrl }}/" class="btn btn-black btn-outline-black ml-1 rounded-0">Подробнее</a>
+                  <a href="/product/{{ product.sefUrl }}/" class="btn btn-black btn-outline-black ml-1 rounded-0">Подробнее</a>
                 </div>
               </div>
             </div>
@@ -159,16 +160,6 @@
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
-
-
 
 <!-- Ява -->
  <script src="/burningOffers/js/jquery-3.3.1.min.js"></script>
