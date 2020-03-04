@@ -24,7 +24,7 @@
 !/web/oauth2.html
 !/web/favicon.ico
 !/web/.htaccess
-!/web/burningOffers/
+!/web/burningOffersWeb/
 /.idea
 /nbproject
 /node_modules/*
