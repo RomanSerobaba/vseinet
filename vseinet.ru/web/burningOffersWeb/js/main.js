@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
 			window.location.href = '/cart/';
 		  });
 	});
-	
+
 
 	var siteMenuClone = function() {
 
@@ -27,11 +27,11 @@ jQuery(document).ready(function($) {
 
 
 		setTimeout(function() {
-			
+
 			var counter = 0;
       $('.site-mobile-menu .has-children').each(function(){
         var $this = $(this);
-        
+
         $this.prepend('<span class="arrow-collapse collapsed">');
 
         $this.find('.arrow-collapse').attr({
@@ -57,8 +57,8 @@ jQuery(document).ready(function($) {
       } else {
         $this.addClass('active');
       }
-      e.preventDefault();  
-      
+      e.preventDefault();
+
     });
 
 		$(window).resize(function() {
@@ -83,7 +83,7 @@ jQuery(document).ready(function($) {
 				$('body').addClass('offcanvas-menu');
 				$this.addClass('active');
 			}
-		}) 
+		})
 
 		// click outisde offcanvas
 		$(document).mouseup(function(e) {
@@ -94,7 +94,7 @@ jQuery(document).ready(function($) {
 				}
 	    }
 		});
-	}; 
+	};
 	siteMenuClone();
 
 
@@ -131,7 +131,7 @@ jQuery(document).ready(function($) {
 	// siteSliderRange();
 
 
-	
+
 	var siteCarousel = function () {
 		if ( $('.nonloop-block-13').length > 0 ) {
 			$('.nonloop-block-13').owlCarousel({
@@ -192,8 +192,7 @@ jQuery(document).ready(function($) {
 	siteStellar();
 
 	var siteCountDown = function() {
-
-		$('#date-countdown').countdown('2020/02/29', function(event) {
+		$('#date-countdown').countdown(moment().endOf('month').format('YYYY/MM/DD'), function(event) {
 		  var $this = $(this).html(event.strftime(''
 		    + '<span class="countdown-block"><span class="label">%w</span> Нед. </span>'
 		    + '<span class="countdown-block"><span class="label">%d</span> Дн. </span>'
@@ -201,7 +200,7 @@ jQuery(document).ready(function($) {
 		    + '<span class="countdown-block"><span class="label">%M</span> Мин. </span>'
 		    + '<span class="countdown-block"><span class="label">%S</span> Сек.</span>'));
 		});
-				
+
 	};
 	siteCountDown();
 
@@ -239,7 +238,7 @@ jQuery(document).ready(function($) {
 
   var siteScroll = function() {
 
-  	
+
 
   	$(window).scroll(function() {
 
@@ -251,7 +250,7 @@ jQuery(document).ready(function($) {
   			$('.js-sticky-header').removeClass('shrink');
   		}
 
-  	}) 
+  	})
 
   };
   siteScroll();
