@@ -1,9 +1,14 @@
 /* breadcrumbs
 -------------------------------------------------------------------*/
-.breadcrumbs {
+UL.breadcrumbs {
 	font-size: 13px;
 }
-	.breadcrumbs SPAN {
-    	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAHBAMAAADdS/HjAAAAMFBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc1sdhDDAAAAD3RSTlP8Cndf1lYthXuHDrkr6gDoSrJnAAAAHklEQVR4AWPQecew9xyD9DWGxz8YAuYxuL9jWPcOAFycCTGNXGWfAAAAAElFTkSuQmCC) 7px 6px no-repeat;
-    	padding: 0 10px;
-	}
+UL.breadcrumbs LI {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAHBAMAAADdS/HjAAAAMFBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc1sdhDDAAAAD3RSTlP8Cndf1lYthXuHDrkr6gDoSrJnAAAAHklEQVR4AWPQecew9xyD9DWGxz8YAuYxuL9jWPcOAFycCTGNXGWfAAAAAElFTkSuQmCC) 7px 6px no-repeat;
+    padding: 0 0 0 20px;
+    display: inline;
+}
+UL.breadcrumbs LI:first-child {
+    background: none;
+    padding: 0;
+}

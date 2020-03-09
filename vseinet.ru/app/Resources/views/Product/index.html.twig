@@ -14,18 +14,26 @@
 
 {% block content %}
     <div itemscope itemtype="http://schema.org/Product" class="product" data-id="{{ baseProduct.id }}" id="product-{{ baseProduct.id }}">
-        <div class="breadcrumbs">
-            {% for link in breadcrumbs %}
-                <a href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}">{{ link.name }}</a>
-                {% if not loop.last %}
-                    <span></span>
+        <ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+            {% set lastkey = 0 %}
+            {% for key, link in breadcrumbs %}
+                {% if link.name == 'Каталог' and key == 0 %}
+                    <li><a href="{{ path('catalog') }}">Каталог</a></li>
+                {% else %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a itemprop="item" href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}"><span itemprop="name">{{ link.name }}</span></a>
+                        <meta itemprop="position" content="{{ key }}" />
+                    </li>
                 {% endif %}
+                {% set lastkey = key %}
             {% endfor %}
             {% if brand %}
-                <span></span>
-                <a href="{% if baseProduct.categorySefUrl %}{{ path('catalog_category_sef_with_brand', { slug: baseProduct.categorySefUrl, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% else %}{{ path('catalog_category_with_brand', { id: baseProduct.categoryId, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% endif %}">{{ brand.name }}</a>
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{% if baseProduct.categorySefUrl %}{{ path('catalog_category_sef_with_brand', { slug: baseProduct.categorySefUrl, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% else %}{{ path('catalog_category_with_brand', { id: baseProduct.categoryId, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% endif %}"><span itemprop="name">{{ brand.name }}</span></a>
+                    <meta itemprop="position" content="{{ lastkey + 1 }}" />
+                </li>
             {% endif %}
-        </div>
+        </ul>
         <div class="title">
             <h1 itemprop="name">{{ baseProduct.name }}</h1>
             <small>Код товара: <b itemprop="sku" class="sku">{{ baseProduct.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (baseProduct.price - baseProduct.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}</small>
