@@ -18,11 +18,14 @@
             {% set lastkey = 0 %}
             {% for key, link in breadcrumbs %}
                 {% if link.name == 'Каталог' and key == 0 %}
-                    <li><a href="{{ path('catalog') }}">Каталог</a></li>
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a itemprop="item" href="{{ path('catalog') }}"><span itemprop="name">Каталог</span></a>
+                        <meta itemprop="position" content="1" />
+                    </li>
                 {% else %}
                     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                         <a itemprop="item" href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}"><span itemprop="name">{{ link.name }}</span></a>
-                        <meta itemprop="position" content="{{ key }}" />
+                        <meta itemprop="position" content="{{ key + 1 }}" />
                     </li>
                 {% endif %}
                 {% set lastkey = key %}
@@ -30,7 +33,7 @@
             {% if brand %}
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                     <a itemprop="item" href="{% if baseProduct.categorySefUrl %}{{ path('catalog_category_sef_with_brand', { slug: baseProduct.categorySefUrl, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% else %}{{ path('catalog_category_with_brand', { id: baseProduct.categoryId, brandName: brand.sefName ? brand.sefName : brand.name }) }}{% endif %}"><span itemprop="name">{{ brand.name }}</span></a>
-                    <meta itemprop="position" content="{{ lastkey + 1 }}" />
+                    <meta itemprop="position" content="{{ lastkey + 2 }}" />
                 </li>
             {% endif %}
         </ul>
