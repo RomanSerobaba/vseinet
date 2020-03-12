@@ -72,7 +72,7 @@ class GetRemainsQueryHandler extends MessageHandler
                 sp.name,
                 sp.product_availability_code,
                 sp.price,
-                ROUND(sp.initial_price * (1.0 + s.delivery_cost_percent - s.price_discount_percent / 100)) AS margin_base_price,
+                ROUND(sp.initial_price * (1.0 + (s.delivery_cost_percent - s.price_discount_percent) / 100)) AS margin_base_price,
                 sp.initial_price,
                 sp.updated_at AS price_time,
                 ti.transfered_by,
