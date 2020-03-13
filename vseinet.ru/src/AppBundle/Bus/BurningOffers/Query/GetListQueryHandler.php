@@ -23,7 +23,7 @@ class GetListQueryHandler extends MessageHandler
                     inner join base_product as bp2 on bp2.id = grrc.base_product_id
                     inner join geo_room as gr on gr.id = grrc.geo_room_id
                     inner join representative as r on r.geo_point_id = gr.geo_point_id
-                where bp2.canonical_id = bp.id and grrc.order_item_id is null and grrc.goods_condition_code = 'free' and r.type != 'franchiser') as is_available,
+                where bp2.canonical_id = bp.id and grrc.order_item_id is null and grrc.goods_condition_code = 'free' and (r.type != 'franchiser' and mr.type != 'franchiser' or r.type = 'franchiser' and mr.type = 'franchiser' and r.company_id = mr.company_id)) as is_available,
                 bpd.short_description
             FROM
                 base_product AS b
@@ -33,6 +33,7 @@ class GetListQueryHandler extends MessageHandler
                 INNER JOIN product AS p ON ( p.base_product_id = b.ID AND p.geo_city_id = 0 )
                 LEFT JOIN base_product_image AS bpi ON bpi.base_product_id = b.ID AND bpi.sort_order = 1 AND bpi.width > 0
                 left join base_product_data as bpd on bpd.base_product_id = bp.id
+                left join representative as mr on mr.geo_city_id = :geoCityId and mr.is_active = true and mr.is_central = true
             WHERE
                 b.id = b.canonical_id
         ", new DTORSM(DTO\Product::class))
