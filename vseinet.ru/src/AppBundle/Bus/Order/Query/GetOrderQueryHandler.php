@@ -36,7 +36,7 @@ class GetOrderQueryHandler extends MessageHandler
 
         if (!empty($result['persons'])) {
             foreach ($result['persons'] as $person) {
-                if ($person['id'] == $order['personId']) {
+                if ($person['id'] == (isset($order['personId']) ? $order['personId'] : null)) {
                     $order['personName'] = $person['fullname'];
                     $order['contacts'] = $person['contacts'];
                 }
