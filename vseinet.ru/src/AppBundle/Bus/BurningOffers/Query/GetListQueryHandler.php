@@ -18,12 +18,13 @@ class GetListQueryHandler extends MessageHandler
                 bpi.basename AS base_src,
                 COALESCE ( p2.price, p.price ) AS price,
                 b.sef_url,
-                (SELECT SUM(grrc.delta)
+                coalesce((SELECT 1
                     from goods_reserve_register_current as grrc
                     inner join base_product as bp2 on bp2.id = grrc.base_product_id
                     inner join geo_room as gr on gr.id = grrc.geo_room_id
                     inner join representative as r on r.geo_point_id = gr.geo_point_id
-                where bp2.canonical_id = bp.id and grrc.order_item_id is null and grrc.goods_condition_code = 'free' and (r.type != 'franchiser' and mr.type != 'franchiser' or r.type = 'franchiser' and mr.type = 'franchiser' and r.company_id = mr.company_id)) as is_available,
+                where bp2.canonical_id = bp.id and grrc.order_item_id is null and grrc.goods_condition_code = 'free' and (r.type != 'franchiser' and mr.type != 'franchiser' or r.type = 'franchiser' and mr.type = 'franchiser' and r.company_id = mr.company_id)
+                limit 1), 0) as is_available,
                 bpd.short_description
             FROM
                 base_product AS b
