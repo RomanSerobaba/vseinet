@@ -1,6 +1,6 @@
 <!-- Yandex.Metrika counter -->
 <script>
-    var yaParams = { /*Здесь параметры визита*/};
+    var yaParams = {ip: {{ app.request.server.get("REMOTE_ADDR") }} };
 </script>
 <script>
     (function (d, w, c) {
