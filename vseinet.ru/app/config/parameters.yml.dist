@@ -24,6 +24,7 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt123123123
 
     cookie_secure: true
+    cookie_samesite: 'lax'
     session.save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
 
     uploads.domain: ''

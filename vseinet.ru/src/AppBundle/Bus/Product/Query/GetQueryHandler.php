@@ -4,8 +4,8 @@ namespace AppBundle\Bus\Product\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Enum\GoodsConditionCode;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Enum\ProductPriceTypeCode;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetQueryHandler extends MessageHandler
 {
@@ -70,7 +70,7 @@ class GetQueryHandler extends MessageHandler
                         ORDER BY
                             ppl2.operatedAt DESC
                     ),
-                    CASE WHEN bp.isHidden OR b.isForbidden THEN true ELSE false END,
+                    CASE WHEN bp.isHidden = true THEN true ELSE false END,
                     bp.sefUrl,
                     c.sefUrl
                 )
@@ -82,7 +82,7 @@ class GetQueryHandler extends MessageHandler
             INNER JOIN AppBundle:Product AS p0 WITH p0.baseProductId = bp.id AND p0.geoCityId = 0
             LEFT OUTER JOIN AppBundle:BaseProductDescription AS d WITH d.baseProductId = bp.id
             LEFT OUTER JOIN AppBundle:ProductPricetagBuffer AS ppb WITH ppb.baseProductId = bp.id AND ppb.createdBy = :userId
-            LEFT OUTER JOIN brand AS b ON b.id = bp.brandId
+            LEFT OUTER JOIN AppBundle:Brand AS b WITH b.id = bp.brandId
             WHERE bpo.id = :id
         ");
         $q->setParameter('id', $query->id);

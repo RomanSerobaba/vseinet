@@ -2,10 +2,10 @@
 
 namespace AppBundle\Bus\Product\Query\DTO;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as VIC;
+use AppBundle\Enum\ProductAvailabilityCode;
 use AppBundle\Enum\ProductPriceTypeCode;
-use AppBundle\Enum\ProductAvailabilityCode
+use AppBundle\Validator\Constraints as VIC;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BaseProduct
 {
@@ -171,8 +171,8 @@ class BaseProduct
         $priceChangedAt,
         $priceChangedBy,
         $isHidden,
-        $sefUrl= null,
-        $categorySefUrl= null
+        $sefUrl = null,
+        $categorySefUrl = null
     ) {
         $this->id = $id;
         $this->name = $name;
