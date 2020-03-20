@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Горящие товары в интернет-магазине Vseinet.ru</title>
+  <link href="https://fonts.googleapis.com/css?family=Muli:300,400,700,900" rel="stylesheet">
+  <link rel="stylesheet" href="/burningOffersWeb/fonts/icomoon/style.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/style.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/jquery-ui.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/owl.carousel.min.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/owl.theme.default.min.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/owl.theme.default.min.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/bootstrap-datepicker.css">
+  <link rel="stylesheet" href="/burningOffersWeb/fonts/flaticon/font/flaticon.css">
+  <link rel="stylesheet" href="/burningOffersWeb/css/aos.css">
+  </head>
+  <body>
+  <!-- Соц.сети -->
+  <div class="top-bar py-3 bg-light" id="home-section">
+      <div class="container">
+        <div class="row align-items-center">
+
+          <div class="col-6 text-left">
+            <ul class="social-media">
+              <li><a href="https://vk.com/vseinetru" target="_blank" class=""><span class="icon-vk"></span></a></li>
+              <li><a href="https://www.instagram.com/vseinetru/" target="_blank"><span class="icon-instagram"></span></a></li>
+              <li><a href="https://ok.ru/vseinetru" target="_blank" class=""><span class="icon-odnoklassniki"></span></a></li>
+
+			</ul>
+          </div>
+           <div class="col-6">
+
+           </div>
+        </div>
+      </div>
+  </div>
+  <header class="site-navbar py-4 bg-white js-sticky-header site-navbar-target" role="banner">
+  <div class="container">
+<a class="" href="index.html"><img src="/burningOffersWeb/images/logo.png" width="350" height="100"  alt=""></a>
+	{# <a class="navbar-brand logo_h" href="index.html"><img src="/burningOffersWeb/images/logo.png" alt=""></a> #}
+	   <div class="row align-items-center">
+<!--Меню-->
+		 <div class="col-xs col-md-xs d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+
+              <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+			   <li><a href="/" class="nav-link">В магазин</a></li>
+                <li><a href="/about/" class="nav-link">О компании</a></li>
+                <li><a href="/delivery/" class="nav-link">Доставка</a></li>
+                <li><a href="/payment/" class="nav-link">Оплата</a></li>
+                <li><a href="/garanty/" class="nav-link">Гарантия</a></li>
+                <li><a href="/credit/" class="nav-link">Рассрочка и кредит</a></li>
+                <li><a href="/contacts/" class="nav-link">Контакты</a></li>
+                <!-- <li><a href="#"class="icon-shopping-basket"  class="nav-link">&nbsp;Корзина пустая</a></li> -->
+			  </ul>
+            </nav>
+          </div>
+		  <div class="col-6 d-inline-block d-xl-none ml-md-0 py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black float-right"><span class="icon-menu h3"></span></a></div>
+
+        </div>
+      </div>
+
+    </header>
+ <!-- Баннер -->
+   <div class="site-blocks-cover overlay get-notification" id="special-section" style="background-image: url(/burningOffersWeb/images/hero_2.jpg); background-attachment: fixed; background-position: top;" data-aos="fade">
+      <div class="container">
+
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-7 text-center">
+            <h3 class="section-sub-title">Акция</h3>
+            <h3 class="section-title text-white mb-4">Горящие Товары</h3>
+            <p class="mb-5 lead">До смены товаров осталось:</p>
+             <div id="date-countdown" class="mb-5"></div>
+<!-- Менять дату в main.js date-countdown-->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+ <div class="site-section" id="products-section">
+      <div class="container">
+        <div class="row mb-5 justify-content-center">
+          <div class="col-md-6 text-center">
+            <h3 class="section-sub-title">Наши</h3>
+            <h2 class="section-title mb-3">Горящие товары</h2>
+            <p>Раз в месяц мы случайным образом выбираем 20 товаров, на которые мы делаем очень большие скидки.</p>
+          </div>
+        </div>
+        <div class="row">
+        {% for product in products %}
+          <div class="col-lg-4 col-md-6 mb-5">
+            <div class="product-item">
+              <figure>
+                <img src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}" alt="{{ product.name }}" class="img-fluid">
+              </figure>
+              <div class="px-4">
+                <h3><a>{{ product.name }}</a></h3>
+               <p class="mb-4">{{ product.shortDescription|striptags|autocut({limit:150})|raw }}</p>
+ {% if product.isAvailable %} <h2><strong class="text-green mb-3 d-inline-block">{{ product.price|price_format }}₽</strong></h2>{% endif %}
+                <div>
+                  {% if product.isAvailable %}
+                  <a href="#" data-id="{{ product.id }}" class="buy btn btn-black mr-1 rounded-0">Купить</a>
+                  {% else %}
+                  <a href="#" class="btn btn-gray mr-1 rounded-0">Продано</a>
+                  {% endif %}
+                  <a href="/product/{{ product.sefUrl }}/" class="btn btn-black btn-outline-black ml-1 rounded-0">Подробнее</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+		   <div class="site-section bg-light" id="services-section">
+
+
+<div class="container">
+        <div class="row mb-5">
+          <div class="col-12 text-center">
+            <h2 class="section-title mb-3">Что такое "Горящие товары"?</h2>
+          </div>
+        </div>
+        <div class="row align-items-stretch">
+          <div class="col-md-6 col-lg-4 mb-4 mb-lg-4" data-aos="fade-up">
+            <div class="unit-4 d-flex">
+              <div class="unit-4-icon mr-4"><span class="text-primary icon-refresh"></span></div>
+              <div>
+                <h3>Каждый месяц</h3>
+                <p>программа автоматически выбирает 20 товаров, которые попадают в категорию "Горящие Товары"</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4 mb-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="unit-4 d-flex">
+              <div class="unit-4-icon mr-4"><span class="text-primary icon-money"></span></div>
+              <div>
+                <h3>Огромная скидка</h3>
+                <p>на все 20 отобранных товаров.</p>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 mb-4 mb-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="unit-4 d-flex">
+              <div class="unit-4-icon mr-4"><span class="text-primary icon-new_releases"></span></div>
+              <div>
+                <h3>Количество ограниченно</h3>
+                <p>Успейте купить, до того как они закончатся.</p>
+              </div>
+            </div>
+          </div>
+
+<!-- Ява -->
+ <script src="/burningOffersWeb/js/jquery-3.3.1.min.js"></script>
+  <script src="/burningOffersWeb/js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="/burningOffersWeb/js/jquery-ui.js"></script>
+  <script src="/burningOffersWeb/js/popper.min.js"></script>
+  <script src="/burningOffersWeb/js/moment.min.js"></script>
+  <script src="/burningOffersWeb/js/bootstrap.min.js"></script>
+  <script src="/burningOffersWeb/js/owl.carousel.min.js"></script>
+  <script src="/burningOffersWeb/js/jquery.stellar.min.js"></script>
+  <script src="/burningOffersWeb/js/jquery.countdown.min.js"></script>
+  <script src="/burningOffersWeb/js/bootstrap-datepicker.min.js"></script>
+  <script src="/burningOffersWeb/js/jquery.easing.1.3.js"></script>
+  <script src="/burningOffersWeb/js/aos.js"></script>
+  <script src="/burningOffersWeb/js/jquery.fancybox.min.js"></script>
+  <script src="/burningOffersWeb/js/jquery.sticky.js"></script>
+
+
+  <script src="/burningOffersWeb/js/main.js"></script>
+
+  </body>
+</html>

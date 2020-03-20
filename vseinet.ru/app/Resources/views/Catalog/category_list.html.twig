@@ -6,13 +6,18 @@
 
 {% block content %}
     <section id="catalog">
-        <div class="breadcrumbs">
-            <a href="{{ path('catalog') }}">Каталог</a>
-            {% for link in category.breadcrumbs %}
-                <span></span>
-                <a href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}">{{ link.name }}</a>
+        <ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a itemprop="item" href="{{ path('catalog') }}"><span itemprop="name">Каталог</span></a>
+                <meta itemprop="position" content="1" />
+            </li>
+            {% for key, link in category.breadcrumbs %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}"><span itemprop="name">{{ link.name }}</span></a>
+                    <meta itemprop="position" content="{{ key + 2 }}" />
+                </li>
             {% endfor %}
-        </div>
+        </ul>
         <h1>{{ category.name }}
         {% if app.userIsEmployee %}
             <a

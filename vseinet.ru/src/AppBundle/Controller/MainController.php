@@ -352,7 +352,7 @@ class MainController extends Controller
 
         return $this->render('Main/block_specials.html.twig', [
             'products' => $products,
-            'title' => $title ?? 'Тотальная распродажа',
+            'title' => $title ?? 'Горящие товары',
         ]);
     }
 

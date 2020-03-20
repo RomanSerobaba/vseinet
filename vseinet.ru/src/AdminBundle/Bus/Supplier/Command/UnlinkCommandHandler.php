@@ -29,8 +29,17 @@ class UnlinkCommandHandler extends MessageHandler
 
         if ($competitor) {
             $competitorProduct = $em->getRepository(CompetitorProduct::class)->findOneBy([
-                'baseProductId' => $supplierProduct->getBaseProductId(),
                 'code' => $supplierProduct->getCode(),
+                'competitorId' => $competitor->getId(),
+            ]);
+
+            if ($competitorProduct) {
+                $em->remove($competitorProduct);
+                $em->flush();
+            }
+
+            $competitorProduct = $em->getRepository(CompetitorProduct::class)->findOneBy([
+                'baseProductId' => $supplierProduct->getBaseProductId(),
                 'competitorId' => $competitor->getId(),
             ]);
 

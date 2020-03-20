@@ -8,6 +8,7 @@ use AppBundle\Entity\Competitor;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\CompetitorProduct;
 use AppBundle\Exception\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AddRevisionCommandHandler extends MessageHandler
 {
@@ -41,6 +42,14 @@ class AddRevisionCommandHandler extends MessageHandler
             }
             $em->remove($revision);
             $em->flush($revision);
+        }
+
+        if ($command->url && $em->getRepository(CompetitorProduct::class)->findOneBy(['url' => $command->url, 'competitorId' => $competitor->getId()])) {
+            throw new BadRequestHttpException(sprintf('Такая ссылка на товар конкурента уже есть в базе'));
+        }
+
+        if ($command->url && $em->getRepository(CompetitorProduct::class)->findOneBy(['baseProductId' => $product->getBaseProductId(), 'competitorId' => $competitor->getId()])) {
+            throw new BadRequestHttpException(sprintf('Такой товар конкурента уже есть в базе'));
         }
 
         $revision = new CompetitorProduct();
