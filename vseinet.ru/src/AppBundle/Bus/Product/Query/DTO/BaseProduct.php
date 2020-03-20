@@ -5,6 +5,7 @@ namespace AppBundle\Bus\Product\Query\DTO;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as VIC;
 use AppBundle\Enum\ProductPriceTypeCode;
+use AppBundle\Enum\ProductAvailabilityCode
 
 class BaseProduct
 {
@@ -134,6 +135,11 @@ class BaseProduct
     public $priceChangedBy;
 
     /**
+     * @Assert\Type("boolean")
+     */
+    public $isHidden;
+
+    /**
      * @Assert\Type("string")
      */
     public $sefUrl;
@@ -164,6 +170,7 @@ class BaseProduct
         $competitorPrice,
         $priceChangedAt,
         $priceChangedBy,
+        $isHidden,
         $sefUrl= null,
         $categorySefUrl= null
     ) {
@@ -172,7 +179,7 @@ class BaseProduct
         $this->exname = $exname;
         $this->categoryId = $categoryId;
         $this->brandId = $brandId;
-        $this->availability = $availability;
+        $this->availability = $isHidden ? ProductAvailabilityCode::OUT_OF_STOCK : $availability;
         $this->price = $price;
         $this->priceTypeCode = $priceTypeCode;
         $this->minQuantity = $minQuantity;
@@ -188,6 +195,7 @@ class BaseProduct
         $this->isManualPrice = in_array($priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
         $this->priceChangedAt = $priceChangedAt;
         $this->priceChangedBy = $priceChangedBy;
+        $this->isHidden = $isHidden;
         $this->sefUrl = $sefUrl;
         $this->categorySefUrl = $categorySefUrl;
     }

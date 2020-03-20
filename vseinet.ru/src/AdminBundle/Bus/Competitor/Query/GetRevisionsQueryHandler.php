@@ -27,20 +27,22 @@ class GetRevisionsQueryHandler extends MessageHandler
                 cp.code,
                 cp.name AS product_name,
                 cp.url,
-                cp.price,
-                cp.completed_at,
-                cp.requested_at,
-                cp.status,
-                CASE WHEN COALESCE(cp.price, 0) = 0 OR c.period IS NOT NULL AND cp.completed_at + (c.period || ' day')::INTERVAL < NOW() OR cp.completed_at IS NULL THEN :void WHEN cp.price >= COALESCE(p2.price, p.price) THEN :ice ELSE :warning END AS state,
-                CASE WHEN c.channel = 'site' AND c.parse_strategy = 'product' OR c.channel = 'retail' THEN false ELSE true END AS read_only
+                cpp.price,
+                cpp.completed_at,
+                cpp.requested_at,
+                cpp.status,
+                CASE WHEN COALESCE(cpp.price, 0) = 0 OR c.period IS NOT NULL AND cpp.completed_at + (c.period || ' day')::INTERVAL < NOW() OR cpp.completed_at IS NULL THEN :void WHEN cpp.price >= COALESCE(p2.price, p.price) THEN :ice ELSE :warning END AS state,
+                true AS read_only
+                -- CASE WHEN c.channel = 'site' AND c.parse_strategy = 'product' OR c.channel = 'retail' THEN false ELSE true END AS read_only
             FROM competitor_product AS cp
             INNER JOIN base_product AS bp ON bp.id = cp.base_product_id
             LEFT OUTER JOIN product AS p2 ON p2.base_product_id = bp.canonical_id AND p2.geo_city_id = :geo_city_id
             INNER JOIN product AS p ON p.base_product_id = bp.canonical_id AND p.geo_city_id = 0
             INNER JOIN competitor AS c ON c.id = cp.competitor_id
+            INNER JOIN competitor_product_geo_city_price AS cpp ON cpp.competitor_product_id = cp.id
             INNER JOIN competitor_to_geo_city AS c2c ON c2c.competitor_id = c.id
             WHERE bp.canonical_id = :base_product_id AND c2c.geo_city_id = :geo_city_id AND c.is_active = true
-            ORDER BY cp.completed_at
+            ORDER BY cpp.completed_at
         ", new DTORSM(DTO\Revision::class));
         $q->setParameter('base_product_id', $product->getId());
         $q->setParameter('geo_city_id', $this->getGeoCity()->getId());
