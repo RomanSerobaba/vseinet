@@ -28,6 +28,7 @@ Disallow: /user/
 Disallow: /order/
 Disallow: /complaint/
 Disallow: /suggestion/
+Disallow: /product/*/_org_registration_
 
 User-agent: Yandex
 Crawl-delay: 1

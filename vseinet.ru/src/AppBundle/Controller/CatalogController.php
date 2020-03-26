@@ -17,6 +17,7 @@ use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
 use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
+use AppBundle\Entity\Brand;
 use AppBundle\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -75,11 +76,18 @@ class CatalogController extends Controller
         if ($brandName) {
             $brand = $this->get('query_bus')->handle(new GetBrandBySefNameQuery(['sefName' => $brandName]));
             if (!$brand) {
-                $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
-                if (!$brand) {
-                    return $this->redirectToRoute('catalog', [], 301);
-                } elseif ($brand->sefName) {
+                $brandObj = $em->getRepository(Brand::class)->findOneBy(['sefName' => $brandName]);
+                if ($brandObj) {
+                    $brandObj = $em->getRepository(Brand::class)->find($brandObj->getCanonicalId());
+                    $brand = $this->get('query_bus')->handle(new GetBrandBySefNameQuery(['sefName' => $brandObj->getSefName()]));
                     $needRedirect = true;
+                } else {
+                    $brand = $this->get('query_bus')->handle(new GetBrandByNameQuery(['name' => $brandName]));
+                    if (!$brand) {
+                        return $this->redirectToRoute('catalog', [], 301);
+                    } elseif ($brand->sefName) {
+                        $needRedirect = true;
+                    }
                 }
             }
             $request->query->set('b', $brand->id);

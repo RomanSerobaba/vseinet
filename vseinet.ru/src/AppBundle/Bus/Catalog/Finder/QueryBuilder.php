@@ -9,6 +9,7 @@ use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Catalog\Enum\SortDirection;
 use AppBundle\Bus\Catalog\Query\GetProductsQuery;
 use AppBundle\Bus\Cart\Query\GetInfoQuery as GetCartInfoQuery;
+use AppBundle\Entity\Brand;
 
 class QueryBuilder extends ContainerAware
 {
@@ -461,6 +462,12 @@ class QueryBuilder extends ContainerAware
                 $brandIds = array_merge($brandIds, $brandIds[-1]->includeIds);
             }
             unset($brandIds[-1]);
+        }
+        $brands = $this->container->get('doctrine')->getManager()->getRepository(Brand::class)->findBy(['canonicalId' => $brandIds]);
+
+        $brandIds = [];
+        foreach ($brands as $brand) {
+            $brandIds[] = $brand->getId();
         }
 
         return 'brand_id IN ('.implode(', ', $brandIds).')';

@@ -27,7 +27,7 @@ class GetBySefNameQueryHandler extends MessageHandler
         $q->setMaxResults(1);
         $brand = $q->getOneOrNullResult();
 
-        if ($brand->isForbidden && !$this->getUserIsEmployee()) {
+        if ($brand && $brand->isForbidden && !$this->getUserIsEmployee()) {
             throw new NotFoundHttpException();
         }
 
