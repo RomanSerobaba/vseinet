@@ -21,7 +21,7 @@
                             <p class="code">
                                 Код товара: {{ product.id }}
                                 <span class="status
-                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock" style="height:auto;width:auto;margin-left:10px;font-size: 1.05em;font-weight: bold;">В наличии, доставка т.290-708
+                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock" style="height:auto;width:auto;margin-left:10px;font-size: 1.05em;font-weight: bold;">В наличии, доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708
                                     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available" style="height:auto;width:auto;margin-left:10px">Нет в продаже
                                     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order" style="height:auto;width:auto;margin-left:10px">Ожидается
                                     {% else %} on-order" style="height:auto;width:auto;margin-left:10px">Доставим {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
