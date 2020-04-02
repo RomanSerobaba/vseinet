@@ -20,11 +20,11 @@
                             <h6><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a><h6>
                             <p class="code">
                                 Код товара: {{ product.id }}
-                                <span style="height:auti;width:auto;margin-left:10px" class="status
-                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock">Есть в наличии
-                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available">Нет в продаже
-                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order">Ожидается
-                                    {% else %} on-order">Доставим {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
+                                <span class="status
+                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock" style="height:auto;width:auto;margin-left:10px;font-size: 1.05em;font-weight: bold;">В наличии, доставка т.290-708
+                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available" style="height:auto;width:auto;margin-left:10px">Нет в продаже
+                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order" style="height:auto;width:auto;margin-left:10px">Ожидается
+                                    {% else %} on-order" style="height:auto;width:auto;margin-left:10px">Доставим {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
                                     {% endif %}
                                 </span>
                             </p>

@@ -11,7 +11,8 @@
             </a>
         </dd>
         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %}
-            <dt>Магазин:</dt>
+            <div class="status in-stock" style="font-size: 1.05em;font-weight: bold;">В наличии, доставка т.290-708</div>
+            {# <dt>Магазин:</dt>
             <dd class="address">
                 {% for geoPoint in geoPoints if geoPoint.geoCityId == app.geoCity.id %}
                     {% if loop.first %}
@@ -21,7 +22,7 @@
                     {% endif %}
                 {% endfor %}
                 &nbsp;
-            </dd>
+            </dd> #}
         {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == baseProduct.availability %}
             <dt content="out_of_stock" class="status not-available">Нет в продаже</dt>
             <dd>&nbsp;</dd>
