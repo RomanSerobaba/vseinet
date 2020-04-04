@@ -143,7 +143,7 @@ class Order
             $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }
         $this->cityName = $order['geoCityName'] ?? null;
-        $this->address = $order['deliveryAddress'] ?? null;
+        $this->address = $order['deliveryAddress'] ?? ($order['address'] ?? null);
         $statuses = [];
         $codes = [];
         foreach ($order['items'] as $item) {

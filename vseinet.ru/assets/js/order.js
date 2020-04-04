@@ -196,12 +196,15 @@ $(function() {
 
     function attachStreetAutocomplete()
     {
-        var cacheGeoStreets = {};
+        var cacheGeoStreets = {},
+            current = '';
 
         var txt = $('[name="create_form[address][geoStreetName]"].autocomplete');
 
         if (txt.length > 0) {
-            var txt = $('[name="create_form[address][geoStreetName]"].autocomplete').autocomplete({
+            var input = txt.autocomplete({
+                minLength: 2,
+                autoFocus: true,
                 create: function() {
                     $(this).data('ui-autocomplete').widget().menu({
                         focus: function(event, ui) {
@@ -212,9 +215,11 @@ $(function() {
                         }
                     });
                 },
-                minLength: 2,
-                select: function(event, ui) {
+                select: function(e, ui) {
                     $('[name="create_form[address][geoStreetId]"]').val(ui.item.id);
+                    current = ui.item.value;
+                    $(this).select(e, ui);
+                    input.trigger('change');
                 },
                 source: function(request, response) {
                     var term = $.ui.autocomplete.escapeRegex(request.term);
@@ -232,8 +237,10 @@ $(function() {
                         response(cacheGeoStreets[term]);
                     });
                 }
-            })
-            txt.data('ui-autocomplete')._renderItem = function(ul, item) {
+            }).on('blur', function(){
+                txt.val(current);
+            });
+            input.data('ui-autocomplete')._renderItem = function(ul, item) {
                 return $('<li>').append('<a>' + item.label + '</a>').appendTo(ul);
             };
         }
