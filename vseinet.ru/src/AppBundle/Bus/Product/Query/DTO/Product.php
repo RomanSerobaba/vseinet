@@ -38,20 +38,14 @@ class Product
     public $geoPointId;
 
     /**
+     * @Assert\Type("boolean")
+     */
+    public $hasRepresentative;
+
+    /**
      * @Assert\All(
      *  @Assert\Type("AppBundle\Bus\Product\Query\DTO\FreeReserve")
      * )
      */
     public $reserves;
-
-    public function __construct($id, $baseProductId, $availability, $supplierId, $supplierAvailability, $supplierDeliveryDate = null, $geoPointId = null)
-    {
-        $this->id = $id;
-        $this->baseProductId = $baseProductId;
-        $this->availability = $availability;
-        $this->supplierId = $supplierId;
-        $this->supplierAvailability = $supplierAvailability;
-        $this->supplierDeliveryDate = $supplierDeliveryDate;
-        $this->geoPointId = $geoPointId;
-    }
 }

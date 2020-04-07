@@ -152,7 +152,7 @@ DIV.order-history-light .Cart TD {
 }
 .Cart .btns .action.delete {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAMAAADDoWbgAAAARVBMVEXNzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc0AAADNzc3vARi8AAAAFnRSTlMxvOzLX7crcoR8HnBPw5sK3vgGsf4ApPGmXAAAAG9JREFUeAE1jkcSgEAMw0KHZXvR/59KAoMujjM6WIaRXHrT2rp0+rK+LW18bElb46cN8VCimrGAlwah3v2uAZrMplSpDZilA/jhLYtkUO1QGbJEmFRrdYIou/0Ac3YZFz+XLTsKRjm+ne4MOZxOrwfxDQzQO4DzgQAAAABJRU5ErkJggg==);
-    margin-left: 0px;
+    margin-left: 15px;
     display: inline-block;
     float: none;
 }

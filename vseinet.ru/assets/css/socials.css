@@ -26,48 +26,64 @@
   .socials .facebook:hover {
     background: #2163ad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAASBAMAAACUbIJFAAAAIVBMVEX///////////////////////////////////8AAAD///+PJa3eAAAACnRSTlMF4/2CiNv6UgcAKLHWZQAAAChJREFUeAFjmMkitIphptUqIBEFIrKWdzLMXLVyJoRYBQQIAixGLAEAX5YrqoOg0TUAAAAASUVORK5CYII=) center no-repeat;
   }
-	#product .socials .facebook {
+	#product .socials .ya-share2__item_service_facebook {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAASBAMAAACUbIJFAAAAG1BMVEUAAADMzMz+/v7S0tLv7+/T09PNzc3k5OTl5eXxSfOiAAAAAXRSTlMAQObYZgAAACdJREFUeAFjYFA3FGRgaBQEEoEgIlFEgYFBUIABQggCAYIAixFLAAD6fQRMSn1bjQAAAABJRU5ErkJggg==) center no-repeat;
 	}
-	#product .socials .facebook:hover {
+	#product .socials .ya-share2__item_service_facebook:hover {
 			background: #2163ad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAASBAMAAACUbIJFAAAAIVBMVEX///////////////////////////////////8AAAD///+PJa3eAAAACnRSTlMF4/2CiNv6UgcAKLHWZQAAAChJREFUeAFjmMkitIphptUqIBEFIrKWdzLMXLVyJoRYBQQIAixGLAEAX5YrqoOg0TUAAAAASUVORK5CYII=) center no-repeat;
-		}
+        }
+    #product .ya-share2__item_service_facebook .ya-share2__badge,
+    #product .ya-share2__item_service_facebook .ya-share2__icon {
+        background: none;
+    }
 	.socials .vkontakte {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAMAAADnP957AAAASFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACrhKybAAAAF3RSTlMR8ZWwrkHaa3sFX1Ua7/mG3Ojh/brEAE7fNoQAAABdSURBVHheTY5XDsAgDEM7GWWVZe5/07JS4R/rKbHlrXSZcN5ABdLTwaS8V2MdMqBtKZEA73/ZNKfMUORrm3WyQRDuCNUdFbQ6TwBfYwSqvY8FibUKsWy75ITokwI+VPsOEGIjPwUAAAAASUVORK5CYII=) center no-repeat;
 	}
 		.socials .vkontakte:hover {
 			background: #49739f url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAMAAADnP957AAAASFBMVEX///////////////////////////////////////////////////////////////////////////////////////8AAAD///8+2PdZAAAAF3RSTlMR8ZWwrkHaa3sFX1Ua7/mG3Ojh/brEAE7fNoQAAABdSURBVHheTY5XDsAgDEM7GWWVZe5/07JS4R/rKbHlrXSZcN5ABdLTwaS8V2MdMqBtKZEA73/ZNKfMUORrm3WyQRDuCNUdFbQ6TwBfYwSqvY8FibUKsWy75ITokwI+VPsOEGIjPwUAAAAASUVORK5CYII=) center no-repeat;
 		}
-	#product .socials .vkontakte {
+	#product .socials .ya-share2__item_service_vkontakte {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAAAAAD1inGVAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAACdFJOUwAAdpPNOAAAAGJJREFUCB0FwDGKwkAAQNF//7O9bEhSOASbBRUUsbAMIhIwr+d3BcCzMO+nGVth1DGhMKqNrXD6HHc8C8CjAvB3+Yb1dvlfcQ2jOiaWMKoWpjCqF9Yw7/sGtwA4fwOmZX/VD92Pfk0deP37AAAAAElFTkSuQmCC) center no-repeat;
 	}
-	#product .socials .vkontakte:hover {
+	#product .socials .ya-share2__item_service_vkontakte:hover {
 			background: #49739f url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAPCAMAAADnP957AAAASFBMVEX///////////////////////////////////////////////////////////////////////////////////////8AAAD///8+2PdZAAAAF3RSTlMR8ZWwrkHaa3sFX1Ua7/mG3Ojh/brEAE7fNoQAAABdSURBVHheTY5XDsAgDEM7GWWVZe5/07JS4R/rKbHlrXSZcN5ABdLTwaS8V2MdMqBtKZEA73/ZNKfMUORrm3WyQRDuCNUdFbQ6TwBfYwSqvY8FibUKsWy75ITokwI+VPsOEGIjPwUAAAAASUVORK5CYII=) center no-repeat;
 		}
+    #product .ya-share2__item_service_vkontakte .ya-share2__badge,
+    #product .ya-share2__item_service_vkontakte .ya-share2__icon {
+        background: none;
+    }
 	.socials .twitter {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAMAAADeWG8gAAAAclBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACa4vOeAAAAJXRSTlO/zlM5oo6rC500CTaxHCvZNSZ8+mR0Am7q/uEfldWFxxI//fIANi/YowAAAINJREFUeAFVy1UOwzAQBuEtQ8PMMfx7/yu29lpqPI+fNASFUJPX6xk6I5XPIj3/GoddUcHTxcnbsrdTQ+nIZpmBF0stCAkzm32rApWgbLN87AFSdSQTQFgiejrqolM7wv1AOzwVfzIfIcy3IVCPQOVVwLTwpJOcpVVDCGlFg7HrojtIX9CyIj7e2dqLAAAAAElFTkSuQmCC) center no-repeat;
 	}
 		.socials .twitter:hover {
 			background: #35ade2 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAMAAADeWG8gAAAAclBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD////2lYI3AAAAJXRSTlO/U845oo6rC500CTaxHCvZNSZ8+mR0Am7q/uEfldWFxxI//fIAvdsFiAAAAINJREFUeAFVy1UOwzAQBuEtQ8PMMfx7/yu29lpqPI+fNASFUJPX6wk6I5XPIj3/GoddUcHTxcnbsrdzQ+nIZpmBF0stCAkzm32rApWgbLN87AFSdSQTQFgiejrqolM7wv1AOzwVfzIfIcy3IVCPQOVVwLTwpJOcpVVDCGlFg7HrojtIX9CKIj6s3ozEAAAAAElFTkSuQmCC) center no-repeat;
 		}
-	#product .socials .twitter {
+	#product .socials .ya-share2__item_service_twitter {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAAAAADM7cDOAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAACdFJOUwAAdpPNOAAAAH5JREFUGBlNwOEOgVAAhuH3/q/tyyERw4gka/MjQWvh1DnoocEromB24XqHaU0vV2ccN6CwwmqNevMCJCU13OScgJWsRZrJeQJHo6EWCDQUYu01tMN6pUZ/JZ2N0U9MrzL6Ciqc+jCWc8Z7bOXkOOtITlTi1dlyEoyipHzjfQDQJp5b6mildAAAAABJRU5ErkJggg==) center no-repeat;
 	}
-	#product .socials .twitter:hover {
+	#product .socials .ya-share2__item_service_twitter:hover {
 			background: #35ade2 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAMAAADeWG8gAAAAclBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD////2lYI3AAAAJXRSTlO/U845oo6rC500CTaxHCvZNSZ8+mR0Am7q/uEfldWFxxI//fIAvdsFiAAAAINJREFUeAFVy1UOwzAQBuEtQ8PMMfx7/yu29lpqPI+fNASFUJPX6wk6I5XPIj3/GoddUcHTxcnbsrdzQ+nIZpmBF0stCAkzm32rApWgbLN87AFSdSQTQFgiejrqolM7wv1AOzwVfzIfIcy3IVCPQOVVwLTwpJOcpVVDCGlFg7HrojtIX9CKIj6s3ozEAAAAAElFTkSuQmCC) center no-repeat;
 		}
+    #product .ya-share2__item_service_twitter .ya-share2__badge,
+    #product .ya-share2__item_service_twitter .ya-share2__icon {
+        background: none;
+    }
 	.socials .odnoklassniki {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAUCAMAAABs8jdaAAAAe1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC9eBywAAAAKHRSTlOqq/B/mFuts5nWL0rvHtdi68XHdhfMCMFxK2b6R+ZtugpS/iaFD90AotkOWQAAAJVJREFUeAElzUWyxDAAA1F9hgxDmGNbff8TTrnyFirtWnYMqUsh2vLjRJaOln/YTdYGXfs4d9DoDL+2P6HVCMH2B9TqIUXHExQqBxi+85TyspKti2UvF+DyZes4NmXRFnNTb/qDW7iHGyQldvn/X9lVjeztCTw3W3ZNds9/XOEAjFZOTXHKMb3BdfZcgdS/V9F2nA79C0xYHCqiNoilAAAAAElFTkSuQmCC) center no-repeat;
 	}
 		.socials .odnoklassniki:hover {
 			background: #f38c00 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAUCAMAAABs8jdaAAAAflBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///9C2eZrAAAAKXRSTlPwf5hbaa2Zs9YvUKss7x7XYusq3hf5h8xTCMFmhOZuugp0JsbdSP4PAKFOQcsAAACZSURBVHheNcZXksIwFAXRN0PO0eCEnCTr9v43iFVAf3Qdk+LDZ/4RJdP9RMofJ6/41Mh6yKr7OYO9nWEp6R8qc1BP/gNnAXxUPEGw4gWvRVphykdSYy6T8gtwmUl2dNciVKG9ut7WMNRdPYC3G79uthm+LPcm9U/g2UuTO1Jd8nyEA+Bk24lNbGDc2g6GVm0JOwtWRkmxOYQ3dcgcxjqn4SAAAAAASUVORK5CYII=) center no-repeat;
 		}
-	#product .socials .odnoklassniki {
+	#product .socials .ya-share2__item_service_odnoklassniki {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAUCAAAAAB+R5i0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAACdFJOUwAAdpPNOAAAAI9JREFUCB0FgFEKgjAAQN/9z/bKZFJmBQVW2ij1R0s2CCC1YRvaBLBWqoYfcFJVG1h0E9e40ZmoV+CmkV7vwEM7Jg2JVOlILrU8l1pmGFTVD8Bnp+7ewK+f8xjHvPRfKj3cn+1BA0FV1cBcq6r1DCx7df8FoFO1A3iphdrDoB5Tow5ctM7kWi9MxTEBqSmmPxMbnW3gl3gUAAAAAElFTkSuQmCC) center no-repeat;
 	}
-	#product .socials .odnoklassniki:hover {
+	#product .socials .ya-share2__item_service_odnoklassniki:hover {
 			background: #f38c00 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAUCAMAAABs8jdaAAAAflBMVEX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAAD///9C2eZrAAAAKXRSTlPwf5hbaa2Zs9YvUKss7x7XYusq3hf5h8xTCMFmhOZuugp0JsbdSP4PAKFOQcsAAACZSURBVHheNcZXksIwFAXRN0PO0eCEnCTr9v43iFVAf3Qdk+LDZ/4RJdP9RMofJ6/41Mh6yKr7OYO9nWEp6R8qc1BP/gNnAXxUPEGw4gWvRVphykdSYy6T8gtwmUl2dNciVKG9ut7WMNRdPYC3G79uthm+LPcm9U/g2UuTO1Jd8nyEA+Bk24lNbGDc2g6GVm0JOwtWRkmxOYQ3dcgcxjqn4SAAAAAASUVORK5CYII=) center no-repeat;
 		}
+    #product .ya-share2__item_service_odnoklassniki .ya-share2__badge,
+    #product .ya-share2__item_service_odnoklassniki .ya-share2__icon {
+        background: none;
+    }
 	.socials .moimir {
 		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAqFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAs30iGAAAAN3RSTlNo7Y54Mn+HSm5NK8oXtCeeck/k15ihvDXdSFiDqRCuHX436g0jLdA7RPvi89Nl3P1f8AYDAfgA1tZkPAAAAOVJREFUeAEtzUVixDAUBNEfmAwzs5lRlrrvf7NYTmr5NiXo09fjxZjqONXoszSb87+5+0fXnNUm9J9nZ0dzs/Sd81NhEa8A/0gTQ7qIa7xfNbkfn8cHFp1sufPfGYv10tSe1+05lQe/sORIA0HFFsKDZAxXjIZ70lPAQlJ2DX9g06aFomeppIOhjxY+c8n4jvkYZMYWISt5sdFFegagTj1N+JCGhXZNft+WEdl2ERtRGR3EFUlzP/HEixIkKUeduk6aBW5k7kKAMmVRBkqH5TPZBLCEpCKZ1mQDmyWo2+ti0uzwHOgXoUI2k5T9Fw8AAAAASUVORK5CYII=) center no-repeat;
 	}
@@ -118,6 +134,6 @@
     background-color: transparent;
     border:none;
     overflow:hidden;
-    width:350px;
-    height: 490px
+    width:300px;
+    height: 300px
 }

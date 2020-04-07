@@ -89,7 +89,15 @@
                                 в избранное
                             </a>
                         {% endif %}
-                        <div id="YaShare"></div>
+                        <div id="YaShare" class="ya-share2"
+                            data-services="vkontakte,twitter,facebook,odnoklassniki"
+                            data-url="https://{{ app.request.server.get('HTTP_HOST') }}{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}"
+                            data-title="{{ baseProduct.name }}"
+                            {% if images|length %}
+                                data-image="{{ images[0]|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}"
+                            {% endif %}
+                            data-description="{{ baseProduct.description|autocut }}"
+                        ></div>
                     </div>
                 </div>
             </div>
@@ -129,7 +137,7 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="https://yandex.st/share/share.js"></script>
+<script src="https://yastatic.net/share2/share.js"></script>
 <script>
 $(function() {
     // $('[itemprop]').removeAttr('itemprop');
@@ -224,27 +232,6 @@ $(function() {
             product.find('.image img').attr('src', $(this).attr('src').replace(/(_\d+)/, '_280')).data('index',$(this).data('index'));
         });
     {% endif %}
-    if ('undefined' != typeof Ya) {
-        var YaShareInstance = new Ya.share({
-            element: 'YaShare',
-            l10n: 'ru',
-            link: "{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}",
-            title: "{{ baseProduct.name|e('js') }}",
-            description: "{{ baseProduct.description|autocut|e('js') }}",
-            {% if images|length %}
-            image: "{{ images[0]|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}",
-            {% endif %}
-            elementStyle: {
-                type: 'none',
-                quickServices: ['facebook', 'vkontakte', 'twitter', 'odnoklassniki']
-            },
-            onready: function(instance) {
-                $(instance._block).find('a').each(function() {
-                    this.className = $(this).html('').data('service');
-                });
-            }
-        });
-    }
 });
 </script>
 {% endblock %}

@@ -44,8 +44,8 @@
                         <span class="RUR">Р</span>
                     </div>
                     <div class="btns coll-md-1">
-                        <a href="{{ path('cart_del', { id: product.id }) }}" class="action delete" title="Удалить" tabindex="-1">Удалить</a>
                         <a href="{{ path('cart_to_favorite', { id: product.id }) }}" class="action favorite" title="Пемереместить в избранное" tabindex="-1">В избранное</a>
+                        <a href="{{ path('cart_del', { id: product.id }) }}" class="action delete" title="Удалить" tabindex="-1">Удалить</a>
                     </div>
                 </div>
             {% endfor %}

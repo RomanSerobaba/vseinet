@@ -354,16 +354,16 @@ $(function() {
                 complete: function (jqXHR, status) {
                     var response = jqXHR.responseJSON;
 
-                    if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
-                            $('[name="create_form[organizationDetails][kpp]"]').val('');
-                            $('[name="create_form[organizationDetails][name]"]').val('');
-                            $('[name="create_form[organizationDetails][legalAddress]"]').val('');
-                            $('[name="create_form[organizationDetails][settlementAccount]"]').val('');
-                            $('[name="create_form[organizationDetails][bic]"]').val('');
-                            $('[name="create_form[organizationDetails][bankName]"]').val('');
-                            $('[name="create_form[organizationDetails][bankId]"]').val('');
-                            return false;
-                    }
+                    // if (response === undefined || !response.hasOwnProperty('data') || null === response.data) {
+                    //         $('[name="create_form[organizationDetails][kpp]"]').val('');
+                    //         $('[name="create_form[organizationDetails][name]"]').val('');
+                    //         $('[name="create_form[organizationDetails][legalAddress]"]').val('');
+                    //         $('[name="create_form[organizationDetails][settlementAccount]"]').val('');
+                    //         $('[name="create_form[organizationDetails][bic]"]').val('');
+                    //         $('[name="create_form[organizationDetails][bankName]"]').val('');
+                    //         $('[name="create_form[organizationDetails][bankId]"]').val('');
+                    //         return false;
+                    // }
 
                     $('[name="create_form[organizationDetails][kpp]"]').val(response.data.kpp);
                     $('[name="create_form[organizationDetails][name]"]').val(response.data.name);
@@ -375,13 +375,13 @@ $(function() {
                 }
             });
         } else {
-            $('[name="create_form[organizationDetails][kpp]"]').val('');
-            $('[name="create_form[organizationDetails][name]"]').val('');
-            $('[name="create_form[organizationDetails][legalAddress]"]').val('');
-            $('[name="create_form[organizationDetails][settlementAccount]"]').val('');
-            $('[name="create_form[organizationDetails][bic]"]').val('');
-            $('[name="create_form[organizationDetails][bankName]"]').val('');
-            $('[name="create_form[organizationDetails][bankId]"]').val('');
+            // $('[name="create_form[organizationDetails][kpp]"]').val('');
+            // $('[name="create_form[organizationDetails][name]"]').val('');
+            // $('[name="create_form[organizationDetails][legalAddress]"]').val('');
+            // $('[name="create_form[organizationDetails][settlementAccount]"]').val('');
+            // $('[name="create_form[organizationDetails][bic]"]').val('');
+            // $('[name="create_form[organizationDetails][bankName]"]').val('');
+            // $('[name="create_form[organizationDetails][bankId]"]').val('');
         }
     }).on('change', '[name="create_form[organizationDetails][bic]"]', function(e){
         if ('' !== $(this).val()) {

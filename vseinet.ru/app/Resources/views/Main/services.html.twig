@@ -1,5 +1,5 @@
 
-    <h3><a href="/service/" class="black">Каталог услуг</a></h3>
+    <h3><a href="/catalog/uslugi-33536/" class="black">Каталог услуг</a></h3>
     <ul>
         {% for service in services %}
             <li><a href="{% if service.url %}{{ service.url }}{% else %}/{{ service.slug }}/?id={{ service.id }}{% endif %}">{{ service.titleShort }}</a></li>

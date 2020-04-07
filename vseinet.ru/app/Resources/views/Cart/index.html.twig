@@ -73,9 +73,6 @@
         };
         cart.on('click', '.action', function() {
             var action = $(this);
-            if (action.is('.delete') && !confirm('Вы уверены?')) {
-                return false;
-            }
             sp.get(action.prop('href')).done(cart.done);
             return false;
         });

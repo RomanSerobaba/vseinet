@@ -40,8 +40,13 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                     FROM representative AS r
                     INNER JOIN geo_point AS gp ON gp.id = r.geo_point_id
                     WHERE gp.geo_city_id = :geoCityId AND r.is_active = TRUE AND r.is_central = TRUE
-                ), :defaultGeoPointId) as geo_point_id
-
+                ), :defaultGeoPointId) as geo_point_id,
+                COALESCE((
+                    SELECT true
+                    FROM representative AS r
+                    INNER JOIN geo_point AS gp ON gp.id = r.geo_point_id
+                    WHERE gp.geo_city_id = :geoCityId AND r.is_active = TRUE AND r.is_central = TRUE
+                ), false) as has_representative
             FROM base_product AS bp2
             INNER JOIN base_product AS bp ON bp2.canonical_id = bp.id
             LEFT OUTER JOIN supplier AS s ON s.id = bp.supplier_id
@@ -195,6 +200,12 @@ class GetDeliveryDateQueryHandler extends MessageHandler
 
                 $deliveryDates[$product->baseProductId] = $delivery;
                 continue;
+            }
+        }
+
+        foreach ($deliveryDates as $baseProductId => $deliveryDate) {
+            if (!$products[$baseProductId]->hasRepresentative) {
+                $deliveryDate->date->modify('+10 days');
             }
         }
 
