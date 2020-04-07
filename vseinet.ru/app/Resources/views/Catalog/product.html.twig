@@ -14,7 +14,7 @@
                 <b class="sku">{{ product.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (product.price - product.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}
             </small>
         </div>
-        <div class="rating" data-rating="{#$product.estimate#}"><span>Рейтинг:</span></div>
+        {#<div class="rating" data-rating=""><span>Рейтинг:</span></div>#}
         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') != product.availability and product.minQuantity > 1 %}
             <div style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</div>
         {% endif %}

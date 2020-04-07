@@ -98,7 +98,7 @@
         {% elseif baseProduct.minQuantity > 1 %}
             style="padding-bottom:0"
         {% endif %}
-        class="rating"
+        {# class="rating" #}
         data-rating="{{ baseProduct.estimate }}"
         {% if baseProduct.estimate %}
             itemprop="aggregateRating"
@@ -106,12 +106,12 @@
             itemtype="http://schema.org/AggregateRating"
         {% endif %}
     >
-        <span>Рейтинг:</span>
+        {# <span>Рейтинг:</span>
         {% if baseProduct.estimate %}
             <meta itemprop="ratingValue" content="{{ baseProduct.estimate }}" />
             <meta itemprop="bestRating" content="5" />
-            {#<meta itemprop="reviewCount" content="{{ baseProduct.countRreviews }}" />#}
-        {% endif %}
+            <meta itemprop="reviewCount" content="{{ baseProduct.countRreviews }}" />
+        {% endif %} #}
     </div>
     {% if baseProduct.minQuantity > 1 and not isAvailable %}
         <div style="color: rgb(242, 108, 79); margin: {% if isAvailable %}4px 0{% else %}10px 0{% endif %};">
