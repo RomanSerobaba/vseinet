@@ -201,10 +201,10 @@ class RepresentativeIdentity extends ContainerAware
             $representative->schedule = 'выходной';
         }
         elseif (0 === $schedule['s']->getTimestamp() % 3600 && 0 === $schedule['t']->getTimestamp() % 3600) {
-            $representative->schedule = $schedule['s']->format('G').' - '.$schedule['t']->format('G');
+            $representative->schedule = $schedule['s']->setTimezone(new \DateTimeZone('Europe/Moscow'))->format('G').' - '.$schedule['t']->setTimezone(new \DateTimeZone('Europe/Moscow'))->format('G');
         }
         else {
-            $representative->schedule = $schedule['s']->format('G:i').' - '.$schedule['t']->format('G:i');
+            $representative->schedule = $schedule['s']->setTimezone(new \DateTimeZone('Europe/Moscow'))->format('G:i').' - '.$schedule['t']->setTimezone(new \DateTimeZone('Europe/Moscow'))->format('G:i');
         }
 
         return $representative;
