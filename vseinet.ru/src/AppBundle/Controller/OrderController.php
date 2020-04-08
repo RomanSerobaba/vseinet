@@ -21,6 +21,8 @@ use AppBundle\Bus\User\Command\IdentifyCommand;
 use AppBundle\Entity\Contact;
 use AppBundle\Entity\OrderItemStatus;
 use AppBundle\Enum\ContactTypeCode;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
 {
@@ -221,12 +223,31 @@ class OrderController extends Controller
      */
     public function creationPageAction(Request $request)
     {
+        $response = new Response();
         if ($request->isMethod('POST')) {
             $data = $request->request->get('create_form');
             $this->get('session')->set('form.orderCreation', $data);
+
+            $response->headers->setCookie(
+                new Cookie(
+                    'order_contacts',
+                    serialize($data['client']),
+                    (new \DateTime())->modify('+365 days')
+                )
+            );
         } else {
+            $response->headers->setCookie(
+                new Cookie(
+                    'order_contacts',
+                    $request->cookies->get('order_contacts'),
+                    (new \DateTime())->modify('+365 days')
+                )
+            );
+
             $data = $this->get('session')->get('form.orderCreation', []);
-            if ($this->getUser() && !$this->getUserIsEmployee()) {
+            if (!$this->getUser() && empty($data) && !empty($request->cookies->get('order_contacts'))) {
+                $data['client'] = unserialize($request->cookies->get('order_contacts'));
+            } elseif ($this->getUser() && !$this->getUserIsEmployee()) {
                 if (empty($data['client']['fullname'])) {
                     $person = $this->getUser()->person;
                     $data['client']['fullname'] = implode(' ', [$person->getLastName(), $person->getFirstName(), $person->getSecondName()]);
@@ -355,7 +376,7 @@ class OrderController extends Controller
                         'canCreateRetailOrder' => $canCreateRetailOrder,
                         'cart' => $cart,
                     ]),
-                ]);
+                ], 200, ['Set-Cookie' => $response->headers->getCookies()]);
             }
         }
 
@@ -371,7 +392,7 @@ class OrderController extends Controller
                     'canCreateRetailOrder' => $canCreateRetailOrder,
                     'cart' => $cart,
                 ]),
-            ]);
+            ], 200, ['Set-Cookie' => $response->headers->getCookies()]);
         }
 
         return $this->render('Order/creation.html.twig', [
@@ -379,7 +400,7 @@ class OrderController extends Controller
             'canCreateRetailOrder' => $canCreateRetailOrder,
             'cart' => $cart,
             'errors' => $this->getFormErrors($form),
-        ]);
+        ], $response);
     }
 
     /**
