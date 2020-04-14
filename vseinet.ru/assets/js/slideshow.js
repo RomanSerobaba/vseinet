@@ -240,19 +240,15 @@ $(function () {
 function setBcgPos() {
     var itemWidth = $('.sheet').width();
     $('.sheet .photoBlock').each(function (index) {
-        var backgroundPos = parseInt($(this).attr('data-pos-x'));
         if (itemWidth > 750) {
             var x = (845 - itemWidth) / 2;
-            backgroundPos -= x;
-            $(this).css('backgroundPositionX', backgroundPos + 'px');
-        } else if ((itemWidth < 750) && (itemWidth > 480)) {
+            $(this).css('marginLeft', -x + 'px');
+        } else if ((itemWidth <= 750) && (itemWidth > 480)) {
             var x = (750 - itemWidth) / 2;
-            backgroundPos -= x;
-            $(this).css('backgroundPositionX', backgroundPos + 'px');
-        } else if ((itemWidth < 480) && (itemWidth > 320)) {
+            $(this).css('marginLeft', -x + 'px');
+        } else if ((itemWidth <= 480) && (itemWidth >= 320)) {
             var x = (480 - itemWidth) / 2;
-            backgroundPos -= x;
-            $(this).css('backgroundPositionX', backgroundPos + 'px');
+            $(this).css('marginLeft', -x + 'px');
         }
     });
 }
