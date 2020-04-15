@@ -15,10 +15,11 @@ class GetByIdQueryHandler extends MessageHandler
                     b.id,
                     b.name,
                     b.url,
-                    b.isForbidden,
+                    cb.isForbidden,
                     b.sefName
                 )
             FROM AppBundle:Brand AS b
+            JOIN AppBundle:Brand AS cb WITH cb.id = b.canonicalId
             WHERE b.id = :id
         ");
         $q->setParameter('id', $query->id);

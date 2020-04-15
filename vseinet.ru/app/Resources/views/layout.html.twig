@@ -12,6 +12,7 @@
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
         <link rel="stylesheet" href="{{ asset('bundles/styles.css') }}" media="all" />
+        <link rel="stylesheet" href="https://cdn.envybox.io/widget/cbk.css">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -80,6 +81,7 @@
             });
             </script>
         {% endif %}
+        <script type="text/javascript" src="https://cdn.envybox.io/widget/cbk.js?cbk_code=fec7a2627ad534082af819c2377fff39" charset="UTF-8" async></script>
         {% block javascripts %}{% endblock %}
         {% if app.environment is same as('prod') %}{% include 'counters.html.twig' %}{% endif %}
         {% include 'profiler.html.twig' %}
