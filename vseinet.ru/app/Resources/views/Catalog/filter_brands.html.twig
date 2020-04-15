@@ -22,7 +22,7 @@
                             &rarr;
                         </a>
                     {% endif %}
-                    <label for="filter_brand_{{ brand.id }}" data-id="{{ brand.id }}">
+                    <label for="filter_brand_{{ brand.id }}" data-id="{{ brand.id }}" data-aliases="{% for aliasId in brand.aliasIds %};{{ aliasId }}{% endfor %};">
                         <input
                             type="checkbox"
                             id="filter_brand_{{ brand.id }}"

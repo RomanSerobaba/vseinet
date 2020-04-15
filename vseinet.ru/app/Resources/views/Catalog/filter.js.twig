@@ -192,7 +192,12 @@ $(function() {
         });
         var fbrandIds = data.brandIds || {};
         $.map(elements.brands, function(brand) {
-            var count = fbrandIds[brand.dataset.id];
+            var count = 0;
+            brand.dataset.aliases.split(';').forEach(function(alias) {
+                if (fbrandIds[alias]) {
+                    count += fbrandIds[alias];
+                }
+            });
             brand.className = 'undefined' == typeof count ? 'disabled' : '';
             brand.querySelector('small').textContent = '(' + (count || '0') + ')';
         });

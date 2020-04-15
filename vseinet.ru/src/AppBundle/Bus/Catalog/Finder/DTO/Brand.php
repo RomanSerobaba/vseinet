@@ -12,6 +12,11 @@ class Brand
     public $id;
 
     /**
+     * @Assert\Type(type="integer")
+     */
+    public $aliasId;
+
+    /**
      * @Assert\Type(type="string")
      */
     public $name;
@@ -24,16 +29,22 @@ class Brand
     /**
      * @Assert\Type(type="integer")
      */
-    public $countProducts;
+    public $countProducts = 0;
 
     /**
      * @Assert\Type(type="boolean")
      */
     public $isTop;
 
-    public function __construct($id, $name, $sefName= null)
+    /**
+     * @Assert\All(@Assert\Type(type="integer"))
+     */
+    public $aliasIds = [];
+
+    public function __construct($id, $name, $sefName= null, $aliasId = null)
     {
         $this->id = $id;
+        $this->aliasId = $aliasId;
         $this->name = $name;
         $this->sefName = $sefName;
     }

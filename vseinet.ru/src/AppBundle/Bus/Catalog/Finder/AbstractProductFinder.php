@@ -210,23 +210,31 @@ class AbstractProductFinder extends ContainerAware
         $q = $this->getDoctrine()->getManager()->createQuery("
             SELECT
                 NEW AppBundle\Bus\Catalog\Finder\DTO\Brand (
-                    b.id,
-                    b.name,
-                    b.sefName
+                    cb.id,
+                    cb.name,
+                    cb.sefName,
+                    b.id
                 )
             FROM AppBundle:Brand AS b
+            JOIN AppBundle:Brand AS cb WITH cb.id = b.canonicalId
             WHERE b.id IN (:ids)
-            ORDER BY b.name
+            ORDER BY cb.name
         ");
         $q->setParameter('ids', array_keys($brandId2count));
-        $brands = $q->getResult('IndexByHydrator');
+        $rawBrands = $q->getResult('IndexByHydrator');
 
+        $brands = [];
         if (isset($brandId2count[0])) {
             $brands[0] = new DTO\Brand(0, 'Прочее');
+            $brands[0]->aliasIds[0] = 0;
         }
-        foreach ($brands as $id => $brand) {
-            $brand->countProducts = $brandId2count[$id];
-            $brand->isTop = isset($top[$id]);
+        foreach ($rawBrands as $rawBrand) {
+            if (!isset($brands[$rawBrand->id])) {
+                $brands[$rawBrand->id] = $rawBrand;
+            }
+            $brands[$rawBrand->id]->countProducts += $brandId2count[$rawBrand->aliasId];
+            $brands[$rawBrand->id]->isTop = isset($top[$rawBrand->aliasId]);
+            $brands[$rawBrand->id]->aliasIds[$rawBrand->aliasId] = $rawBrand->aliasId;
         }
 
         return $brands;
