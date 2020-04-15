@@ -19,9 +19,6 @@
                 <p class="quantity">{{ product.quantity }} шт</p>
                 <strong class="price {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}from_pricetag{% endif %}">{% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value and product.storePricetag > 0 %}{{ product.storePricetag|price_format }}{% else %}{{ product.price|price_format }}{% endif %} <span class="RUR">Р</span></strong>
             </div>
-            {% if '3014' == product.categoryId %}
-                <p title="Есть вопросы? Звоните по тел. 8 (8412) 290-708">+ установка</p>
-            {% endif %}
             {% if product.deliveryTax %}
                 <small>Доставка до регионального склада: +{{ product.deliveryTax|price_format }} <span class="RUR">Р</span></small>
             {% endif %}

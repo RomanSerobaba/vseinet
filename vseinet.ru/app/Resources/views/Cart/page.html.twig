@@ -31,6 +31,9 @@
                             {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') != product.availabilityCode and 1 < product.minQuantity %}
                                 <p style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</p>
                             {% endif %}
+                            {% if '3014' == product.categoryId %}
+                                <p title="Есть вопросы? Звоните по тел. 8 (8412) 290-708">+ возможна установка!</p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="quantity coll-md-3">
