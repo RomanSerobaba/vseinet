@@ -258,6 +258,35 @@ class CatalogController extends Controller
 
     /**
      * @VIA\Route(
+     *     name="catalog_markdown",
+     *     path="/markdown/",
+     *     methods={"GET", "POST"}
+     * )
+     */
+    public function markdownAction(Request $request)
+    {
+        $finder = $this->get('catalog.markdown_product.finder');
+        $finder->setFilterData($request->query->all());
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build());
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ]);
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show('markdown', $finder, $request);
+    }
+
+    /**
+     * @VIA\Route(
      *     name="catalog_search",
      *     path="/search/",
      *     methods={"GET", "POST"}

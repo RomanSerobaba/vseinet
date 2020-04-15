@@ -17,6 +17,12 @@ services:
         calls:
             - [ 'setContainer', [ '@service_container' ] ]
 
+    catalog.markdown_product.finder:
+        class: 'AppBundle\Bus\Catalog\Finder\MarkdownProductFinder'
+        public: true
+        calls:
+            - [ 'setContainer', [ '@service_container' ] ]
+
     catalog.search_product.finder:
         class: 'AppBundle\Bus\Catalog\Finder\SearchProductFinder'
         public: true
