@@ -156,6 +156,16 @@ class Representative
      */
     public $schedule;
 
+    /**
+     * @var \DateTime|null
+     */
+    public $scheduleFrom;
+
+    /**
+     * @var \DateTime|null
+     */
+    public $scheduleTo;
+
 
     /**
      * Set geoPointId.

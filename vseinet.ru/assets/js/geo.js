@@ -208,4 +208,21 @@ $(function() {
             geo.addClass('hidden');
         }
     }
+
+    var timeWrapper = $('.phone .time a'),
+        scheduleFrom = timeWrapper.data('schedule-from'),
+        scheduleTo = timeWrapper.data('schedule-to');
+
+    if (scheduleFrom) {
+        var scheduleFromTime = new Date(Date.parse('2012-05-01T' + scheduleFrom + '.000+03:00')),
+            scheduleToTime = new Date(Date.parse('2012-05-01T' + scheduleTo + '.000+03:00')),
+            timezoneOffset = new Date().getTimezoneOffset(),
+            scheduleFromMinutes = scheduleFromTime.getUTCHours() * 60 + scheduleFromTime.getUTCMinutes() - timezoneOffset,
+            scheduleToMinutes = scheduleToTime.getUTCHours() * 60 + scheduleToTime.getUTCMinutes() - timezoneOffset;
+        if (0 === scheduleFromMinutes % 60 && 0 === scheduleToMinutes % 60) {
+            timeWrapper.html((scheduleFromMinutes / 60) + ' - ' + (scheduleToMinutes / 60));
+        } else {
+            timeWrapper.html(Math.floor(scheduleFromMinutes / 60) + ':' + (scheduleFromMinutes % 60)  + ' - ' + Math.floor(scheduleToMinutes / 60) + ':' + (scheduleToMinutes % 60));
+        }
+    }
 });

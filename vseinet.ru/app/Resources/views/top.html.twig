@@ -100,7 +100,7 @@
             <br />
             <strong>8 {{ representative.phone2 }}</strong>
             <span class="time">
-                <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}">
+                <a href="{{ path('contacts_representative', { geoPointId: representative.geoPointId }) }}" data-schedule-from="{{ representative.scheduleFrom|date('H:i:s') }}" data-schedule-to="{{ representative.scheduleTo|date('H:i:s') }}">
                     {{ representative.schedule }}
                 </a>
             </span>
