@@ -17,7 +17,7 @@ class SearchQueryHandler extends MessageHandler
                     c.name,
                     c.pid
                 ),
-                CASE WHEN c.name LIKE :qo THEN 1 ELSE 2 END AS HIDDEN ORD
+                CASE WHEN c.name LIKE LOWER(:qo) THEN 1 ELSE 2 END AS HIDDEN ORD
             FROM AppBundle:Category AS c
             WHERE c.aliasForId IS NULL
                 AND (CASE WHEN EXISTS (
@@ -25,7 +25,7 @@ class SearchQueryHandler extends MessageHandler
                     FROM AppBundle:Category AS cc
                     WHERE cc.pid = c.id
                 ) THEN false ELSE true END) = true
-                AND (c.name LIKE :q1 OR c.name LIKE :q2)
+                AND (c.name LIKE LOWER(:q1) OR c.name LIKE LOWER(:q2))
             ORDER BY ORD, c.name
         ");
         $q->setParameter('q1', $query->q.'%');
