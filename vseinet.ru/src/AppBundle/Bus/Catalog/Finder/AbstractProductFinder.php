@@ -118,7 +118,7 @@ class AbstractProductFinder extends ContainerAware
             return array_merge($carry, $group['categories']);
         }, []);
 
-        $main = array_slice($categories, 0, 3, true);
+        $main = array_slice($categories, 0, 7, true);
         if (count($main)) {
             $filter = $this->getFilter();
             foreach ($main as $index => $category) {
@@ -140,7 +140,7 @@ class AbstractProductFinder extends ContainerAware
         $tree = [];
         foreach ($categories as $category) {
             if (!isset($tree[$category->id2])) {
-                if (10 === count($tree)) {
+                if (5 === count($tree)) {
                     break;
                 }
                 $tree[$category->id2] = new DTO\Category($category->id2, $category->name2);
