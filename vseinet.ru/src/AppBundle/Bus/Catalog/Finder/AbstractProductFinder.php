@@ -115,6 +115,9 @@ class AbstractProductFinder extends ContainerAware
         });
 
         $categories = array_reduce($groups, function ($carry, $group) {
+            usort($group['categories'], function ($c1, $c2) {
+                return $c1->countProducts < $c2->countProducts;
+            });
             return array_merge($carry, $group['categories']);
         }, []);
 
