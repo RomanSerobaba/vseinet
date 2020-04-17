@@ -44,7 +44,7 @@ class SearchQueryHandler extends MessageHandler
                 FROM AppBundle:Category AS c
                 INNER JOIN AppBundle:CategoryPath AS cp WITH cp.pid = c.id
                 WHERE c.aliasForId IS NULL AND c.id > 0 AND cp.id IN (:ids)
-                ORDER BY cp.level
+                ORDER BY cp.level, cp.plevel
             ");
             $q->setParameter('ids', array_keys($result));
             foreach ($q->getResult() as $item) {
