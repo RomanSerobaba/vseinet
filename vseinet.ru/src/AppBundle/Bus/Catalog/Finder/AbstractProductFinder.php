@@ -118,7 +118,7 @@ class AbstractProductFinder extends ContainerAware
             return array_merge($carry, $group['categories']);
         }, []);
 
-        $main = array_slice($categories, 0, 7, true);
+        $main = array_slice($categories, 0, 3, true);
         if (count($main)) {
             $filter = $this->getFilter();
             foreach ($main as $index => $category) {
@@ -136,7 +136,7 @@ class AbstractProductFinder extends ContainerAware
             $all->url = '?'.http_build_query($filter->build(['c' => null]));
             array_unshift($main, $all);
         }
-        $categories = array_slice($categories, 3, count($categories), true);
+        // $categories = array_slice($categories, 3, count($categories), true);
         $tree = [];
         foreach ($categories as $category) {
             if (!isset($tree[$category->id2])) {
