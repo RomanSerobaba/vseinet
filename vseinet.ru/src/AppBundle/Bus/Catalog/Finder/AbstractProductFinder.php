@@ -84,13 +84,13 @@ class AbstractProductFinder extends ContainerAware
             ORDER BY cs.popularity DESC, ORD, c.name
         ');
         $q->setParameter('ids', array_keys($categoryId2count));
-        $categories = $q->getResult('IndexByHydrator');
+        $categories = $q->getResult();
         if (count($categories) <= 1) {
             return new DTO\Categories();
         }
 
-        foreach ($categories as $id => $category) {
-            $category->countProducts = $categoryId2count[$id];
+        foreach ($categories as $category) {
+            $category->countProducts = $categoryId2count[$category->id];
         }
 
         $groups = [];
@@ -140,7 +140,7 @@ class AbstractProductFinder extends ContainerAware
         $tree = [];
         foreach ($categories as $category) {
             if (!isset($tree[$category->id2])) {
-                if (5 === count($tree)) {
+                if (10 === count($tree)) {
                     break;
                 }
                 $tree[$category->id2] = new DTO\Category($category->id2, $category->name2);
