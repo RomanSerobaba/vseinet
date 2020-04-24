@@ -1,60 +1,87 @@
 .status_tracker {
     float: right;
     margin:0 0 20px;
-    width: 60%;
+}
+.status_tracker .question-ico {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADJElEQVQ4T22Ta0iTYRTH/8/7uq3NaWtTtza32RouF6EREXTBkkQoDQo0oguVJl0I6kOZUGT1oYtEF6L7jYguE6Xo3ofmpwgCG2UXb/Oy1GnNbebu2/vE+5Yjq/Pxec75nf/zf84h+F+U29icVNEsmqAmEIYyIF3dpnetqKvj/k4nfx5Yy21iqlAdSFOqdqWmK+UiiRQARTQSwtjoyI+A11OvbmePNjcviY/XJQG6DU2qjAzdm0yN0SxnxrDEIsZ0tQQUQJc7AntbDAEqw/CA87Nv2Lug706pl4cIAL6zSGP4qNJmm5dbE9i5XI9AhKKlN4Y4B+TrRVBIgbOPXXj+hcU3t+uT6n0kn1ciACxVLw9PzbEcKJtFsLtMD0dfDIcejkKcQsAQitEQh5pl6VhkkaD+QR+efUxgsLejtv1qyTGCchs722D06bMU8ru7zEJR1RW30PlqpYb3ENuuuxGJU9zaqkU4yqHidBcGhrw+x+l5SjJtXVO+2pDrWD1fge0lWsGbk0+GMdckQ6FVjlCUQ+XFHsjEDK5ty0GCA8486UfjGy+G+jutxLi+aZXWOKOxZkUWSgqmCADeOIYA/mACe2854XSHcW6LGbk6KSgHPG0ZQf0jN7597SgTAGqdubF2pQ7F+YoJ33zkfhfsHzy4vGMmLLpUJDgeDTx758OJBy54BrvLhCcosnSOtYuzUV2sngDYdKoFeXo5aissiP8u5hPOP3fjXrMLfn9/nmCiVaX0GrM1aTd3WgQTx+NtmweTZSxy9ZOTZ5EYxfozX9A34Pa1XSpWCtmmzY/q5HLVwTVFOahemplMXlXXDImYgW1/YVLBhRfDuG93Ijjm3+e8WXpcAMypviTyx/WtstT03NVFJmwsVEGUQtDu8kM+iYVBnYZAlMMN+3c02J0I/Rht7QwGCtBQkUjqza60KSUx6WuJTGbRajJQVJAJk1oKSvlRDuGVYwiDQx5Ew+FWGgwudDZU+JOjPK6ZVzIS0dSAkD0pbEo6IYxwxVEOlIv7EnF6tCccOcl3/meZJq4pJYa1D/NYBtMJ4Sjl2I7u2yvaAfLrH/+In8OIR7saGK9FAAAAAElFTkSuQmCC) center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
 }
 .status_tracker TABLE {
     border-collapse: separate;
     border-spacing: 2px;
     width: 100%;
+    margin-bottom: 25px;
 }
 .status_tracker TH {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
+    color: #9a9a9a;
     padding: 0;
     text-align: center;
+    vertical-align: middle;
 }
 .status_tracker TD {
-    background-color: #EFEBEB;
     height: 5px;
+    vertical-align: middle;
 }
 .status_tracker .status-created {
-    background-color: #4D9901;
+    color: #4D9901;
 }
 .status_tracker .status-prepayable,
 .status_tracker .status-callable {
-    background-color: red;
+    color: red;
 }
 .status_tracker .status-shipping {
-    background-color: #EF6B00;
+    color: #EF6B00;
 }
 .status_tracker .status-transit {
-    background-color: maroon;
+    color: maroon;
 }
 .status_tracker .status-releasable,
 .status_tracker .status-arrived {
-    background-color: #09169F;
+    color: #09169F;
 }
 .status_tracker .status-completed {
-    background-color: #000;
+    color: #000;
 }
 .status_tracker .status-refunded {
-    background-color: #AAA901;
+    color: #AAA901;
 }
 .status_tracker .status-issued {
-    background-color: #C811C7;
+    color: #C811C7;
 }
 .status_tracker .status-transport,
 .status_tracker .status-post,
 .status_tracker .status-courier {
-    background-color: #4D92FF;
+    color: #4D92FF;
 }
 .status_tracker .status-stationed {
-    background-color: #03C18B;
+    color: #03C18B;
+}
+.status_tracker .status-canceled,
+.status_tracker .status-annulled {
+    color: rgb(228, 227, 23);
+}
+.status_tracker .status-lack {
+    color: rgb(145, 255, 150);
 }
 .status_tracker P {
+    margin: 0 0 5px;
+    background-color: #ffff55;
     font-size: 12px;
-    margin: 20px 0;
+    padding: 5px 10px;
+}
+.status_tracker H3 {
+    border-bottom: solid 1px lightgray;
+    font-size: 18px;
+    margin: 0 0 15px;
+}
+.status_tracker H3 .price {
+    cursor: help;
+    float: right;
 }
 .status_tracker H4 {
     border-bottom: solid 1px lightgray;
@@ -87,6 +114,5 @@
     padding: 5px 0;
 }
 .status_tracker SPAN {
-    color: #333;
     font-size: 14px;
 }

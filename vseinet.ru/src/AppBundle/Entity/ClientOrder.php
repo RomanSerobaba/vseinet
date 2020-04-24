@@ -21,6 +21,13 @@ class ClientOrder
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_type_code", type="string", length=30)
+     */
+    public $deliveryTypeCode;
+
+    /**
      * Get orderId.
      *
      * @return int
@@ -28,5 +35,29 @@ class ClientOrder
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set deliveryTypeCode.
+     *
+     * @param string $deliveryTypeCode
+     *
+     * @return OrderDoc
+     */
+    public function setDeliveryTypeCode($deliveryTypeCode)
+    {
+        $this->deliveryTypeCode = $deliveryTypeCode;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveryTypeCode.
+     *
+     * @return string
+     */
+    public function getDeliveryTypeCode()
+    {
+        return $this->deliveryTypeCode;
     }
 }

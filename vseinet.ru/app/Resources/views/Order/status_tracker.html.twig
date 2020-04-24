@@ -6,48 +6,423 @@
 
 {% block content %}
 <h1>Проверить статус заказа</h1>
-<div class="block gray w40p">
-    <div class="wrapper">
-        {% include 'Order/status_form.html.twig' %}
+<div class="w40p">
+    <div class="block gray">
+        <div class="wrapper">
+            {% include 'Order/status_form.html.twig' %}
+        </div>
     </div>
+    {% if order is not null %}
+        <div class="block">
+            <div class="wrapper">
+                {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode %}
+                    <a
+                        data-url="{{ path('sberbank', { id: order.id }) }}"
+                        rel="nofollow"
+                        href="{{ path('sberbank', { id: order.id }) }}"
+                        style="margin-bottom:15px;"
+                        class="bttn green sberbank">Оплатить сейчас</a>
+                {% endif %}
+                {% if constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
+                    <span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>
+                {% endif %}
+                {% if order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') %}
+                    <h4>Адрес пункта выдачи</h4>
+                    <p>{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}.
+                        {% if representative.hasDelivery %}<br/><br/>Вы можете оформить доставку по тел. 8 (8412) 290-708{% endif %}</p><br/>
+
+                    <h4>Расписание работы</h4>
+                    <table class="schedule">
+                        <tr>
+                            {% for day in ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'] %}
+                                <td>{{ day }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for schedule in representative.schedule %}
+                                <td colspan="{{ schedule.count }}">{{ schedule.time }}</td>
+                            {% endfor %}
+                        </tr>
+                    </table><br/>
+
+                    <h4>Для получения товара</h4>
+                    <p>
+                        {% if order.typeCode == constant('AppBundle\\Enum\\OrderTypeCode::LEGAL') %}При себе иметь доверенность или печать организации.
+                        {% else %}{% if order.prepaymentAmount > 0 %}Предъявить на кассе квитанцию о внесении предоплаты либо паспорт в случае ее утери (или электронный чек в случае электронного платежа). {% endif %}Назвать на кассе номер заказа или телефона, на который оформлялся заказ.{% endif %}
+                    </p><br/>
+
+                    <h4>Доступные способы оплаты</h4>
+                    <ul>
+                        {% for paymentType in paymentTypes %}
+                        <li>{{ paymentType.name }}{% if paymentType.code == constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') %}
+                                <a
+                                    data-url="{{ path('sberbank', { id: order.id }) }}"
+                                    rel="nofollow"
+                                    href="{{ path('sberbank', { id: order.id }) }}"
+                                    class="bttn green sberbank" style="height: 20px; line-height: 20px;">Инструкция</a>{% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') %}
+                    <h4>Важно</h4>
+                    <p>После передачи заказа в транспортную компанию, вам будет отправлен трек-номер груза.</p>
+                {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::POST') %}
+                    <h4>Важно</h4>
+                    <p>После передачи заказа в почтовое отделение, вам будет отправлен трек-номер бандероли.</p>
+                {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') %}
+                    <h4>Доставка</h4>
+                    <p>По приходу заказа на склад, с вами свяжется менеджер, чтобы согласовать время доставки.</p><br/>
+                    {% if order.typeCode == constant('AppBundle\\Enum\\OrderTypeCode::LEGAL') or order.prepaymentAmount > 0 %}
+                        <h4>Для получения товара</h4>
+                        <p>
+                            {% if order.typeCode == constant('AppBundle\\Enum\\OrderTypeCode::LEGAL') %}При себе иметь доверенность или печать организации.
+                            {% elseif order.prepaymentAmount > 0 %}Предъявить курьеру квитанцию о внесении предоплаты либо паспорт в случае ее утери (или электронный чек в случае электронного платежа). {% endif %}
+                        </p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 {% if order is not null %}
-    <div class="status_tracker">
-        <h4>
+    <div class="status_tracker w60p">
+        <h3>
             <span class="price" title="Указана сумма всех неотмененных позиций">
-                на сумму {{ order.amount|price_format }} <span class="RUR">Р</span>
+                на общую сумму {{ order.amount|price_format }} <span class="RUR">Р</span>
             </span>
             Заказ №{{ order.number }} от {{ order.createdAt|date_format('%d.%m.%Y') }}
-            {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode %}
-                <a
-                    data-url="{{ path('sberbank', { id: order.id }) }}"
-                    rel="nofollow"
-                    href="{{ path('sberbank', { id: order.id }) }}"
-                    style="margin-left:15px;"
-                    class="bttn green sberbank">Оплатить сейчас</a>
+        </h3>
+        {% for key, group in groups %}
+            {% if key == 'callable' and group.items|length > 0 %}
+                <h4 class='status-prepayable'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    Ожидайте звонка менеджера
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'prepayable' and group.items|length > 0 %}
+                <h4 class='status-prepayable'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    Ожидают внесения предоплаты
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'ready' and group.items|length > 0 %}
+                <h4 class='status-arrived'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    {% if order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') %}Готовы к получению{% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') %}Ожидают доставки{% else %}Готовы к отправке{% endif %}
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'transit' and group.items|length > 0 %}
+                <h4 class='status-transit'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    В пути
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: center; width: 90px'>Ожидается</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: center;'>{{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'courier' and group.items|length > 0 %}
+                <h4 class='status-courier'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    У курьера на доставке{% if courierPhone %}, тел. 8 (8412) {{ courierPhone }}{% endif %}
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'created' and group.items|length > 0 %}
+                <h4 class='status-created'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    {% if processingDate %}Будет обработан {{ processingDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}{% else %}В обработке{% endif %}
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'completed' and group.items|length > 0 %}
+                <h4 class='status-completed'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    Вручены клиенту
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 70px'>Дата</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right'>{{ item.updatedAt|date_format('%e.%m.%Y') }}</td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'issued' and group.items|length > 0 %}
+                <h4 class='status-issued'>
+                    <span class="price">
+                        на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
+                    </span>
+                    Ожидается решение
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: right; width: 50px'>Цена</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% elseif key == 'canceled' and group.items|length > 0 %}
+                <h4 class='status-refunded'>
+                    Отсутствующие и отмененные позиции
+                </h4>
+                <table>
+                <thead>
+                    <tr>
+                        <th style='text-align: right; width: 25px;'>#</th>
+                        <th style='text-align: center; width: 45px;'>Фото</th>
+                        <th style='text-align: left;'>Товар</th>
+                        <th style='text-align: right; width: 35px;'>Кол-во</th>
+                        <th style='text-align: center; width: 100px;'>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in group.items %}
+                <tr>
+                    <td style='text-align: right;'>{{ loop.index }}</td>
+                    <td style='text-align: center;'>
+                        <img
+                            src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
+                            alt="{{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
+                            style="width: 40px"
+                        />
+                    </td>
+                    <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
+                    <td style='text-align: right;'>{{ item.quantity }}</td>
+                    <td style='text-align: center;' class='status-{{ item.statusCode }}'>{{ item.statusCodeName }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
             {% endif %}
-            {% if constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
-                <span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>
-            {% endif %}
-        </h4>
-        {% for item in order.items %}
+        {% endfor %}
+        <a name="comments"></a>
+        <div><span class='question-ico' style='vertical-align:text-bottom'>&nbsp;</span> - Цену уточняйте у менеджера по тел. 8 (8412) 290-708</div>
+        {# {% for item in order.items %}
             <div class="position">
                 <div class="product">
                     <span class="price">
-                        <strong>{{ item.quantity }}</strong>
+                        <strong style='text-align: right;'>{{ item.quantity }}</strong>
                         по цене
-                        <strong>{{ item.retailPrice|price_format }}</strong> <span class="RUR">Р</span>
+                        <strong{% if item.retailPrice > 0 %}>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}{% else %} title='Стоимость позиции уточняйте у менеджера, тел. 8 (8412) 29-07-08'>???{% endif %}</strong> <span class="RUR">Р</span>
                     </span>
                     <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">{{ item.productName }}</a>
                 </div>
-                {#foreach from=$curr1.price_changes item=change}
-                    <div class="product" style="overflow:hidden">
-                        <span class="price">
-                            +{$change.name} <strong>{$change.amount|@price_format}</strong> <span class="RUR">Р</span>
-                        </span>
-                    </div>
-                {/foreach#}
                 <table>
                     <tr>
                         {% for statusCode, isActive in item.tracker %}
@@ -78,15 +453,9 @@
                         {% endfor %}
                     </tr>
                 </table>
-                {#% if item.comment and (
-                    constant('AppBundle\\Enum\\OrderItemStatus::IN_TRANSIT') == item.statusCode or
-                    constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') == item.statusCode)
-                %}
-                    <p class="comment">Комментарий: <i>{{ item.comment }}</i></p>
-                {% endif %#}
             </div>
         {% endfor %}
-        <p>* Внимание! Указанная дата прибытия является ожидаемой (приблизительной).</p>
+        <p>* Внимание! Указанная дата прибытия является ожидаемой (приблизительной).</p> #}
     </div>
 {% endif %}
 {% endblock %}

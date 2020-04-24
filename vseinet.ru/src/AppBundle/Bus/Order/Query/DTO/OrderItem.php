@@ -51,6 +51,16 @@ class OrderItem
     public $deliveryDate;
 
     /**
+     * @Assert\Type(type="date")
+     */
+    public $updatedAt;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $relatedDocumentId;
+
+    /**
      * @Assert\Type(type="integer")
      */
     public $prepaymentAmount;
@@ -85,6 +95,8 @@ class OrderItem
         $this->baseProductId = $item['baseProductId'];
         $this->retailPrice = $item['retailPrice'] ?? 0;
         $this->deliveryDate = $item['deliveryDate'] ?? null;
+        $this->updatedAt = $item['updatedAt'] ?? null;
+        $this->relatedDocumentId = $item['relatedDocumentId'] ?? null;
         $this->prepaymentAmount = $item['prepaymentAmount'] ?? 0;
         $this->requiredPrepayment = $item['requiredPrepayment'] ?? 0;
         $this->baseSrc = $item['imageBasename'] ?? null;

@@ -18,9 +18,10 @@ class GetRepresentativeQueryHandler extends MessageHandler
                 NEW AppBundle\Bus\Geo\Query\DTO\Representative (
                     gp.id,
                     gp.name,
-                    CONCAT(gc.name, ' ', gc.unit),
+                    CONCAT(gc.unit, ' ', gc.name),
                     ga.address,
-                    r.hasRetail
+                    r.hasRetail,
+                    r.hasDelivery
                 )
             FROM AppBundle:Representative AS r
             INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId

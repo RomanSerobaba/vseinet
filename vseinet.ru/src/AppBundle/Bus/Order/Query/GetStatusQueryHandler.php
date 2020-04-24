@@ -43,6 +43,7 @@ class GetStatusQueryHandler extends MessageHandler
                     'statusCode' => $status['code'],
                     'statusCodeName' => $status['clientName'],
                     'deliveryDate' => $status['deliveryDate'] ?? null,
+                    'relatedDocumentId' => $status['relatedDocumentId'] ?? null,
                 ]);
             }
         }
@@ -51,6 +52,10 @@ class GetStatusQueryHandler extends MessageHandler
             'id' => $order->getDId(),
             'number' => $order->getNumber(),
             'createdAt' => $order->getCreatedAt(),
+            'geoPointId' => $order->getGeoPointId(),
+            'geoCityId' => $order->getGeoCityId(),
+            'orderTypeCode' => $order->getOrderTypeCode(),
+            'deliveryType' => $client->getDeliveryTypeCode(),
             'paymentTypeCode' => $result['order']['paymentTypeCode'],
             'prepaymentAmount' => $result['order']['prepaymentAmount'],
             'items' => $items,

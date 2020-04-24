@@ -32,6 +32,11 @@ class Representative
     public $hasRetail;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $hasDelivery;
+
+    /**
      * @Assert\Type(type="array<AppBundle\Entity\RepresentativePhoto>")
      */
     public $photos;
@@ -52,12 +57,14 @@ class Representative
         $geoPointName,
         $geoCityName,
         $address,
-        $hasRetail
+        $hasRetail,
+        $hasDelivery
     ) {
         $this->geoPointId = $geoPointId;
         $this->geoPointName = $geoPointName;
         $this->geoCityName = $geoCityName;
         $this->address = $address;
         $this->hasRetail = $hasRetail;
+        $this->hasDelivery = $hasDelivery;
     }
 }

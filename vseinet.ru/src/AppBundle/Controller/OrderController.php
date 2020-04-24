@@ -15,12 +15,15 @@ use AppBundle\Enum\PaymentTypeCode;
 use AppBundle\Bus\Catalog\Paging;
 use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\ApiClient\ApiClientException;
+use AppBundle\Bus\Geo\Query\GetRepresentativeQuery;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Bus\User\Query\GetUserDataQuery;
 use AppBundle\Bus\User\Command\IdentifyCommand;
 use AppBundle\Entity\Contact;
 use AppBundle\Entity\OrderItemStatus;
 use AppBundle\Enum\ContactTypeCode;
+use AppBundle\Enum\OrderItemStatus as EnumOrderItemStatus;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,13 +35,24 @@ class OrderController extends Controller
      *     path="/order/status/",
      *     methods={"GET", "POST"}
      * )
+     * @VIA\Route(
+     *     name="status",
+     *     path="/{orderNumber}/",
+     *     requirements={"orderNumber": "\d+"},
+     *     methods={"GET", "POST"},
+     *     parameters={
+     *         @VIA\Parameter(name="orderNumber", type="integer")
+     *     }
+     * )
      */
-    public function statusAction(Request $request)
+    public function statusAction(int $orderNumber = null, Request $request)
     {
-        $query = new Query\GetStatusQuery();
+        $query = new Query\GetStatusQuery(['number' => $orderNumber]);
         $form = $this->createForm(Form\GetStatusFormType::class, $query);
 
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod('GET') && $orderNumber) {
+            $order = $this->get('query_bus')->handle($query);
+        } elseif ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
@@ -81,16 +95,111 @@ class OrderController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $statuses = [];
-        foreach ($em->getRepository(OrderItemStatus::class)->findAll() as $status) {
-            $statuses[$status->getCode()] = $status->getClientName();
+        $courierPhone = '';
+        $representative = null;
+        $processingDate = '';
+        $paymentTypes = [];
+        $groups = array_fill_keys(['callable', 'prepayable', 'ready', 'transit', 'courier', 'created', 'completed', 'issued', 'canceled'], ['items' => [], 'sum' => 0]);
+
+        if (!empty($order)) {
+            $order->amount = 0;
+
+            foreach ($order->items as $item) {
+                switch ($item->statusCode) {
+                    case EnumOrderItemStatus::CALLABLE:
+                        $groupName = 'callable';
+                        break;
+                    case EnumOrderItemStatus::PREPAYABLE:
+                        $groupName = 'prepayable';
+                        break;
+                    case EnumOrderItemStatus::ARRIVED:
+                    case EnumOrderItemStatus::RELEASABLE:
+                        $groupName = 'ready';
+                        break;
+                    case EnumOrderItemStatus::TRANSIT:
+                    case EnumOrderItemStatus::RESERVED:
+                    case EnumOrderItemStatus::SHIPPING:
+                    case EnumOrderItemStatus::STATIONED:
+                        $groupName = 'transit';
+                        break;
+                    case EnumOrderItemStatus::COURIER:
+                        if ($item->relatedDocumentId) {
+                            $data = $em->createNativeQuery('
+                                SELECT courier_phone FROM delivery_doc WHERE did = :deliveryId
+                            ', (new ResultSetMapping())->addScalarResult('courier_phone', 'courierPhone', 'string'))
+                                ->setParameter('deliveryId', $item->relatedDocumentId)
+                                ->getOneOrNullResult();
+                            if ($data) {
+                                $courierPhone = $data['courierPhone'];
+                            }
+                        }
+                        $groupName = 'courier';
+                        break;
+                    case EnumOrderItemStatus::CREATED:
+                        $groupName = 'created';
+                        break;
+                    case EnumOrderItemStatus::COMPLETED:
+                        $groupName = 'completed';
+                        break;
+                    case EnumOrderItemStatus::ISSUED:
+                        $groupName = 'issued';
+                        break;
+                    default:
+                        $order->amount -= $item->retailPrice * $item->quantity;
+                        $groupName = 'canceled';
+                }
+
+                $groups[$groupName]['items'][] = $item;
+                $groups[$groupName]['sum'] += $item->retailPrice * $item->quantity;
+                $order->amount += $item->retailPrice * $item->quantity;
+            }
+
+            usort($groups['completed']['items'], function($a, $b) {
+                return $a->updatedAt > $b->updatedAt ? -1 : 1;
+            });
+            usort($groups['transit']['items'], function($a, $b) {
+                return $a->deliveryDate < $b->deliveryDate ? -1 : 1;
+            });
+            $representative = $this->get('query_bus')->handle(new GetRepresentativeQuery(['geoPointId' => $order->geoPointId, 'geoCityId' => $order->geoCityId]));
+
+            $data = $em->createNativeQuery('
+                SELECT "date" FROM workday WHERE "date"::text = to_char(NOW(), \'YYYY-MM-DD\') ORDER BY "date" LIMIT 1
+            ', (new ResultSetMapping())->addScalarResult('date', 'date', 'string'))
+                ->getOneOrNullResult();
+            if ($data && date('H:i:s') <= '15:00:00') {
+                $processingDate = $data['date'];
+            } else {
+                $data = $em->createNativeQuery('
+                    SELECT "date" FROM workday WHERE "date" > NOW() ORDER BY "date" LIMIT 1
+                ', (new ResultSetMapping())->addScalarResult('date', 'date', 'string'))
+                    ->getOneOrNullResult();
+                if ($data) {
+                    $processingDate = $data['date'];
+                }
+            }
+
+            $paymentTypes = $em->createNativeQuery('
+                SELECT
+                    pt.code,
+                    pt.name
+                FROM representative_to_payment_type AS r2pt
+                INNER JOIN payment_type AS pt ON pt.code = r2pt.payment_type_code
+                WHERE r2pt.representative_id = :representativeId
+            ', (new ResultSetMapping())->addScalarResult('name', 'name', 'string')->addScalarResult('code', 'code', 'string'))
+                ->setParameter('representativeId', $order->geoPointId)
+                ->getResult();
         }
 
+        // var_dump($order);die();
         return $this->render('Order/status_tracker.html.twig', [
             'form' => $form->createView(),
             'errors' => $this->getFormErrors($form),
             'order' => $order ?? null,
-            'statuses' => $statuses,
+            'groups' => $groups,
+            'representative' => $representative,
+            'courierPhone' => $courierPhone,
+            'processingDate' => $processingDate,
+            'paymentTypes' => $paymentTypes ?? [],
         ]);
     }
 

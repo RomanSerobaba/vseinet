@@ -20,6 +20,20 @@ class OrderDoc
     private $DId;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_point_id", type="integer")
+     */
+    public $geoPointId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geo_city_id", type="integer")
+     */
+    public $geoCityId;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
@@ -29,7 +43,7 @@ class OrderDoc
     /**
      * @var string
      *
-     * @ORM\Column(name="order_type_code", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_type_code", type="string", length=30)
      */
     public $orderTypeCode;
 
@@ -124,5 +138,53 @@ class OrderDoc
     public function getOrderTypeCode()
     {
         return $this->orderTypeCode;
+    }
+
+    /**
+     * Set geoPointId.
+     *
+     * @param int $geoPointId
+     *
+     * @return OrderDoc
+     */
+    public function setGeoPointId($geoPointId)
+    {
+        $this->geoPointId = $geoPointId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoPointId.
+     *
+     * @return int
+     */
+    public function getGeoPointId()
+    {
+        return $this->geoPointId;
+    }
+
+    /**
+     * Set geoCityId.
+     *
+     * @param int $geoCityId
+     *
+     * @return OrderDoc
+     */
+    public function setGeoCityId($geoCityId)
+    {
+        $this->geoCityId = $geoCityId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoCityId.
+     *
+     * @return int
+     */
+    public function getGeoCityId()
+    {
+        return $this->geoCityId;
     }
 }

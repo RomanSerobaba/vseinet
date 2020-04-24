@@ -31,6 +31,16 @@ class Order
     /**
      * @Assert\Type(type="integer")
      */
+    public $geoPointId;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
+    public $geoCityId;
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $amount;
 
     /**
@@ -116,6 +126,11 @@ class Order
     public $isCancelEnabled = false;
 
     /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isCallNeeded = false;
+
+    /**
      * @Assert\All({
      *     @Assert\Type(type="AppBundle\Bus\Order\Query\DTO\OrderItem")
      * })
@@ -128,6 +143,8 @@ class Order
         $this->number = $order['number'] ?? 0;
         $this->financialCounteragentId = $order['financialCounteragentId'] ?? null;
         $this->createdAt = $order['createdAt'];
+        $this->geoPointId = $order['geoPointId'];
+        $this->geoCityId = $order['geoCityId'];
         $this->amount = 0;
         $this->paymentTypeCode = $order['paymentTypeCode'] ?? null;
         $this->paymentType = $order['paymentType'] ?? null;
@@ -139,6 +156,7 @@ class Order
         $this->typeCode = $order['orderTypeCode'] ?? null;
         $this->prepaymentAmount = $order['prepaymentAmount'] ?? 0;
         $this->isCancelRequested = $order['isCancelRequested'] ?? false;
+        $this->isCallNeeded = $order['isCallNeeded'] ?? false;
         foreach ($order['contacts'] ?? [] as $contact) {
             $this->contacts[] = new Contact(0, $contact['typeCode'], $contact['value']);
         }

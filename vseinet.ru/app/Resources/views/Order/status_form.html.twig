@@ -5,14 +5,14 @@
         {{ form_label(form.number, 'Номер заказа:') }}
         {{ form_widget(form.number, { attr: { class: 'txt' }}) }}
         <span class="status"></span>
-        {% if errors.number is defined %}<div class="error">{{ errors.number.0 }}</div>{% endif %} 
+        {% if errors.number is defined %}<div class="error">{{ errors.number.0 }}</div>{% endif %}
     </div>
-    
+
     <div class="row">
         {{ form_widget(form.submit, { label: 'Проверить статус', attr: { class: 'bttn blue' }}) }}
         {{ form_widget(form._token) }}
     </div>
-    
+
     {% if app.user is null %}
         <div class="row linker">
             или <a href="{{ path('login') }}" data-popup="Login">войдите</a> на сайт и проверьте статус в истории заказов
