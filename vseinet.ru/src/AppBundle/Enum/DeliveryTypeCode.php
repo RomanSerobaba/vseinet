@@ -13,10 +13,10 @@ class DeliveryTypeCode
     public static function getChoices(): array
     {
         return [
-            'Самовывоз' => self::EX_WORKS,
-            'Курьером' => self::COURIER,
-            'Почтой' => self::POST,
-            'Транспортной компанией' => self::TRANSPORT_COMPANY,
+            self::EX_WORKS => 'Самовывоз',
+            self::COURIER => 'Курьером',
+            self::POST => 'Почтой',
+            self::TRANSPORT_COMPANY => 'Транспортной компанией',
         ];
     }
 
@@ -25,7 +25,7 @@ class DeliveryTypeCode
         $choices = self::getChoices();
 
         if (!isset($choices[$code])) {
-            throw new \LogicException(strintf('Choice "%s" in class "%s" not found.', $code, get_called_class()));
+            throw new \LogicException(sprintf('Choice "%s" in class "%s" not found.', $code, get_called_class()));
         }
 
         return $choices[$code];

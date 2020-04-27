@@ -4,7 +4,9 @@ namespace AppBundle\Bus\Order\Query\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Bus\User\Query\DTO\Contact;
+use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\OrderItemStatus;
+use AppBundle\Enum\PaymentTypeCode;
 
 class Order
 {
@@ -32,6 +34,11 @@ class Order
      * @Assert\Type(type="integer")
      */
     public $geoPointId;
+
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $geoPointAddress;
 
     /**
      * @Assert\Type(type="integer")
@@ -147,13 +154,14 @@ class Order
         $this->geoCityId = $order['geoCityId'];
         $this->amount = 0;
         $this->paymentTypeCode = $order['paymentTypeCode'] ?? null;
-        $this->paymentType = $order['paymentType'] ?? null;
-        $this->paymentTypeName = $order['paymentTypeName'] ?? null;
-        $this->deliveryType = $order['deliveryType'] ?? null;
-        $this->deliveryTypeName = $order['deliveryType'] ?? null;
+        $this->paymentType = $order['paymentTypeCode'] ?? null;
+        $this->paymentTypeName = !empty($order['paymentTypeCode']) ? PaymentTypeCode::getName($order['paymentTypeCode']) : null;
+        $this->deliveryType = $order['deliveryTypeCode'] ?? null;
+        $this->deliveryTypeName = !empty($order['deliveryTypeCode']) ? DeliveryTypeCode::getName($order['deliveryTypeCode']) : null;
         $this->username = $order['financialCounteragentName'] ?? null;
         $this->addresseename = $order['personName'] ?? null;
         $this->typeCode = $order['orderTypeCode'] ?? null;
+        $this->geoPointAddress = $order['geoPointAddress'] ?? null;
         $this->prepaymentAmount = $order['prepaymentAmount'] ?? 0;
         $this->isCancelRequested = $order['isCancelRequested'] ?? false;
         $this->isCallNeeded = $order['isCallNeeded'] ?? false;

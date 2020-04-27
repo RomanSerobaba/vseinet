@@ -56,7 +56,7 @@ class GetStatusQueryHandler extends MessageHandler
             'geoCityId' => $order->getGeoCityId(),
             'orderTypeCode' => $order->getOrderTypeCode(),
             'deliveryType' => $client->getDeliveryTypeCode(),
-            'paymentTypeCode' => $result['order']['paymentTypeCode'],
+            'paymentTypeCode' => $client->getPaymentTypeCode(),
             'prepaymentAmount' => $result['order']['prepaymentAmount'],
             'items' => $items,
         ]);

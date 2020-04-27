@@ -28,6 +28,13 @@ class ClientOrder
     public $deliveryTypeCode;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="payment_type_code", type="string", length=30)
+     */
+    public $paymentTypeCode;
+
+    /**
      * Get orderId.
      *
      * @return int
@@ -59,5 +66,29 @@ class ClientOrder
     public function getDeliveryTypeCode()
     {
         return $this->deliveryTypeCode;
+    }
+
+    /**
+     * Set paymentTypeCode.
+     *
+     * @param string $paymentTypeCode
+     *
+     * @return OrderDoc
+     */
+    public function setPaymentTypeCode($paymentTypeCode)
+    {
+        $this->paymentTypeCode = $paymentTypeCode;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentTypeCode.
+     *
+     * @return string
+     */
+    public function getPaymentTypeCode()
+    {
+        return $this->paymentTypeCode;
     }
 }

@@ -23,7 +23,7 @@
                 {% endif %}
                 {% if order.deliveryType %}
                     <dt>Способ доставки:</dt>
-                    <dd>{{ order.deliveryTypeName }}</dd>
+                    <dd>{{ order.deliveryTypeName }}{% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == order.deliveryType %},<br/>{{ order.geoPointAddress }}{% endif %}</dd>
                 {% endif %}
                 {#if $order.delivery_type=='Транспортная компания'}
                 <dt>Название компании:</dt><dd>&nbsp;{$order.trading}</dd>
@@ -62,7 +62,7 @@
                             <dd>{{ contact.value }}</dd>
                         {% endif %}
                     {% endfor %}
-                    {% if order.address %}
+                    {% if order.address and (constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') == order.deliveryType or constant('AppBundle\\Enum\\DeliveryTypeCode::POST') == order.deliveryType) %}
                         <dt>Адрес:</dt>
                         <dd>{{ order.address }}</dd>
                     {% endif %}

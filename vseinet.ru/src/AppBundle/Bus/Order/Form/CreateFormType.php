@@ -439,7 +439,7 @@ class CreateFormType extends AbstractType
             });
 
             if (count($points) > 0) {
-                $deliveryTypes[array_search(DeliveryTypeCode::EX_WORKS, $allDeliveryTypes)] = DeliveryTypeCode::EX_WORKS;
+                $deliveryTypes[DeliveryTypeCode::EX_WORKS] = $allDeliveryTypes[DeliveryTypeCode::EX_WORKS];
                 $deliveryType = DeliveryTypeCode::EX_WORKS;
                 $point = reset($points);
 
@@ -459,7 +459,7 @@ class CreateFormType extends AbstractType
             }
 
             if ($hasDelivery) {
-                $deliveryTypes[array_search(DeliveryTypeCode::COURIER, $allDeliveryTypes)] = DeliveryTypeCode::COURIER;
+                $deliveryTypes[DeliveryTypeCode::COURIER] = $allDeliveryTypes[DeliveryTypeCode::COURIER];
                 $this->addAddressDataFields($builder, $options);
                 $builder
                     ->add('needLifting', CheckBoxType::class, [
@@ -488,7 +488,7 @@ class CreateFormType extends AbstractType
             $transportCompanies = $q->getResult('IndexByHydrator');
 
             if (count($transportCompanies) > 0) {
-                $deliveryTypes[array_search(DeliveryTypeCode::TRANSPORT_COMPANY, $allDeliveryTypes)] = DeliveryTypeCode::TRANSPORT_COMPANY;
+                $deliveryTypes[DeliveryTypeCode::TRANSPORT_COMPANY] = $allDeliveryTypes[DeliveryTypeCode::TRANSPORT_COMPANY];
                 $deliveryType = DeliveryTypeCode::TRANSPORT_COMPANY;
                 $transportCompany = reset($transportCompanies);
 
@@ -508,11 +508,11 @@ class CreateFormType extends AbstractType
                     ->add('passport', PassportType::class);
             }
 
-            $deliveryTypes[array_search(DeliveryTypeCode::POST, $allDeliveryTypes)] = DeliveryTypeCode::POST;
+            $deliveryTypes[DeliveryTypeCode::POST] = $allDeliveryTypes[DeliveryTypeCode::POST];
             $this->addAddressDataFields($builder, $options);
         }
 
-        if (!empty($options['data']->deliveryTypeCode) && false !== array_search($options['data']->deliveryTypeCode, $deliveryTypes)) {
+        if (!empty($options['data']->deliveryTypeCode) && !isset($deliveryTypes[$options['data']->deliveryTypeCode])) {
             $deliveryType = $options['data']->deliveryTypeCode;
         }
 
@@ -531,7 +531,7 @@ class CreateFormType extends AbstractType
                 ])
             ->add('deliveryTypeCode', ChoiceType::class, [
                     'required' => false,
-                    'choices' => $deliveryTypes,
+                    'choices' => array_flip($deliveryTypes),
                     'data' => $deliveryType,
                 ]);
     }
