@@ -527,6 +527,7 @@ class CatalogController extends Controller
 
         return $this->render('Catalog/'.$view.'.html.twig', $parameters + [
             'features' => $finder->getFeatures(),
+            'view' => $view,
             'filter' => $filter,
             'facets' => $facets,
             'products' => $products,

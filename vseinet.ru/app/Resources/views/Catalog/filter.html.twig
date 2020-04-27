@@ -11,12 +11,14 @@
         {% include 'Catalog/filter_availability.html.twig' %}
         {% include 'Catalog/filter_nofilled.html.twig' %}
         {# search #}
+        {% if view != 'search' %}
         <div class="tab search expanded">
             <span class="filter-titles">Поиск в наименовании</span>
         </div>
         <div class="sheet search" style="display:block">
             <input type="text" name="filter[name]" class="txt" value="{{ filter.name }}" />
         </div>
+        {% endif %}
         {# apply #}
         <div class="tab last apply">
             <a href="{{ resetUrl }}" class="gray">Сброс</a>

@@ -33,7 +33,7 @@
             <div class="row subrow">
                 <label for="{{ form.geoPointId.vars.id }}_{{ subchoice.value }}">
                     {% if subchoice.data.address is not empty %}
-                        {{ subchoice.data.address }} <a href="/contacts/{{ subchoice.value }}/">см. контакты</a>
+                        {{ subchoice.data.address }} <a href="/contacts/{{ subchoice.value }}/">см. карту</a>
                     {% else %}
                         {{ subchoice.label }}
                     {% endif %}
