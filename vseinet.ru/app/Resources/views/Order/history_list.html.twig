@@ -23,7 +23,7 @@
                 {% endif %}
                 {% if order.deliveryType %}
                     <dt>Способ доставки:</dt>
-                    <dd>{{ order.deliveryTypeName }}{% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == order.deliveryType %},<br/>{{ order.geoPointAddress }}{% endif %}</dd>
+                    <dd>{{ order.deliveryTypeName }}{% if constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') == order.deliveryType %},<br/><a href="{{ path('contacts_representative', { geoPointId: order.geoPointId }) }}" target="_blank">{{ order.geoPointAddress }}</a>{% endif %}</dd>
                 {% endif %}
                 {#if $order.delivery_type=='Транспортная компания'}
                 <dt>Название компании:</dt><dd>&nbsp;{$order.trading}</dd>
