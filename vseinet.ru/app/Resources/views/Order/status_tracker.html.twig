@@ -84,6 +84,7 @@
     {% endif %}
 </div>
 
+{% set showTooltip = false %}
 {% if order is not null %}
     <div class="status_tracker w60p">
         <h3>
@@ -123,7 +124,7 @@
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -158,7 +159,7 @@
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -193,7 +194,7 @@
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -230,7 +231,7 @@
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: center;'>{{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -265,7 +266,7 @@
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -300,7 +301,7 @@
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -337,7 +338,7 @@
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right'>{{ item.updatedAt|date_format('%e.%m.%Y') }}</td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -372,7 +373,7 @@
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
                     <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -411,8 +412,10 @@
                 </table>
             {% endif %}
         {% endfor %}
+        {% if showTooltip %}
         <a name="comments"></a>
         <div><span class='question-ico' style='vertical-align:text-bottom'>&nbsp;</span> - Цену уточняйте у менеджера по тел. 8 (8412) 290-708</div>
+        {% endif %}
         {# {% for item in order.items %}
             <div class="position">
                 <div class="product">
