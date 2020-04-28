@@ -512,7 +512,7 @@ class CreateFormType extends AbstractType
             $this->addAddressDataFields($builder, $options);
         }
 
-        if (!empty($options['data']->deliveryTypeCode) && !isset($deliveryTypes[$options['data']->deliveryTypeCode])) {
+        if (!empty($options['data']->deliveryTypeCode) && isset($deliveryTypes[$options['data']->deliveryTypeCode])) {
             $deliveryType = $options['data']->deliveryTypeCode;
         }
 
