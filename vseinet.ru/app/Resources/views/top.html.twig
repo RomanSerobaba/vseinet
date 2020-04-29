@@ -68,13 +68,22 @@
             <li><a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a> <span style="color: red; font-size: 11px; vertical-align: sub;">new</span></li>
         </ul>
     </nav>
-    {% if app.userIsEmployee %}
+    {% if app.userIsEmployee and not app.user.isFired %}
         <div style="margin-bottom: 10px; margin-top: -10px;">
             {% if app.user.isContenter %}
                 <a href="/content/stats/full">Статистика</a>
             {% else %}
                 <a href="/admin/org/lockscreen" title="Личный кабинет сотрудника">ЛК сотрудника</a>
             {% endif %}
+        </div>
+    {% elseif app.userIsWholesaler %}
+        <div style="margin-bottom: 10px; margin-top: -10px;">
+            <a
+                href="/admin/catalog"
+                title="Оптовый каталог"
+            >
+                Оптовый каталог
+            </a>
         </div>
     {% endif %}
     <a href="{{ path('complaint') }}" class="bttn light claim">Жалоба директору</a>
