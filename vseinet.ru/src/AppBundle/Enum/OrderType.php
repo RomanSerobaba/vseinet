@@ -10,11 +10,12 @@ class OrderType
     const RESUPPLY = 'resupply';
     const CONSUMABLES = 'consumables';
     const EQUIPMENT = 'equipment';
+    const COMPANY = 'company';
 
-    public static function getChoices($forEmployee = false)
+    public static function getChoices($forEmployee = false, $isFranchiser = false)
     {
         if ($forEmployee) {
-            return [
+            $data = [
                 self::NATURAL => 'Частное лицо',
                 self::LEGAL => 'Организацию',
                 self::RETAIL => 'Продажу с магазина',
@@ -22,6 +23,12 @@ class OrderType
                 self::CONSUMABLES => 'Покупку расходных материалов',
                 // self::EQUIPMENT => 'Покупку оборудования',
             ];
+
+            if ($isFranchiser) {
+                $data[self::COMPANY] = 'Свою организацию';
+            }
+
+            return $data;
         } else {
             return [
                 self::NATURAL => 'Частное лицо',

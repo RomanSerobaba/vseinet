@@ -59,8 +59,9 @@ class CreateFormType extends AbstractType
     {
         $user = $this->security->getToken()->getUser();
         $isUserEmployee = is_object($user) && $user->isEmployee();
+        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->container->get('representative.identity')->getEmployeeRepresentative()->getType();
 
-        $types = array_flip(OrderType::getChoices($isUserEmployee));
+        $types = array_flip(OrderType::getChoices($isUserEmployee, $isFranchiser));
 
         if ($isUserEmployee) {
             $points = $this->getEmployeePoints();
@@ -70,6 +71,8 @@ class CreateFormType extends AbstractType
                     return !in_array($val, [OrderType::CONSUMABLES, OrderType::EQUIPMENT, OrderType::RESUPPLY]);
                 });
             }
+
+
         }
 
         switch ($options['data']->typeCode) {

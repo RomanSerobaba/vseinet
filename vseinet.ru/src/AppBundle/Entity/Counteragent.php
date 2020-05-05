@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Counteragent.
  *
  * @ORM\Table(name="counteragent")
- * @ORM\Entity(repositoryClass="AccountingBundle\Repository\CounteragentRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CounteragentRepository")
  */
 class Counteragent
 {

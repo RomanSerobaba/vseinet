@@ -337,13 +337,15 @@ class OrderController extends Controller
             $data = $request->request->get('create_form');
             $this->get('session')->set('form.orderCreation', $data);
 
-            $response->headers->setCookie(
-                new Cookie(
-                    'order_contacts',
-                    serialize($data['client']),
-                    (new \DateTime())->modify('+365 days')
-                )
-            );
+            if (!empty($data['client'])) {
+                $response->headers->setCookie(
+                    new Cookie(
+                        'order_contacts',
+                        serialize($data['client']),
+                        (new \DateTime())->modify('+365 days')
+                    )
+                );
+            }
         } else {
             $response->headers->setCookie(
                 new Cookie(
