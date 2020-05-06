@@ -40,6 +40,8 @@ class GetRevisionsQueryHandler extends MessageHandler
             INNER JOIN product AS p ON p.base_product_id = bp.canonical_id AND p.geo_city_id = 0
             INNER JOIN competitor AS c ON c.id = cp.competitor_id
             INNER JOIN competitor_to_geo_city AS c2c ON c2c.competitor_id = c.id
+            INNER JOIN partner_product AS pp ON pp.id = cp.partner_product_id
+            INNER JOIN parser_product AS pars ON pars.target_partner_product_id = cp.partner_product_id
             WHERE bp.canonical_id = :base_product_id AND c2c.geo_city_id = :geo_city_id AND c.is_active = true
             ORDER BY cp.updated_at
         ", new DTORSM(DTO\Revision::class));
