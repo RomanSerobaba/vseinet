@@ -59,7 +59,7 @@ class CreateFormType extends AbstractType
     {
         $user = $this->security->getToken()->getUser();
         $isUserEmployee = is_object($user) && $user->isEmployee();
-        $isFranchiser = RepresentativeTypeCode::FRANCHISER === $this->container->get('representative.identity')->getEmployeeRepresentative()->getType();
+        $isFranchiser = $isUserEmployee && RepresentativeTypeCode::FRANCHISER === $this->container->get('representative.identity')->getEmployeeRepresentative()->getType();
 
         $types = array_flip(OrderType::getChoices($isUserEmployee, $isFranchiser));
 
