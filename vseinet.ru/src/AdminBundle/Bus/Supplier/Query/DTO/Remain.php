@@ -2,8 +2,8 @@
 
 namespace AdminBundle\Bus\Supplier\Query\DTO;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\Enum;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Remain
 {
@@ -66,9 +66,4 @@ class Remain
      * @Assert\Type(type="datetime")
      */
     public $transferedAt;
-
-    /**
-     * @Assert\Type(type="boolean")
-     */
-    public $isSupplier;
 }

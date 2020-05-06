@@ -5,7 +5,7 @@ namespace AppBundle\Enum;
 class BaseProductHistoryObject
 {
     public const BASE_PRODUCT = 'base_product';
-    public const SUPPLIER_PRODUCT = 'supplier_product';
+    public const PARTNER_PRODUCT = 'partner_product';
     public const NAME = 'name';
     public const EXNAME = 'exname';
     public const CATEGORY = 'category';

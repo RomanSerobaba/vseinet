@@ -41,7 +41,7 @@ class GetMenuQueryHandler extends MessageHandler
         $tree = [];
         foreach ($categories as $category) {
             $tree[$category->level][$category->id] = $category;
-            if (0 < $category->level) {
+            if (1 < $category->level) {
                 $tree[$category->level - 1][$category->pid]->children[] = $category->id;
             }
         }
@@ -50,7 +50,7 @@ class GetMenuQueryHandler extends MessageHandler
             $ids2 = $category->children;
             $count = count($ids2);
             if (8 < $count) {
-                $colsLast= floor($count / 7);
+                $colsLast = floor($count / 7);
                 $ids2Last = array_slice($ids2, 8 - $colsLast);
                 if (2 < $colsLast) {
                     $ids2Last2 = array_slice($ids2Last, ($colsLast - 2) * 6);
@@ -75,14 +75,16 @@ class GetMenuQueryHandler extends MessageHandler
             switch ($count) {
                 case 3:
                 case 2: $full2[1] = true;
+                // no break
                 case 1: $full2[0] = true;
                     break;
                 case 5: $full2[4] = true;
+                // no break
                 case 6:
                 case 4: $full2[3] = true;
                     break;
             }
-            foreach ($category->children as $index => & $category2) {
+            foreach ($category->children as $index => &$category2) {
                 $ids3 = $category2->children;
                 if (!isset($full2[$index]) && count($ids3) > 3) {
                     $ids3 = array_slice($ids3, 0, 3);

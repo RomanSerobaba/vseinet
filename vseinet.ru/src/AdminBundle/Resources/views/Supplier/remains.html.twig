@@ -42,8 +42,5 @@
             <a href="{{ path('admin_supplier_unlink') }}" class="supplier-unlink" data-id="{{ remain.id }}" title="Удалить"></a>
             <a href="{{ path('admin_supplier_restore') }}" class="supplier-restore" data-id="{{ remain.id }}" title="Восстановить" style="display:none"></a>
         {% endif %}
-        {% if remain.isSupplier != true and remain.supplierCode is not null %}
-            <span style="color:#de5e42;font-weight:bold">Только конкурент!</span>
-        {% endif %}
     </div>
 {% endfor %}
