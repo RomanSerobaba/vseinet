@@ -3,7 +3,7 @@
         <div class="actions">
         {% if app.employeeRepresentative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
             <a
-                href="{{ path('authority', { targetUrl: '/admin/product/' ~ product.id }) }}"
+                href="{{ path('authority', { targetUrl: '/admin/content/product/' ~ product.id }) }}"
                 class="edit"
                 target="_blank"
                 title="Редактировать"
