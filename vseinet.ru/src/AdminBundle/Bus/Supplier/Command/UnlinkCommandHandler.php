@@ -25,30 +25,6 @@ class UnlinkCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар поставщика с кодом %d не найден', $command->supplierProductId));
         }
 
-        $competitor = $em->getRepository(Competitor::class)->findOneBy(['supplierId' => $supplierProduct->getSupplierId()]);
-
-        if ($competitor) {
-            $competitorProduct = $em->getRepository(CompetitorProduct::class)->findOneBy([
-                'code' => $supplierProduct->getCode(),
-                'competitorId' => $competitor->getId(),
-            ]);
-
-            if ($competitorProduct) {
-                $em->remove($competitorProduct);
-                $em->flush();
-            }
-
-            $competitorProduct = $em->getRepository(CompetitorProduct::class)->findOneBy([
-                'baseProductId' => $supplierProduct->getBaseProductId(),
-                'competitorId' => $competitor->getId(),
-            ]);
-
-            if ($competitorProduct) {
-                $em->remove($competitorProduct);
-                $em->flush();
-            }
-        }
-
         $supplierProduct->setBaseProductId(null);
         $em->persist($supplierProduct);
         $em->flush();
