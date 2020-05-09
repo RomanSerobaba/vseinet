@@ -36,18 +36,18 @@ class SupplierProduct
     private $supplierId;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="partner_product_id", type="integer")
+     */
+    private $partnerProductId;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="product_availability_code", type="string")
      */
     private $productAvailabilityCode;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="code", type="string")
-     */
-    private $code;
 
 
     /**
@@ -109,6 +109,30 @@ class SupplierProduct
     }
 
     /**
+     * Set partnerProductId
+     *
+     * @param integer $partnerProductId
+     *
+     * @return SupplierProduct
+     */
+    public function setPartnerProductId($partnerProductId)
+    {
+        $this->partnerProductId = $partnerProductId;
+
+        return $this;
+    }
+
+    /**
+     * Get partnerProductId
+     *
+     * @return int
+     */
+    public function getPartnerProductId()
+    {
+        return $this->partnerProductId;
+    }
+
+    /**
      * Set productAvailabilityCode
      *
      * @param string $productAvailabilityCode
@@ -130,30 +154,6 @@ class SupplierProduct
     public function getProductAvailabilityCode()
     {
         return $this->productAvailabilityCode;
-    }
-
-    /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return SupplierProduct
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 }
 
