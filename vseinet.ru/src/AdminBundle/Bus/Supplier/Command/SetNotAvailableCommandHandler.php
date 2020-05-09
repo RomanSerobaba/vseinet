@@ -13,7 +13,7 @@ class SetNotAvailableCommandHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $supplierProduct = $em->getRepository(SupplierProduct::class)->find($command->supplierProductId);
+        $supplierProduct = $em->getRepository(SupplierProduct::class)->findOneBy(['partnerProductId' => $command->supplierProductId]);
         if (!$supplierProduct instanceof SupplierProduct) {
             throw new NotFoundHttpException(sprintf('Товар поставщика с кодом %d не найден', $command->supplierProductId));
         }
