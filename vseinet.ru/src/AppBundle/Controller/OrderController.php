@@ -355,7 +355,8 @@ class OrderController extends Controller
                 )
             );
 
-            $data = $this->get('session')->get('form.orderCreation', []);
+            $data = $this->get('session')->get('form.orderCreation');
+            $data = is_iterable($data) ? $data : [];
             if (!$this->getUser() && empty($data) && !empty($request->cookies->get('order_contacts'))) {
                 $data['client'] = unserialize($request->cookies->get('order_contacts'));
             } elseif ($this->getUser() && !$this->getUserIsEmployee()) {
