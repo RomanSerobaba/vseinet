@@ -10,7 +10,7 @@ class OrderType
     const RESUPPLY = 'resupply';
     const CONSUMABLES = 'consumables';
     const EQUIPMENT = 'equipment';
-    const COMPANY = 'company';
+    const WHOLESALE = 'wholesale';
 
     public static function getChoices($forEmployee = false, $isFranchiser = false)
     {
@@ -25,7 +25,7 @@ class OrderType
             ];
 
             if ($isFranchiser) {
-                $data[self::COMPANY] = 'Свою организацию';
+                $data[self::WHOLESALE] = 'Оптовый';
             }
 
             return $data;
@@ -39,6 +39,6 @@ class OrderType
 
     public static function isInnerOrder($typeCode)
     {
-        return in_array($typeCode, [self::RESUPPLY, self::EQUIPMENT, self::CONSUMABLES]);
+        return in_array($typeCode, [self::RESUPPLY, self::EQUIPMENT, self::CONSUMABLES, self::WHOLESALE]);
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Enum;
 
@@ -9,5 +9,4 @@ class GoodsConditionCode
     const EQUIPMENT = 'equipment';
     const ISSUED = 'issued';
     const RELEASABLE = 'releasable';
-    const RESUPPLY = 'resupply';
 }

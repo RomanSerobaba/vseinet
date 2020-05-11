@@ -14,6 +14,7 @@ class OrderTypeCode
     public const RESUPPLY = 'resupply';
     public const REQUEST = 'request';
     public const CONSUMABLES = 'consumables';
+    public const WHOLESALE = 'wholesale';
 
     public static function isClient($code)
     {
