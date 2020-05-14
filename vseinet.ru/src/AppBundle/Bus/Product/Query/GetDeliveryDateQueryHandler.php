@@ -34,7 +34,7 @@ class GetDeliveryDateQueryHandler extends MessageHandler
                 (SELECT product_availability_code FROM product WHERE base_product_id = bp.id AND geo_city_id IN (0, :geoCityId) ORDER BY geo_city_id DESC LIMIT 1 ) AS availability,
                 bp.supplier_id,
                 bp.supplier_availability_code AS supplier_availability,
-                s.order_delivery_date AS supplier_delivery_date,
+                COALESCE(s.order_delivery_date, now() + \'14 day\') AS supplier_delivery_date,
                 COALESCE((
                     SELECT r.geo_point_id
                     FROM representative AS r
