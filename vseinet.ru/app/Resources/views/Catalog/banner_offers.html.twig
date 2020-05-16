@@ -1,0 +1,39 @@
+{% extends "layout.html.twig" %}
+
+{% block pageTitle %}Уценка в интернет-магазине Vseinet.ru{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="breadcrumbs">
+            <a href="{{ path('catalog') }}">Каталог</a>
+        </div>
+        <div class="title category-title">
+            <h1>{{ banner.title }}</h1>
+            {% set total = facets.total %}
+            <small id="products-total">{{ total }}{% if total == 10000 %}+{% endif %} {{ total|declension('товар;товара;товаров') }}</small>
+        </div>
+        <div class="mobile-filter-box">
+            <div class="mobile-filter-btn">
+                <a href="#" class="bttn light">Показать фильтры по параметрам <span class="hide">Показать фильтры</span></a>
+            </div>
+            <nav class="sort" id="sorting">
+                {% include 'Catalog/sorting.html.twig' %}
+            </nav>
+        </div>
+        <div id="category">
+            <nav id="nav">
+                {% include 'Catalog/filter.html.twig' %}
+            </nav>
+            <div class="wrapper">
+                <div id="main-categories">
+                    {% include 'Catalog/filter_main_categories.html.twig' %}
+                </div>
+                {% include 'Catalog/products.html.twig' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {% include 'Catalog/filter.js.twig' %}
+{% endblock %}

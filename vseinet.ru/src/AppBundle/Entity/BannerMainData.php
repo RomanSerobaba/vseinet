@@ -392,6 +392,26 @@ class BannerMainData
      */
     private $templatesId;
 
+    /**
+     * @ORM\Column(name="base_products_ids", type="json", nullable=true)
+     *
+     * @var string|null
+     */
+    private $baseProductsIds;
+
+    /**
+     * @ORM\Column(name="categories_ids", type="json", nullable=true)
+     *
+     * @var string|null
+     */
+    private $categoriesIds;
+
+    /**
+     * @ORM\Column(name="brands_ids", type="json", nullable=true)
+     *
+     * @var string|null
+     */
+    private $brandsIds;
 
     /**
      * Get id.
@@ -1673,5 +1693,71 @@ class BannerMainData
     public function getTemplatesId()
     {
         return $this->templatesId;
+    }
+
+    /**
+     * Set baseProductsIds.
+     *
+     * @param array|null $baseProductsIds
+     *
+     * @return BannerMainData
+     */
+    public function setBaseProductsIds($baseProductsIds = null): self
+    {
+        $this->baseProductsIds = $baseProductsIds;
+
+        return $this;
+    }
+
+    /**
+     * Get baseProductsIds.
+     */
+    public function getBaseProductsIds(): ?array
+    {
+        return $this->baseProductsIds;
+    }
+
+    /**
+     * Set categoriesIds.
+     *
+     * @param array|null $categoriesIds
+     *
+     * @return BannerMainData
+     */
+    public function setCategoriesIds($categoriesIds = null): self
+    {
+        $this->categoriesIds = $categoriesIds;
+
+        return $this;
+    }
+
+    /**
+     * Get categoriesIds.
+     */
+    public function getCategoriesIds(): ?array
+    {
+        return $this->categoriesIds;
+    }
+
+    /**
+     * Set brandsIds.
+     *
+     * @param array|null $brandsIds
+     *
+     * @return BannerMainData
+     */
+    public function setBrandsIds($brandsIds = null): self
+    {
+        $this->brandsIds = $brandsIds;
+
+        return $this;
+    }
+
+    /**
+     * Get brandsIds.
+     */
+    public function getBrandsIds(): ?array
+    {
+        return $this->brandsIds;
     }
 }

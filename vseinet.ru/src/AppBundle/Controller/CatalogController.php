@@ -17,6 +17,7 @@ use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
 use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
+use AppBundle\Entity\BannerMainData;
 use AppBundle\Entity\Brand;
 use AppBundle\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -254,6 +255,41 @@ class CatalogController extends Controller
         }
 
         return $this->show('total_sale', $finder, $request);
+    }
+
+    /**
+     * @VIA\Route(
+     *     name="banner_offers",
+     *     path="/bn/offers/{bannerId}/",
+     *     requirements={"bannerId": "\d+"},
+     *     methods={"GET", "POST"},
+     *     parameters={
+     *         @VIA\Parameter(name="bannerId", type="integer")
+     *     }
+     * )
+     */
+    public function bannerOffersAction(int $bannerId, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $banner = $em->getRepository(BannerMainData::class)->find($bannerId);
+        $finder = $this->get('catalog.banner_offers_product.finder');
+        $finder->setFilterData($request->query->all(), $banner);
+
+        if ($request->isMethod('POST')) {
+            $finder->handleRequest($request->request->get('filter'));
+            $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build(['bannerId' => $bannerId]));
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'facets' => $finder->getFacets(),
+                    'filterUrl' => $filterUrl,
+                ]);
+            }
+
+            return $this->redirect($filterUrl);
+        }
+
+        return $this->show('banner_offers', $finder, $request, ['banner' => $banner], ['bannerId' => $bannerId]);
     }
 
     /**
