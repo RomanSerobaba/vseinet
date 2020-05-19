@@ -3,9 +3,9 @@
 namespace AdminBundle\Bus\Supplier\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
-use AppBundle\Entity\SupplierProduct;
+use AppBundle\Entity\PartnerProduct;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestoreCommandHandler extends MessageHandler
 {
@@ -18,18 +18,13 @@ class RestoreCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->baseProductId));
         }
 
-        $supplierProduct = $em->getRepository(SupplierProduct::class)->find($command->supplierProductId);
-        if (!$supplierProduct instanceof SupplierProduct) {
-            throw new NotFoundHttpException(sprintf('Товар поставщика с кодом %d не найден', $command->supplierProductId));
+        $partnerProduct = $em->getRepository(PartnerProduct::class)->find($command->partnerProductId);
+        if (!$partnerProduct instanceof PartnerProduct) {
+            throw new NotFoundHttpException(sprintf('Товар партнера с кодом %d не найден', $command->partnerProductId));
         }
 
-        $supplierProduct->setBaseProductId($baseProduct->getId());
-        $em->persist($supplierProduct);
+        $partnerProduct->setBaseProductId($baseProduct->getId());
+        $em->persist($partnerProduct);
         $em->flush();
-
-        // $q = $em->getConnection()->prepare("
-        //     SELECT supplier_product_after_update({$command->baseProductId})
-        // ");
-        // $q->execute();
     }
 }

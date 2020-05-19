@@ -186,7 +186,7 @@ $(function() {
         e.preventDefault();
         sp.post(this.href, {
             baseProductId: this.closest('.admin-panel').dataset.id,
-            supplierProductId: this.dataset.id
+            partnerProductId: this.dataset.id
         }).then(function(response) {
             e.target.style.display = 'none';
             e.target.nextElementSibling.style.display = 'inline-block';
@@ -196,7 +196,7 @@ $(function() {
         e.preventDefault();
         sp.post(this.href, {
             baseProductId: this.closest('.admin-panel').dataset.id,
-            supplierProductId: this.dataset.id
+            partnerProductId: this.dataset.id
         }).then(function(response) {
             e.target.style.display = 'none';
             e.target.previousElementSibling.style.display = 'inline-block';
@@ -205,7 +205,7 @@ $(function() {
     container.on('click', '.admin-panel .supplier-set-not-available', function(e) {
         e.preventDefault();
         sp.post(this.href, {
-            supplierProductId: this.dataset.id
+            partnerProductId: this.dataset.id
         }).then(function(response) {
             e.target.closest('.supplier-product').querySelector('.supplier-availability').style.color = 'red';
             e.target.remove();

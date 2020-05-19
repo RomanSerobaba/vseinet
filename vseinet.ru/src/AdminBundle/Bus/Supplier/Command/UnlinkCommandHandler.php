@@ -3,11 +3,9 @@
 namespace AdminBundle\Bus\Supplier\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\BaseProduct;
-use AppBundle\Entity\Competitor;
-use AppBundle\Entity\CompetitorProduct;
-use AppBundle\Entity\SupplierProduct;
+use AppBundle\Entity\PartnerProduct;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UnlinkCommandHandler extends MessageHandler
 {
@@ -20,24 +18,13 @@ class UnlinkCommandHandler extends MessageHandler
             throw new NotFoundHttpException(sprintf('Товар с кодом %d не найден', $command->baseProductId));
         }
 
-        $supplierProduct = $em->getRepository(SupplierProduct::class)->findOneBy(['partnerProductId' => $command->supplierProductId]);
-        if (!$supplierProduct instanceof SupplierProduct) {
-            throw new NotFoundHttpException(sprintf('Товар поставщика с ид %d не найден', $command->supplierProductId));
+        $partnerProduct = $em->getRepository(PartnerProduct::class)->find($command->partnerProductId);
+        if (!$partnerProduct instanceof PartnerProduct) {
+            throw new NotFoundHttpException(sprintf('Товар партнера с ид %d не найден', $command->partnerProductId));
         }
-
-        $supplierProduct->setBaseProductId(null);
-        $em->persist($supplierProduct);
-        $em->flush();
-
-        $partnerProduct = $em->getRepository(SupplierProduct::class)->find($command->supplierProductId);
 
         $partnerProduct->setBaseProductId(null);
         $em->persist($partnerProduct);
         $em->flush();
-
-        // $q = $em->getConnection()->prepare("
-        //     SELECT supplier_product_after_update({$command->baseProductId})
-        // ");
-        // $q->execute();
     }
 }

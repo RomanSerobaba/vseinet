@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AdminBundle\Bus\Supplier\Command;
 
@@ -14,8 +14,8 @@ class RestoreCommand extends Message
     public $baseProductId;
 
     /**
-     * @Assert\NotBlank(message="Выберите товар поставщика")
+     * @Assert\NotBlank(message="Выберите товар партнера")
      * @Assert\Type(type="numeric")
      */
-    public $supplierProductId;
+    public $partnerProductId;
 }
