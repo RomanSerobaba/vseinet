@@ -5,6 +5,7 @@ namespace AdminBundle\Bus\Supplier\Command;
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Entity\BaseProduct;
 use AppBundle\Entity\PartnerProduct;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestoreCommandHandler extends MessageHandler
@@ -38,7 +39,7 @@ class RestoreCommandHandler extends MessageHandler
                 :user_id,
                 :object,
                 :new_value
-        ');
+        ', new ResultSetMapping());
         $q->execute([
             'base_product_id' => $baseProduct->getId(),
             'user_id' => $this->getUser()->getId(),
