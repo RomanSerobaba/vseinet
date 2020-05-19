@@ -25,6 +25,27 @@ class RestoreCommandHandler extends MessageHandler
 
         $partnerProduct->setBaseProductId($baseProduct->getId());
         $em->persist($partnerProduct);
+
+        $q = $em->createNativeQuery('
+            INSERT INTO base_product_history (
+                base_product_id,
+                user_id,
+                object,
+                new_value
+            )
+            SELECT
+                :base_product_id,
+                :user_id,
+                :object,
+                :new_value
+        ');
+        $q->execute([
+            'base_product_id' => $baseProduct->getId(),
+            'user_id' => $this->getUser()->getId(),
+            'object' => 'partner_product',
+            'new_value' => $partnerProduct->getId(),
+        ]);
+
         $em->flush();
     }
 }
