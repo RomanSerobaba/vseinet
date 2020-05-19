@@ -1,3 +1,7 @@
 /.idea
 /nbproject
 .php_cs.cache
+
+Apache-PHP-7-x64\+Nginx-1.12_vhosta.conf
+
+Apache-PHP-7-x64\+Nginx-1.12_vhostn.conf
