@@ -54,7 +54,7 @@ class SetPriceCommandHandler extends MessageHandler
             $em->flush();
         }
 
-        if ($product->getPrice() > $command->price && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && ($baseProduct->getSupplierPrice() > $command->price || !in_array($this->getUser()->getId(), [4980, 1501, 65621, 12538, 106265])) && (!$isFranchiser || $franchiserRepresentative->getGeoCityId() !== $geoCityId)) {
+        if ($product->getPrice() > $command->price && !$this->getUser()->isRoleIn([UserRole::ADMIN, UserRole::PURCHASER]) && ($baseProduct->getSupplierPrice() > $command->price || !in_array($this->getUser()->getId(), [4980, 1501, 65621, 10602, 12538, 106265])) && (!$isFranchiser || $franchiserRepresentative->getGeoCityId() !== $geoCityId)) {
             throw new BadRequestHttpException(sprintf('У вас нет прав на снижение цены, обратитесь к уполномоченному'));
         }
 
