@@ -3,8 +3,6 @@
 namespace AppBundle\Bus\Main\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
-use AppBundle\Entity\BannerMainData;
-use AppBundle\Entity\BannerMainProductData;
 
 class GetBannerMainQueryHandler extends MessageHandler
 {
@@ -22,26 +20,17 @@ class GetBannerMainQueryHandler extends MessageHandler
 
         $q = $em->createQuery("
             SELECT b
-            FROM AppBundle:BannerMainData AS b
+            FROM AppBundle:Banner AS b
             WHERE
-                b.isVisible = true
-                AND (b.startVisibleDate IS NULL OR b.startVisibleDate <= CURRENT_TIMESTAMP())
-                AND (b.endVisibleDate IS NULL OR b.endVisibleDate >= CURRENT_TIMESTAMP())
-            ORDER BY b.weight, b.id
+                COALESCE(b.activeSince, CURRENT_TIMESTAMP()) <= CURRENT_TIMESTAMP()
+                AND COALESCE(b.activeTill, CURRENT_TIMESTAMP()) >= CURRENT_TIMESTAMP()
+            ORDER BY b.priority, b.id DESC
         ");
         $banners = $q->getResult();
         if (!empty($banners)) {
             foreach ($banners as $banner) {
                 $result['banners'][$banner->getId()] = $banner;
             }
-
-            $products = $em->getRepository(BannerMainProductData::class)->findBy(['bannerId' => array_keys($result['banners'])], ['id' => 'ASC']);
-            $bannerId2products = [];
-            foreach ($products as $product) {
-                $bannerId2products[$product->getBannerId()][] = $product;
-            }
-
-            $result['products'] = $bannerId2products;
         }
 
         $cachedBanners->set($result);

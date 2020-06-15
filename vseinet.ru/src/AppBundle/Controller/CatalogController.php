@@ -17,7 +17,7 @@ use AppBundle\Bus\Catalog\Enum\Sort;
 use AppBundle\Bus\Main\Command\AddViewHistoryCategoryCommand;
 use AppBundle\Bus\Main\Command\AddViewHistoryBrandCommand;
 use AppBundle\Bus\Product\Query\GetLocalAvailabilityQuery;
-use AppBundle\Entity\BannerMainData;
+use AppBundle\Entity\Banner;
 use AppBundle\Entity\Brand;
 use AppBundle\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -271,7 +271,7 @@ class CatalogController extends Controller
     public function bannerOffersAction(int $bannerId, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $banner = $em->getRepository(BannerMainData::class)->find($bannerId);
+        $banner = $em->getRepository(Banner::class)->find($bannerId);
         $finder = $this->get('catalog.banner_offers_product.finder');
         $finder->setFilterData($request->query->all(), $banner);
 

@@ -5,17 +5,17 @@
             <div class="sheet">
                 <a rel="nofollow" href="{% if banner.url %}{{ banner.url }}{% elseif banner.baseProductsIds or banner.categoriesIds %}{{ url('banner_offers', { bannerId: banner.id }) }}{% endif %}">
                     <picture>
-                        <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" media="(min-width: 1160px)" />
-                        <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPc)|replace({' ':'%20'}) }}" type="image/jpg" media="(min-width: 1160px)" />
-                        <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" media="(min-width: 481px)" />
-                        <source srcset="{{ asset(imagedir ~ banner.imgBackgroundTablet)|replace({' ':'%20'}) }}" type="image/jpg" media="(min-width: 481px)" />
-                        <source srcset="{{ asset(imagedir ~ banner.imgBackgroundPhone)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
+                        <source srcset="{{ asset(imagedir ~ banner.imagePc)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" media="(min-width: 1160px)" />
+                        <source srcset="{{ asset(imagedir ~ banner.imagePc)|replace({' ':'%20'}) }}" type="image/jpg" media="(min-width: 1160px)" />
+                        <source srcset="{{ asset(imagedir ~ banner.imageTablet)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" media="(min-width: 481px)" />
+                        <source srcset="{{ asset(imagedir ~ banner.imageTablet)|replace({' ':'%20'}) }}" type="image/jpg" media="(min-width: 481px)" />
+                        <source srcset="{{ asset(imagedir ~ banner.imagePhone)|replace({'.jpg':'.webp',' ':'%20'}) }}" type="image/webp" />
                         <img
                             class="photoBlock {% if loop.index > 1 %} lazyload{% endif %}"
                             data-pos-x="0"
-                            src="{{ asset(imagedir ~ banner.imgBackgroundPhone) }}"
-                            data-src="{{ asset(imagedir ~ banner.imgBackgroundPhone) }}"
-                            alt="{{ banner.title }}"
+                            src="{{ asset(imagedir ~ banner.imagePhone) }}"
+                            data-src="{{ asset(imagedir ~ banner.imagePhone) }}"
+                            alt="{{ banner.name }}"
                         />
                     </picture>
                 </a>
@@ -26,7 +26,7 @@
         {% for banner in banners %}
             <div
                 class="tab tabExample{% if banner.tabIsFixed %} fixed{% endif %}"
-                style="background:{% if banner.tabImg %} url('{{ asset(imagedir ~ banner.tabImg) }}') {{ banner.tabImgPosX }}px {{ banner.tabImgPosY }}px no-repeat{% endif %} {{ banner.tabBackgroundColor }}">
+                style="background:{{ banner.tabBackgroundColor }}">
                 {% if banner.tabText %}
                     <div class="textTab" style="color:{{ banner.tabTextColor|default('#000000') }}">
                         {{ banner.tabText }}
