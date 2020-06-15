@@ -2,13 +2,13 @@
 
 namespace AppBundle\Bus\Catalog\Finder;
 
-use AppBundle\Entity\BannerMainData;
+use AppBundle\Entity\Banner;
 use AppBundle\Enum\ProductAvailabilityCode;
 
 class BannerOffersProductFinder extends AbstractProductFinder
 {
     /**
-     * @var BannerMainData
+     * @var Banner
      */
     protected $banner;
 
@@ -17,7 +17,7 @@ class BannerOffersProductFinder extends AbstractProductFinder
      *
      * @return self
      */
-    public function setFilterData(iterable $values, BannerMainData $banner): self
+    public function setFilterData(iterable $values, Banner $banner): self
     {
         $this->getFilter()->parse($values);
         $this->banner = $banner;
