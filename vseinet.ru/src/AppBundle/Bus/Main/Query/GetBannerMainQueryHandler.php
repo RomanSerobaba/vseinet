@@ -24,7 +24,7 @@ class GetBannerMainQueryHandler extends MessageHandler
             WHERE
                 COALESCE(b.activeSince, CURRENT_TIMESTAMP()) <= CURRENT_TIMESTAMP()
                 AND COALESCE(b.activeTill, CURRENT_TIMESTAMP()) >= CURRENT_TIMESTAMP()
-            ORDER BY b.priority, b.id DESC
+            ORDER BY b.tabIsFixed, b.priority, b.id DESC
         ");
         $banners = $q->getResult();
         if (!empty($banners)) {
