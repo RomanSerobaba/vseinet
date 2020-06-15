@@ -275,6 +275,10 @@ class CatalogController extends Controller
         $finder = $this->get('catalog.banner_offers_product.finder');
         $finder->setFilterData($request->query->all(), $banner);
 
+        if (empty($banner)) {
+            return $this->redirectToRoute('catalog', [], 302);
+        }
+
         if ($request->isMethod('POST')) {
             $finder->handleRequest($request->request->get('filter'));
             $filterUrl = $this->generateUrl($request->attributes->get('_route'), $finder->getFilter()->build(['bannerId' => $bannerId]));
