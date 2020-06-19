@@ -52,6 +52,7 @@ class SetPriceCommandHandler extends MessageHandler
             $product->setPriceTypeCode($product0->getPriceTypeCode());
             $product->setPriceTime(new \DateTime());
             $product->setCreatedAt(new \DateTime());
+            $product->setProfit(0);
             $em->persist($product);
             $em->flush();
         }
