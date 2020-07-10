@@ -58,7 +58,7 @@ $(function() {
             var len = 0,
                 val = lfs
                         .val()
-                        .replace(/\s+/ig,' '),
+                        .replace(/\s+/igu,' '),
                 pf = (val && val.charAt(val.length - 1)!=' ') ? '&nbsp;' : '';
 
             if (val) {
@@ -150,9 +150,9 @@ $(function() {
                 indicator.removeClass('search_clear').addClass('loading');
 
                 if ('phone' == fieldName) {
-                    q = request.term.replace(/[^\d]+/giu, '').replace(/^7/giu, '');
+                    q = request.term.replace(/[^\d]+/gi, '').replace(/^7/gi, '');
                 } else {
-                    q = request.term.replace(/[^\wа-яА-Я\s]+/giu, '');
+                    q = request.term.replace(/[^\wА-яЁё\s]+/gi, '');
                 }
 
                 sp.get(Routing.generate('user_search_autocomplete'), {q: q, field: fieldName}).done(function(data) {
