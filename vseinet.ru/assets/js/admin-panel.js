@@ -180,7 +180,21 @@ $(function() {
         });
         a.classList.add('busy');
     });
-
+    container.on('click', '.admin-panel .burning-offer', function(e) {
+        e.preventDefault();
+        var a = this;
+        sp.post(this.href, {
+            baseProductId: this.closest('.admin-panel').dataset.id,
+            value: a.classList.contains('inact')
+        }).then(function(response) {
+            var isActive = a.classList.contains('inact');
+            if (isActive) {
+                a.classList.remove('inact');
+            } else {
+                a.classList.add('inact');
+            }
+        });
+    });
     // supplier remains
     container.on('click', '.admin-panel .supplier-unlink', function(e) {
         e.preventDefault();

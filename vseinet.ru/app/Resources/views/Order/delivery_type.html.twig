@@ -2,7 +2,7 @@
     <div class="wrapper">
         <h2>Способ доставки</h2>
         <div class="row h">
-            <label>Город получения:</label>
+            <label>Населенный пункт получения:</label>
                 <div>
                 {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == form.typeCode.vars.value %}
                     {{ form_widget(form.geoCityName, { attr: { class: 'txt autocomplete', novalidate: true, readonly: true }}) }}

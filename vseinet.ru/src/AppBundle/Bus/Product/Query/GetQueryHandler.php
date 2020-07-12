@@ -72,7 +72,15 @@ class GetQueryHandler extends MessageHandler
                     ),
                     CASE WHEN bp.isHidden = true THEN true ELSE false END,
                     bp.sefUrl,
-                    c.sefUrl
+                    c.sefUrl,
+                    FIRST(
+                        SELECT
+                            pts.baseProductId
+                        FROM
+                            AppBundle:ProductTotalSale AS pts
+                        WHERE
+                            pts.baseProductId = bp.id
+                    )
                 )
             FROM AppBundle:BaseProduct AS bp
             INNER JOIN AppBundle:Category AS c WITH c.id = bp.categoryId

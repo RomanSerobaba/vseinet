@@ -198,6 +198,14 @@ H4 A.competitor {
     margin: 8px 0 0 3px;
     width: 16px;
 }
+.admin-panel A.burning-offer {
+    background: url(../images/main_offer.png);
+    height: 24px;
+    width: 24px;
+}
+.admin-panel A.burning-offer.inact {
+    background: url(../images/main_offer-inact.png);
+}
 .admin-panel INPUT.pricetag-quantity {
     height: 16px;
     margin: 8px 0 0 -2px;

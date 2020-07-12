@@ -4,6 +4,7 @@ namespace AppBundle\Bus\BurningOffers\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
 use AppBundle\Doctrine\ORM\Query\DTORSM;
+use AppBundle\Enum\ProductAvailabilityCode;
 
 class GetListQueryHandler extends MessageHandler
 {
@@ -36,9 +37,10 @@ class GetListQueryHandler extends MessageHandler
                 left join base_product_data as bpd on bpd.base_product_id = bp.id
                 left join representative as mr on mr.geo_city_id = :geoCityId and mr.is_active = true and mr.is_central = true
             WHERE
-                b.id = b.canonical_id
+                b.id = b.canonical_id AND p.product_availability_code > :outOfStock
         ", new DTORSM(DTO\Product::class))
             ->setParameter('geoCityId', $geoCity->getId())
+            ->setParameter('outOfStock', ProductAvailabilityCode::OUT_OF_STOCK)
             ->getResult('DTOHydrator');
     }
 }

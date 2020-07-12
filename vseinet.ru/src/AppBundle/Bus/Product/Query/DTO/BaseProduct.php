@@ -149,6 +149,11 @@ class BaseProduct
      */
     public $categorySefUrl;
 
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isBurningOffer;
+
     public function __construct(
         $id,
         $name,
@@ -172,7 +177,8 @@ class BaseProduct
         $priceChangedBy,
         $isHidden,
         $sefUrl = null,
-        $categorySefUrl = null
+        $categorySefUrl = null,
+        $isBurningOffer = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -192,6 +198,7 @@ class BaseProduct
         $this->pricetagQuantity = $pricetagQuantity;
         $this->purchasePrice = $purchasePrice;
         $this->competitorPrice = $competitorPrice;
+        $this->isBurningOffer = (bool) $isBurningOffer;
         $this->isManualPrice = in_array($priceTypeCode, [ProductPriceTypeCode::MANUAL, ProductPriceTypeCode::ULTIMATE, ProductPriceTypeCode::TEMPORARY]);
         $this->priceChangedAt = $priceChangedAt;
         $this->priceChangedBy = $priceChangedBy;

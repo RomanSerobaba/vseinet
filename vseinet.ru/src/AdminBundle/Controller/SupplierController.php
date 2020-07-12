@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Bus\Product\Command\ToggleBurningOfferCommand;
 use AppBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -33,6 +34,23 @@ class SupplierController extends Controller
                 'remains' => $remains,
             ]),
         ]);
+    }
+
+    /**
+     * @VIA\Post(
+     *     name="admin_toggle_burining_offer",
+     *     path="/burningOffer/toggle/",
+     *     parameters={
+     *         @VIA\Parameter(model="AdminBundle\Bus\Product\Command\ToggleBurningOfferCommand")
+     *     },
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function toggleBurningOfferAction(Request $request)
+    {
+        $this->get('command_bus')->handle(new ToggleBurningOfferCommand($request->request->all()));
+
+        return $this->json([]);
     }
 
     /**
