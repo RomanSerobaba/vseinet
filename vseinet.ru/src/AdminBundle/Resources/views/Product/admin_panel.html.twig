@@ -62,6 +62,9 @@
             {% if app.employeeRepresentative.type != constant('AppBundle\\Enum\\RepresentativeTypeCode::FRANCHISER') %}
                 <div class="supplier-remains loading competitors"></div>
             {% endif %}
+            {% if app.userIsEmployee and constant('AppBundle\\Enum\\UserRole::ADMIN') in app.user.roles %}
+                <div class="wholesaler-prices loading competitors"></div>
+            {% endif %}
             <div class="reserves loading competitors"></div>
             <div class="competitor-revisions loading competitors"></div>
         </div>

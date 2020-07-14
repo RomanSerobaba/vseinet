@@ -139,6 +139,13 @@ $(function() {
                 });
             }
 
+            var prices = pane.find('.wholesaler-prices');
+            if (prices.is('.loading')) {
+                sp.get(Routing.generate('admin_wholesaler_prices'), { baseProductId: panel.data('id') }).then(function(response) {
+                    prices.html(response.html).removeClass('loading');
+                });
+            }
+
             var reserves = pane.find('.reserves');
             if (reserves.is('.loading')) {
                 sp.get(Routing.generate('admin_reserves'), { baseProductId: panel.data('id') }).then(function(response) {

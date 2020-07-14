@@ -1,0 +1,19 @@
+<h4 class="part_title"><span>Цены оптовиков</span></h4>
+{% if prices %}
+    <table class="point_reserve">
+    <thead>
+    <tr>
+        <th>Оптовик</th>
+        <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for price in prices %}
+        <tr>
+            <td>{{ price.name }}</td>
+            <td>{{ price.price|price_format }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endif %}
