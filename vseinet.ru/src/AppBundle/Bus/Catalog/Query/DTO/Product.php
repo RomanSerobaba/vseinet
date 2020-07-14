@@ -102,10 +102,15 @@ class Product
      */
     public $sefUrl;
 
+    /**
+     * @Assert\Type(type="boolean")
+     */
+    public $isBurningOffer;
+
     public function __construct($id, $name, $baseSrc, $availability, $price, $priceTypeCode, $description, $minQuantity, $updatedAt, $pricetagQuantity, $purchasePrice, $competitorPrice,
     $priceChangedAt,
     $priceChangedBy,
-    $sefUrl = null)
+    $sefUrl = null, $isBurningOffer = false)
     {
         $this->id = $id;
         $this->name = $name;
@@ -122,5 +127,6 @@ class Product
         $this->priceChangedAt = $priceChangedAt;
         $this->priceChangedBy = $priceChangedBy;
         $this->sefUrl = $sefUrl;
+        $this->isBurningOffer = (bool) $isBurningOffer;
     }
 }

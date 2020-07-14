@@ -63,7 +63,16 @@ class GetProductsQueryHandler extends MessageHandler
                         ppl2.operated_at DESC
                     LIMIT 1
                 ) AS price_changed_by,
-                b.sef_url
+                b.sef_url,
+                (
+                    SELECT
+                        pts.base_product_id
+                    FROM
+                        product_total_sale AS pts
+                    WHERE
+                        pts.base_product_id = b.id
+                    LIMIT 1
+                ) AS is_burning_offer
             FROM
                 base_product AS b
                 INNER JOIN base_product_data AS bpd ON ( bpd.base_product_id = b.ID )
