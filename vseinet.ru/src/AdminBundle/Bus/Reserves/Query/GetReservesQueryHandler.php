@@ -35,7 +35,7 @@ class GetReservesQueryHandler extends MessageHandler
                 grrc.destination_geo_room_id,
                 COALESCE(s.code, 'VS') AS code,
                 a.number,
-                a.created_at,
+                COALESCE(sd.delivered_at, a.created_at) AS created_at,
                 grrc.delta,
                 (si.purchase_price - si.bonus_amount - si.extra_discount_amount + si.charges) AS purchase_price,
                 grrc.goods_condition_code,
