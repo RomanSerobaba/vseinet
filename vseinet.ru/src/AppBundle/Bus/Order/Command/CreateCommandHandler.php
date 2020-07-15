@@ -3,17 +3,8 @@
 namespace AppBundle\Bus\Order\Command;
 
 use AppBundle\Bus\Message\MessageHandler;
-use AppBundle\Bus\Order\Command\Schema\Address;
-use AppBundle\Bus\Order\Command\Schema\OrganizationDetails;
-use AppBundle\Entity\CompanyToFinancialCounteragent;
-use AppBundle\Entity\FinancialCounteragent;
-use AppBundle\Entity\Counteragent;
-use AppBundle\Entity\WholesaleContract;
-use AppBundle\Enum\ContactTypeCode;
-use AppBundle\Enum\DeliveryTypeCode;
 use AppBundle\Enum\OrderType;
 use AppBundle\Enum\OrderTypeCode;
-use AppBundle\Enum\PaymentTypeCode;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CreateCommandHandler extends MessageHandler

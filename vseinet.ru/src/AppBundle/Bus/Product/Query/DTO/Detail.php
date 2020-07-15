@@ -38,7 +38,7 @@ class Detail
      */
     public $value;
 
-    public function __construct($id, $name, $group, $typeCode, $unit, $value, $number, $memo)
+    public function __construct($id, $name, $group, $typeCode, $unit, $value, $number = null, $memo = null)
     {
         $this->id = $id;
         $this->name = $name;
