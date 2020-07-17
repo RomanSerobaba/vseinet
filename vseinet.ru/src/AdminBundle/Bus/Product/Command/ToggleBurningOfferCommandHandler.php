@@ -11,7 +11,7 @@ class ToggleBurningOfferCommandHandler extends MessageHandler
 {
     public function handle(ToggleBurningOfferCommand $command)
     {
-        if (!$this->getUser()->isRoleIn([UserRole::ADMIN])) {
+        if (!$this->getUser()->isRoleIn([UserRole::ADMIN]) && !in_array($this->getUser()->getId(), [2519,1505,4980])) {
             throw new BadRequestHttpException(sprintf('У вас нет прав, обратитесь к уполномоченному'));
         }
 
