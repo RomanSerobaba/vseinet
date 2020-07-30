@@ -51,5 +51,5 @@
     {% for competitor in competitors %}
         <a href="{{ competitor.link }}" target="_blank">{{ competitor.name }}</a>{% if not loop.last %}, {% endif %}
     {% endfor %}
-    <a href="{{ path('admin_competitor_revision_new') }}" class="icon-add revision-add" title="Добавить"></a>
+    {# <a href="{{ path('admin_competitor_revision_new') }}" class="icon-add revision-add" title="Добавить"></a> #}
 </div>
