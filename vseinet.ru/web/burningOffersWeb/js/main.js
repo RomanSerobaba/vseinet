@@ -192,7 +192,7 @@ jQuery(document).ready(function($) {
 	siteStellar();
 
 	var siteCountDown = function() {
-		$('#date-countdown').countdown(moment().endOf('month').format('YYYY/MM/DD'), function(event) {
+		$('#date-countdown').countdown(moment().endOf('month').format('YYYY/MM/DD HH:mm:ss'), function(event) {
 		  var $this = $(this).html(event.strftime(''
 		    + '<span class="countdown-block"><span class="label">%w</span> Нед. </span>'
 		    + '<span class="countdown-block"><span class="label">%d</span> Дн. </span>'
