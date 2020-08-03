@@ -101,10 +101,11 @@
                                 <div>
                                     {% if product.isAvailable %}
                                     <a href="#" data-id="{{ product.id }}" class="buy btn btn-black mr-1 rounded-0">Купить</a>
+                                    <a href="/product/{{ product.sefUrl }}/" class="btn btn-black btn-outline-black ml-1 rounded-0">Подробнее</a>
                                     {% else %}
                                     <a href="#" class="btn btn-gray mr-1 rounded-0">Продано</a>
+                                    <a href="/product/{{ product.sefUrl }}/" class="btn btn-black btn-outline-black ml-1 rounded-0">Заказать?</a>
                                     {% endif %}
-                                    <a href="/product/{{ product.sefUrl }}/" class="btn btn-black btn-outline-black ml-1 rounded-0">Подробнее</a>
                                 </div>
                             </div>
                             </div>
