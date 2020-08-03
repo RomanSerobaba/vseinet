@@ -45,6 +45,10 @@ class GetPricesQueryHandler extends MessageHandler
                 from base_product as bp
                 inner join supplier_products as sp on sp.base_product_id = bp.id and sp.ord = 1
                 where bp.canonical_id = :base_product_id
+                group by
+                    sp.wholesaler_contract_id,
+                    sp.wholesaler_contract_name,
+                    sp.purchase_price
                 order by sp.wholesaler_contract_name
         ', new DTORSM(DTO\Price::class));
         $q->setParameter('base_product_id', $query->baseProductId);
