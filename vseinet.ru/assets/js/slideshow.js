@@ -128,7 +128,7 @@ $.widget('sp.slideshow', {
                 if (dx < -w) dx = -w;
                 else if (dx > w) dx = w;
                 if (slide) {
-                    if (Math.abs(dx) < 5) {
+                    if (Math.abs(dx) > 5) {
                         this[dx > 0 ? 'prev' : 'next'](150);
                     }
                     this.x = null;
