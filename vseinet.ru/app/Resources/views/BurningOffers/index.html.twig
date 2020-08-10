@@ -97,7 +97,7 @@
                             <div class="px-4">
                                 <h3><a>{{ product.name }}</a></h3>
                                 {# <p class="mb-4">{{ product.shortDescription|striptags|autocut({limit:150})|raw }}</p> #}
-                                {% if product.isAvailable %} <h2><strong class="text-green mb-3 d-inline-block">{{ product.price|price_format }} <span class="RUR">&#8381;</span></strong></h2>{% endif %}
+                                {% if product.isAvailable %} <h2><strong class="text-green mb-3 d-inline-block">{{ product.price|price_format }} <span class="RUR">P</span></strong></h2>{% endif %}
                                 <div>
                                     {% if product.isAvailable %}
                                     <a href="#" data-id="{{ product.id }}" class="buy btn btn-black mr-1 rounded-0">Купить</a>
