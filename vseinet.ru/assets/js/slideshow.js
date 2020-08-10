@@ -127,8 +127,10 @@ $.widget('sp.slideshow', {
                 var w = this.element.width();
                 if (dx < -w) dx = -w;
                 else if (dx > w) dx = w;
-                if (slide && Math.abs(dx) < 5) {
-                    this[dx > 0 ? 'prev' : 'next'](150);
+                if (slide) {
+                    if (Math.abs(dx) < 5) {
+                        this[dx > 0 ? 'prev' : 'next'](150);
+                    }
                     this.x = null;
                 }
                 else this.sheetsContainer.css({left: this.left + dx});
