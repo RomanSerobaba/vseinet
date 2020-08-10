@@ -127,7 +127,7 @@ $.widget('sp.slideshow', {
                 var w = this.element.width();
                 if (dx < -w) dx = -w;
                 else if (dx > w) dx = w;
-                if (slide) {
+                if (slide && dx) {
                     this[dx > 0 ? 'prev' : 'next'](150);
                     this.x = null;
                 }
