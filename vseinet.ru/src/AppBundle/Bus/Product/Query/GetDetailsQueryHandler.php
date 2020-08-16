@@ -48,7 +48,8 @@ class GetDetailsQueryHandler extends MessageHandler
                     COUNT(d2p.parserProductId) AS ord
                 FROM AppBundle:ParserDetailToProduct AS d2p
                 INNER JOIN AppBundle:ParserProduct AS pp WITH pp.id = d2p.parserProductId
-                INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = pp.baseProductId
+                INNER JOIN AppBundle:PartnerProduct AS parp WITH parp.id = pp.targetPartnerProductId
+                INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = parp.baseProductId
                 WHERE bp.canonicalId = :baseProductId
                 GROUP BY d2p.parserProductId
                 ORDER BY ord DESC
