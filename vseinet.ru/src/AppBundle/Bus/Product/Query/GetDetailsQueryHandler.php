@@ -76,6 +76,7 @@ class GetDetailsQueryHandler extends MessageHandler
                 INNER JOIN AppBundle:PartnerProduct AS parp WITH parp.id = pp.targetPartnerProductId
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = parp.baseProductId
                 WHERE bp.canonicalId = :baseProductId AND pp.id = :parserProductId
+                ORDER BY dg.id, d.id
             ");
             $q->setParameter('baseProductId', $baseProduct->getId());
             $q->setParameter('parserProductId', $parserProduct[0]['id']);
