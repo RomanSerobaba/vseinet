@@ -41,49 +41,47 @@ class GetDetailsQueryHandler extends MessageHandler
         $q->setParameter('baseProductId', $baseProduct->getId());
         $details = $q->getResult('IndexByHydrator');
 
-        if (empty($details)) {
+        $q = $em->createQuery("
+            SELECT
+                d2p.parserProductId AS id,
+                COUNT(d2p.parserProductId) AS ord
+            FROM AppBundle:ParserDetailToProduct AS d2p
+            INNER JOIN AppBundle:ParserProduct AS pp WITH pp.id = d2p.parserProductId
+            INNER JOIN AppBundle:PartnerProduct AS parp WITH parp.id = pp.targetPartnerProductId
+            INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = parp.baseProductId
+            WHERE bp.canonicalId = :baseProductId
+            GROUP BY d2p.parserProductId
+            ORDER BY ord DESC
+        ");
+        $q->setParameter('baseProductId', $baseProduct->getId());
+        $q->setMaxResults(1);
+        $parserProduct = $q->getResult();
+
+        if ($parserProduct) {
             $q = $em->createQuery("
                 SELECT
-                    d2p.parserProductId AS id,
-                    COUNT(d2p.parserProductId) AS ord
-                FROM AppBundle:ParserDetailToProduct AS d2p
+                    NEW AppBundle\Bus\Product\Query\DTO\Detail (
+                        d.id,
+                        d.name,
+                        dg.name,
+                        'string',
+                        '',
+                        dv.value
+                    )
+                FROM AppBundle:ParserDetail AS d
+                INNER JOIN AppBundle:ParserDetailGroup AS dg WITH dg.id = d.parserDetailGroupId
+                INNER JOIN AppBundle:ParserDetailToProduct AS d2p WITH d2p.parserDetailId = d.id
+                INNER JOIN AppBundle:ParserDetailValue AS dv WITH dv.id = d2p.parserDetailValueId
                 INNER JOIN AppBundle:ParserProduct AS pp WITH pp.id = d2p.parserProductId
                 INNER JOIN AppBundle:PartnerProduct AS parp WITH parp.id = pp.targetPartnerProductId
                 INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = parp.baseProductId
-                WHERE bp.canonicalId = :baseProductId
-                GROUP BY d2p.parserProductId
-                ORDER BY ord DESC
+                WHERE bp.canonicalId = :baseProductId AND pp.id = :parserProductId
             ");
             $q->setParameter('baseProductId', $baseProduct->getId());
-            $q->setMaxResults(1);
-            $parserProduct = $q->getResult();
-
-            if ($parserProduct) {
-                $q = $em->createQuery("
-                    SELECT
-                        NEW AppBundle\Bus\Product\Query\DTO\Detail (
-                            d.id,
-                            d.name,
-                            dg.name,
-                            'string',
-                            '',
-                            dv.value
-                        )
-                    FROM AppBundle:ParserDetail AS d
-                    INNER JOIN AppBundle:ParserDetailGroup AS dg WITH dg.id = d.parserDetailGroupId
-                    INNER JOIN AppBundle:ParserDetailToProduct AS d2p WITH d2p.parserDetailId = d.id
-                    INNER JOIN AppBundle:ParserDetailValue AS dv WITH dv.id = d2p.parserDetailValueId
-                    INNER JOIN AppBundle:ParserProduct AS pp WITH pp.id = d2p.parserProductId
-                    INNER JOIN AppBundle:PartnerProduct AS parp WITH parp.id = pp.targetPartnerProductId
-                    INNER JOIN AppBundle:BaseProduct AS bp WITH bp.id = parp.baseProductId
-                    WHERE bp.canonicalId = :baseProductId AND pp.id = :parserProductId
-                ");
-                $q->setParameter('baseProductId', $baseProduct->getId());
-                $q->setParameter('parserProductId', $parserProduct[0]['id']);
-                $details = $q->getResult('IndexByHydrator');
-            }
+            $q->setParameter('parserProductId', $parserProduct[0]['id']);
+            $parserDetails = $q->getResult('IndexByHydrator');
         }
 
-        return $details;
+        return count($parserDetails) > count($details) ? $parserDetails : $details;
     }
 }
