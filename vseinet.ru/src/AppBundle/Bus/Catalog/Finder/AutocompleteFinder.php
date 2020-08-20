@@ -101,7 +101,7 @@ class AutocompleteFinder extends AbstractProductFinder
                 WEIGHT() AS weight,
                 SNIPPET(name, '{$snippet}') AS label
             FROM product_index_{$this->getGeoCity()->getRealId()}
-            WHERE MATCH('{$expression}') AND availability <= {$availability}
+            WHERE MATCH('{$expression}') AND availability <= {$availability} AND is_forbidden = 0
             ORDER BY weight DESC, availability ASC, rating DESC, price ASC
             LIMIT ".self::COUNT_PRODUCTS."
             OPTION ranker=expr('sum(if(min_best_span_pos < 5, 5 - min_best_span_pos, 0) + exact_order * 15) + if(availability = 1, 14, if(availability < 4, 4 - availability, 0) * 2) + (1 - is_accessories) * 15 + if(category_average_price > 100000, 15, 0) + if(popularity > 500, 10, popularity / 50) + if(name_length < 120, 10, 0)')
