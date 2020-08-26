@@ -55,7 +55,7 @@ class CheaperRequestCommandHandler extends MessageHandler
             }
             $host = implode('.', array_slice(explode('.', $competitorUrlFragments['host']), -2, 2));
 
-            if (false !== strstr(strtolower($urlFragments['host']), strtolower($host))) {
+            if (false !== stristr($urlFragments['host'], $host)) {
                 return true;
             }
         }
