@@ -97,7 +97,16 @@
                             <div class="px-4">
                                 <h3><a>{{ product.name }}</a></h3>
                                 {# <p class="mb-4">{{ product.shortDescription|striptags|autocut({limit:150})|raw }}</p> #}
-                                {% if product.isAvailable %} <h2><strong class="text-green mb-3 d-inline-block">{{ product.price|price_format }} <span class="RUR">P</span></strong></h2>{% endif %}
+                                {% if product.price <= 20000 %}
+                                    {% set oldprice = (product.price * 1.3 / 100)|round * 100 %}
+                                {% elseif product.price > 20000 and product.price < 200000 %}
+                                    {% set oldprice = (product.price * 1.2 / 1000)|round * 1000 - 100 %}
+                                {% elseif product.price < 1000000 %}
+                                    {% set oldprice = (product.price * 1.15 / 10000)|round * 10000 - 1000 %}
+                                {% else %}
+                                    {% set oldprice = (product.price * 1.1 / 100000)|round * 100000 - 10000 %}
+                                {% endif %}
+                                {% if product.isAvailable %} <h2><small class="text-red mb-3 mr-4 d-inline-block"><strike>{{ oldprice|price_format }} <span class="RUR">P</span></strike></small><strong class="text-green mb-3 d-inline-block">{{ product.price|price_format }} <span class="RUR">P</span></strong></h2>{% endif %}
                                 <div>
                                     {% if product.isAvailable %}
                                     <a href="#" data-id="{{ product.id }}" class="buy btn btn-black mr-1 rounded-0">Купить</a>

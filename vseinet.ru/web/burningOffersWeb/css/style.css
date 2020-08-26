@@ -27,11 +27,19 @@ h1, h2, h3, h4, h5,
 .RUR {
 	line-height: 10px;
 	width: 0.4em;
-	border-bottom: 2px solid #00980d;
+	border-bottom: 2px solid #000000;
     display: inline-block;
     font-weight: normal;
     font-size: 26px;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.text-red .RUR {
+	border-bottom: 2px solid #ff0000;
+}
+
+.text-green .RUR {
+	border-bottom: 2px solid #00980d;
 }
 
 .border-2 {
@@ -39,6 +47,8 @@ h1, h2, h3, h4, h5,
 
 .text-black {
   color: #000 !important; }
+.text-red {
+color: #ff0000 !important; }
 .text-green {
 color: #00980d !important; }
 .bg-black {
