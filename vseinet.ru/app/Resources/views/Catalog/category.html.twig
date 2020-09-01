@@ -8,20 +8,20 @@
     <section>
         <ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
             <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="{{ path('catalog') }}"><span itemprop="name">Каталог</span></a>
+                <a itemprop="item" href="{{ path('catalog') }}" title="Каталог"><span itemprop="name">Каталог</span></a>
                 <meta itemprop="position" content="1" />
             </li>
             {% set lastkey = 0 %}
             {% for key, link in category.breadcrumbs %}
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                    <a itemprop="item" href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}"><span itemprop="name">{{ link.name }}</span></a>
+                    <a itemprop="item" href="{% if link.sefUrl %}{{ path('catalog_category_sef', { slug: link.sefUrl }) }}{% else %}{{ path('catalog_category', { id: link.id }) }}{% endif %}" title="{{ link.name }}"><span itemprop="name">{{ link.name }}</span></a>
                     <meta itemprop="position" content="{{ key + 2 }}" />
                 </li>
                 {% set lastkey = key %}
             {% endfor %}
             {% if brand %}
                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                    <a itemprop="item" href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category.id }) }}{% endif %}"><span itemprop="name">{{ category.name }}</span></a>
+                    <a itemprop="item" href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category.id }) }}{% endif %}" title="{{ category.name }}"><span itemprop="name">{{ category.name }}</span></a>
                     <meta itemprop="position" content="{{ lastkey + 3 }}" />
                 </li>
             {% endif %}

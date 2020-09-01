@@ -2,7 +2,7 @@
     <div class="tab brands expanded">
         <span class="filter-titles">Производитель</span>
     </div>
-    <div class="sheet multi brands" style="display:block">
+    <div class="sheet multi brands show-all" style="display:block">
         <div class="search-box">
             <input type="text" class="txt" />
         </div>
@@ -12,12 +12,12 @@
                 {% if not (brand.isTop or filter.brandIds[brand.id] is defined) %}
                     {% set hasOtherBrands = true %}
                 {% endif %}
-                <div class="brand {% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %}{% if filter.brandIds[brand.id] is defined %} checked{% endif %}">
+                <div class="brand {#% if brand.isTop or filter.brandIds[brand.id] is defined %}main{% else %}other{% endif %#}{% if filter.brandIds[brand.id] is defined %} checked{% endif %}">
                     {% if category is defined %}
                         {% set brandName = brand.sefName ? brand.sefName : brand.name %}
                         <a
                             href="{% if category.sefUrl %}{{ path('catalog_category_sef_with_brand', { slug: category.sefUrl, brandName: brandName }) }}{% else %}{{ path('catalog_category_with_brand', { id: category.id, brandName: brandName }) }}{% endif %}"
-                            class="brand-page"
+                            class="brand-page" title="{{ category.name }} {{ brand.name }}"
                         >
                             &rarr;
                         </a>
@@ -34,8 +34,8 @@
                 </div>
             {% endfor %}
         </div>
-        {% if hasOtherBrands %}
+        {#% if hasOtherBrands %}
             <a href="javascript:void(0)" class="toggle-other ajax gray r">показать все</a>
-        {% endif %}
+        {% endif %#}
     </div>
 {% endif %}

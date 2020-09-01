@@ -10,6 +10,8 @@ Clean-param: q /catalog/*
 Clean-param: q /product/*
 Disallow: /catalog/*/?
 Allow: /catalog/*/?page=
+Disallow: /catalog/*/?page=*&
+Disallow: /catalog/*/b/*/?page=
 Disallow: /admin/
 Disallow: /search
 Disallow: /cart/add
@@ -36,6 +38,8 @@ Clean-param: q /catalog/*
 Clean-param: q /product/*
 Disallow: /catalog/*/?
 Allow: /catalog/*/?page=
+Disallow: /catalog/*/?page=*&
+Disallow: /catalog/*/b/*/?page=
 Disallow: /admin/
 Disallow: /search
 Disallow: /cart/add
