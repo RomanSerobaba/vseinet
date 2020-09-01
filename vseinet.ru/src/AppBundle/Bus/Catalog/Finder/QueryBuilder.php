@@ -457,20 +457,17 @@ class QueryBuilder extends ContainerAware
             return '';
         }
 
-        if (!empty($brandIds[-1])) {
-            if (!empty($brandIds[-1]->includeIds)) {
-                $brandIds = array_merge($brandIds, $brandIds[-1]->includeIds);
-            }
-            unset($brandIds[-1]);
+        $brandFilterIds = [];
+        if (isset($brandIds[0])) {
+            $brandFilterIds[] = 0;
         }
         $brands = $this->container->get('doctrine')->getManager()->getRepository(Brand::class)->findBy(['canonicalId' => $brandIds]);
 
-        $brandIds = [];
         foreach ($brands as $brand) {
-            $brandIds[] = $brand->getId();
+            $brandFilterIds[] = $brand->getId();
         }
 
-        return 'brand_id IN ('.implode(', ', $brandIds).')';
+        return 'brand_id IN ('.implode(', ', $brandFilterIds).')';
     }
 
     /**

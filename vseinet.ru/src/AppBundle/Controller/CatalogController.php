@@ -74,7 +74,7 @@ class CatalogController extends Controller
         $em = $this->getDoctrine()->getManager();
         $needRedirect = false;
 
-        if ($brandName) {
+        if ($brandName && $brandName !== 'Прочее') {
             $brand = $this->get('query_bus')->handle(new GetBrandBySefNameQuery(['sefName' => $brandName]));
             if (!$brand) {
                 $brandObj = $em->getRepository(Brand::class)->findOneBy(['sefName' => $brandName]);
@@ -136,7 +136,7 @@ class CatalogController extends Controller
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
-        $finder->setFilterData($request->query->all() + ($brand ? ['b' => $brand->id] : []), $category, $brand);
+        $finder->setFilterData($request->query->all() + ($brand || $brandName === 'Прочее' ? ['b' => $brandName === 'Прочее' ? 0 : $brand->id] : []), $category, $brand);
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
