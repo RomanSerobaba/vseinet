@@ -181,9 +181,9 @@ class CatalogController extends Controller
             ]);
         }
 
-        if (empty($category->countProducts) && !$this->getUserIsEmployee()) {
-            return $this->redirectToRoute('catalog', [], 302);
-        }
+        // if (empty($category->countProducts) && !$this->getUserIsEmployee()) {
+        //     return $this->redirectToRoute('catalog', [], 302);
+        // }
 
         if (1 === $finder->getFilter()->page && !empty($category->description)) {
             $category->image = $this->get('query_bus')->handle(new Query\GetCategoryImageQuery(['categoryId' => $category->id]));
