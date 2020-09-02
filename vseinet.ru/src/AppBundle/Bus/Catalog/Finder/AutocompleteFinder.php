@@ -54,7 +54,8 @@ class AutocompleteFinder extends AbstractProductFinder
                     )
                 FROM AppBundle:Category c
                 INNER JOIN AppBundle:CategoryPath cp WITH cp.pid = c.id
-                WHERE c.aliasForId IS NULL AND cp.plevel > 0 AND cp.id IN (:ids)
+                INNER JOIN AppBundle:CategoryStats AS cs WITH cs.categoryId = c.id
+                WHERE c.aliasForId IS NULL AND cp.plevel > 0 AND cp.id IN (:ids) AND cs.countProducts > 0
             ");
             $q->setParameter('ids', $categoryIds);
             $categories = $q->getResult('IndexByHydrator');
