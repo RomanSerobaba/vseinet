@@ -83,6 +83,6 @@ class GetDetailsQueryHandler extends MessageHandler
             $parserDetails = $q->getResult('IndexByHydrator');
         }
 
-        return count($parserDetails) > count($details) ? $parserDetails : $details;
+        return !empty($parserDetails) && count($parserDetails) > count($details) ? $parserDetails : $details;
     }
 }
