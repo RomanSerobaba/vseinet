@@ -25,7 +25,7 @@ class ResetPriceCommandHandler extends MessageHandler
             $geoCityId = 0;
         } else {
             $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => $representative->getGeoCityId(),]);
-            if ($product->getTemporaryPrice() === ProductPriceTypeCode::ULTIMATE || RepresentativeTypeCode::FRANCHISER === $representative->getType()) {
+            if ($product->getPriceTypeCode() === ProductPriceTypeCode::ULTIMATE || RepresentativeTypeCode::FRANCHISER === $representative->getType()) {
                 $geoCityId = $representative->getGeoCityId();
             } else {
                 $geoCityId = 0;
