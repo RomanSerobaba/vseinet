@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Bus\Catalog;
 
@@ -65,11 +65,10 @@ class Paging
 
     protected function url($page)
     {
+        unset($this->attributes['page']);
+
         if (1 < $page) {
-            $this->attributes['page'] = $page;
-        }
-        else {
-            unset($this->attributes['page']);
+            array_merge(['page' => $page], $this->attributes);
         }
 
         return $this->baseUrl.(empty($this->attributes) ? '' : '?'.http_build_query($this->attributes));
