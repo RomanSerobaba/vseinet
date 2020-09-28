@@ -6,64 +6,59 @@ Sitemap: https://vseinet.ru/sitemap.xml
 
 User-agent: *
 Crawl-delay: 2
-Clean-param: q /catalog/*
 Clean-param: q /product/*
-Disallow: /catalog/*/?
+Clean-param: q /catalog/*
+Disallow: *
+Allow: /$
+Allow: /about/
+Allow: /delivery/
+Allow: /payment/
+Allow: /garanty/
+Allow: /credit/
+Allow: /contacts/
+Allow: /promo/
+Allow: /burningOffers/
+Allow: /markdown/
+Allow: /partnership/
+Allow: /vacancies/
+Allow: /service/
+Allow: /catalog/$
+Allow: /catalog/*/$
 Allow: /catalog/*/?page=
 Disallow: /catalog/*/?page=*&
-Disallow: /catalog/*/b/*/?page=
-Disallow: /admin/
-Disallow: /search
-Disallow: /cart/add
-Disallow: /catalog/*/rating
-Disallow: /catalog/*/price
-Disallow: /catalog/*/novelty
-Disallow: /catalog/*/name
-Disallow: /city/set
-Disallow: /product/compare
-Disallow: /favorite
-Disallow: /cheaper
-Disallow: /user/oauth/
-Disallow: /org/
-Disallow: /cart/
-Disallow: /user/
-Disallow: /order/
-Disallow: /complaint/
-Disallow: /suggestion/
-Disallow: /product/*/_org_registration_
+Allow: /catalog/*/b/*/$
+Allow: /product/*/$
 
 User-agent: Yandex
 Crawl-delay: 1
-Clean-param: q /catalog/*
 Clean-param: q /product/*
-Disallow: /catalog/*/?
+Clean-param: q /catalog/*
+Disallow: *
+Allow: /$
+Allow: /about/
+Allow: /delivery/
+Allow: /payment/
+Allow: /garanty/
+Allow: /credit/
+Allow: /contacts/
+Allow: /promo/
+Allow: /burningOffers/
+Allow: /markdown/
+Allow: /partnership/
+Allow: /vacancies/
+Allow: /service/
+Allow: /catalog/$
+Allow: /catalog/*/$
 Allow: /catalog/*/?page=
 Disallow: /catalog/*/?page=*&
-Disallow: /catalog/*/b/*/?page=
-Disallow: /admin/
-Disallow: /search
-Disallow: /cart/add
-Disallow: /catalog/*/rating
-Disallow: /catalog/*/price
-Disallow: /catalog/*/novelty
-Disallow: /catalog/*/name
-Disallow: /city/set
-Disallow: /product/compare
-Disallow: /favorite
-Disallow: /cheaper
-Disallow: /user/oauth/
-Disallow: /org/
-Disallow: /cart/
-Disallow: /user/
-Disallow: /order/
-Disallow: /complaint/
-Disallow: /suggestion/
+Allow: /catalog/*/b/*/$
+Allow: /product/*/$
 
 User-Agent: SputnikBot
 Crawl-delay: 3
 
 User-Agent: Slurp
-Disallow: /
+Disallow: *
 
 User-agent: BLEXBot
-Disallow: /
+Disallow: *
