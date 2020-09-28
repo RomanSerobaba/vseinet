@@ -15,9 +15,9 @@
                         {{ geoCity.name }}
                     </a>
                     {% if geoCity.hasRetail %}
-                        <img style="opacity:0.9;cursor:help;" src="/images/office.png" title="Есть точка самовывоза" alt=""/>
+                        <img style="opacity:0.9;cursor:help;" src="/images/office.png" title="Есть представительство" alt="Представительство"/>
                     {% elseif geoCity.hasDelivery %}
-                        <span class="point-ico" title="Есть курьерская доставка"></span>
+                        <span class="point-ico" title="Возможна курьерская доставка"></span>
                     {% endif %}
                     {% if geoCity.countNewPoints %}
                         <span class="new_point">новая!</span>

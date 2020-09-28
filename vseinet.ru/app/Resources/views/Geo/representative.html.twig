@@ -47,7 +47,7 @@
 <div class="content">
     <p>
         {% for photo in representative.photos %}
-            <img src="{{ uploads_domain }}/contacts/{{ photo.url }}" alt="Фото №{{ loop.index }} точки в г.{{ representative.geoCityName }}" />
+            <img src="{{ uploads_domain }}/contacts/{{ photo.url }}" alt="Фото №{{ loop.index }} представительства в г.{{ representative.geoCityName }}" />
             {% if loop.index % 2 == 1 %}
                 &nbsp;
             {% endif %}

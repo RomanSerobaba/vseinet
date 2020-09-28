@@ -66,7 +66,8 @@
         <script>
             $(function() {
                 $('<img/>', {
-                    src: "{{ category.image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
+                    src: "{{ category.image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}",
+                    alt: "Фото из категории {{ category.name }}"
                 }).insertAfter('.htx_category h2');
             });
         </script>

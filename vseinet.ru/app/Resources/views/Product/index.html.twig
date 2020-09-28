@@ -50,7 +50,7 @@
                             {% if image %}itemprop="image"{% endif %}
                             src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_LG')) }}"
                             title="{{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"
-                            alt="{{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            alt="Фото {{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"
                             data-index="0"
                         />
                         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %}
@@ -62,7 +62,7 @@
                             {% for index, image in images %}
                                 <img
                                     src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
-                                    alt="Фото № {{ index }}"
+                                    alt="Фото № {{ index }} {{ baseProduct.name }}"
                                     data-index="{{ index }}"
                                     {% if 0 == index %}class="current"{% endif %}
                                 />
