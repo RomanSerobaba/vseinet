@@ -68,7 +68,7 @@ class Paging
         unset($this->attributes['page']);
 
         if (1 < $page) {
-            array_merge(['page' => $page], $this->attributes);
+            $this->attributes = array_merge(['page' => $page], $this->attributes);
         }
 
         return $this->baseUrl.(empty($this->attributes) ? '' : '?'.http_build_query($this->attributes));
