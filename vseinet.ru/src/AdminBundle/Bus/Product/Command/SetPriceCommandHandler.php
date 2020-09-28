@@ -23,7 +23,7 @@ class SetPriceCommandHandler extends MessageHandler
         $isFranchiser = RepresentativeTypeCode::FRANCHISER === $franchiserRepresentative->getType();
 
         $representative = $this->get('representative.identity')->getRepresentative();
-        if (!$representative || RepresentativeTypeCode::FRANCHISER !== $representative->getType()) {
+        if (!$representative || RepresentativeTypeCode::FRANCHISER !== $representative->getType() && $command->type !== ProductPriceTypeCode::ULTIMATE) {
             $geoCityId = 0;
         } else {
             $geoCityId = $representative->getGeoCityId();

@@ -21,10 +21,15 @@ class ResetPriceCommandHandler extends MessageHandler
         $isFranchiser = RepresentativeTypeCode::FRANCHISER === $franchiserRepresentative->getType();
 
         $representative = $this->get('representative.identity')->getRepresentative();
-        if (!$representative || RepresentativeTypeCode::FRANCHISER !== $representative->getType()) {
+        if (!$representative) {
             $geoCityId = 0;
         } else {
-            $geoCityId = $representative->getGeoCityId();
+            $product = $em->getRepository(Product::class)->findOneBy(['baseProductId' => $command->id, 'geoCityId' => $representative->getGeoCityId(),]);
+            if ($product->getTemporaryPrice() === ProductPriceTypeCode::ULTIMATE || RepresentativeTypeCode::FRANCHISER === $representative->getType()) {
+                $geoCityId = $representative->getGeoCityId();
+            } else {
+                $geoCityId = 0;
+            }
         }
 
         $baseProduct = $em->getRepository(BaseProduct::class)->find($command->id);
