@@ -1,13 +1,9 @@
 # www.robotstxt.org/
 # www.google.com/support/webmasters/bin/answer.py?hl=en&answer=156449
 
-Host: https://vseinet.ru
 Sitemap: https://vseinet.ru/sitemap.xml
 
 User-agent: *
-Crawl-delay: 2
-Clean-param: q /product/*
-Clean-param: q /catalog/*
 Disallow: *
 Allow: /$
 Allow: /about/
@@ -30,7 +26,6 @@ Allow: /catalog/*/b/*/$
 Allow: /product/*/$
 
 User-agent: Yandex
-Crawl-delay: 1
 Clean-param: q /product/*
 Clean-param: q /catalog/*
 Disallow: *
@@ -53,9 +48,6 @@ Allow: /catalog/*/?page=
 Disallow: /catalog/*/?page=*&
 Allow: /catalog/*/b/*/$
 Allow: /product/*/$
-
-User-Agent: SputnikBot
-Crawl-delay: 3
 
 User-Agent: Slurp
 Disallow: *
