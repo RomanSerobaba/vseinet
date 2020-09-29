@@ -27,7 +27,7 @@ class GetRepresentativeQueryHandler extends MessageHandler
             INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
             INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId
             LEFT OUTER JOIN AppBundle:GeoAddress AS ga WITH ga.id = gp.geoAddressId
-            WHERE r.geoPointId = :geoPointId AND r.isActive = true
+            WHERE r.geoPointId = :geoPointId AND r.isActive = true AND (r.hasRetail = true OR r.hasDelivery = true)
         ");
         $q->setParameter('geoPointId', $query->geoPointId);
         $representative = $q->getOneOrNullResult();
