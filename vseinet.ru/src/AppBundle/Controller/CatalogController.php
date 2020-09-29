@@ -91,7 +91,6 @@ class CatalogController extends Controller
                     }
                 }
             }
-            $request->query->set('b', $brand->id);
         } else {
             $brand = null;
         }
