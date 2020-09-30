@@ -15,6 +15,7 @@ $(function() {
     var sorting1 = $('#sorting');
     var paging1 = $('#upper-paging');
     var showmore1 = $('#showmore-container');
+    var title1 = $('.category-title h1 span');
     var mainCategories = $('#main-categories');
 
     $(document).on('click', '.showmore', function(e) {
@@ -28,6 +29,7 @@ $(function() {
             sorting1.html(response.sorting);
             paging1.html(response.paging);
             showmore1.html(response.showmore);
+            title1.html(response.category.name + (response.brand ? '«' + response.brand.name + '»' : '') + (response.page > 1 ? ', страница ' + response.page : ''));
             mainCategories.html(response.mainCategories);
         });
         e.preventDefault();
@@ -49,6 +51,7 @@ $(function() {
             sorting1.html(data.sorting);
             paging1.html(data.paging);
             showmore1.html(data.showmore);
+            title1.html(data.category.name + (data.brand ? ' «' + data.brand.name + '»' : '') + (data.page > 1 ? ', страница ' + data.page : ''));
             mainCategories.html(data.mainCategories);
         });
         filter.prop('action', url)

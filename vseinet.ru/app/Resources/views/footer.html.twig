@@ -27,15 +27,13 @@
 <nav class="menu">
     <ul>
         <li><a href="{{ path('about_page') }}" class="gray">О компании</a></li>
-        <li><a href="{{ path('delivery_page') }}" class="gray">Доставка</a> и <a href="/payment/" class="gray">оплата</a></li>
-        <li><a href="{{ path('content_page', { slug: 'garanty' }) }}" class="gray">Гарантия</a></li>
         <li><a href="{{ path('content_page', { slug: 'promo' }) }}" class="gray">Акции</a></li>
+        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}" class="gray">Сотрудничество</a></li>
     </ul>
     <ul>
+        <li><a href="{{ path('delivery_page') }}" class="gray">Доставка</a> и <a href="/payment/" class="gray">оплата</a></li>
+        <li><a href="{{ path('content_page', { slug: 'garanty' }) }}" class="gray">Гарантия</a></li>
         <li><a href="{{ path('content_page', { slug: 'credit' }) }}" class="gray">Рассрочка и кредит</a></li>
-        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}#franchising" class="gray">Франшиза</a></li>
-        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}#corporate" class="gray">Корпоративным клиентам</a></li>
-        <li><a href="{{ path('content_page', { slug: 'partnership' }) }}#wholesale" class="gray">Оптовикам</a></li>
     </ul>
     <ul>
         <li><a href="{{ path('content_page', { slug: 'help' }) }}" class="gray">Помощь</a></li>

@@ -553,13 +553,14 @@ class CatalogController extends Controller
                 'facets' => $facets,
             ]);
 
-            return $this->json([
+            return $this->json($parameters + [
                 'products' => $productsHtml,
                 'paging' => $pagingHtml,
                 'showmore' => $showmoreHtml,
                 'sorting' => $sortingHtml,
                 'mainCategories' => $mainCategoriesHtml,
                 'sort' => $filter->sort,
+                'page' => $filter->page,
                 'sortDirection' => $filter->sortDirection,
             ]);
         }
@@ -572,6 +573,7 @@ class CatalogController extends Controller
             'products' => $products,
             'geoPoints' => $geoPoints ?? [],
             'paging' => $paging,
+            'page' => $filter->page,
             'sorting' => $sorting,
             'availabilityChoices' => Availability::getChoices($this->getUserIsEmployee()),
             'nofilledChoices' => Nofilled::getChoices(),
