@@ -23,6 +23,7 @@
 !/web/app_dev.php
 !/web/oauth2.html
 !/web/favicon.ico
+!/web/favicon.svg
 !/web/.htaccess
 !/web/burningOffersWeb/
 /.idea
