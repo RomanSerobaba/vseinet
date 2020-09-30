@@ -1,11 +1,11 @@
 <section id="populars">
-    <h1>Популярные товары</h1>
+    <h2>Популярные товары</h2>
     <div class="products">
         {% for product in products %}
             <div class="product{% if loop.index == 1 %} first{% endif %} {% if loop.index > 2 %} mobile-hide{% endif %}">
-                <h5 class="category">
+                <div class="category">
                     <a href="{{ url('catalog_category', { id: product.categoryId }) }}" class="green">{{ product.categoryName }}</a>
-                </h5>
+                </div>
                 <a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}" class="image">
                     <img
                         src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
@@ -14,7 +14,7 @@
                         class="lazyload"
                     />
                 </a>
-                <h4><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h4>
+                <div class='product-title'><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></div>
                 <div class="price">
                     <strong>{{ product.price|price_format }} <span class="RUR">Р</span></strong>
                 </div>

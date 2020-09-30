@@ -1,8 +1,8 @@
 <fieldset class="block">
     <div class="wrapper">
         <h2>Дополнительная информация</h2>
-        <h4>Звонок менеджера</h4>
-        <div class="row v">
+        <b>Звонок менеджера</b>
+        <div class="row v" style="margin-top:5px">
             <label for="{{ form.isCallNeeded.vars.id }}_0">
                 Не требуется, со сроками доставки ознакомлен
                 <input type="radio" id="{{ form.isCallNeeded.vars.id }}_0" name="{{ form.isCallNeeded.vars.full_name }}" value="0"{% if (form.isCallNeeded.vars.value is same as("0"))  %} checked="checked"{% endif %} />

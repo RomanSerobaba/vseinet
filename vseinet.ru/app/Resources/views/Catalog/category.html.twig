@@ -51,10 +51,15 @@
             <nav id="nav">
                 {% include 'Catalog/filter.html.twig' %}
             </nav>
-            {% if category.description %}
-                <section class="content htx htx_category">{{ category.description|raw }}</section>
-            {% endif %}
-            <div class="wrapper"{%if category.description %} style="display:table-header-group"{% endif %}>
+
+            <section class="content htx htx_category">
+                {% if category.description %}{{ category.description|raw }}{% endif %}
+                <!--noindex-->
+                <p>Наличие товара и цены на него уточняйте у наших менеджеров.</p>
+                <!--/noindex-->
+            </section>
+
+            <div class="wrapper" style="display:table-header-group">
                 {% include 'Catalog/products.html.twig' %}
             </div>
         </div>

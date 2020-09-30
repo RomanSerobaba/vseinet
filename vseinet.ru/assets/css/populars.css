@@ -6,8 +6,11 @@
 	overflow: hidden;
 	width: 100%;
 }
-#populars h1{
-	padding-top: 0;
+#populars h2{
+    padding-top: 0;
+    font-size: 24px;
+    line-height: 1.2;
+    margin: 0 0 25px;
 }
 	#populars .products {
 		overflow: hidden;
@@ -29,10 +32,12 @@
 			vertical-align: middle;
 			width: 100%;
 		}
-		#populars H4 {
-			margin: 4px 0;
+		#populars .product-title {
+            margin: 4px 0;
+            font-size: 13px;
+            font-weight: 700;
 		}
-		#populars H5 {
+		#populars .category {
 			margin: 0 0 10px;
 		}
 		#populars .price {

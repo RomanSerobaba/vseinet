@@ -5,7 +5,7 @@
 {% block content %}
     <div id="user-account">
         {% include 'User/account_menu.html.twig' with { active: 'account' } %}
-        <h1>{{ app.user.person.fullname }}</h1>
+        <h1>Личная информация</h1>
         <div class="w60p">
             {% include 'User/account_ajax.html.twig' %}
         </div>

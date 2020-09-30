@@ -1,6 +1,7 @@
 /app/config/parameters.yml
 /app/config/bus-services.yml
 /app/config/cache.yml
+/app/config/twig.yml
 /phpunit.xml
 /var/*
 !/var/cache

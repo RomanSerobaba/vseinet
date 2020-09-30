@@ -1,5 +1,5 @@
 <section id="specials">
-    <h1><a href="{{ url('burning_offers_page') }}" class="black">{{ title }}</a></h1>
+    <h2><a href="{{ url('burning_offers_page') }}" class="black">{{ title }}</a></h2>
     <div class="products">
         {% for product in products %}
             {% if loop.index == 4 %}
@@ -14,7 +14,7 @@
                         class="lazyload"
                     />
                 </a>
-                <h4><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h4>
+                <div class='product-title'><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></div>
                 <strong class="discount">-{{ product.price|discount_percent }}%</strong>
                 <div class="price">
                     <del class="old">{{ product.price|discount_price|price_format }}<span class="RUR">Р</span></del>

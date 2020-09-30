@@ -3,8 +3,8 @@
     <p>&copy; 2008 — {{ 'now'|date('Y') }}, &laquo;ВсеИнет.ру&raquo;<p>
     {# broken url #}
     <p>Все цены указаны в рублях — <span class="RUR" style="color:#333">Р</span>{# <a rel="nofollow" class="RUR" style="color:#333" href="_org_registration_">Р</a> #}</p>
-    <p>Наличие товара и цены на него<br/> уточняйте у наших менеджеров</p>
-    <br />
+    {# <p>Наличие товара и цены на него<br/> уточняйте у наших менеджеров</p> #}
+    <p class="error-report" style="clear:both">Нашли ошибку?<br/>Выделите текст и нажмите <b>Ctrl + Enter!</b></p>
 </div>
 
 <div class="contacts">
@@ -16,7 +16,6 @@
             <a href="https://ok.ru/group/52950211035223" rel="nofollow" target="_blank" title="Vseinet в одноклассниках" class="odnoklassniki"></a>
             <a href="https://www.instagram.com/vseinetru/" rel="nofollow" target="_blank" title="Vseinet в instagram" class="fa fa-instagram"></a>
         </div>
-        <p class="error-report" style="clear:both">Нашли ошибку?<br/>Выделите текст и нажмите <b>Ctrl + Enter!</b></p>
     </div>
     <div class="coll-sm-6">
         <a href="{{ path('complaint') }}" class="bttn light claim">Жалоба директору</a>
@@ -27,8 +26,8 @@
 <nav class="menu">
     <ul>
         <li><a href="{{ path('about_page') }}" class="gray">О компании</a></li>
-        <li><a href="{{ path('content_page', { slug: 'promo' }) }}" class="gray">Акции</a></li>
         <li><a href="{{ path('content_page', { slug: 'partnership' }) }}" class="gray">Сотрудничество</a></li>
+        <li><a href="{{ path('vacancies_page') }}" class="gray">Вакансии</a></li>
     </ul>
     <ul>
         <li><a href="{{ path('delivery_page') }}" class="gray">Доставка</a> и <a href="/payment/" class="gray">оплата</a></li>
@@ -36,9 +35,9 @@
         <li><a href="{{ path('content_page', { slug: 'credit' }) }}" class="gray">Рассрочка и кредит</a></li>
     </ul>
     <ul>
-        <li><a href="{{ path('content_page', { slug: 'help' }) }}" class="gray">Помощь</a></li>
-        <li><a href="{{ path('vacancies_page') }}" class="gray">Вакансии</a></li>
         <li><a href="{{ path('contacts_page') }}" class="gray">Контакты</a></li>
+        <li><a href="{{ path('content_page', { slug: 'promo' }) }}" class="gray">Акции</a></li>
+        <li><a href="{{ path('content_page', { slug: 'help' }) }}" class="gray">Помощь</a></li>
     </ul>
 </nav>
 
@@ -56,11 +55,10 @@
             <dt>Электронная почта</dt>
             <dd><a href="mailto:mail@vseinet.ru">mail@vseinet.ru</a></dd>
         </dl>
-        <ul>
-            <li>
-                <a href="skype:vseinet?chat" class="contact skype online">vseinet</a>
-            </li>
-        </ul>
+        <dl>
+            <dt>Skype</dt>
+            <dd><a href="skype:vseinet?chat" class="contact skype online">vseinet</a></dd>
+        </dl>
     </div>
     <div class="coll-sm-6">
         <div class="socials">
@@ -70,7 +68,6 @@
             <a href="https://ok.ru/group/52950211035223" rel="nofollow" target="_blank" title="Vseinet в одноклассниках" class="odnoklassniki"></a>
             <a href="https://my.mail.ru/community/vseinet/" rel="nofollow" target="_blank" title="Vseinet в mail" class="moimir"></a>
         </div>
-        <p class="error-report">Нашли ошибку?<br/>Выделите текст и нажмите <b>Ctrl + Enter!</b></p>
     </div>
 </div>
 
@@ -83,9 +80,8 @@
         <dt>Электронная почта</dt>
         <dd><a href="mailto:mail@vseinet.ru">mail@vseinet.ru</a></dd>
     </dl>
-    <ul>
-        <li><a href="skype:vseinet?chat" class="contact skype online">vseinet</a></li>
-    </ul>
+    <dl>
+    </dl>
 </div>
 
 <div id="scroller" title="Наверх"></div>

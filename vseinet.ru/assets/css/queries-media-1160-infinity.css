@@ -79,7 +79,7 @@
 	#favorite .cart-table .row{
 		margin-bottom: 20px;
 	}
-	#product DIV.details H3:not(.garanty_title){
+	#product DIV.details H2:not(.garanty_title){
 		margin-bottom: 24px;
 	}
 	#Complaint .bttn.r , #Suggestion .bttn.r{

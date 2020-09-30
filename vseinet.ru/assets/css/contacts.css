@@ -1,5 +1,14 @@
 /* contacts
 -------------------------------------------------------------------*/
+#contacts h2.contact_sections_title {
+    font-size: 18px;
+    margin: 0 0 15px;
+}
+#contacts h3.contact_sections_title {
+    font-size: 13px;
+    margin: 0 0 5px;
+}
+
 .contact {
 	background-repeat: no-repeat;
 	border: none !important;

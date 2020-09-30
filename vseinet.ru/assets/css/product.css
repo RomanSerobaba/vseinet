@@ -58,8 +58,13 @@
     clear: both;
     padding-top: 30px;
 }
-#product DIV.details H3 {
+#product DIV.details H2 {
     clear: both;
+    margin: 0 0 14px;
+    font-size: 18px;
+}
+#product DIV.description H2 {
+    font-size: 18px;
     margin: 0 0 14px;
 }
 #product DIV.details DL {

@@ -7,14 +7,10 @@
     <a href="/contacts">Контакты</a>
 </div>
 
-<h1>{{ representative.geoPointName }}</h1>
-{% if representative.geoPointId == 341 %}
-<h3 style="color:blue">ВНИМАНИЕ!</h3>
-<p style="color:blue"> Интернет-магазин Vseinet.ru доставляет Ваши заказы, а также приемку товара на сервисное обслуживание, по субботам с 11.30 до 13.00 около магазина (машина-газель Vseinet.ru).</p><br/>
-{% endif %}
-<h3>Адрес</h3>
+<h1>Торговая точка &laquo;{{ representative.geoPointName }}&raquo;</h1>
+<h2>Адрес</h2>
 <p>{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}</p><br/>
-<h3>Телефон</h3>
+<h2>Телефон</h2>
 <p>
     {% if representative.geoPointId == 341 %}Курьер: (8412) 220-212, 8(927)378-1743<br/><br/>{% endif %}
     {% if representative.geoPointId == 341 %}Магазин: {% endif %}{% for phone in representative.phones %}
@@ -23,7 +19,7 @@
 </p>
 <br/>
 
-<h3>График работы</h3>
+<h2>График работы</h2>
 <table class="schedule">
     <tr>
         {% for day in ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'] %}
@@ -38,7 +34,7 @@
 </table>
 <br/>
 
-<h3>Процесс оформления заказа</h3>
+<h2>Процесс оформления заказа</h2>
 <p>
     1) Вы можете оформить заказ через наш сайт или по указанным телефонам.<br/>
     2) В течение суток с вами свяжется менеджер и сообщит точную информацию по наличию и срокам доставки, конечную стоимость товара, а также необходимо ли вам будет вносить предоплату и способы ее внесения.

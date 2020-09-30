@@ -3,7 +3,7 @@
 #page-footer {
 	background: #f8f8f8;
 	height: 245px;
-	margin-top: -253px;
+	margin-top: -245px;
 	padding-top: 60px;
 	position: relative;
 	z-index: 20;
@@ -31,9 +31,9 @@
 		width: 100%;
 		z-index: 2;
 	}
-	
 
-	#page-footer .logo-area {		
+
+	#page-footer .logo-area {
 		padding-top: 4px;
 		width: 25%;
 	}
@@ -48,7 +48,7 @@
 			border: none;
 		}
 	#page-footer .contacts {
-		float: right;		
+		float: right;
 		position: relative;
 		width: 230px;
 	}
@@ -66,14 +66,14 @@
 	}
 	#page-footer .contacts_mobile{
 		display: none;
-		
+
 	}
 
-	#page-footer .error-report {
+	#page-footer .logo-area P.error-report {
 		line-height: 14px;
-		margin: 0 0 17px 20px;
+		margin: 24px 0 0;
 	}
-    
+
 	#page-footer .claim {
 		float: none;
     margin: 1px 20px 10px 3px;

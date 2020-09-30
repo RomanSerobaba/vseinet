@@ -6,7 +6,7 @@
 >
     <div class="wrapper">
         <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}" class="image">
-            <img src="{{ uploads_domain }}/contacts/{{ contact.geoPointId }}_p.jpg" alt="Превью представительства в г.{{ contact.geoCityName }}" />
+            <img src="{{ uploads_domain }}/contacts/{{ contact.geoPointId }}_p.jpg" alt="Превью представительства в {{ contact.geoCityName }}" />
         </a>
         <h4>
             <a href="{{ path('contacts_representative', { geoPointId: contact.geoPointId }) }}">

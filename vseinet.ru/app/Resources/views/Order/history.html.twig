@@ -6,7 +6,7 @@
     <div id="user-account">
         {% include 'User/account_menu.html.twig' with { active: 'history' } %}
         <h1 class="order-history-title">
-            {{ app.user.person.fullname }}
+            История заказов
             {% if mode == 'list' %}
                 <img src="/images/list.png" alt="Отображение списком" title="Отображение списком" class="current">
             {% else %}
