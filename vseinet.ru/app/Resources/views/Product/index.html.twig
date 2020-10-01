@@ -7,8 +7,8 @@
 {% block keywords %}{{ baseProduct.name }}{% endblock %}
 
 {% block meta %}
-    {% if not baseProduct.canonicalId != baseProduct.id %}
-        <link rel="canonical" href="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.canonicalId }) }}{% endif %}">
+    {% if baseProduct.canonicalId != baseProduct.id %}
+        <link rel="canonical" href="https://vseinet.ru{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.canonicalId }) }}{% endif %}">
     {% endif %}
 {% endblock %}
 
