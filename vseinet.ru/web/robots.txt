@@ -24,6 +24,7 @@ Allow: /catalog/*/?page=
 Disallow: /catalog/*/?page=*&
 Allow: /catalog/*/b/*/$
 Allow: /product/*/$
+Allow: *.*
 
 User-agent: Yandex
 Clean-param: q /product/*
@@ -48,6 +49,7 @@ Allow: /catalog/*/?page=
 Disallow: /catalog/*/?page=*&
 Allow: /catalog/*/b/*/$
 Allow: /product/*/$
+Allow: *.*
 
 User-Agent: Slurp
 Disallow: *
