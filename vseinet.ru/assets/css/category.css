@@ -114,6 +114,7 @@
 }
 #category .product .title a {
     margin-right: 5px;
+    line-break: anywhere;
 }
 #category .product .code {
     position: static;
