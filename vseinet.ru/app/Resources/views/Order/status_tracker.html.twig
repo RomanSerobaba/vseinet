@@ -63,10 +63,10 @@
                         {% endfor %}
                     </ul>
                 {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') %}
-                    <h4>Важно</h4>
+                    <p><b>Важно</p></p>
                     <p>После передачи заказа в транспортную компанию, вам будет отправлен трек-номер груза.</p>
                 {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::POST') %}
-                    <h4>Важно</h4>
+                    <p><b>Важно</p></p>
                     <p>После передачи заказа в почтовое отделение, вам будет отправлен трек-номер бандероли.</p>
                 {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') %}
                     <h4>Доставка</h4>
@@ -87,20 +87,20 @@
 {% set showTooltip = false %}
 {% if order is not null %}
     <div class="status_tracker w60p">
-        <h3>
+        <div class="order">
             <span class="price" title="Указана сумма всех неотмененных позиций">
                 на общую сумму {{ order.amount|price_format }} <span class="RUR">Р</span>
             </span>
             Заказ №{{ order.number }} от {{ order.createdAt|date_format('%d.%m.%Y') }}
-        </h3>
+        </div>
         {% for key, group in groups %}
             {% if key == 'callable' and group.items|length > 0 %}
-                <h4 class='status-prepayable'>
+                <div class='status status-prepayable'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     Ожидайте звонка менеджера
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -130,12 +130,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'prepayable' and group.items|length > 0 %}
-                <h4 class='status-prepayable'>
+                <div class='status status-prepayable'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     Ожидают внесения предоплаты
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -165,12 +165,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'ready' and group.items|length > 0 %}
-                <h4 class='status-arrived'>
+                <div class='status status-arrived'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     {% if order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') %}Готовы к получению{% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') %}Ожидают доставки{% else %}Готовы к отправке{% endif %}
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -200,12 +200,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'transit' and group.items|length > 0 %}
-                <h4 class='status-transit'>
+                <div class='status status-transit'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     В пути
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -237,12 +237,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'courier' and group.items|length > 0 %}
-                <h4 class='status-courier'>
+                <div class='status status-courier'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     У курьера на доставке{% if courierPhone %}, тел. 8 (8412) {{ courierPhone }}{% endif %}
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -272,12 +272,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'created' and group.items|length > 0 %}
-                <h4 class='status-created'>
+                <div class='status status-created'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     {% if processingDate %}Будет обработан {{ processingDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}{% else %}В обработке{% endif %}
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -307,12 +307,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'completed' and group.items|length > 0 %}
-                <h4 class='status-completed'>
+                <div class='status status-completed'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     Вручены клиенту
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -344,12 +344,12 @@
                 </tbody>
                 </table>
             {% elseif key == 'issued' and group.items|length > 0 %}
-                <h4 class='status-issued'>
+                <div class='status status-issued'>
                     <span class="price">
                         на сумму {{ group.sum|price_format }} <span class="RUR">Р</span>
                     </span>
                     Ожидается решение
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>
@@ -379,9 +379,9 @@
                 </tbody>
                 </table>
             {% elseif key == 'canceled' and group.items|length > 0 %}
-                <h4 class='status-refunded'>
+                <div class='status status-refunded'>
                     Отсутствующие и отмененные позиции
-                </h4>
+                </div>
                 <table>
                 <thead>
                     <tr>

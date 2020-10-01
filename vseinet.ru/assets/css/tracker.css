@@ -74,21 +74,23 @@
     font-size: 12px;
     padding: 5px 10px;
 }
-.status_tracker H3 {
+.status_tracker .order {
     border-bottom: solid 1px lightgray;
     font-size: 18px;
     margin: 0 0 15px;
+    font-weight: 700;
 }
-.status_tracker H3 .price {
+.status_tracker .order .price {
     cursor: help;
     float: right;
 }
-.status_tracker H4 {
+.status_tracker .status {
     border-bottom: solid 1px lightgray;
     font-size: 15px;
     margin: 0 0 5px;
+    font-weight: 700;
 }
-.status_tracker H4 .price {
+.status_tracker .status .price {
     cursor: help;
     float: right;
 }

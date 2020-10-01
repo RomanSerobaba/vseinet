@@ -8,7 +8,7 @@
                 class="lazyload"
             />
         </a>
-        <h6><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h6>
+        <div style="margin-bottom:5px"><b><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></b></div>
         <strong class="price">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
         <span class="discount">Акция</span>
     </div>
@@ -38,15 +38,13 @@
                         {% endif %}
                         <ul>
                             <li class="top">
-                                <h4>
-                                    <a href="{% if category2.sefUrl %}{{ path('catalog_category_sef', { slug: category2.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category2.id }) }}{% endif %}">
-                                        {{ category2.name }}
-                                        {% if category2.id == 4590 %}
-                                            <span class="new"></span>
-                                        {% endif %}
-                                        <span class="go-to-category">Перейти в раздел</span>
-                                    </a>
-                                </h4>
+                                <a href="{% if category2.sefUrl %}{{ path('catalog_category_sef', { slug: category2.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category2.id }) }}{% endif %}">
+                                    {{ category2.name }}
+                                    {% if category2.id == 4590 %}
+                                        <span class="new"></span>
+                                    {% endif %}
+                                    <span class="go-to-category">Перейти в раздел</span>
+                                </a>
                             </li>
                             {% for category3 in category2.children %}
                                 <li>
@@ -65,12 +63,10 @@
                     {% for categories in category1.last %}
                         <ul>
                             {% for category in categories %}
-                                <li>
-                                    <h4>
-                                        <a href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category.id }) }}{% endif %}">
+                                <li class="top2">
+                                    <a href="{% if category.sefUrl %}{{ path('catalog_category_sef', { slug: category.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category.id }) }}{% endif %}">
                                             {{ category.name }}
-                                        </a>
-                                    </h4>
+                                    </a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -78,9 +74,7 @@
                     {% if category1.last %}
                         <ul class="mobile-all">
                             <li class="top">
-                                <h4>
-                                    <a href="{% if category1.sefUrl %}{{ path('catalog_category_sef', { slug: category1.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category1.id }) }}{% endif %}" class="all go-to-category">Все разделы</a>
-                                </h4>
+                                <a href="{% if category1.sefUrl %}{{ path('catalog_category_sef', { slug: category1.sefUrl }) }}{% else %}{{ path('catalog_category', { id: category1.id }) }}{% endif %}" class="all go-to-category">Все разделы</a>
                             </li>
                         </ul>
                     {% endif %}

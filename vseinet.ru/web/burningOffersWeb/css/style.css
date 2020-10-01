@@ -1747,9 +1747,11 @@ color: #00980d !important; }
       -webkit-transform: scale(1);
       -ms-transform: scale(1);
       transform: scale(1); }
-  .product-item h3 {
-    font-size: 18px; }
-    .product-item h3 a {
+  .product-item .name {
+    font-size: 18px;
+    line-height: 1.2;
+ }
+    .product-item .name a {
       color: #000;
     height: 63px;
     overflow:hidden;
@@ -1758,7 +1760,7 @@ color: #00980d !important; }
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical; }
-      .product-item h3 a:hover {
+      .product-item .name a:hover {
         color: #f16821; }
   .product-item p {
     line-height: 1.4;
@@ -1870,7 +1872,7 @@ display: block;}
   background: #fafafa;
   padding: 15px 0;
 }
-.product-list h3 {
+.product-list .name {
   font-size: 18px;
   font-weight: 400;
   color: #444444;

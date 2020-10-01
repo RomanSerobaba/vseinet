@@ -11,6 +11,17 @@
 		padding: 10px 0 0 50px;
 		width: 20%;
 	}
+	#catalog .category .title {
+        margin: 0 0 23px;
+	}
+	#catalog .category .title small {
+        position: static;
+        top: 0;
+	}
+	#catalog .category .title a {
+        font-size: 16px;
+        font-weight: bold;
+	}
 		#catalog .category .image {
 			border: none!important;
 			display: block;

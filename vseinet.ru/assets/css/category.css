@@ -110,22 +110,22 @@
     font-size: 13px;
     font-weight: bold;
     line-height: inherit;
+    margin-bottom: 15px;
 }
-#category .product .title H2 {
-    display: inline;
+#category .product .title a {
+    margin-right: 5px;
 }
-#category .product .title A B {
-    background: #ffea00ab;
-}
-#category .product .title SMALL {
+#category .product .code {
     position: static;
     top:0;
+    color: #999;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
 }
-#category .product .title SMALL SPAN {
-    color: #ccc;
-}
-#category .product .sku {
+#category .product .code .sku {
     margin: 0 0 10px;
+    color:#333;
 }
 #category .product .rating {
     margin: 10px 0;

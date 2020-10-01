@@ -18,15 +18,16 @@
                 </li>
             {% endfor %}
         </ul>
-        <h1>{{ category.name }}
+        <h1 style="display:inline-block">{{ category.name }}</h1>
         {% if app.userIsEmployee %}
             <a
                 href="{{ path('authority', { targetUrl: ['/admin/productPricetags?listType=category&ids[]=', category.id]|join}) }}"
                 target="_blank"
                 class="pricetag"
-                title="Печать ценников">
+                title="Печать ценников"
+                style="margin-left: 5px">
                 </a>
-        {% endif %}</h1>
+        {% endif %}
         {% if category.description %}
             <section class="content htx htx_catalog">{{ category.description|raw }}</section>
         {% endif %}
@@ -36,13 +37,13 @@
                     <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}" class="image">
                         <img src="{{ subcategory|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}" alt="Превью категории {{ subcategory.name }}" />
                     </a>
-                    <h2>
+                    <div class="title">
                         <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}">{{ subcategory.name }}</a>
                         <small>
                             {{ subcategory.countProducts|number_format }}
                             {{ subcategory.countProducts|declension('товар;товара;товаров') }}
                         </small>
-                    </h2>
+                    </div>
                 </div>
             {% endfor %}
         </div>

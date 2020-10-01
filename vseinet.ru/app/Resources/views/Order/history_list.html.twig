@@ -1,7 +1,7 @@
 <div class="order-history block gray">
     <div class="wrapper">
         <div class="column">
-            <h2>
+            <div style="font-size: 16px;margin: 0 0 23px;font-weight:700;">
                 Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">
@@ -10,8 +10,8 @@
                 {% else %}
                     {{ order.number }}
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
-            </h2>
+                <span style="color:#999;">от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
+            </div>
             <dl>
                 {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
                     <dt><span title="Указана сумма всех неотмененных позиций">Сумма заказа:</span></dt>
@@ -42,7 +42,7 @@
         </div>
         <div class="column">
             {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
-                <h2>Данные покупателя</h2>
+                <div style="font-size: 16px; margin: 0 0 23px; font-weight: 700;">Данные покупателя</div>
                 <dl>
                     <dt>Город:</dt>
                     <dd>{{ order.cityName }}</dd>
@@ -98,12 +98,12 @@
         </div>
     </div>
     <div class="wrapper white">
-        <h2>
+        <div style="font-size: 16px; font-weight: 700;margin: 0 0 0 30px;">
             Состав заказа
             {% if constant('AppBundle\\Enum\\OrderItemStatus::CREATED') == order.statusCode %}
                 <span style="font-size: 0.7em; font-weight: normal; vertical-align: top;">Внимание! Обращаем Ваше внимание, что окончательная стоимость заказа, будет подтверждена после обработки заказа сотрудником компании.</span>
             {% endif %}
-        </h2>
+        </div>
         <div class="row">
             {% for item in order.items %}
                 {% if not loop.first and loop.index % 3 == 1 %}

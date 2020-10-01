@@ -29,13 +29,13 @@
     {% for geoRegion in contacts %}
         <h2 class="contact_sections_title">{{ geoRegion.name }}</h2>
         {% for type, contactsByGeoRegion in geoRegion.contacts %}
-            <h3 class="contact_sections_title" style="margin-bottom: 20px">
+            <div class="contact_sections_title" style="margin-bottom: 20px;font-weight: bold;font-size:13px">
                 {% if constant('AppBundle\\Enum\\RepresentativeTypeCode::COURIER') == type %}
                     Курьеры<span style="color: rgb(153, 153, 153); font-weight: normal;">, звонить по доставке; уточнить информацию по заказам можно по тел. (8412) 296-222</span>
                 {% else %}
                     Представительства (точки самовывоза)<span style="color: rgb(153, 153, 153); font-weight: normal;">, звонить по заказам и доставке</span>
                 {% endif %}
-            </h3>
+            </div>
             <div class="representatives">
                 {% for contact in contactsByGeoRegion %}
                     {% if not loop.first and loop.index % 3 == 1 %}

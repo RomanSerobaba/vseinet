@@ -27,15 +27,16 @@
             {% endif %}
         </ul>
         <div class="title category-title">
-            <h1><span>{{ category.name }}{% if brand %} «{{ brand.name }}»{% endif %}{% if page > 1 %}, страница {{ page }}{% endif %}</span>
+            <h1 style="display:inline-block">{{ category.name }}{% if brand %} «{{ brand.name }}»{% endif %}{% if page > 1 %}, страница {{ page }}{% endif %}</h1>
             {% if app.userIsEmployee %}
                 <a
                     href="{{ path('authority', { targetUrl: ['/admin/productPricetags?listType=category&ids[]=', category.id]|join}) }}"
                     target="_blank"
                     class="pricetag"
-                    title="Печать ценников">
-                    </a>
-            {% endif %}</h1>
+                    title="Печать ценников"
+                    style="margin-left: 5px">
+                </a>
+            {% endif %}
             {% set total = facets.total %}
             <small id="products-total">{{ total }}{% if total == 10000 %}+{% endif %} {{ total|declension('товар;товара;товаров') }}</small>
         </div>

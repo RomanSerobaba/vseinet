@@ -43,20 +43,20 @@
 		padding: 8px 25px 8px 20px;
 	}
 	#tree > UL > LI > A .new {
-		color: red; 
-                display: inline-block; 
-                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAIAAADHZSmzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNpi/J/jw0BtwMRAAzBqKPUBc4OZGoqAYzCDtSeDqj6DdwyDhALD9TMgwaAMEFfThOHjBwZ2DoaMRoYXzxj+/GTI62D4/Inh1WOGkgkMf/4zPL2Lw6WCogwWjgzfvzE8f8Tg6M2gpMfgGQdiHNoOkk0sZnjxkIFfkMHAikHTnEFemUHPgkHXCsR4dANuBgt2D2xfBFIKNJ2bh0HbiOHDOwYZRZC4gBBI/MZFBi1DBk4uhpfPGBTVQeJABtAyAoYigx/fQE67fQnEPrWP4cE1hq9fQPYBwcaFDGmVIMbZoyRG1KmDIAcCvWnvw+AfDxK5dwnkdnEphsvHGB7eBTHOH0TWgeFSiIuA4PVThv1bQSTQX2+egwLx+yOGNTMZPn8AyW5eBgoZINi5ikFGBdnvQMA4mvdHsKEAAQYACQ9jkFuc8jYAAAAASUVORK5CYII=) repeat scroll left top transparent; 
-                width: 28px; 
-                height: 18px; 
+		color: red;
+                display: inline-block;
+                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAIAAADHZSmzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNpi/J/jw0BtwMRAAzBqKPUBc4OZGoqAYzCDtSeDqj6DdwyDhALD9TMgwaAMEFfThOHjBwZ2DoaMRoYXzxj+/GTI62D4/Inh1WOGkgkMf/4zPL2Lw6WCogwWjgzfvzE8f8Tg6M2gpMfgGQdiHNoOkk0sZnjxkIFfkMHAikHTnEFemUHPgkHXCsR4dANuBgt2D2xfBFIKNJ2bh0HbiOHDOwYZRZC4gBBI/MZFBi1DBk4uhpfPGBTVQeJABtAyAoYigx/fQE67fQnEPrWP4cE1hq9fQPYBwcaFDGmVIMbZoyRG1KmDIAcCvWnvw+AfDxK5dwnkdnEphsvHGB7eBTHOH0TWgeFSiIuA4PVThv1bQSTQX2+egwLx+yOGNTMZPn8AyW5eBgoZINi5ikFGBdnvQMA4mvdHsKEAAQYACQ9jkFuc8jYAAAAASUVORK5CYII=) repeat scroll left top transparent;
+                width: 28px;
+                height: 18px;
                 margin-left: 10px;
                 border-radius: 5px;
                 vertical-align: middle;
 	}
-	#tree > UL > LI > DIV > UL > LI > H4 > A .new {
-		width: 28px; 
-                display: inline-block; 
-                background: transparent url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAIAAADHZSmzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNpi/J/jw0BtwMRAAzBqKPUBc4OZGoqAYzCDtSeDqj6DdwyDhALD9TMgwaAMEFfThOHjBwZ2DoaMRoYXzxj+/GTI62D4/Inh1WOGkgkMf/4zPL2Lw6WCogwWjgzfvzE8f8Tg6M2gpMfgGQdiHNoOkk0sZnjxkIFfkMHAikHTnEFemUHPgkHXCsR4dANuBgt2D2xfBFIKNJ2bh0HbiOHDOwYZRZC4gBBI/MZFBi1DBk4uhpfPGBTVQeJABtAyAoYigx/fQE67fQnEPrWP4cE1hq9fQPYBwcaFDGmVIMbZoyRG1KmDIAcCvWnvw+AfDxK5dwnkdnEphsvHGB7eBTHOH0TWgeFSiIuA4PVThv1bQSTQX2+egwLx+yOGNTMZPn8AyW5eBgoZINi5ikFGBdnvQMA4mvdHsKEAAQYACQ9jkFuc8jYAAAAASUVORK5CYII=") repeat scroll left -2px; 
-                height: 12px; 
+	#tree > UL > LI > DIV > UL > LI > A .new {
+		width: 28px;
+                display: inline-block;
+                background: transparent url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAIAAADHZSmzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNpi/J/jw0BtwMRAAzBqKPUBc4OZGoqAYzCDtSeDqj6DdwyDhALD9TMgwaAMEFfThOHjBwZ2DoaMRoYXzxj+/GTI62D4/Inh1WOGkgkMf/4zPL2Lw6WCogwWjgzfvzE8f8Tg6M2gpMfgGQdiHNoOkk0sZnjxkIFfkMHAikHTnEFemUHPgkHXCsR4dANuBgt2D2xfBFIKNJ2bh0HbiOHDOwYZRZC4gBBI/MZFBi1DBk4uhpfPGBTVQeJABtAyAoYigx/fQE67fQnEPrWP4cE1hq9fQPYBwcaFDGmVIMbZoyRG1KmDIAcCvWnvw+AfDxK5dwnkdnEphsvHGB7eBTHOH0TWgeFSiIuA4PVThv1bQSTQX2+egwLx+yOGNTMZPn8AyW5eBgoZINi5ikFGBdnvQMA4mvdHsKEAAQYACQ9jkFuc8jYAAAAASUVORK5CYII=") repeat scroll left -2px;
+                height: 12px;
                 margin-left: 5px;
 	}
 	#tree > UL > LI > A:hover,
@@ -131,8 +131,12 @@
    					top: 0;
    					width: 100%;
 				}
+				#tree .subtree UL LI.top2 {
+                    font-weight: bold;
+				}
 				#tree .subtree UL LI.top {
-					height: auto;
+                    height: auto;
+                    font-weight: bold;
 				}
 					#tree .subtree UL LI.top * {
 						width: auto;
@@ -214,7 +218,7 @@
 	margin-top: 0px;
 	margin-right: 15px;
 	color: #5fad12;
-	font-weight: bold;	
+	font-weight: bold;
 	z-index: 3;
 	white-space: nowrap;
 }
@@ -223,33 +227,30 @@
 	vertical-align: middle;
 }
 #tree .subtree UL LI.top span.go-to-category{
-	display: none;	
+	display: none;
 	background: none;
 	text-decoration: underline !important;
 	font-size: 13px;
 	margin-top: 0;
 	margin-right: 15px;
 	color: #5fad12;
-	font-weight: bold;	
+	font-weight: bold;
 }
 #tree .mobile-all {
 	display: none;
-}
-#tree h4 {
-	margin: 0;
 }
 
 #tree > UL > LI.opened > span.go-to-category{
 	display: table !important;
 	text-decoration: underline;
 	padding: 0;
-	margin-top: 17px;	
+	margin-top: 17px;
 }
 #tree > UL > LI > span.go-to-category{
 	background: transparent !important;
 }
 #tree > UL > LI > span.go-to-category:before{
-	display: none;	
+	display: none;
 }
 #tree .subtree ul.third-menu-open li{
 	display: block;

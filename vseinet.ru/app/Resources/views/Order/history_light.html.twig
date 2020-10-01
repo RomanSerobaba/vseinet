@@ -39,15 +39,15 @@
                     Адрес: {$order.address}
                 {/if#}
             </span>
-            <h2>
+            <div style="font-size: 16px;margin: 0 0 23px;font-weight:700;">
                 Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">{{ order.number }}</a>
                 {% else %}
                     {{ order.number }}
                 {% endif %}
-                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
-            </h2>
+                <span style="color:#999;">от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
+            </div>
             <span class="info">
                 Оплата: {{ order.paymentTypeName|replace({ ' (оплата по банковскому счету)': '' }) }}
                 {#if $order.discount}
@@ -59,12 +59,12 @@
     {% for item in order.items %}
         <tr>
             <td class="text">
-                <h6>
+                <div style="font-weight:bold">
                     <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">
                         {{ item.productName }}
                     </a>
                     <span style="font-size:0.9em">код товара {{ item.baseProductId }}</span>
-                </h6>
+                </div>
             </td>
             {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == item.statusCode ? ' canceled' : '' %}
             <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
@@ -85,7 +85,7 @@
         {#if $position.price_changes}
             {foreach from=$position.price_changes item=change}
                 <tr>
-                    <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
+                    <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone || $order.phone!=$user.phone)}{$change.name}{/if}</td>
                     <td></td>
                     <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if !Model::factory('User')->isRole('USER_WHOLESALER')}{$change.amount|price_format} <span class="RUR">Р</span>{/if}</td>
                     <td class="status"></td>

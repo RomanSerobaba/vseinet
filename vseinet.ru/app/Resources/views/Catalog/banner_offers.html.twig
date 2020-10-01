@@ -8,7 +8,7 @@
             <a href="{{ path('catalog') }}">Каталог</a>
         </div>
         <div class="title category-title">
-            <h1>{{ banner.name }}</h1>
+            <h1>Специальное предложение &laquo;{{ banner.name }}&raquo;</h1>
             {% set total = facets.total %}
             <small id="products-total">{{ total }}{% if total == 10000 %}+{% endif %} {{ total|declension('товар;товара;товаров') }}</small>
         </div>

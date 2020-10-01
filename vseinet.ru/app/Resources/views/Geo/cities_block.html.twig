@@ -1,9 +1,9 @@
 {% if geoCityCentral is not null %}
-    <H3 class="city central{% if geoCityCentral.isCurrent %} current{% endif %}" data-id="{{ geoCityCentral.id }}">
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px;" class="city central{% if geoCityCentral.isCurrent %} current{% endif %}" data-id="{{ geoCityCentral.id }}">
         <a href="javascript:void(0)" class="ajax">
             {{ geoCityCentral.name }}
         </a>
-    </H3>
+    </div>
 {% endif %}
 {% for group in geoCityGroups %}
     <div class="column">

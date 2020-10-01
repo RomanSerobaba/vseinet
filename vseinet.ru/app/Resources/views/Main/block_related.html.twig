@@ -12,7 +12,7 @@
                             class="lazyload"
                         />
                     </a>
-                    <h6><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></h6>
+                    <div><b><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></b></div>
                     <strong class="price">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
                 </div>
             {% endfor %}

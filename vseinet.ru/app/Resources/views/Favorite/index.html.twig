@@ -5,7 +5,8 @@
 {% block content %}
     <div id="user-account">
         {% include 'User/account_menu.html.twig' with { active: 'favorite' } %}
-        <h1>Избранное <small>{{ favorites|length }} {{ favorites|length|declension('товар;товара;товаров') }}</small></h1>
+        <h1 style="display:inline-block">Избранное</h1>
+        <small style="position: relative; top: -2px; color: #999; font-size: 12px; font-weight: 400; white-space: nowrap; margin-left: 5px;">{{ favorites|length }} {{ favorites|length|declension('товар;товара;товаров') }}</small>
         <div id="favorite">
             {% include 'Favorite/page.html.twig' %}
         </div>

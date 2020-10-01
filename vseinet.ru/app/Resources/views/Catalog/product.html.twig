@@ -7,10 +7,10 @@
     </a>
     <div class="details">
         <div class="title">
-            <h2><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}" class="title">
+            <a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">
                 {{ product.name|raw }}
-            </a></h2>
-            <small>Код товара:
+            </a>
+            <small class="code">Код товара:
                 <b class="sku">{{ product.id }}</b>{% if app.userIsEmployee %} Арт.: {{ (product.price - product.purchasePrice)|price_format({ decimals: 0, ds: '.', ts: ' ' }) }}{% endif %}
             </small>
         </div>

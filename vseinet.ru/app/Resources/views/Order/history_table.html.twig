@@ -1,7 +1,7 @@
 <div class="order-history block gray order-history-table">
     <div class="wrapper">
         <div class="column">
-            <h2>
+            <div style="font-size: 16px; margin: 0 0 23px; font-weight: 700;">
                 Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}" target="_blank">{{ order.number }}</a>
@@ -9,7 +9,7 @@
                     {{ order.number }}
                 {% endif %}
                 <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
-            </h2>
+            </div>
         </div>
         <div class="column">
             <dl>
@@ -80,11 +80,11 @@
                             <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="Фото {{ item.productName }}">
                         </td>
                         <td class="text">
-                            <h6>
+                            <div style="font-weight:bold">
                                 <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">
                                     {{ item.productName }}
                                 </a>
-                            </h6>
+                            </div>
                             <p class="code" style="color:#999">Код товара: {{ item.baseProductId }}</p>
                         </td>
                         {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == item.statusCode ? ' canceled' : '' %}
@@ -102,7 +102,7 @@
                         {foreach from=$position.price_changes item=change}
                             <tr>
                                 <td></td>
-                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone or $order.phone!=$user.phone)}<h6>{$change.name}</h6>{/if}</td>
+                                <td class="text{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if $order.user_id!=$user.id && (!$user.phone or $order.phone!=$user.phone)}{$change.name}{/if}</td>
                                 <td></td>
                                 <td class="price{if $position.status_code=='IS_CANCELED'} IS_CANCELED{/if}">{if !Model::factory('User')->isRole('USER_WHOLESALER')}{$change.amount|price_format} <span class="RUR">Р</span>{/if}</td>
                                 <td class="status">
