@@ -44,10 +44,10 @@
         <div id="product" data-id="{{ baseProduct.id }}">
             <div class="row clearfix">
                 <div class="coll-md-5 coll-sm-6">
-                    <div class="image">
-                        {% set image = images[0]|default(null) %}
+                    {% set image = images[0]|default(null) %}
+                    <div class="image"{% if image %} itemscope itemtype="http://schema.org/ImageObject"{% endif %}>
                         <img
-                            {% if image %}itemprop="image"{% endif %}
+                            {% if image %}itemprop="image" itemprop="contentUrl"{% endif %}
                             src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_LG')) }}"
                             title="{{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"
                             alt="Фото {{ baseProduct.name }}. Интернет-магазин Vseinet.ru Пенза"

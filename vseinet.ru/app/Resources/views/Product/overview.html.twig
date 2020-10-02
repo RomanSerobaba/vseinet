@@ -1,6 +1,6 @@
 <div class="column details">
-    {% if brand or baseProduct.model or baseProduct.details is defined %}
-        {% if details is defined %}
+    {% if brand or baseProduct.model or baseProduct.details is defined and baseProduct.details is not empty %}
+        {% if details is defined and details is not empty %}
             <h2>Краткие характеристики</h2>
         {% else %}
             <h2>Основные характеристики</h2>
@@ -24,7 +24,7 @@
             <dd>{{ baseProduct.model }}</dd>
         </dl>
     {% endif %}
-    {% if baseProduct.details is defined %}
+    {% if baseProduct.details is defined and baseProduct.details is not empty %}
         {% for detail in baseProduct.details %}
             <dl>
                 <dt><span>{{ detail.name }}{% if detail.unit %}, {{ detail.unit }}{% endif %}</span></dt>
@@ -68,6 +68,11 @@
             {{ baseProduct.description|raw }}
         </div>
     <!--/noindex-->
+    {% else %}
+        <h2>Описание</h2>
+        <div class="content" itemprop="description">
+            Вы можете купить {{ baseProduct.name }} в нашем интернет-магазине Vseinet.ru по лучшей цене в г.{{ app.geoCity.name }}. Заказывайте онлайн, не выходя из дома!
+        </div>
     {% endif %}
     {% if baseProduct.manufacturerLink or baseProduct.manualLink %}
         <h2>Информация на сайте производителя</h2>

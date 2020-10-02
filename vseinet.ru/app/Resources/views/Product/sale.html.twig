@@ -44,7 +44,7 @@
                 content="https://schema.org/{% if isAvailable %}InStock{% elseif isOnDemand %}PreOrder{% else %}OutOfStock{% endif %}"
             >
             <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
-            <meta itemprop="url" content="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}" />
+            <a itemprop="url" rel="nofollow" href="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}"></a>
         </strong>
     {% else %}
         <strong

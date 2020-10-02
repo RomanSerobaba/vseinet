@@ -43,7 +43,9 @@
 <div class="content">
     <p>
         {% for photo in representative.photos %}
-            <img src="{{ uploads_domain }}/contacts/{{ photo.url }}" alt="Фото №{{ loop.index }} представительства в г.{{ representative.geoCityName }}" />
+            <span itemscope itemtype="http://schema.org/ImageObject">
+            <img src="{{ uploads_domain }}/contacts/{{ photo.url }}" alt="Фото №{{ loop.index }} представительства в г.{{ representative.geoCityName }}" itemprop="contentUrl" />
+            </span>
             {% if loop.index % 2 == 1 %}
                 &nbsp;
             {% endif %}
