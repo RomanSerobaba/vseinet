@@ -37,6 +37,16 @@ class Representative
     public $hasDelivery;
 
     /**
+     * @Assert\Type(type="float")
+     */
+    public $longitude;
+
+    /**
+     * @Assert\Type(type="float")
+     */
+    public $latitude;
+
+    /**
      * @Assert\Type(type="array<AppBundle\Entity\RepresentativePhoto>")
      */
     public $photos;
@@ -51,20 +61,8 @@ class Representative
      */
     public $schedule;
 
-
-    public function __construct(
-        $geoPointId,
-        $geoPointName,
-        $geoCityName,
-        $address,
-        $hasRetail,
-        $hasDelivery
-    ) {
-        $this->geoPointId = $geoPointId;
-        $this->geoPointName = $geoPointName;
-        $this->geoCityName = $geoCityName;
-        $this->address = $address;
-        $this->hasRetail = $hasRetail;
-        $this->hasDelivery = $hasDelivery;
-    }
+    /**
+     * @Assert\Type(type="string")
+     */
+    public $fullSchedule;
 }

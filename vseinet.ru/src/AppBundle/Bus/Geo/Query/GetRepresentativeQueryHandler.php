@@ -3,6 +3,7 @@
 namespace AppBundle\Bus\Geo\Query;
 
 use AppBundle\Bus\Message\MessageHandler;
+use AppBundle\Doctrine\ORM\Query\DTORSM;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\RepresentativePhoto;
 use AppBundle\Enum\ContactTypeCode;
@@ -13,28 +14,30 @@ class GetRepresentativeQueryHandler extends MessageHandler
     {
         $em = $this->getDoctrine()->getManager();
 
-        $q = $em->createQuery("
+        $q = $em->createNativeQuery('
             SELECT
-                NEW AppBundle\Bus\Geo\Query\DTO\Representative (
-                    gp.id,
-                    gp.name,
-                    CONCAT(gc.unit, ' ', gc.name),
-                    ga.address,
-                    r.hasRetail,
-                    r.hasDelivery
-                )
-            FROM AppBundle:Representative AS r
-            INNER JOIN AppBundle:GeoPoint AS gp WITH gp.id = r.geoPointId
-            INNER JOIN AppBundle:GeoCity AS gc WITH gc.id = gp.geoCityId
-            LEFT OUTER JOIN AppBundle:GeoAddress AS ga WITH ga.id = gp.geoAddressId
-            WHERE r.geoPointId = :geoPointId AND r.isActive = true AND (r.hasRetail = true OR r.hasDelivery = true)
-        ");
-        $q->setParameter('geoPointId', $query->geoPointId);
-        $representative = $q->getOneOrNullResult();
-        if (!$representative instanceof DTO\Representative) {
+                gp.id as geo_point_id,
+                gp.name as geo_point_name,
+                CONCAT(gc.unit, \' \', gc.name) as geo_city_name,
+                ga.address,
+                r.has_retail,
+                r.has_delivery,
+                ga.coordinates[0] as longitude,
+                ga.coordinates[1] as latitude
+            FROM representative AS r
+            INNER JOIN geo_point AS gp on gp.id = r.geo_point_id
+            INNER JOIN geo_city AS gc on gc.id = gp.geo_city_id
+            LEFT OUTER JOIN geo_address AS ga on ga.id = gp.geo_address_id
+            WHERE r.geo_point_id = :geoPointId AND r.is_active = true AND (r.has_retail = true OR r.has_delivery = true)
+        ', new DTORSM(DTO\Representative::class))
+            ->setParameter('geoPointId', $query->geoPointId);
+        $representative = $q->getResult('DTOHydrator');
+
+        if (empty($representative)) {
             throw new NotFoundHttpException();
         }
 
+        $representative = $representative[0];
         $representative->photos = $em->getRepository(RepresentativePhoto::class)->findBy([
             'representativeId' => $query->geoPointId,
         ], [
@@ -70,7 +73,9 @@ class GetRepresentativeQueryHandler extends MessageHandler
         $schedules = $q->getSingleResult();
 
         $days = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+        $enDays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
         $blocks = [];
+        $fullBlocks = [];
         $period = 0;
         $current = '';
         foreach ($days as $i => $day) {
@@ -83,6 +88,15 @@ class GetRepresentativeQueryHandler extends MessageHandler
             }
             $blocks[$period]['days'][] = $day;
             $blocks[$period]['time'] = $time;
+            if ($till) {
+                $fullBlocks[$since->format("G:i").'-'.$till->format("G:i")][] = $enDays[$i];
+            }
+        }
+        if ($fullBlocks) {
+            uasort($fullBlocks, function($a, $b){ count($a) > count($b) ? -1 : 1; });
+            $sch = key($fullBlocks);
+            $d = reset($fullBlocks);
+            $representative->fullSchedule = implode(',',$d) . ' ' . $sch;
         }
         foreach ($blocks as $block) {
             $representative->schedule[] = new DTO\ScheduleItem(count($block['days']), $block['time']);
