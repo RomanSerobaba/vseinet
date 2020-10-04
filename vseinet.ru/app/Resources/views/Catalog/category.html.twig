@@ -2,7 +2,7 @@
 
 {% block pageTitle %}{% if category.pageTitle %}{{ category.pageTitle }}{% else %}Купить {{ category.name }}{% if brand %} {{ brand.name }}{% endif %} в г.{{ app.geoCity.name }}, цена{% endif %} в интернет-магазине Vseinet.ru{% if page > 1 %}, страница {{ page }}{% endif %}{% endblock %}
 
-{% block pageDescription %}{% if category.pageDescription %}{{ category.pageDescription }}{% else %}В каталоге {{ category.name }}{% if brand %} {{ brand.name }}{% endif %} вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!{% endif %}{% if page > 1 %} Страница {{ page }}{% endif %}{% endblock %}
+{% block pageDescription %}{% if category.pageDescription %}{{ category.pageDescription }}{% else %}В каталоге {{ category.name }}{% if brand %} {{ brand.name }}{% endif %}{% if page > 1 %}, страница {{ page }}{% endif %} вы найдёте цены, отзывы, характеристики, описания и фотографии товаров. Наши цены вас порадуют!{% endif %}{% endblock %}
 
 {% block content %}
     <section>

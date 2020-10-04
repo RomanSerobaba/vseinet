@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Annotation as VIA;
+use AppBundle\Bus\Brand\Query\DTO\Brand as DTOBrand;
 use AppBundle\Bus\Catalog\Query;
 use AppBundle\Bus\Brand\Query\GetBySefNameQuery as GetBrandBySefNameQuery;
 use AppBundle\Bus\Brand\Query\GetByNameQuery as GetBrandByNameQuery;
@@ -91,6 +92,8 @@ class CatalogController extends Controller
                     }
                 }
             }
+        } elseif ($brandName === 'Прочее') {
+            $brand = new DTOBrand(0, 'Прочие бренды', null, false, $brandName);
         } else {
             $brand = null;
         }
@@ -135,7 +138,7 @@ class CatalogController extends Controller
         $category = $this->get('query_bus')->handle(new Query\GetCategoryQuery(['id' => $id, 'brand' => $brand]));
 
         $finder = $this->get('catalog.category_product.finder');
-        $finder->setFilterData($request->query->all() + ($brand || $brandName === 'Прочее' ? ['b' => $brandName === 'Прочее' ? 0 : $brand->id] : []), $category, $brand);
+        $finder->setFilterData($request->query->all() + ($brand ? ['b' => $brand->id] : []), $category, $brand);
 
         if ($request->isMethod('POST')) {
             if (!$category->isLeaf) {
@@ -145,7 +148,7 @@ class CatalogController extends Controller
             $finder->handleRequest($request->request->get('filter'));
 
             $filter = $finder->getFilter();
-            if (!empty($filter->brandIds) && 1 === count($filter->brandIds) && 0 < reset($filter->brandIds)) {
+            if (!empty($filter->brandIds) && 1 === count($filter->brandIds)) {
                 $brand = $this->get('query_bus')->handle(new GetBrandByIdQuery(['id' => reset($filter->brandIds)]));
                 $brandName = $brand ? ($brand->sefName ?? $brand->name) : $brandName;
                 $route = 'catalog_category'.($category->sefUrl ? '_sef' : '').'_with_brand';
@@ -191,7 +194,7 @@ class CatalogController extends Controller
         }
 
         $this->get('command_bus')->handle(new AddViewHistoryCategoryCommand(['categoryId' => $category->id]));
-        if (null !== $brand) {
+        if (null !== $brand && $brandName !== 'Прочее') {
             $this->get('command_bus')->handle(new AddViewHistoryBrandCommand(['brandId' => $brand->id]));
         }
 

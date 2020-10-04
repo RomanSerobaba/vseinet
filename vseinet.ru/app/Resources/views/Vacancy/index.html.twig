@@ -1,6 +1,8 @@
 {% extends "layout.html.twig" %}
 
-{% block pageTitle %}Вакансии в интернет-магазине Vseinet.ru{% endblock %}
+{% block pageTitle %}{% if vacancy is defined %}Вакансия {{ vacancy.position }} в интернет-магазине Vseinet.ru{% else %}Вакансии в интернет-магазине Vseinet.ru{% endif %}{% endblock %}
+
+{% block pageDescription %}{% if vacancy is defined %}На этой странице представлено актуальное описание вакансии {{ vacancy.position }} в интернет-магазине Vseinet.ru{% else %}На этой странице приведены актуальные вакансии в интернет-магазине Vseinet.ru{% endif %}{% endblock %}
 
 {% block content %}
     {{ render(controller('AppBundle:Vacancy:getList')) }}

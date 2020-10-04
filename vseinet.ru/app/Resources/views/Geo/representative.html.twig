@@ -1,6 +1,8 @@
 {% extends "layout.html.twig" %}
 
-{% block pageTitle %}Контакты представительства в г.{{ representative.geoCityName }} в интернет-магазине Vseinet.ru{% endblock %}
+{% block pageTitle %}Контакты представительства в {{ representative.geoCityName }} в интернет-магазине Vseinet.ru{% endblock %}
+
+{% block pageDescription %}На этой странице представлены телефоны, расписание работы и адрес представительства в {{ representative.geoCityName }} в интернет-магазине Vseinet.ru{% endblock %}
 
 {% block content %}
 <div class="breadcrumbs">
