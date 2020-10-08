@@ -4,6 +4,9 @@
 
     padding-left: 15px;
 }
+.wrapper.category-description-wrapper{
+    display: table-header-group;
+}
 #category {
     padding-top: 0px;
     clear: both;
@@ -27,6 +30,10 @@
 }
 #category .product .image img{
     width: 100%;
+}
+#category .product .status.in-stock {
+    font-size: 1.05em;
+    font-weight: bold;
 }
 #category .product .sale {
     float: left;
@@ -250,4 +257,8 @@
 }
 #main-categories SPAN.bttn.light {
     color: #999 !important;
+}
+.empty-result {
+    font-size:16px;
+    font-weight: 700;
 }

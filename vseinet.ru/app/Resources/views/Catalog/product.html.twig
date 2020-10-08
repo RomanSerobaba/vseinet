@@ -16,7 +16,7 @@
         </div>
         {#<div class="rating" data-rating=""><span>Рейтинг:</span></div>#}
         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') != product.availability and product.minQuantity > 1 %}
-            <div style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</div>
+            <div class="min-quantity">Мин. количество для заказа: {{ product.minQuantity }}</div>
         {% endif %}
         <div class="content">
             {{ product.description|raw }}

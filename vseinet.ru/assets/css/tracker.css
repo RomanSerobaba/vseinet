@@ -1,3 +1,6 @@
+#tracker-info .schedule {
+    margin-bottom: 15px;
+}
 .status_tracker {
     float: right;
     margin:0 0 20px;
@@ -23,9 +26,88 @@
     text-align: center;
     vertical-align: middle;
 }
+.status_tracker TH:nth-child(1) {
+    text-align: right;
+    width: 25px;
+}
+.status_tracker TH:nth-child(2) {
+    text-align: center;
+    width: 45px;
+}
+.status_tracker TH:nth-child(3) {
+    text-align: left;
+}
+.status_tracker TH:nth-child(4) {
+    text-align: right;
+    width: 35px;
+}
+.status_tracker TH:nth-child(5) {
+    text-align: right;
+    width: 50px
+}
+.status_tracker TD:nth-child(1) {
+    text-align: right;
+}
+.status_tracker TD:nth-child(2) {
+    text-align: center;
+}
+.status_tracker TD:nth-child(4) {
+    text-align: right;
+}
+.status_tracker TD:nth-child(5) {
+    text-align: right;
+}
+
+.status_tracker .status_tracker-completed TH:nth-child(4) {
+    text-align: right;
+    width: 70px;
+}
+.status_tracker .status_tracker-completed TH:nth-child(5) {
+    text-align: right;
+    width: 35px;
+}
+.status_tracker .status_tracker-completed TH:nth-child(6) {
+    text-align: right;
+    width: 50px
+}
+.status_tracker .status_tracker-completed TD:nth-child(4) {
+    text-align: right;
+}
+.status_tracker .status_tracker-completed TD:nth-child(5) {
+    text-align: right;
+}
+.status_tracker .status_tracker-completed TD:nth-child(6) {
+    text-align: right;
+}
+
+.status_tracker .status_tracker-transit TH:nth-child(4) {
+    text-align: center;
+    width: 90px
+}
+.status_tracker .status_tracker-transit TH:nth-child(5) {
+    text-align: right;
+    width: 35x
+}
+.status_tracker .status_tracker-transit TH:nth-child(6) {
+    text-align: right;
+    width: 50px
+}
+.status_tracker .status_tracker-transit TD:nth-child(4) {
+    text-align: center;
+}
+.status_tracker .status_tracker-transit TD:nth-child(5) {
+    text-align: right;
+}
+.status_tracker .status_tracker-transit TD:nth-child(6) {
+    text-align: right;
+}
+
 .status_tracker TD {
     height: 5px;
     vertical-align: middle;
+}
+.status_tracker TD IMG {
+    width: 40px;
 }
 .status_tracker .status-created {
     color: #4D9901;
@@ -117,4 +199,24 @@
 }
 .status_tracker SPAN {
     font-size: 14px;
+}
+.sberbank-payed {
+    margin-left:50px;
+    padding:2px 5px;
+    background-color:yellow;
+    color: green;
+    font-size: 0.85em;
+    font-weight:normal;
+}
+.sberbank-payed .RUR {
+    color: green;
+    font-size: 0.85em;
+    font-weight:normal;
+}
+.bttn.sberbank.pay {
+    margin-bottom:15px;
+}
+.bttn.sberbank.tutorial {
+    height: 20px;
+    line-height: 20px;
 }

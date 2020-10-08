@@ -78,9 +78,13 @@ jQuery(document).ready(function($) {
 
 			if ( $('body').hasClass('offcanvas-menu') ) {
 				$('body').removeClass('offcanvas-menu');
+				$('body .site-menu').addClass('d-none');
+				$('body .site-menu').parent().parent().addClass('d-none');
 				$this.removeClass('active');
 			} else {
 				$('body').addClass('offcanvas-menu');
+				$('body .site-menu').removeClass('d-none');
+				$('body .site-menu').parent().parent().removeClass('d-none');
 				$this.addClass('active');
 			}
 		})

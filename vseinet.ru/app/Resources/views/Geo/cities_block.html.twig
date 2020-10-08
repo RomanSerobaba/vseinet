@@ -1,5 +1,5 @@
 {% if geoCityCentral is not null %}
-    <div style="font-weight:700;font-size:16px;margin-bottom:10px;" class="city central{% if geoCityCentral.isCurrent %} current{% endif %}" data-id="{{ geoCityCentral.id }}">
+    <div class="city central{% if geoCityCentral.isCurrent %} current{% endif %}" data-id="{{ geoCityCentral.id }}">
         <a href="javascript:void(0)" class="ajax">
             {{ geoCityCentral.name }}
         </a>
@@ -15,7 +15,7 @@
                         {{ geoCity.name }}
                     </a>
                     {% if geoCity.hasRetail %}
-                        <img style="opacity:0.9;cursor:help;" src="/images/office.png" title="Есть представительство" alt="Представительство"/>
+                        <img class="has-retail-ico" src="/images/office.png" title="Есть представительство" alt="Представительство"/>
                     {% elseif geoCity.hasDelivery %}
                         <span class="point-ico" title="Возможна курьерская доставка"></span>
                     {% endif %}

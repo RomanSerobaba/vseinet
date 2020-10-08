@@ -3,7 +3,7 @@
         <div class="tab categoties expanded">
             <span class="filter-titles">{{ group.name }}</span>
         </div>
-        <div class="sheet multi categories" style="display:block">
+        <div class="sheet multi categories">
             {% for category in group.children %}
                 <div>
                     <label for="filter_category_{{ category.id }}" data-id="{{ category.id }}">

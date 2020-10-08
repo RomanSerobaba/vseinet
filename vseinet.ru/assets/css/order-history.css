@@ -20,6 +20,145 @@ DIV.order-history-light {
     margin-bottom: 0px;
     border-radius: 0px;
 }
+DIV.order-history-light .info {
+    float:right;
+}
+DIV.order-history-light .info .sberbank-payed {
+    text-align: center;
+    padding:2px 5px;
+    margin-right:26px;
+    background-color:yellow;
+    color: green;
+    font-size: 0.85em;
+    font-weight:bold;
+}
+DIV.order-history-light .info .sberbank-payed .RUR {
+    color: green;
+    font-size: 0.85em;
+    font-weight:normal;
+}
+DIV.order-history-light .info .danger {
+    margin-top:10px;
+}
+DIV.order-history-light .order-header {
+    font-size: 16px;
+    margin: 0 0 23px;
+    font-weight:700;
+}
+DIV.order-history-light .order-header .order-date {
+    color:#999;
+}
+DIV.order-history-light .order-item .text {
+    font-weight:bold;
+}
+DIV.order-history-light .order-item .text .product-code {
+    font-size:0.9em;
+}
+DIV.order-history-light .order-item .price {
+    white-space: nowrap;
+}
+DIV.order-history-light .summary .price {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+DIV.order-history-list .order-header {
+    font-size: 16px;
+    margin: 0 0 23px;
+    font-weight:700;
+}
+DIV.order-history-list .order-header .order-date {
+    color:#999;
+}
+DIV.order-history-list .order-contacts {
+    font-size: 16px;
+    margin: 0 0 23px;
+    font-weight: 700;
+}
+DIV.order-history-list .sberbank-payed {
+    text-align: center;
+    padding:2px 5px;
+    margin-right:26px;
+    background-color:yellow;
+    color: green;
+    font-size: 0.85em;
+    font-weight:bold;
+}
+DIV.order-history-list .sberbank-payed .RUR {
+    color: green;
+    font-size: 0.85em;
+    font-weight:normal;
+}
+DIV.order-history-list .danger {
+    margin-top:10px;
+}
+DIV.order-history-list .order-items-header {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 0 30px;
+}
+DIV.order-history-list .order-items-header .notification {
+    font-size: 0.7em;
+    font-weight: normal;
+    vertical-align: top;
+}
+
+DIV.order-history-table .order-header {
+    font-size: 16px;
+    margin: 0 0 23px;
+    font-weight: 700;
+}
+DIV.order-history-table .sberbank-payed {
+    text-align: center;
+    padding:2px 5px;
+    margin-right:26px;
+    background-color:yellow;
+    color: green;
+    font-size: 0.85em;
+    font-weight:bold;
+}
+DIV.order-history-table .sberbank-payed .RUR {
+    color: green;
+    font-size: 0.85em;
+    font-weight:normal;
+}
+DIV.order-history-table .danger {
+    margin-top:10px;
+}
+DIV.order-history-table .Cart {
+    padding-left:25px;
+    padding-right:25px;
+}
+DIV.order-history-table .Cart TABLE {
+    margin-bottom:0;
+    width: 100%;
+}
+DIV.order-history-table .Cart TH:nth-child(1) {
+    width:100px;
+}
+DIV.order-history-table .Cart TH:nth-child(3) {
+    width:120px;
+}
+DIV.order-history-table .Cart TH:nth-child(4) {
+    width:120px;
+}
+DIV.order-history-table .Cart TH:nth-child(5) {
+    width:150px;
+}
+DIV.order-history-table .Cart .text .product-name {
+    font-weight:bold;
+}
+DIV.order-history-table .Cart .text .code {
+    color:#999;
+}
+DIV.order-history-table .Cart .status .code {
+    color:#999;
+}
+DIV.order-history-table .Cart .summary .price {
+    font-size: 24px;
+    white-space: nowrap;
+}
+
 TABLE.order-history-light-table {
     width: 100%;
 }
@@ -258,4 +397,21 @@ DIV.order-history .product P STRONG {
 }
 .order-history-title IMG.current {
     opacity: 0.4;
+}
+
+#user-account .order-history-title-img {
+    position: relative;
+    top: 9px;
+    margin-left: 5px;
+}
+#user-account .order-history-title-link {
+    border: none;
+}
+#user-account .order-history-table-title-img {
+    position: relative;
+    top: 9px;
+}
+#user-account .order-history-light-title-img {
+    position: relative;
+    top: 9px;
 }

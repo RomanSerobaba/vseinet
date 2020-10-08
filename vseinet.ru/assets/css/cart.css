@@ -334,3 +334,60 @@ DIV.order-history-light .Cart TD {
     margin-bottom: 5px;
     margin-top: 10px;
 }
+#favorite .status.in-stock {
+    font-size: 1.05em;
+    font-weight: bold;
+}
+#cart-total {
+    position: relative;
+    top: -2px;
+    color: #999;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+#cart-total-lexeme {
+    position: relative;
+    top: -2px;
+    color: #999;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+.action.bttn.cart-clear {
+    margin-left:20px;
+}
+.cart-counter {
+    color: #999;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-left: 5px;
+    position: relative;
+    top: -2px;
+}
+.cart-counter.cart-ajax {
+    position: static;
+    top: 0;
+}
+.cart-table-body .status.in-stock {
+    height:auto;
+    width:auto;
+    margin-left:10px;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+.cart-table-body .status.not-available {
+    height:auto;
+    width:auto;
+    margin-left:10px;
+}
+.cart-table-body .status.on-order {
+    height:auto;
+    width:auto;
+    margin-left:10px;
+}
+.cart-table-body .min-quantity {
+    color: rgb(242, 108, 79);
+}

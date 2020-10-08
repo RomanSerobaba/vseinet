@@ -1,6 +1,6 @@
 <div class="wrapper products">
     <a href="{{ path('cart') }}" class="bttn light">Редактировать</a>
-    <h2 style="display:inline-block">Ваша корзина</h2><small style="color: #999;font-size: 12px;font-weight: 400;white-space: nowrap;margin-left: 5px;">{{ cart.total }} {{ cart.total|declension('товар;товара;товаров') }}</small>
+    <h2 class="inline">Ваша корзина</h2><small class="cart-counter cart-ajax">{{ cart.total }} {{ cart.total|declension('товар;товара;товаров') }}</small>
     {% for product in cart.products %}
         <div class="product">
             <div>

@@ -65,6 +65,9 @@
     padding-right: 40px;
     width: 16.6%;
 }
+#lastview_content .product .product-name {
+    margin-bottom:10px;
+}
 #products #lastview_content .product {
     width: 100%;
 }

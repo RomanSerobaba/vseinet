@@ -11,7 +11,7 @@
             </a>
         </dd>
         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == baseProduct.availability %}
-            <div class="status in-stock" style="font-size: 1.05em;font-weight: bold;">В наличии,<br/>доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708</div>
+            <div class="status in-stock">В наличии,<br/>доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708</div>
             {# <dt>Магазин:</dt>
             <dd class="address">
                 {% for geoPoint in geoPoints if geoPoint.geoCityId == app.geoCity.id %}

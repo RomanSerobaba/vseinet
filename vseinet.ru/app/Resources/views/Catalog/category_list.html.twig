@@ -18,20 +18,19 @@
                 </li>
             {% endfor %}
         </ul>
-        <h1 style="display:inline-block">{{ category.name }}</h1>
+        <h1 class="inline">{{ category.name }}</h1>
         {% if app.userIsEmployee %}
             <a
                 href="{{ path('authority', { targetUrl: ['/admin/productPricetags?listType=category&ids[]=', category.id]|join}) }}"
                 target="_blank"
                 class="pricetag"
-                title="Печать ценников"
-                style="margin-left: 5px">
+                title="Печать ценников">
                 </a>
         {% endif %}
         {% if category.description %}
             <section class="content htx htx_catalog">{{ category.description|raw }}</section>
         {% endif %}
-        <div class="wrapper"{% if category.description %} style="display: table-header-group;"{% endif %}>
+        <div class="wrapper{% if category.description %} category-description-wrapper{% endif %}">
             {% for subcategory in subcategories %}
                 <div class="category">
                     <a href="{% if subcategory.sefUrl %}{{ path('catalog_category_sef', { slug: subcategory.sefUrl }) }}{% else %}{{ path('catalog_category', { id: subcategory.id }) }}{% endif %}" class="image">

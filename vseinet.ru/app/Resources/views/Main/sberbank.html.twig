@@ -3,60 +3,45 @@
     <h2>Варианты оплаты</h2>
     <ul id='sberbank-instruction'>
         <li>
-            <span style="float:right;font-size: 16px; color:white; margin: 7px 5px 0 0;">▲</span>
-            <h3 class="bttn green" style="
-                    padding-top: 10px;
-                    text-align: left;
-                    cursor:pointer;
-                    margin-bottom: 10px;
-                ">
+            <span class="arrow">▲</span>
+            <h3 class="bttn green">
 
                 1. &laquo;Сбербанк Онлайн&raquo;</h3>
             <ol class='sberbank-option'>
                 <li>1. В приложении "Сбербанк Онлайн" Сверху в строке поиска введите "Vseinet"</li>
                 <li>2. Выберете из результатов поиска любой вариант</li>
                 <li>3. Введите номер заказа: <strong>{{ number }}</strong> и оплатите</li>
-            </ol><br/>
-            <p><a href="{{ path('content_page', { slug: 'payment' }) }}">Подробная инструкция с картинками.</a></p><br/>
+            </ol>
+            <p class="sberbank-option-addition with-margin"><a href="{{ path('content_page', { slug: 'payment' }) }}">Подробная инструкция с картинками.</a></p>
         </li>
         <li>
-            <span style="float:right;font-size: 16px; color:white; margin: 7px 5px 0 0;">▼</span>
-            <h3 class="bttn green" style="
-                padding-top: 10px;
-                text-align: left;
-                cursor:pointer;
-                margin-bottom: 10px;
-            ">
+            <span class="arrow">▼</span>
+            <h3 class="bttn green">
 
                 2. QR код &laquo;Сбербанк Онлайн&raquo;</h3>
-            <ol class='sberbank-option' style='display: none'>
+            <ol class='sberbank-option hidden'>
                 <li>1. В приложении "Сбербанк онлайн" откройте раздел платежи.</li>
-                <li>2. Отсканируйте QR код.<br/><br/>
-                <img src="/api/pay/qrcode/{{ id }}/?format=svg" alt="Qr-code по заказу №{{ number }}" width="150px" /><br/><br/></li>
+                <li>2. Отсканируйте QR код.<br/>
+                <img src="/api/pay/qrcode/{{ id }}/?format=svg" alt="Qr-code по заказу №{{ number }}" width="150px" /></li>
                 <li>3. Оплатите</li>
-            </ol><br/>
+            </ol>
         </li>
-        {# <p style="font-style:italic;">Вы можете отправить QR-код на другое устройство, чтобы отсканировать его из приложения на своем смартфоне <br />
+        {# <p>Вы можете отправить QR-код на другое устройство, чтобы отсканировать его из приложения на своем смартфоне
         <form id="sberbank-contact-form">
-            Канал отправки: <select class="txt" id="sberbank-channel-select-{{ number }}" name="sberbank_channel" style="width: 239px;"><option value="" selected>Выбрать</option><option value="email">Электронная почта</option><option value="viber">Viber</option></select><br />
-            <input placeholder="Контакт" class="txt" type="text" name="sberbank_contact" id="sberbank-contact-input-{{ number }}" size="10" style="width: 230px;" /> &nbsp;
-            <button style="width: 100px;" class="bttn blue" name="sberbank_button" id="sberbank-contact-button-{{ number }}">Отправить</button>
+            Канал отправки: <select class="txt" id="sberbank-channel-select-{{ number }}" name="sberbank_channel"><option value="" selected>Выбрать</option><option value="email">Электронная почта</option><option value="viber">Viber</option></select>
+            <input placeholder="Контакт" class="txt" type="text" name="sberbank_contact" id="sberbank-contact-input-{{ number }}" size="10" /> &nbsp;
+            <button class="bttn blue" name="sberbank_button" id="sberbank-contact-button-{{ number }}">Отправить</button>
         </form></p> #}
         <li>
-            <span style="float:right;font-size: 16px; color:white; margin: 7px 5px 0 0;">▼</span>
-            <h3 class="bttn green" style="
-                padding-top: 10px;
-                text-align: left;
-                cursor:pointer;
-                margin-bottom: 10px;
-            ">
+            <span class="arrow">▼</span>
+            <h3 class="bttn green">
 
                 3. Терминал (банкомат) оплаты Сбербанка</h3>
-            <ol class='sberbank-option' style='display: none'>
+            <ol class='sberbank-option hidden'>
                 <li>1. Выберите в услугах организацию Vseinet.ru</li>
                 <li>2. Укажите номер заказа: <strong>{{ number }}</strong></li>
                 <li>3. Оплатите</li>
-            </ol><br/>
+            </ol>
         </li>
         {# <li><h3>Отделение Сбербанка по счету</h3>
             <p><a class="btn btn-primary btn-labeled fa fa-print" href="/order/PrintInvoicePDF/{$order.id}" onclick="window.open(this.href);return false;">Распечатать счет</a></p></li> #}
@@ -65,10 +50,16 @@
 <script type='text/javascript'>
     $(function () {
         $(document).on("click", "#sberbank-instruction h3", function (e) {
-            $('#sberbank-instruction .sberbank-option').hide();
+            $('#sberbank-instruction .sberbank-option, #sberbank-instruction .sberbank-option-addition').hide();
             $('#sberbank-instruction h3').prev().html('▼');
-            $(this).next('.sberbank-option').show();
+            $(this).next('.sberbank-option').show().next('.sberbank-option-addition').show();
             $(this).prev().html('▲');
+        });
+        $(document).on("click", "#sberbank-instruction .arrow", function (e) {
+            $('#sberbank-instruction .sberbank-option, #sberbank-instruction .sberbank-option-addition').hide();
+            $('#sberbank-instruction h3').prev().html('▼');
+            $(this).next('h3').next('.sberbank-option').show().next('.sberbank-option-addition').show();
+            $(this).html('▲');
         });
     });
 </script>

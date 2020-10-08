@@ -176,6 +176,15 @@
     border-bottom: 1px dashed #bababa;
 }
 
+.filter .sheet.price,
+.filter .sheet.search,
+.filter .sheet.brands,
+.filter .sheet.categories,
+.filter .sheet.sections,
+.filter .sheet.nofilled,
+.filter .sheet.availability {
+    display:block;
+}
 
 /***************/
 #category #ProductFilter.showfilter:before{
@@ -188,5 +197,5 @@
     z-index: 10;
     -webkit-box-shadow: -6px 0 7px 3px rgba(0,0,0,.1);
     box-shadow: -3px 0 7px 3px rgba(0,0,0,.1);
-    
+
 }

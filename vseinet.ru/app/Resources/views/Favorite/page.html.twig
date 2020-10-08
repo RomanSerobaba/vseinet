@@ -20,9 +20,9 @@
                             <div><b><a href="{% if product.sefUrl %}{{ path('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ path('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></b></div>
                             <p class="code">Код товара: {{ product.id }}</p>
                             {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %}
-                                <div class="status in-stock" style="font-size: 1.05em;font-weight: bold;">В наличии, доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708</div>
+                                <div class="status in-stock">В наличии, доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708</div>
                             {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %}
-                                <div class="status not-available"{% if product.updatedAt %} style="cursor:help" title="Последний заход: {{ product.updatedAt|date('d.m.Y') }}"{% endif %}>Нет в продаже</div>
+                                <div class="status not-available{% if product.updatedAt %} help" title="Последний заход: {{ product.updatedAt|date('d.m.Y') }}{% endif %}">Нет в продаже</div>
                             {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %}
                                 <div class="status on-order">Ожидается</div>
                             {% else %}

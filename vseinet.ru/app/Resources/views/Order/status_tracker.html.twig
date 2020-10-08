@@ -15,23 +15,22 @@
         </div>
     </div>
     {% if order is not null %}
-        <div class="block">
+        <div class="block" id="tracker-info">
             <div class="wrapper">
                 {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode %}
                     <a
                         data-url="{{ path('sberbank', { id: order.id }) }}"
                         rel="nofollow"
                         href="{{ path('sberbank', { id: order.id }) }}"
-                        style="margin-bottom:15px;"
-                        class="bttn green sberbank">Оплатить сейчас</a>
+                        class="bttn green sberbank pay">Оплатить сейчас</a>
                 {% endif %}
                 {% if constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
-                    <span style="margin-left:50px;padding:2px 5px;background-color:yellow;color: green;font-size: 0.85em;font-weight:normal;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></span>
+                    <span class="sberbank-payed">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR">Р</span></span>
                 {% endif %}
                 {% if order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::EX_WORKS') %}
                     <h4>Адрес пункта выдачи</h4>
-                    <p>{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}.
-                        {% if representative.hasDelivery %}<br/><br/>Вы можете оформить доставку по тел. 8 (8412) 290-708{% endif %}</p><br/>
+                    <p class="with-margin">{{ representative.geoCityName }}{% if representative.address %}, {{ representative.address }}{% endif %}.
+                        {% if representative.hasDelivery %}<br/>Вы можете оформить доставку по тел. 8 (8412) 290-708{% endif %}</p>
 
                     <h4>Расписание работы</h4>
                     <table class="schedule">
@@ -45,13 +44,13 @@
                                 <td colspan="{{ schedule.count }}">{{ schedule.time }}</td>
                             {% endfor %}
                         </tr>
-                    </table><br/>
+                    </table>
 
                     <h4>Для получения товара</h4>
-                    <p>
+                    <p class="with-margin">
                         {% if order.typeCode == constant('AppBundle\\Enum\\OrderTypeCode::LEGAL') %}При себе иметь доверенность или печать организации.
                         {% else %}{% if order.prepaymentAmount > 0 %}Предъявить на кассе квитанцию о внесении предоплаты либо паспорт в случае ее утери (или электронный чек в случае электронного платежа). {% endif %}Назвать на кассе номер заказа или телефона, на который оформлялся заказ.{% endif %}
-                    </p><br/>
+                    </p>
 
                     <h4>Доступные способы оплаты</h4>
                     <ul>
@@ -61,21 +60,21 @@
                                     data-url="{{ path('sberbank', { id: order.id }) }}"
                                     rel="nofollow"
                                     href="{{ path('sberbank', { id: order.id }) }}"
-                                    class="bttn green sberbank" style="height: 20px; line-height: 20px;">Инструкция</a>{% endif %}</li>
+                                    class="bttn green sberbank tutorial">Инструкция</a>{% endif %}</li>
                         {% endfor %}
                     </ul>
                 {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::TRANSPORT_COMPANY') %}
-                    <p><b>Важно</p></p>
-                    <p>После передачи заказа в транспортную компанию, вам будет отправлен трек-номер груза.</p>
+                    <p class="with-margin"><b>Важно</p></p>
+                    <p class="with-margin">После передачи заказа в транспортную компанию, вам будет отправлен трек-номер груза.</p>
                 {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::POST') %}
-                    <p><b>Важно</p></p>
-                    <p>После передачи заказа в почтовое отделение, вам будет отправлен трек-номер бандероли.</p>
+                    <p class="with-margin"><b>Важно</p></p>
+                    <p class="with-margin">После передачи заказа в почтовое отделение, вам будет отправлен трек-номер бандероли.</p>
                 {% elseif order.deliveryType == constant('AppBundle\\Enum\\DeliveryTypeCode::COURIER') %}
                     <h4>Доставка</h4>
-                    <p>По приходу заказа на склад, с вами свяжется менеджер, чтобы согласовать время доставки.</p><br/>
+                    <p class="with-margin">По приходу заказа на склад, с вами свяжется менеджер, чтобы согласовать время доставки.</p>
                     {% if order.typeCode == constant('AppBundle\\Enum\\OrderTypeCode::LEGAL') or order.prepaymentAmount > 0 %}
                         <h4>Для получения товара</h4>
-                        <p>
+                        <p class="with-margin">
                             {% if order.typeCode == constant('AppBundle\\Enum\\OrderTypeCode::LEGAL') %}При себе иметь доверенность или печать организации.
                             {% elseif order.prepaymentAmount > 0 %}Предъявить курьеру квитанцию о внесении предоплаты либо паспорт в случае ее утери (или электронный чек в случае электронного платежа). {% endif %}
                         </p>
@@ -106,27 +105,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -141,27 +139,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -176,27 +173,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -208,32 +204,31 @@
                     </span>
                     В пути
                 </div>
-                <table>
+                <table class='status_tracker-transit'>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: center; width: 90px'>Ожидается</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Ожидается</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: center;'>{{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -248,27 +243,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -283,27 +277,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -315,32 +308,31 @@
                     </span>
                     Вручены клиенту
                 </div>
-                <table>
+                <table class='status_tracker-completed'>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 70px'>Дата</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Дата</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right'>{{ item.updatedAt|date_format('%e.%m.%Y') }}</td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.updatedAt|date_format('%e.%m.%Y') }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -355,27 +347,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: right; width: 50px'>Цена</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: right'>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}{% set showTooltip = true %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -387,27 +378,26 @@
                 <table>
                 <thead>
                     <tr>
-                        <th style='text-align: right; width: 25px;'>#</th>
-                        <th style='text-align: center; width: 45px;'>Фото</th>
-                        <th style='text-align: left;'>Товар</th>
-                        <th style='text-align: right; width: 35px;'>Кол-во</th>
-                        <th style='text-align: center; width: 100px;'>Статус</th>
+                        <th>#</th>
+                        <th>Фото</th>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Статус</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in group.items %}
                 <tr>
-                    <td style='text-align: right;'>{{ loop.index }}</td>
-                    <td style='text-align: center;'>
+                    <td>{{ loop.index }}</td>
+                    <td>
                         <img
                             src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
                             alt="Фото {{ item.productName }}. Интернет-магазин Vseinet.ru Пенза"
-                            style="width: 40px"
                         />
                     </td>
                     <td><a href="{{ path('catalog_product_sef', { slug: item.sefUrl }) }}">{{ item.productName }}</a>, <small>код товара {{ item.baseProductId }}</small></td>
-                    <td style='text-align: right;'>{{ item.quantity }}</td>
-                    <td style='text-align: center;' class='status-{{ item.statusCode }}'>{{ item.statusCodeName }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td class='status-{{ item.statusCode }}'>{{ item.statusCodeName }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -416,13 +406,13 @@
         {% endfor %}
         {% if showTooltip %}
         <a name="comments"></a>
-        <div><span class='question-ico' style='vertical-align:text-bottom'>&nbsp;</span> - Цену уточняйте у менеджера по тел. 8 (8412) 290-708</div>
+        <div><span class='question-ico bottom'>&nbsp;</span> - Цену уточняйте у менеджера по тел. 8 (8412) 290-708</div>
         {% endif %}
         {# {% for item in order.items %}
             <div class="position">
                 <div class="product">
                     <span class="price">
-                        <strong style='text-align: right;'>{{ item.quantity }}</strong>
+                        <strong>{{ item.quantity }}</strong>
                         по цене
                         <strong{% if item.retailPrice > 0 %}>{% if item.retailPrice > 0 %}{{ item.retailPrice|price_format }}{% else %}<a href="#comments"><span class='question-ico'>&nbsp;</span></a>{% endif %}{% else %} title='Стоимость позиции уточняйте у менеджера, тел. 8 (8412) 29-07-08'>???{% endif %}</strong> <span class="RUR">Р</span>
                     </span>

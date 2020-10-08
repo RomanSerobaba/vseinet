@@ -11,8 +11,7 @@
     {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != baseProduct.availability %}
     {% if baseProduct.price %}
         <strong
-            class="price"
-            {% if isAvailable %}style="padding:10px 0 3px;"{% endif %}
+            class="price{% if isAvailable %} product-available{% endif %}"
             itemprop="offers"
             itemscope
             itemtype="http://schema.org/Offer"
@@ -30,8 +29,7 @@
             {% if app.userIsEmployee %}
                 <a
                     href="{{ path('product_reset_price', { id: baseProduct.id }) }}"
-                    class="icon reset-price"
-                    {% if not baseProduct.isManualPrice %}style="display:none"{% endif %}
+                    class="icon reset-price{% if not baseProduct.isManualPrice %} hidden{% endif %}"
                     title="Сбросить ручную цену"
                 >
                 </a>
@@ -48,8 +46,7 @@
         </strong>
     {% else %}
         <strong
-            class="price"
-            style="cursor:help"
+            class="price help"
             title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}"
             itemprop="offers"
             itemscope
@@ -92,12 +89,7 @@
             <meta itemprop="url" content="{% if baseProduct.sefUrl %}{{ path('catalog_product_sef', { slug: baseProduct.sefUrl }) }}{% else %}{{ path('catalog_product', { id: baseProduct.id }) }}{% endif %}" />
         </span>
     {% endif %}
-    <div
-        {% if isAvailable %}
-            style="padding: 15px 0 25px 60px"
-        {% elseif baseProduct.minQuantity > 1 %}
-            style="padding-bottom:0"
-        {% endif %}
+    <div class="availability product-{% if isAvailable %}available{% else %}unavaialble{% endif %}{% if baseProduct.minQuantity > 1 %} min-quantity{% endif %}"
         {# class="rating" #}
         data-rating="{{ baseProduct.estimate }}"
         {% if baseProduct.estimate %}
@@ -114,7 +106,7 @@
         {% endif %} #}
     </div>
     {% if baseProduct.minQuantity > 1 and not isAvailable %}
-        <div style="color: rgb(242, 108, 79); margin: {% if isAvailable %}4px 0{% else %}10px 0{% endif %};">
+        <div class="quantity product-{% if isAvailable %}available{% else %}unavaialble{% endif %} min-quantity">
             Мин. количество для заказа: {{ baseProduct.minQuantity }}
         </div>
     {% endif %}

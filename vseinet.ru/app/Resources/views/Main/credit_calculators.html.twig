@@ -1,13 +1,13 @@
 <h2 id="credit_name">{{ product.name }}</h2>
-<p>Вы можете оформить этот товар в кредит.</p><br/>
-<p>
+<p>Вы можете оформить этот товар в кредит.</p>
+<p class="with-margin">
     Для этого вам нужно всего лишь <a href="{{ path('order_creation_credit', { id: product.id }) }}">продолжить оформление заказа</a>, после чего с вами свяжется кредитный специалист и расскажет все подробности и условия предоставления кредита.
-</p><br/>
+</p>
 <p>Произвести предварительный расчет выплат вы можете, кликнув по логотипу соответствующего банка.</p>
-<p><i>Внимание! Рассчет является предварительным, более точную информацию вы можете узнать у кредитного специалиста по телефону 8 (8412) 29-41-14.</i></p><br/>
-<div style="text-align: center">
+<p class="with-margin"><i>Внимание! Рассчет является предварительным, более точную информацию вы можете узнать у кредитного специалиста по телефону 8 (8412) 29-41-14.</i></p>
+<div class="credit-logos">
     <p><a onclick="window.open(this.href);
-        return false;" rel="nofollow" href="https://www.pochtabank.ru/cash-calculator"><img src="/images/banks/pochtaBank.png" alt="Логотип Почта Банка" style="vertical-align:middle;"/></a></p>
+        return false;" rel="nofollow" href="https://www.pochtabank.ru/cash-calculator"><img src="/images/banks/pochtaBank.png" alt="Логотип Почта Банка" /></a></p>
     <p><a onclick="window.open(this.href);
-        return false;" rel="nofollow" href="https://www.otpbank.ru/retail/credits/"><img src="http://toplogos.ru/images/thumbs/preview-logo-otp-bank.jpg" alt="Логотип ОТП Банка" style="vertical-align:middle;"/></a></p>
+        return false;" rel="nofollow" href="https://www.otpbank.ru/retail/credits/"><img src="http://toplogos.ru/images/thumbs/preview-logo-otp-bank.jpg" alt="Логотип ОТП Банка" /></a></p>
 </div>

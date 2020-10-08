@@ -14,7 +14,7 @@
             <li id="li_tabs_4"><a href="javascript:void(0)" data-hash="#post" class="green">Почтой</a></li>
         </ul>
     </div>
-    <div style="display: block; clear: both;margin-bottom: 20px;"></div>
+    <div class="delivery-wrapper"></div>
     <div class="w40p">
         <h2>Тарифная сетка</h2>
         <table class="tariff">
@@ -30,10 +30,10 @@
             {% endfor %}
             <tr>
                 <td>Остальные категории товаров</td>
-                <td style="color:red;font-weight: bold">бесплатно</td>
+                <td class="free">бесплатно</td>
             </tr>
-        </table><br/>
-        <div class="delivery_explanation">Если вы хотите забрать товар из другого представительства, узнать стоимость доставки до него из основного представительства можно из нижеприведенной таблицы. Итоговая стоимость доставки до вашего представительства вычисляется как сумма доставок из первой и второй таблицы.</div><br/>
+        </table>
+        <div class="delivery_explanation">Если вы хотите забрать товар из другого представительства, узнать стоимость доставки до него из основного представительства можно из нижеприведенной таблицы. Итоговая стоимость доставки до вашего представительства вычисляется как сумма доставок из первой и второй таблицы.</div>
         <table class="tariff">
             <tr>
                 <th>Представительство</th>
@@ -58,12 +58,12 @@
                 {% elseif representative.deliveryTax and ( not representative.isOur or not representative.hasRetail ) %}
                     <td>от {{ representative.deliveryTax|price_format }} руб
                 {% else %}
-                    <td style="color:red;font-weight:bold">бесплатно*</td>
+                    <td class="free">бесплатно*</td>
                 {% endif %}
             </tr>
             {% endfor %}
-        </table><br/>
-        <div class="delivery_explanation"><span style="color:red;font-weight: bold">*</span> &ndash; Кроме категорий, указанных в первой таблице.</div>
+        </table>
+        <div class="delivery_explanation"><span class="free">*</span> &ndash; Кроме категорий, указанных в первой таблице.</div>
         <div class="delivery_explanation">** &ndash; От стоимости товара. При стоимости товара свыше 10 000 руб, стоимость доставки составляет 1 000 руб.</div>
     </div>
     <div class="content w60p r text_page">
@@ -147,20 +147,4 @@
         });
     });
 </script>
-{% endblock %}
-
-{% block stylesheets %}
-<style>
-    #delivery .tabs {
-        margin-top: -45px;
-        background-color: #ffffff;
-        float: left;
-        margin-left: 500px;
-    }
-    #delivery h1 {
-        padding-top: 0;
-    }
-    .tariff TD { border: 1px solid #dcdcde; padding: 3px 5px; }
-    .tariff TH { padding: 0 10px; }
-</style>
 {% endblock %}

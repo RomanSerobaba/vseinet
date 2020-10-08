@@ -8,3 +8,10 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+#cheaper_content .product-name {
+    font-size:14px;
+    padding-top:5px;
+}
+#cheaper_content .link-example {
+    white-space:nowrap;
+}

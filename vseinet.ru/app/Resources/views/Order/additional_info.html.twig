@@ -2,7 +2,7 @@
     <div class="wrapper">
         <h2>Дополнительная информация</h2>
         <b>Звонок менеджера</b>
-        <div class="row v" style="margin-top:5px">
+        <div class="row v call-no-need-wrapper">
             <label for="{{ form.isCallNeeded.vars.id }}_0">
                 Не требуется, со сроками доставки ознакомлен
                 <input type="radio" id="{{ form.isCallNeeded.vars.id }}_0" name="{{ form.isCallNeeded.vars.full_name }}" value="0"{% if (form.isCallNeeded.vars.value is same as("0"))  %} checked="checked"{% endif %} />
@@ -18,9 +18,9 @@
                 <div class="error">{{ errors.isCallNeeded.0 }}</div>
             {% endif %}
         </div>
-        <div class="row v subrow"{% if not(form.isCallNeeded.vars.value is same as("1")) %} style="display: none"{% endif %}>
+        <div class="row v subrow call-question-wrapper{% if not(form.isCallNeeded.vars.value is same as("1")) %} hidden{% endif %}">
             {{ form_widget(form.callNeedComment, { attr: { class: 'txt', placeholder: 'Краткая суть вопроса' }}) }}
-            <div class="notice" style="margin-bottom:20px">В случае изменения срока доставки, статуса товара или если требуется предоплата, с вами свяжется менеджер</div>
+            <div class="notice">В случае изменения срока доставки, статуса товара или если требуется предоплата, с вами свяжется менеджер</div>
         </div>
         <div class="row v">
             {{ form_widget(form.comment, { attr: { class: 'txt', rows: 8, placeholder: 'Просьбы и пожелания' }}) }}

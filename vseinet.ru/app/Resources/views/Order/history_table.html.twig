@@ -1,7 +1,7 @@
 <div class="order-history block gray order-history-table">
     <div class="wrapper">
         <div class="column">
-            <div style="font-size: 16px; margin: 0 0 23px; font-weight: 700;">
+            <div class="order-header">
                 Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}" target="_blank">{{ order.number }}</a>
@@ -22,7 +22,7 @@
         </div>
         <div>
             {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
-                <div style="text-align: center;padding:2px 5px;margin-right:26px;background-color:yellow;color: green;font-size: 0.85em;font-weight:bold;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></div>
+                <div class="sberbank-payed">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR">Р</span></div>
             {% endif %}
             {% if order.canBePayed %}
                 <a
@@ -33,7 +33,7 @@
                     title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить сейчас</a>
             {% elseif constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode  %}{# and order.available_sum #}
                 <a href="javascript:void(0)" class="bttn green disabled" title="Внимание! Заказ можно будет оплатить после подтверждения менеджером наличия товара">Оплатить</a>
-                <p style="color:red;margin-top:10px">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p>
+                <p class="danger">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p>
             {% endif %}
             <a href="{{ path('repeat_order', { id: order.id }) }}" class="bttn blue repeat_order">Перезаказать</a>
             {% if order.isCancelRequested and order.isCancelEnabled %}
@@ -62,15 +62,15 @@
             </dl>#}
         </div>
     </div>
-    <div class="wrapper white Cart" style="padding-left:25px;padding-right:25px;">
-        <table style="margin-bottom:0;width: 100%">
+    <div class="wrapper white Cart">
+        <table>
             <thead>
                 <tr>
-                    <th style="width:100px">&nbsp;</th>
+                    <th>&nbsp;</th>
                     <th>Товар</th>
-                    <th style="width:120px">Количество</th>
-                    <th style="width:120px">Цена</th>
-                    <th style="width:150px">Статус</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,19 +80,19 @@
                             <img src="{{ item|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}" alt="Фото {{ item.productName }}">
                         </td>
                         <td class="text">
-                            <div style="font-weight:bold">
+                            <div class="product-name">
                                 <a href="{% if item.sefUrl %}{{ path('catalog_product_sef', { slug: item.sefUrl }) }}{% else %}{{ path('catalog_product', { id: item.baseProductId }) }}{% endif %}">
                                     {{ item.productName }}
                                 </a>
                             </div>
-                            <p class="code" style="color:#999">Код товара: {{ item.baseProductId }}</p>
+                            <p class="code">Код товара: {{ item.baseProductId }}</p>
                         </td>
                         {% set cssclass = constant('AppBundle\\Enum\\OrderItemStatus::CANCELED') == item.statusCode ? ' canceled' : '' %}
                         <td class="quantity{{ cssclass }}">{{ item.quantity }} шт</td>
                         <td class="price{{ cssclass }}">{{ item.retailPrice|price_format }} <span class="RUR">Р</span></td>
                         <td class="status">
                             <span class="{{ item.statusCode }}">{{ item.statusCodeName }}</span>
-                            {% if item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::TRANSIT') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::SHIPPING') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::CALLABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::PREPAYABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::RESERVED') %},<p class="code" style="color:#999">ожидаем {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }} *</p>
+                            {% if item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::TRANSIT') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::STATIONED') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::SHIPPING') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::CALLABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::PREPAYABLE') or item.statusCode == constant('AppBundle\\Enum\\OrderItemStatus::RESERVED') %},<p class="code">ожидаем {{ item.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }} *</p>
                             {% endif %}
                         </td>
                         <td>
@@ -112,11 +112,11 @@
                         {/foreach}
                     {/if#}
                 {% endfor %}
-                <tr>
+                <tr class="summary">
                     <td></td>
                     <td></td>
                     <td><strong>Итого</strong></td>
-                    <td class="price" style="font-size: 24px;white-space: nowrap">
+                    <td class="price">
                         {{ order.amount|price_format }} <span class="RUR">Р</span>
                     </td>
                     <td colspan="2">

@@ -3,7 +3,7 @@
         <div class="tab sections expanded">
             <span class="filter-titles">Наименование</span>
         </div>
-        <div class="sheet multi sections" style="display:block">
+        <div class="sheet multi sections">
             {% for section in features.categorySections %}
                 {% if section.name is not empty %}
                     <label for="filter_section_{{ section.id }}" data-id="{{ section.id }}">
@@ -14,17 +14,17 @@
                             {% if filter.sectionIds[section.id] is defined %}checked{% endif %}
                         />
                         {{ section.name }}&nbsp;<small>({{ section.countProducts }})</small>
-                    </label><br />
+                    </label>
                 {% endif %}
             {% endfor %}
         </div>
     {% endif %}
     {% for detail in features.details %}
         <div class="detail">
-            <div class="tab detail-{{ detail.id }}{% if data.details[detail.id] is defined %} expanded{% endif %}">
+            <div class="tab detail-{{ detail.id }}{% if filter.details[detail.id] is defined %} expanded{% endif %}">
                 <span class="filter-titles">{{ detail.name }}{% if detail.unit %}, {{ detail.unit }}{% endif %}</span>
             </div>
-            <div class="sheet multi detail-{{ detail.id }}{% if 'boolean' == detail.typeCode %} inline{% endif %}"{% if filter.details[detail.id] is defined %} style="display:block"{% endif %} data-id="{{ detail.id }}">
+            <div class="sheet multi detail-{{ detail.id }}{% if filter.details[detail.id] is defined %} inline-block{% endif %}" data-id="{{ detail.id }}">
                 {% if 'boolean' == detail.typeCode %}
                     <label for="filter_detail_{{ detail.id }}_1" data-value="1">
                         <input

@@ -8,7 +8,18 @@
     font-size: 13px;
     margin: 0 0 5px;
 }
-
+#contacts DIV.contact_sections_title {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size:13px;
+}
+#contacts DIV.contact_sections_title .contacts-comment {
+    color: rgb(153, 153, 153);
+    font-weight: normal;
+}
+#representative .schedule {
+    margin-bottom: 15px;
+}
 .contact {
 	background-repeat: no-repeat;
 	border: none !important;

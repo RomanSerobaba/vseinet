@@ -40,6 +40,15 @@
 .account-table .address-delete {
     background: url('../images/delete.png');
 }
+.account-table .floor {
+    width:50px;
+}
+.account-table .lift {
+    width:50px;
+}
+.account-table .blank {
+    width:40px;
+}
 
 #user-edit-form .gender {
     padding-top: 6px;

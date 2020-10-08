@@ -5,26 +5,26 @@
 {% block content %}
     <div id="user-account">
         {% include 'User/account_menu.html.twig' with { active: 'history' } %}
-        <h1 class="order-history-title" style="display:inline-block">История заказов</h1>
+        <h1 class="order-history-title" class="inline">История заказов</h1>
         {% if mode == 'list' %}
-            <img src="/images/list.png" alt="Отображение списком" title="Отображение списком" class="current" style="position: relative; top: 9px; margin-left: 5px;">
+            <img class="order-history-title-img current" src="/images/list.png" alt="Отображение списком" title="Отображение списком">
         {% else %}
-            <a href="{{ path('order_history') }}?mode=list" style="border: none;">
-                <img src="/images/list.png" alt="Отображение списком" title="Отображение списком" style="position: relative; top: 9px; margin-left: 5px;">
+            <a class="order-history-title-link" href="{{ path('order_history') }}?mode=list">
+                <img class="order-history-title-img" src="/images/list.png" alt="Отображение списком" title="Отображение списком">
             </a>
         {% endif %}
         {% if mode == 'table' %}
-            <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей" class="current" style="position: relative; top: 9px;">
+            <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей" class="current order-history-table-title-img">
         {% else %}
-            <a href="{{ path('order_history') }}?mode=table" style="border: none;">
-                <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей" style="position: relative; top: 9px;">
+            <a href="{{ path('order_history') }}?mode=table" class="order-history-title-link">
+                <img src="/images/table.png" alt="Отображение таблицей" title="Отображение таблицей" class="order-history-table-title-img">
             </a>
         {% endif %}
         {% if mode == 'light' %}
-            <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно" class="current" style="position: relative; top: 9px;">
+            <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно" class="current order-history-light-title-img">
         {% else %}
-            <a href="{{ path('order_history') }}?mode=light" style="border: none;">
-                <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно" style="position: relative; top: 9px;">
+            <a href="{{ path('order_history') }}?mode=light" class="order-history-title-link">
+                <img src="/images/light.png" alt="Отображение построчно" title="Отображение построчно" class="order-history-light-title-img">
             </a>
         {% endif %}
 

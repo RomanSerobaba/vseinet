@@ -8,11 +8,11 @@
 
 {{ form_start(form, { action: path('cheaper_request', { id: product.id }), attr: { id: 'cheaper-request-form', novalidate: true }}) }}
 
-<fieldset>
+<fieldset id="cheaper_content">
 
     <div class="row h">
         <label>Наименование</label>
-        <p style="font-size:14px;padding-top:5px">{{ product.name }}</p>
+        <p class="product-name">{{ product.name }}</p>
     </div>
 
     <div class="row h{% if errors.competitorPrice is defined %} error{% endif %}">
@@ -26,7 +26,7 @@
         {{ form_label(form.competitorLink, 'Ссылка на товар*') }}
         {{ form_widget(form.competitorLink, { attr: { class: 'txt' }}) }}
         <span class="status"></span>
-        <div class="notice">Карточка товара на сайте конкурента, например, <a href="https://vseinet.ru/product/{{ product.id }}/" style="white-space:nowrap">https://vseinet.ru/product/{{ product.id }}/</a>.</div>
+        <div class="notice">Карточка товара на сайте конкурента, например, <a href="https://vseinet.ru/product/{{ product.id }}/" class="link-example">https://vseinet.ru/product/{{ product.id }}/</a>.</div>
         <div class="notice">
             Заявки принимаются с сайтов:
             {% for competitor in competitors %}
@@ -53,7 +53,7 @@
 
     {% include 'User/is_human_form.html.twig' with { form: form } only %}
 
-    <p style="font-style:italic">Внимание! Поля, отмеченные <label><b>*</b></label>, являются обязательными для заполнения.</p>
+    <p><i>Внимание! Поля, отмеченные <label><b>*</b></label>, являются обязательными для заполнения.</i></p>
 
     <div class="row h">
         {{ form_widget(form.submit, { label: 'Отправить запрос', attr: { class: 'bttn orange r' }}) }}

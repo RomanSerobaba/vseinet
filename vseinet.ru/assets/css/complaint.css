@@ -8,3 +8,16 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.complaint-notice {
+    line-height: 28px;
+    margin:0;
+}
+.complaint-notice .violet {
+    color:darkviolet;
+    font-size:24px;
+}
+.complaint-notice .violet.phone,
+.complaint-notice .violet.schedule {
+    color:darkviolet;
+    font-size:24px;
+}

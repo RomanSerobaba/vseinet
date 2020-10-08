@@ -8,14 +8,14 @@
                 <input type="radio" id="{{ form.paymentTypeCode.vars.id }}_{{ choice.value }}" name="{{ form.paymentTypeCode.vars.full_name }}" value="{{ choice.value }}"{% if (choice.value == form.paymentTypeCode.vars.value)  %} checked="checked"{% endif %}{% if (constant('AppBundle\\Enum\\PaymentTypeCode::INSTALLMENT') == choice.value or constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value) and cart.summary < credit_threshold %} disabled="disabled"{% endif %} />
             </label>
             {% if constant('AppBundle\\Enum\\PaymentTypeCode::CASH') == choice.value %}
-            <div class="notice" style="color:red">Обратите внимание! По заказу возможно потребуется предоплата.</div>
+            <div class="notice danger">Обратите внимание! По заказу возможно потребуется предоплата.</div>
             {% endif %}
             {% if choice.data.description %}
             <div class="notice">{{ choice.data.description }}</div>
             {% endif %}
         </div>
         {% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') == choice.value and cart.summary > credit_threshold %}
-        <div class="row h subrow" id="credit_down_payment"{% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') != form.paymentTypeCode.vars.value %} style="display:none"{% endif %}>
+        <div class="row h subrow{% if constant('AppBundle\\Enum\\PaymentTypeCode::CREDIT') != form.paymentTypeCode.vars.value %} hidden{% endif %}" id="credit_down_payment">
             {{ form_label(form.creditDownPayment, 'Первоначальный взнос:') }}
             {{ form_widget(form.creditDownPayment, { attr: { class: 'txt' }}) }}
         </div>

@@ -108,6 +108,9 @@
 #product TABLE.details .composite TD.name DIV {
     background: none;
 }
+#product TABLE.details .column.right {
+    margin-right: 0;
+}
 #product TABLE.details .depend TD.name {
     padding-left: 30px;
 }
@@ -345,6 +348,13 @@
 #product .delivery .links {
     margin-left: 61px;
 }
+#product .delivery .status.in-stock {
+    font-size: 1.05em;
+    font-weight: bold;
+}
+#product .uitab-wrapper {
+    clear: both;
+}
 #product .socials .bm {
     margin: -17px 0 7px -3px;
     position: relative;
@@ -353,8 +363,29 @@
     /*padding-top: 30px;*/
 }
 #product .offer B {
-    /*color: #f30;*/
+    cursor:default;
     line-height: 10px;
+}
+#product .offer P {
+    margin-top:15px;
+}
+#product .price.product-available {
+    padding:10px 0 3px;
+}
+#product .availability.product-available {
+    padding: 15px 0 25px 60px;
+}
+#product .availability.product-unavailable.min-quantity {
+    padding-bottom:0;
+}
+#product .quantity.min-quantity {
+    color: rgb(242, 108, 79);
+}
+#product .quantity.product-available.min-quantity {
+    margin: 4px 0;
+}
+#product .quantity.product-unavailable.min-quantity {
+    margin: 10px 0;
 }
 
 #product .review {
@@ -399,5 +430,7 @@
 }
 .product + .wrapper{
     overflow: hidden;
-
+}
+.product .min-quantity {
+    color: rgb(242, 108, 79);
 }

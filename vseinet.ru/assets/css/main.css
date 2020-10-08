@@ -138,6 +138,14 @@ H6 {
 	margin: 0 0 5px;
         line-height: inherit;
 }
+H1.inline,
+H2.inline,
+H3.inline,
+H4.inline,
+H5.inline,
+H6.inline {
+    display:inline-block;
+}
 
 	H1 A,
 	H3 A {
@@ -320,4 +328,68 @@ TIME, .time {
 .hot-offer {
     background: url(../images/hot_offer.png) center top !important;
     height: 50px;
+}
+
+img.bottom {
+    vertical-align:text-bottom;
+}
+
+.danger {
+    color:red;
+}
+
+#sberbank-instruction .bttn.green {
+    padding-top: 10px;
+    text-align: left;
+    cursor:pointer;
+    margin-bottom: 10px;
+}
+
+#sberbank-instruction .arrow {
+    float:right;
+    font-size: 16px;
+    color:white;
+    margin: 7px 5px 0 0;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.inline-block {
+    display: inline-block !important;
+}
+
+.help {
+    cursor: help;
+}
+
+.relative {
+    position: relative;
+}
+
+P.with-margin {
+    margin: 15px 0;
+}
+
+#franchising-call-to-action {
+    text-decoration: none;
+    border:none;
+}
+#franchising-call-to-action .call-to-action-wrapper {
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    font-family: Intro;
+    font-size: 15px;
+    width: 210px;
+    text-align: center;
+    line-height: 25px;
+    color: rgb(58, 164, 203);
+    padding-bottom: 20px;
+    display: inline-block;
+    padding-top:15px;
+}
+#franchising-call-to-action .call-to-action-wrapper .franchising-representatives-word {
+    color:#C5A864;
 }

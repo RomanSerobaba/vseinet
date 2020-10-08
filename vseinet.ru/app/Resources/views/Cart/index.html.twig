@@ -4,13 +4,13 @@
 
 {% block content %}
     <div class="breadcrumbs"> <a href="{{ path('catalog') }}">Каталог</a></div>
-    <h1 style="display:inline-block">
+    <h1 class="inline">
         Ваша корзина
     </h1>
     <small>
-        <span id="cart-total" style="position: relative; top: -2px; color: #999; font-size: 12px; font-weight: 400; white-space: nowrap;margin-left: 5px;">{{ cart.total }}</span> <span style="position: relative; top: -2px; color: #999; font-size: 12px; font-weight: 400; white-space: nowrap;">{{ cart.total|declension('товар;товара;товаров') }}</span>
+        <span id="cart-total">{{ cart.total }}</span> <span id="cart-total-lexeme">{{ cart.total|declension('товар;товара;товаров') }}</span>
         {% if cart.total %}
-            <a href="{{ path('cart_clear') }}" class="action bttn blue" tabindex="-1" style="margin-left:20px">
+            <a href="{{ path('cart_clear') }}" class="action bttn blue cart-clear" tabindex="-1">
                 Очистить
             </a>
         {% endif %}

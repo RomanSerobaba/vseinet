@@ -13,6 +13,8 @@
 	}
 	#catalog .category .title {
         margin: 0 0 23px;
+        padding-top: 0;
+        line-height: 0.9;
 	}
 	#catalog .category .title small {
         position: static;

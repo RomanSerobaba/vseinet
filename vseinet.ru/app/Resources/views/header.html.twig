@@ -2,67 +2,67 @@
     {% if 'now'|date('m-d') >= '12-15' or 'now'|date('m-Y') == '01-15' %}
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:12px;left:-7px;top:2px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-1" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:8px;left:9px;top:13px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-2" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:6px;left:48px;top:-11px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-3" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:10px;left:38px;top:18px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-4" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:8px;left:63px;top:38px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-5" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:9px;left:52px;top:23px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-6" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:12px;left:67px;top:-5px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-7" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:12px;left:6px;top:36px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-8" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:18px;left:75px;top:13px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-9" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:22px;left:125px;top:-10px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-10" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:10px;left:105px;top:15px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-11" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:14px;left:125px;top:20px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-12" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:5px;left:122px;top:44px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-13" />
     </picture>
     <picture>
         <source srcset="/images/santa-hat.webp" type="image/webp" />
-        <img src="/images/santa-hat.png" alt="Шапка Деда Мороза" style="width:30px;left:17px;top:-15px;" />
+        <img src="/images/santa-hat.png" alt="Шапка Деда Мороза" class="santa-hat" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:5px;left:28px;top:40px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-14" />
     </picture>
     <picture>
         <source srcset="/images/snowflake.webp" type="image/webp" />
-        <img src="/images/snowflake.png" alt="Снежинка" style="width:4px;left:23px;top:25px;" />
+        <img src="/images/snowflake.png" alt="Снежинка" class="snowflake-15" />
     </picture>
     {% endif %}
 {% endset %}
@@ -124,10 +124,7 @@
         <li><a href="{{ path('content_page', { slug: 'garanty' }) }}">Гарантия</a></li>
         <li><a href="{{ path('content_page', { slug: 'credit' }) }}">Рассрочка и кредит</a></li>
         <li><a href="{{ path('contacts_page') }}">Контакты</a></li>
-        <li>
-            <a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a>
-            <span style="color: red; font-size: 11px; vertical-align: sub;">new</span>
-        </li>
+        <li><a href="{{ path('content_page', { slug: 'promo' }) }}">Акции</a></li>
     </ul>
 </nav>
 

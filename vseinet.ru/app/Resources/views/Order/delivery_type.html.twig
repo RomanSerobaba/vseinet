@@ -11,7 +11,7 @@
                 {% endif %}
                 </div>
             {% if cart.hasStroika %}
-                <div class="notice" style="color:red">Внимание! Для товаров из категории Стройматериалы возможен только самовывоз из пункта выдачи в городе Пенза.</div>
+                <div class="notice danger">Внимание! Для товаров из категории Стройматериалы возможен только самовывоз из пункта выдачи в городе Пенза.</div>
             {% else %}
                 <div class="notice">В случае отсутствия пункта самовывоза в вашем городе, Вы можете указать ближайший город, где такой пункт есть, чтобы самостоятельно забрать свой заказ оттуда.</div>
             {% endif %}
@@ -117,13 +117,13 @@
             {% for subchoice in form.transportCompanyId.vars.choices %}
             <div class="row subrow">
                 <label for="{{ form.transportCompanyId.vars.id }}_{{ subchoice.value }}">
-                    {{ subchoice.label }}<span style="font-size:12px;color:#666">, 2 - 14 дней</span>, <a href='{{ subchoice.data.url }}' onclick='window.open(this.href); return false;'>рассчитать стоимость услуг</a>
+                    {{ subchoice.label }}<span class="delivery-transport-terms">, 2 - 14 дней</span>, <a href='{{ subchoice.data.url }}' onclick='window.open(this.href); return false;'>рассчитать стоимость услуг</a>
                     <input type="radio" id="{{ form.transportCompanyId.vars.id }}_{{ subchoice.value }}" name="{{ form.transportCompanyId.vars.full_name }}" value="{{ subchoice.value }}"{% if (subchoice.value == form.transportCompanyId.vars.value)  %} checked="checked"{% endif %} />
                 </label>
-                <div class="notice2">доставка до ТК: {{ transport_company_delivery_cost|price_format }} <span class="RUR">Р</span> <b style="font-size: 18px">*</b></div>
+                <div class="notice2">доставка до ТК: {{ transport_company_delivery_cost|price_format }} <span class="RUR">Р</span> <b class="delivery-asterix">*</b></div>
             </div>
             {% endfor %}
-            <div class="notice">* Указана стоимость доставки заказа до филиала транспортной компании (ТК), она не включает в себя стоимость доставки самой ТК, которая оплачивается непосредственно при получении товара и зависит от габаритов и веса товаров в заказе. <br/>Расчитать стоимость услуг ТК, вы можете перейдя на калькулятор услуг по ссылке, указанной рядом с названием соответствующей ТК.</div><br/>
+            <div class="notice">* Указана стоимость доставки заказа до филиала транспортной компании (ТК), она не включает в себя стоимость доставки самой ТК, которая оплачивается непосредственно при получении товара и зависит от габаритов и веса товаров в заказе. <br/>Расчитать стоимость услуг ТК, вы можете перейдя на калькулятор услуг по ссылке, указанной рядом с названием соответствующей ТК.</div>
             {% if constant('AppBundle\\Enum\\OrderType::LEGAL') != form.typeCode.vars.value %}
                 {% include 'Order/passport_form.html.twig' %}
             {% endif %}

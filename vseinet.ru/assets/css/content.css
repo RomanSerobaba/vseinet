@@ -5,7 +5,7 @@
 	position: relative;
 	z-index: 1;
 	clear: both;
-	
+
 }
 /* content
 -------------------------------------------------------------------*/
@@ -85,7 +85,7 @@
 }
 
 .content.htx P {
-    margin: 0 0 18px;    
+    margin: 0 0 18px;
 }
 
 .content.htx,
@@ -148,4 +148,33 @@
 }
 #about .tabs{
 	margin-bottom: 25px;
+}
+#delivery .delivery-wrapper {
+    display: block;
+    clear: both;
+    margin-bottom: 20px;
+}
+#delivery .delivery_explanation .free,
+#delivery .tariff .free {
+    color:red;
+    font-weight: bold;
+}
+
+#delivery .tabs {
+    margin-top: -45px;
+    background-color: #ffffff;
+    float: left;
+    margin-left: 500px;
+}
+#delivery h1 {
+    padding-top: 0;
+}
+#delivery .tariff TD { border: 1px solid #dcdcde; padding: 3px 5px; }
+#delivery .tariff TH { padding: 0 10px; }
+
+.credit-logos {
+    text-align: center;
+}
+.credit-logos IMG {
+    vertical-align:middle;
 }

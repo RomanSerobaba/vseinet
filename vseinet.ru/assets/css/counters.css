@@ -1,0 +1,11 @@
+#yandex-counter IMG {
+    position:absolute;
+    left:-9999px;
+}
+#mail-counter {
+    position:absolute;
+    left:-10000px;
+}
+#mail-counter IMG {
+    border:0;
+}

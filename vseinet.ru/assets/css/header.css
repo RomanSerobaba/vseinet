@@ -148,3 +148,99 @@
     color: red;
     font-size: 11px;
 }
+
+.snowflake-1 {
+    width:12px;
+    left:-7px;
+    top:2px;
+}
+
+.snowflake-2 {
+    width:8px;
+    left:9px;
+    top:13px;
+}
+
+.snowflake-3 {
+    width:6px;
+    left:48px;
+    top:-11px;
+}
+
+.snowflake-4 {
+    width:10px;
+    left:38px;
+    top:18px;
+}
+
+.snowflake-5 {
+    width:8px;
+    left:63px;
+    top:38px;
+}
+
+.snowflake-6 {
+    width:9px;
+    left:52px;
+    top:23px;
+}
+
+.snowflake-7 {
+    width:12px;
+    left:67px;
+    top:-5px;
+}
+
+.snowflake-8 {
+    width:12px;
+    left:6px;
+    top:36px;
+}
+
+.snowflake-9 {
+    width:18px;
+    left:75px;
+    top:13px;
+}
+
+.snowflake-10 {
+    width:22px;
+    left:125px;
+    top:-10px;
+}
+
+.snowflake-11 {
+    width:10px;
+    left:105px;
+    top:15px;
+}
+
+.snowflake-12 {
+    width:14px;
+    left:125px;
+    top:20px;
+}
+
+.snowflake-13 {
+    width:5px;
+    left:122px;
+    top:44px;
+}
+
+.snowflake-14 {
+    width:5px;
+    left:28px;
+    top:40px;
+}
+
+.snowflake-15 {
+    width:4px;
+    left:23px;
+    top:25px;
+}
+
+.santa-hat {
+    width:30px;
+    left:17px;
+    top:-15px;
+}

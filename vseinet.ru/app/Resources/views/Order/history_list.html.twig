@@ -1,7 +1,7 @@
-<div class="order-history block gray">
+<div class="order-history order-history-list block gray">
     <div class="wrapper">
         <div class="column">
-            <div style="font-size: 16px;margin: 0 0 23px;font-weight:700;">
+            <div class="order-header">
                 Заказ №
                 {% if app.userIsEmployee %}
                     <a href="{{ path('authority', { targetUrl: admin_host ~ '/admin/orders/' ~ order.id }) }}">
@@ -10,7 +10,7 @@
                 {% else %}
                     {{ order.number }}
                 {% endif %}
-                <span style="color:#999;">от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
+                <span>от {{ order.createdAt|date_format('%d %B %Y')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}</span>
             </div>
             <dl>
                 {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
@@ -42,7 +42,7 @@
         </div>
         <div class="column">
             {% if constant('AppBundle\\Enum\\OrderType::RESUPPLY') != order.typeCode and constant('AppBundle\\Enum\\OrderType::EQUIPMENT') != order.typeCode and constant('AppBundle\\Enum\\OrderType::CONSUMABLES') != order.typeCode %}
-                <div style="font-size: 16px; margin: 0 0 23px; font-weight: 700;">Данные покупателя</div>
+                <div class="order-contacts">Данные покупателя</div>
                 <dl>
                     <dt>Город:</dt>
                     <dd>{{ order.cityName }}</dd>
@@ -71,7 +71,7 @@
         </div>
          <div class="actions">
             {% if order.canBePayed and constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode and order.prepaymentAmount %}
-                <div style="text-align: center;padding:2px 5px;margin-right:26px;background-color:yellow;color: green;font-size: 0.85em;font-weight:bold;">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR" style="color: green;font-size: 0.85em;font-weight:normal;">Р</span></div>
+                <div class="sberbank-payed">Оплачено {{ order.prepaymentAmount|price_format }} <span class="RUR">Р</span></div>
             {% endif %}
             {% if order.canBePayed %}
                 <div><a
@@ -82,7 +82,7 @@
                     title="Оплатить позиции, наличие которых подтверждено менеджером">Оплатить сейчас</a></div>
             {% elseif constant('AppBundle\\Enum\\PaymentTypeCode::SBERBANK') == order.paymentTypeCode  %}{# and order.available_sum #}
                 <div><a href="javascript:void(0)" class="bttn green disabled" title="Внимание! Заказ можно будет оплатить после подтверждения менеджером наличия товара">Оплатить</a>
-                <p style="color:red;margin-top:10px">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p></div>
+                <p class="danger">ВНИМАНИЕ! Товар можно будет оплатить только после того, как он будет обработан и зарезервирован! Вам поступит подтверждающее сообщение. </p></div>
             {% endif %}
             <a href="{{ path('repeat_order', { id: order.id }) }}" class="bttn blue repeat_order">Заказать повторно</a>
             {% if order.isCancelRequested and order.isCancelEnabled %}
@@ -98,10 +98,10 @@
         </div>
     </div>
     <div class="wrapper white">
-        <div style="font-size: 16px; font-weight: 700;margin: 0 0 0 30px;">
+        <div class="order-items-header">
             Состав заказа
             {% if constant('AppBundle\\Enum\\OrderItemStatus::CREATED') == order.statusCode %}
-                <span style="font-size: 0.7em; font-weight: normal; vertical-align: top;">Внимание! Обращаем Ваше внимание, что окончательная стоимость заказа, будет подтверждена после обработки заказа сотрудником компании.</span>
+                <span class="notification">Внимание! Обращаем Ваше внимание, что окончательная стоимость заказа, будет подтверждена после обработки заказа сотрудником компании.</span>
             {% endif %}
         </div>
         <div class="row">
@@ -152,24 +152,3 @@
         </div>
     </div>
 </div>
-<style>
-    .sber-unpaid {
-        margin: 20px 0;
-    }
-    div[id^=Sberbank] strong {
-        font-size: 1.1em;
-    }
-    div[id^=Sberbank] ol {
-        list-style: decimal outside;
-        color: #333;
-        margin-top: 15px;
-    }
-    div[id^=Sberbank] li {
-        margin-top: 25px;
-    }
-    div[id^=Sberbank] .info {
-        color: #333;
-        font-size: 1.2em;
-        margin-bottom: 20px;
-    }
-</style>

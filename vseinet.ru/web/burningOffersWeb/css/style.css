@@ -1897,3 +1897,13 @@ display: block;}
 }
 .product-item:hover .button {background: #fc5a5a;}
 
+#special-section {
+    background-image: url(/burningOffersWeb/images/hero_2.jpg);
+    background-attachment: fixed;
+    background-position: top;
+}
+
+.site-menu-wrapper {
+    position: relative;
+    top: 3px;
+}

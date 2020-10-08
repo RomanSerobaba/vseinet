@@ -21,15 +21,15 @@
                             <p class="code">
                                 Код товара: {{ product.id }}
                                 <span class="status
-                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock" style="height:auto;width:auto;margin-left:10px;font-size: 1.05em;font-weight: bold;">В наличии, доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708
-                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available" style="height:auto;width:auto;margin-left:10px">Нет в продаже
-                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order" style="height:auto;width:auto;margin-left:10px">Ожидается
-                                    {% else %} on-order" style="height:auto;width:auto;margin-left:10px">Доставим {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
+                                    {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availabilityCode %} in-stock">В наличии, доставка т.{% if app.geoCity.id != 1 %}8 (8412) {% endif %}290-708
+                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availabilityCode %} not-available">Нет в продаже
+                                    {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availabilityCode %} on-order">Ожидается
+                                    {% else %} on-order">Доставим {{ product.deliveryDate|date_format('%e %B')|replace({ 'нварь': 'нваря', 'евраль': 'евраля', 'арт': 'арта', 'прель': 'преля', 'ай': 'ая', 'юнь': 'юня', 'юль': 'юля', 'вгуст': 'вгуста', 'ентябрь': 'ентября', 'ктябрь': 'ктября', 'оябрь': 'оября', 'екабрь': 'екабря' })|replace({ 'аа': 'а' }) }}
                                     {% endif %}
                                 </span>
                             </p>
                             {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') != product.availabilityCode and 1 < product.minQuantity %}
-                                <p style="color: rgb(242, 108, 79);">Мин. количество для заказа: {{ product.minQuantity }}</p>
+                                <p class="min-quantity">Мин. количество для заказа: {{ product.minQuantity }}</p>
                             {% endif %}
                             {% if '3014' == product.categoryId %}
                                 <p title="Есть вопросы? Звоните по тел. 8 (8412) 290-708">Возможна установка!</p>
@@ -64,11 +64,11 @@
         <p>На следующем шаге вы выберете вариант доставки и оплаты.</p>
     </div>
     <div class="cupon">
-        <del{% if cart.amount == cart.amountWithDiscount %} style="display:none"{% endif %}>
+        <del{% if cart.amount == cart.amountWithDiscount %} class="hidden"{% endif %}>
             <span class="total">{{ cart.amount|price_format }}</span> <span class="RUR">Р</span>
         </del>
         <strong>Сумма покупки: <span class="total-discount">{{ cart.amountWithDiscount|price_format }}</span> <span class="RUR">Р</span></strong>
-        <label for="cart_discount_code">Код для получения скидки: <span class="discount_error" style="color:red;display:none">Введен не верный код</span></label>
+        <label for="cart_discount_code">Код для получения скидки: <span class="discount_error hidden danger">Введен не верный код</span></label>
         <p>
             <input type="text" class="txt" name="discountCode" id="cart_discount_code" value="{{ cart.discountCode }}" />
             <button type="submit" class="bttn light">Пересчитать</button>

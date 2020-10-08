@@ -8,21 +8,20 @@
 <div class="breadcrumbs">
     <a href="/contacts">Контакты</a>
 </div>
-<div itemscope itemtype="http://schema.org/ElectronicsStore">
+<div id="representative" itemscope itemtype="http://schema.org/ElectronicsStore">
 <h1 itemprop="name">Vseinet.ru &laquo;{{ representative.geoPointName }}&raquo;</h1>
 <h2>Адрес</h2>
-<p itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="addressLocality">{{ representative.geoCityName }}</span>{% if representative.address %}, <span itemprop="streetAddress">{{ representative.address }}</span>{% endif %}</p><br/>
+<p class="with-margin" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="addressLocality">{{ representative.geoCityName }}</span>{% if representative.address %}, <span itemprop="streetAddress">{{ representative.address }}</span>{% endif %}</p>
 <div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
     <meta itemprop="latitude" content="{{ representative.latitude }}" />
     <meta itemprop="longitude" content="{{ representative.longitude }}" />
   </div>
 <h2>Телефон</h2>
-<p>
+<p class="with-margin">
     {% for phone in representative.phones %}
         <span itemprop="telephone">{{ phone.value }}</span>{% if not loop.last %},{% endif %}
     {% endfor %}
 </p>
-<br/>
 
 <h2>График работы</h2>
 <table class="schedule" itemprop="openingHours" datetime="{{ representative.fullSchedule }}">
@@ -37,10 +36,9 @@
         {% endfor %}
     </tr>
 </table>
-<br/>
 
 <h2>Процесс оформления заказа</h2>
-<p>
+<p class="with-margin">
     1) Вы можете оформить заказ через наш сайт или по указанным телефонам.<br/>
     2) В течение суток с вами свяжется менеджер и сообщит точную информацию по наличию и срокам доставки, конечную стоимость товара, а также необходимо ли вам будет вносить предоплату и способы ее внесения.
 </p>

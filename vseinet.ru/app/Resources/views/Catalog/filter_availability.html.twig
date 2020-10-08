@@ -1,6 +1,6 @@
 {% if features.availability|length %}
     <div class="tab expanded"><span class="filter-titles">Доступность</span></div>
-    <div class="sheet multi availability" style="display:block">
+    <div class="sheet multi availability">
         {% for id, title in availabilityChoices %}
             {% if features.availability[id] is defined and features.availability[id] %}
                 <label for="filter_availability_{{ id }}">

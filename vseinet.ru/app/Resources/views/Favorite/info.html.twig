@@ -1,3 +1,3 @@
 <a href="{{ path('favorite') }}" class="favorite">
-    Избранное <b{% if 0 == favorites.count %} style="display:none"{% endif %}>{{ favorites.count }}</b>
+    Избранное <b{% if 0 == favorites.count %} class="hidden"{% endif %}>{{ favorites.count }}</b>
 </a>

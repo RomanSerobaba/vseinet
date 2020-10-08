@@ -1,8 +1,8 @@
 {% macro availability(product) %}
     {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::AVAILABLE') == product.availability %}
-        <div class="status in-stock" style="font-size: 1.05em;font-weight: bold;">В наличии,{% if app.geoCity.id != 1 %} доставка<br/>т.8 (8412) {% else %}<br/>доставка т.{% endif %}290-708</div>
+        <div class="status in-stock">В наличии,{% if app.geoCity.id != 1 %} доставка<br/>т.8 (8412) {% else %}<br/>доставка т.{% endif %}290-708</div>
     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') == product.availability %}
-        <div class="status not-available"{% if product.updatedAt %} style="cursor:help" title="Последний заход: {{ product.updatedAt|date('d.m.Y') }}"{% endif %}>Нет в продаже</div>
+        <div class="status not-available{% if product.updatedAt %} help" title="Последний заход: {{ product.updatedAt|date('d.m.Y') }}{% endif %}">Нет в продаже</div>
     {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::AWAITING') == product.availability %}
         <div class="status on-order">Ожидается</div>
     {% else %}
@@ -21,18 +21,17 @@
     </div>
     {% if app.userIsEmployee %}
         {% if constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != product.availability or product.isManualPrice %}
-            <strong class="price"{% if product.price|default(0) %}>
+            <strong class="price{% if product.price|default(0) %}">
                     <a
                         href="{{ path('product_set_price', { id: product.id }) }}"
                         class="icon set-price"
                         title="Установить ручную цену"
                     >
                     </a>
-                <span class="price-value price-{{ product.priceTypeCode }}" title="{{ product.priceTypeName }}{% if product.isManualPrice %}, {{ product.priceChangedAt|date_format('%d.%m.%Y') }} {{ product.priceChangedBy }}{% endif %}">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
+                <span class="price-value price-{{ product.priceTypeCode }}" title="{{ product.priceTypeName }}{% if product.isManualPrice %}, {{ product.priceChangedAt|date_format('%d.%m.%Y') }} {{ product.priceChangedBy }}{% endif %}">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
                     <a
                         href="{{ path('product_reset_price', { id: product.id }) }}"
-                        class="icon reset-price"
-                        {% if not product.isManualPrice %}style="display:none"{% endif %}
+                        class="icon reset-price{% if not product.isManualPrice %} hidden{% endif %}"
                         title="Сбросить ручную цену"
                     >
                     </a>
@@ -45,8 +44,8 @@
                 <strong class="new">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
             </div>
         {% elseif constant('AppBundle\\Enum\\ProductAvailabilityCode::OUT_OF_STOCK') != product.availability %}
-            <strong class="price"{% if product.price|default(0) %}>
-                <span class="price-value">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} style="cursor:help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
+            <strong class="price{% if product.price|default(0) %}">
+                <span class="price-value">{{ product.price|price_format }} <span class="RUR">Р</span>{% else %} help" title="товар участвует в акции, за более подробной информацией обращайтесь по тел. {{ app.representative.phone1 }}">???{% endif %}</span>
             </strong>
         {% endif %}
     {% endif %}

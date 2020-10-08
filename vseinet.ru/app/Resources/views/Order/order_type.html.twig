@@ -11,7 +11,7 @@
         {% if constant('AppBundle\\Enum\\OrderType::RETAIL') == choice.value and canCreateRetailOrder is same as(false) %}
         <div class="notice">
             Продажа с магазина не возможна, так как на точке нет требуемого количества товара или он уже зарезервирован под других клиентов.
-        </div><br/>
+        </div>
         {% endif %}
         {% endfor %}
     </div>

@@ -42,6 +42,10 @@
 		line-height: 16px;
 		padding: 8px 25px 8px 20px;
 	}
+	#tree > UL > LI > A .sml {
+        display: block;
+        font-size: 10px;
+    }
 	#tree > UL > LI > A .new {
 		color: red;
                 display: inline-block;
@@ -175,6 +179,9 @@
 		width: 220px;
 		z-index: 1;
 	}
+		#tree .product .name {
+            margin-bottom:5px;
+        }
 		#tree .product .image {
 			border: none ! important;
 		}

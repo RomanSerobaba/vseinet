@@ -37,6 +37,9 @@
 		padding-top: 4px;
 		width: 25%;
 	}
+	#page-footer .logo-area .RUR {
+		color:#333;
+	}
 		#page-footer .logo-area .logo {
 			font-size: 18px;
 		}
@@ -71,7 +74,8 @@
 
 	#page-footer .logo-area P.error-report {
 		line-height: 14px;
-		margin: 24px 0 0;
+        margin: 24px 0 0;
+        clear: both;
 	}
 
 	#page-footer .claim {

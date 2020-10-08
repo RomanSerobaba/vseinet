@@ -27,14 +27,13 @@
             {% endif %}
         </ul>
         <div class="title category-title">
-            <h1 style="display:inline-block">{{ category.name }}{% if brand %} «{{ brand.name }}»{% endif %}{% if page > 1 %}, страница {{ page }}{% endif %}</h1>
+            <h1 class="inline">{{ category.name }}{% if brand %} «{{ brand.name }}»{% endif %}{% if page > 1 %}, страница {{ page }}{% endif %}</h1>
             {% if app.userIsEmployee %}
                 <a
                     href="{{ path('authority', { targetUrl: ['/admin/productPricetags?listType=category&ids[]=', category.id]|join}) }}"
                     target="_blank"
                     class="pricetag"
-                    title="Печать ценников"
-                    style="margin-left: 5px">
+                    title="Печать ценников">
                 </a>
             {% endif %}
             {% set total = facets.total %}
@@ -60,7 +59,7 @@
                 <!--/noindex-->
             </section>
 
-            <div class="wrapper" style="display:table-header-group">
+            <div class="wrapper category-description-wrapper">
                 {% include 'Catalog/products.html.twig' %}
             </div>
         </div>
