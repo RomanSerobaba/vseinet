@@ -877,6 +877,13 @@
     #related .product:nth-child(6){
         display: none;
     }
+    #similar .product{
+        width: 25%;
+    }
+    #similar .product:nth-child(5),
+    #similar .product:nth-child(6){
+        display: none;
+    }
     #lastview_content .product{
         width: 25%;
     }

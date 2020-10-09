@@ -393,6 +393,18 @@ class MainController extends Controller
     }
 
     /**
+     * @internal
+     */
+    public function getBlockSimilarAction(int $baseProductId)
+    {
+        $products = $this->get('query_bus')->handle(new Query\GetBlockSimilarQuery(['baseProductId' => $baseProductId, 'count' => 6]));
+
+        return $this->render('Main/block_similar.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
+    /**
      * @VIA\Get(
      *     name="agreement",
      *     path="/agreement/"

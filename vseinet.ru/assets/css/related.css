@@ -26,4 +26,30 @@
     font-weight: 700;
     margin: 0 0 10px;
 }
+#similar {
+	margin: 0 0 20px;
+	overflow: hidden;
+	width: 100%;
+}
+#similar .product {
+    float: left;
+    padding-right: 40px;
+    width: 16.6%;
+}
+#similar .product:nth-child(7){
+    display: none;
+}
+#similar .image {
+    border: none !important;
+}
+.main #similar .image img {
+    width: 100px;
+    height: 100px;
+}
+#similar .price {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
 

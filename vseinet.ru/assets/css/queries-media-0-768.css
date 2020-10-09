@@ -754,6 +754,32 @@
     #related .product h4{
         margin-bottom: 20px;
     }
+    #similar{
+        width: 100%;
+    }
+    #similar .product{
+        float: none;
+        width: 100%;
+        padding-right: 0;
+        margin-bottom: 20px;
+        clear: both;
+    }
+    #similar .product h6{
+        margin-bottom: 30px;
+    }
+    #similar .image{
+        width: 33.333334%;
+        padding-right: 15px;
+        float: left;
+        height: auto;
+    }
+    #similar .image img{
+        max-width: 100%;
+        height: auto;
+    }
+    #similar .product h4{
+        margin-bottom: 20px;
+    }
     #lastview_content{
         width: 100%;
     }
@@ -957,6 +983,13 @@
         margin-bottom: 44px;
     }
     .product + .wrapper #related{
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+    .product + .wrapper #similar .product{
+        margin-bottom: 44px;
+    }
+    .product + .wrapper #similar{
         margin-top: 40px;
         margin-bottom: 30px;
     }

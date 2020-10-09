@@ -1,0 +1,21 @@
+{% if not products is empty %}
+    <section class="wrapper" id="similar">
+        <h3>Смотрите также</h3>
+        <div id="similar_content">
+            {% for product in products %}
+                <div class="product">
+                    <a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}" class="image">
+                        <img
+                            src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
+                            data-src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_SM')) }}"
+                            alt="Фото {{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
+                            class="lazyload"
+                        />
+                    </a>
+                    <div><b><a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}">{{ product.name }}</a></b></div>
+                    <strong class="price">{{ product.price|price_format }} <span class="RUR">Р</span></strong>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
