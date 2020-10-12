@@ -5,7 +5,7 @@
                 {% if app.userIsEmployee %}<a class="up" href="javascript:void(0)"></a>{% endif %}
                 <img
                     src="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XS')) }}"
-                    alt="Фото № {{ index }} {{ item.productName }}"
+                    alt="Фото № {{ index }} {{ product.name }}"
                     data-index="{{ index }}"
                     rel="{{ image|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}"
                     class="{% if index == current %}current{% endif %}"
@@ -15,6 +15,6 @@
         {% endfor %}
     </div>
     <div class="view">
-        <img src="{{ images[current]|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}" alt="Фото {{ item.productName }}" />
+        <img src="{{ images[current]|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_XL')) }}" alt="Фото {{ product.name }}" />
     </div>
 </div>
