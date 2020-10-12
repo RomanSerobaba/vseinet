@@ -67,8 +67,10 @@
         <script src="{{ asset('js/router.min.js') }}"></script>
         <script src="{{ asset('js/lazysizes.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-        <script src="{{ asset('bundles/libs.js') }}"></script>
-        <script src="{{ asset('bundles/scripts.js')}}"></script>
+        <script type="module" src="{{ asset('bundles/es6_libs.js') }}"></script>
+        <script type="module" src="{{ asset('bundles/es6_scripts.js')}}"></script>
+        <script nomodule src="{{ asset('bundles/libs.js') }}"></script>
+        <script nomodule src="{{ asset('bundles/scripts.js')}}"></script>
         {% if app.userIsEmployee %}
             <script>
             $(function() {
