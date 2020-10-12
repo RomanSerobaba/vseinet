@@ -48,6 +48,7 @@ Encore
     })
     .addEntry('es6_libs', './assets/libs.js')
     .addEntry('es6_scripts', './assets/app.js')
+    .addStyleEntry('styles', './assets/app.css')
     .enableVersioning(Encore.isProduction())
     .enableSourceMaps(!Encore.isProduction());
 
