@@ -8,7 +8,6 @@
                 </div>
                 <a href="{% if product.sefUrl %}{{ url('catalog_product_sef', { slug: product.sefUrl }) }}{% else %}{{ url('catalog_product', { id: product.id }) }}{% endif %}" class="image">
                     <img
-                        src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
                         data-src="{{ product|image(constant('AppBundle\\Enum\\BaseProductImage::SIZE_MD')) }}"
                         alt="Фото {{ product.name }}. Интернет-магазин Vseinet.ru Пенза"
                         class="lazyload"
