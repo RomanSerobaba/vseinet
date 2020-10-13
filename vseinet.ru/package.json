@@ -7,6 +7,6 @@
     "build": "encore production"
   },
   "dependencies": {
-    "yarn": "^1.9.4"
+    "yarn": "^1.22.0"
   }
 }
